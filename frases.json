@@ -1,5 +1,42 @@
 [
-{"categoria":"Motivação","texto":"A persistência transforma sonhos em conquistas."},
-{"categoria":"Fé","texto":"A esperança ilumina os dias difíceis."},
-{"categoria":"Amor","texto":"O amor cresce quando é compartilhado."}
+  {
+    "categoria": "Motivação",
+    "texto": "Nunca desista dos seus sonhos. Grandes conquistas começam com pequenos passos."
+  },
+  {
+    "categoria": "Motivação",
+    "texto": "O sucesso é a soma de pequenos esforços repetidos diariamente."
+  },
+  {
+    "categoria": "Fé",
+    "texto": "A fé fortalece o coração e renova a esperança."
+  },
+  {
+    "categoria": "Fé",
+    "texto": "Confie em Deus mesmo quando o caminho parecer difícil."
+  },
+  {
+    "categoria": "Amor",
+    "texto": "O amor cresce quando é compartilhado."
+  },
+  {
+    "categoria": "Amor",
+    "texto": "Quem ama cuida, respeita e permanece."
+  },
+  {
+    "categoria": "Reflexão",
+    "texto": "Cada dia é uma nova oportunidade para escrever uma nova história."
+  },
+  {
+    "categoria": "Reflexão",
+    "texto": "A felicidade está nas pequenas coisas da vida."
+  },
+  {
+    "categoria": "Bom Dia",
+    "texto": "Que seu dia seja cheio de paz, alegria e conquistas."
+  },
+  {
+    "categoria": "Boa Noite",
+    "texto": "Descanse em paz. Amanhã será um novo começo."
+  }
 ]
