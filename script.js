@@ -1,4 +1,3 @@
-
 let frases = [];
 
 const lista = document.getElementById("listaFrases");
@@ -6,9 +5,39 @@ const pesquisa = document.getElementById("pesquisa");
 const copiarBtn = document.getElementById("copiarBtn");
 const fraseDia = document.getElementById("fraseDia");
 
+const arquivos = [
+  "frases_01.json",
+  "frases_02.json",
+  "frases_03.json",
+  "frases_04.json",
+  "frases_05.json",
+  "frases_06.json",
+  "frases_07.json",
+  "frases_08.json",
+  "frases_09.json",
+  "frases_10.json"
+];
+
 async function carregarFrases() {
-  const resposta = await fetch("frases.json");
-  frases = await resposta.json();
+  frases = [];
+
+  for (const arquivo of arquivos) {
+    try {
+      const resposta = await fetch(arquivo);
+
+      if (resposta.ok) {
+        const dados = await resposta.json();
+        frases.push(...dados);
+      }
+    } catch (erro) {
+      console.log("Erro ao carregar " + arquivo);
+    }
+  }
+
+  if (frases.length === 0) {
+    lista.innerHTML = "<p>Nenhuma frase encontrada.</p>";
+    return;
+  }
 
   const indice = Math.floor(Math.random() * frases.length);
   fraseDia.textContent = `"${frases[indice].texto}"`;
@@ -25,77 +54,90 @@ function mostrarFrases(filtro = "") {
       f.categoria.toLowerCase().includes(filtro.toLowerCase())
     )
     .forEach(f => {
-      const div = document.createElement("div");
-      div.className = "frase";
-      div.innerHTML = `
+
+      const card = document.createElement("div");
+      card.className = "frase";
+
+      card.innerHTML = `
         <h3>${f.categoria}</h3>
         <p>${f.texto}</p>
-        <button onclick="copiar('${f.texto.replace(/'/g, "\\'")}')">
-  📋 Copiar
-</button>
-<button onclick="favoritar('${f.texto.replace(/'/g, "\\'")}')">
-  ❤️ Favoritar
-</button>
 
-<button onclick="compartilhar('${f.texto.replace(/'/g, "\\'")}')">
-  📤 Compartilhar
-</button>
+        <button onclick="copiar('${f.texto.replace(/'/g,"\\'")}')">
+        📋 Copiar
+        </button>
+
+        <button onclick="compartilhar('${f.texto.replace(/'/g,"\\'")}')">
+        📤 Compartilhar
+        </button>
+
+        <button onclick="favoritar('${f.texto.replace(/'/g,"\\'")}')">
+        ❤️ Favoritar
+        </button>
       `;
-      lista.appendChild(div);
+
+      lista.appendChild(card);
+
     });
 }
 
-function copiar(texto) {
-  navigator.clipboard.writeText(texto);
-  alert("Frase copiada!");
+function copiar(texto){
+    navigator.clipboard.writeText(texto);
+    alert("Frase copiada!");
 }
 
-pesquisa.addEventListener("input", () => {
-  mostrarFrases(pesquisa.value);
+function compartilhar(texto){
+
+    if(navigator.share){
+
+        navigator.share({
+            title:"Frases de Messias",
+            text:texto,
+            url:window.location.href
+        });
+
+    }else{
+
+        window.open(
+        "https://wa.me/?text="+encodeURIComponent(texto),
+        "_blank");
+
+    }
+
+}
+
+let favoritos =
+JSON.parse(localStorage.getItem("favoritos")) || [];
+
+function favoritar(texto){
+
+    if(!favoritos.includes(texto)){
+
+        favoritos.push(texto);
+
+        localStorage.setItem(
+        "favoritos",
+        JSON.stringify(favoritos));
+
+        alert("❤️ Frase adicionada aos favoritos!");
+
+    }else{
+
+        alert("Essa frase já está nos favoritos.");
+
+    }
+
+}
+
+pesquisa.addEventListener("input",()=>{
+
+    mostrarFrases(pesquisa.value);
+
 });
 
-copiarBtn.addEventListener("click", () => {
-  copiar(fraseDia.textContent.replace(/"/g, ""));
+copiarBtn.addEventListener("click",()=>{
+
+    copiar(fraseDia.textContent.replace(/"/g,""));
+
 });
 
 carregarFrases();
-function compartilhar(texto) {
-  if (navigator.share) {
-    navigator.share({
-      title: "Frases de Messias",
-      text: texto,
-      url: window.location.href
-    });
-  } else {
-    window.open(
-      "https://wa.me/?text=" + encodeURIComponent(texto),
-      "_blank"
-    );
-  }
-}
-const temaBtn = document.getElementById("temaBtn");
-
-temaBtn.addEventListener("click", () => {
-  document.body.classList.toggle("dark");
-
-  if (document.body.classList.contains("dark")) {
-    localStorage.setItem("tema", "dark");
-  } else {
-    localStorage.setItem("tema", "light");
-  }
-});
-
-if (localStorage.getItem("tema") === "dark") {
-  document.body.classList.add("dark");
-}
-let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
-
-function favoritar(texto) {
-  if (!favoritos.includes(texto)) {
-    favoritos.push(texto);
-    localStorage.setItem("favoritos", JSON.stringify(favoritos));
-    alert("❤️ Frase adicionada aos favoritos!");
-  } else {
-    alert("⭐ Essa frase já está nos favoritos.");
-  }
-}
