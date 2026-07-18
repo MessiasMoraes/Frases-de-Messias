@@ -107,7 +107,15 @@ Exportar JSON
 </div>
 
 <script type="module">
+import { db } from "./firebase.js";
 
+import {
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  doc
+} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 let frases =
 JSON.parse(localStorage.getItem("frasesAdmin")) || [];
 
