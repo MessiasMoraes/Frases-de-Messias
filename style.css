@@ -109,3 +109,26 @@ footer{
   padding:20px;
   margin-top:40px;
 }
+.dark{
+    background:#121212;
+    color:#ffffff;
+}
+
+.dark .hero,
+.dark .card,
+.dark .frase{
+    background:#1e1e1e;
+    color:#ffffff;
+}
+
+#temaBtn{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    padding:12px 18px;
+    border:none;
+    border-radius:30px;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+  }
