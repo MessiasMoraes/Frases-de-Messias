@@ -147,44 +147,30 @@ Excluir
 
 }
 
-function adicionarFrase(){
+async function adicionarFrase() {
 
-const autor=document.getElementById("autor").value;
+  const autor = document.getElementById("autor").value;
+  const categoria = document.getElementById("categoria").value;
+  const texto = document.getElementById("texto").value;
 
-const categoria=document.getElementById("categoria").value;
+  if (texto === "") {
+    alert("Digite uma frase.");
+    return;
+  }
 
-const texto=document.getElementById("texto").value;
+  await addDoc(collection(db, "frases"), {
+    autor: autor,
+    categoria: categoria,
+    texto: texto,
+    data: new Date()
+  });
 
-if(texto==""){
+  alert("Frase salva no Firebase!");
 
-alert("Digite uma frase.");
+  document.getElementById("autor").value = "";
+  document.getElementById("texto").value = "";
 
-return;
-
-}
-
-frases.push({
-
-id:Date.now(),
-
-categoria,
-
-autor,
-
-texto
-
-});
-
-localStorage.setItem(
-"frasesAdmin",
-JSON.stringify(frases)
-);
-
-document.getElementById("autor").value="";
-document.getElementById("texto").value="";
-
-atualizar();
-
+  carregarFirebase();
 }
 
 function excluir(i){
