@@ -132,3 +132,19 @@ footer{
     color:white;
     cursor:pointer;
   }
+nav{
+  display:flex;
+  gap:15px;
+  margin:15px 0;
+  flex-wrap:wrap;
+}
+
+nav a{
+  color:white;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+nav a:hover{
+  text-decoration:underline;
+}
