@@ -85,3 +85,14 @@ temaBtn.addEventListener("click", () => {
 if (localStorage.getItem("tema") === "dark") {
   document.body.classList.add("dark");
 }
+let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+
+function favoritar(texto) {
+  if (!favoritos.includes(texto)) {
+    favoritos.push(texto);
+    localStorage.setItem("favoritos", JSON.stringify(favoritos));
+    alert("❤️ Frase adicionada aos favoritos!");
+  } else {
+    alert("⭐ Essa frase já está nos favoritos.");
+  }
+}
