@@ -33,6 +33,9 @@ function mostrarFrases(filtro = "") {
         <button onclick="copiar('${f.texto.replace(/'/g, "\\'")}')">
   📋 Copiar
 </button>
+<button onclick="favoritar('${f.texto.replace(/'/g, "\\'")}')">
+  ❤️ Favoritar
+</button>
 
 <button onclick="compartilhar('${f.texto.replace(/'/g, "\\'")}')">
   📤 Compartilhar
