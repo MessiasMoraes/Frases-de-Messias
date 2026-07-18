@@ -31,8 +31,12 @@ function mostrarFrases(filtro = "") {
         <h3>${f.categoria}</h3>
         <p>${f.texto}</p>
         <button onclick="copiar('${f.texto.replace(/'/g, "\\'")}')">
-          Copiar
-        </button>
+  📋 Copiar
+</button>
+
+<button onclick="compartilhar('${f.texto.replace(/'/g, "\\'")}')">
+  📤 Compartilhar
+</button>
       `;
       lista.appendChild(div);
     });
