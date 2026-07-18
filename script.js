@@ -56,3 +56,17 @@ copiarBtn.addEventListener("click", () => {
 });
 
 carregarFrases();
+function compartilhar(texto) {
+  if (navigator.share) {
+    navigator.share({
+      title: "Frases de Messias",
+      text: texto,
+      url: window.location.href
+    });
+  } else {
+    window.open(
+      "https://wa.me/?text=" + encodeURIComponent(texto),
+      "_blank"
+    );
+  }
+}
