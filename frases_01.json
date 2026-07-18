@@ -1,62 +1,42 @@
 [
   {
-    "id": 1,
     "categoria": "Motivação",
-    "autor": "Desconhecido",
     "texto": "Nunca desista dos seus sonhos. Grandes conquistas começam com pequenos passos."
   },
   {
-    "id": 2,
     "categoria": "Motivação",
-    "autor": "Desconhecido",
-    "texto": "O sucesso é construído com dedicação diária."
+    "texto": "O sucesso é a soma de pequenos esforços repetidos diariamente."
   },
   {
-    "id": 3,
     "categoria": "Fé",
-    "autor": "Desconhecido",
-    "texto": "A fé ilumina o caminho mesmo nos momentos mais difíceis."
+    "texto": "A fé fortalece o coração e renova a esperança."
   },
   {
-    "id": 4,
     "categoria": "Fé",
-    "autor": "Desconhecido",
-    "texto": "Confie em Deus e siga em frente com esperança."
+    "texto": "Confie em Deus mesmo quando o caminho parecer difícil."
   },
   {
-    "id": 5,
     "categoria": "Amor",
-    "autor": "Desconhecido",
-    "texto": "O amor verdadeiro nasce do respeito e da confiança."
+    "texto": "O amor cresce quando é compartilhado."
   },
   {
-    "id": 6,
-    "categoria": "Amizade",
-    "autor": "Desconhecido",
-    "texto": "Amigos verdadeiros permanecem nos bons e maus momentos."
+    "categoria": "Amor",
+    "texto": "Quem ama cuida, respeita e permanece."
   },
   {
-    "id": 7,
     "categoria": "Reflexão",
-    "autor": "Desconhecido",
-    "texto": "Cada novo dia traz uma nova oportunidade de recomeçar."
+    "texto": "Cada dia é uma nova oportunidade para escrever uma nova história."
   },
   {
-    "id": 8,
+    "categoria": "Reflexão",
+    "texto": "A felicidade está nas pequenas coisas da vida."
+  },
+  {
     "categoria": "Bom Dia",
-    "autor": "Desconhecido",
-    "texto": "Bom dia! Que hoje seja um dia de paz, alegria e realizações."
+    "texto": "Que seu dia seja cheio de paz, alegria e conquistas."
   },
   {
-    "id": 9,
     "categoria": "Boa Noite",
-    "autor": "Desconhecido",
-    "texto": "Boa noite! Descanse e renove suas forças para amanhã."
-  },
-  {
-    "id": 10,
-    "categoria": "Gratidão",
-    "autor": "Desconhecido",
-    "texto": "A gratidão transforma o que temos em suficiente."
+    "texto": "Descanse em paz. Amanhã será um novo começo."
   }
 ]
