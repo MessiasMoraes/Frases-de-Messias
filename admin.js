@@ -46,6 +46,7 @@ const texto = document.getElementById("texto");
 const btnSalvar = document.getElementById("btnSalvar");
 
 const listaFrases = document.getElementById("listaFrases");
+const pesquisa = document.getElementById("pesquisa");
 const totalFrases = document.getElementById("totalFrases");
 
 let frases = [];
