@@ -1,3 +1,9 @@
+import { db } from "./firebase.js";
+
+import {
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 let frases = [];
 
 const lista = document.getElementById("listaFrases");
