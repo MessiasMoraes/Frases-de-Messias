@@ -5,8 +5,8 @@ import {
   collection,
   addDoc,
   getDocs,
-  deleteDoc,
   updateDoc,
+  deleteDoc,
   doc
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
@@ -30,6 +30,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
+// Login
 const loginContainer = document.getElementById("loginContainer");
 const painel = document.getElementById("painel");
 
@@ -39,17 +40,18 @@ const senha = document.getElementById("senha");
 const btnLogin = document.getElementById("btnLogin");
 const btnSair = document.getElementById("btnSair");
 
+// Cadastro
 const autor = document.getElementById("autor");
 const categoria = document.getElementById("categoria");
 const texto = document.getElementById("texto");
-
 const btnSalvar = document.getElementById("btnSalvar");
 
+// Lista
 const listaFrases = document.getElementById("listaFrases");
-const pesquisa = document.getElementById("pesquisa");
 const totalFrases = document.getElementById("totalFrases");
+const pesquisa = document.getElementById("pesquisa");
 
-let frases = [];
+// Modal
 const modalEditar = document.getElementById("modalEditar");
 const editId = document.getElementById("editId");
 const editAutor = document.getElementById("editAutor");
@@ -58,9 +60,13 @@ const editTexto = document.getElementById("editTexto");
 
 const btnAtualizar = document.getElementById("btnAtualizar");
 const btnCancelar = document.getElementById("btnCancelar");
+
+let frases = [];
+
+// LOGIN
 btnLogin.addEventListener("click", async () => {
 
-  if (email.value.trim() === "" || senha.value.trim() === "") {
+  if (!email.value || !senha.value) {
     alert("Informe o e-mail e a senha.");
     return;
   }
@@ -73,7 +79,7 @@ btnLogin.addEventListener("click", async () => {
       senha.value
     );
 
-  } catch (erro) {
+  } catch (e) {
 
     alert("E-mail ou senha inválidos.");
 
@@ -81,12 +87,14 @@ btnLogin.addEventListener("click", async () => {
 
 });
 
+// LOGOUT
 btnSair.addEventListener("click", async () => {
 
   await signOut(auth);
 
 });
 
+// CONTROLE DE LOGIN
 onAuthStateChanged(auth, (user) => {
 
   if (user) {
@@ -102,158 +110,5 @@ onAuthStateChanged(auth, (user) => {
     painel.style.display = "none";
 
   }
-
-});
-async function carregarFrases() {
-
-  frases = [];
-
-  listaFrases.innerHTML = "Carregando...";
-
-  const consulta = await getDocs(collection(db, "frases"));
-
-  consulta.forEach((item) => {
-
-    frases.push({
-      id: item.id,
-      ...item.data()
-    });
-
-  });
-
-  totalFrases.textContent = frases.length;
-
-  listaFrases.innerHTML = "";
-
-  frases.forEach((f) => {
-
-    const card = document.createElement("div");
-
-    card.className = "frase";
-
-    card.innerHTML = `
-      <h3>${f.categoria}</h3>
-      <p>${f.texto}</p>
-      <small>${f.autor || "Sem autor"}</small>
-      <br><br>
-
-      <button class="btnEditar">
-  ✏️ Editar
-</button>
-
-<button class="btnExcluir">
-  🗑️ Excluir
-</button>
-card.querySelector(".btnEditar").addEventListener("click", () => {
-
-    editId.value = f.id;
-    editAutor.value = f.autor || "";
-    editCategoria.value = f.categoria;
-    editTexto.value = f.texto;
-
-    modalEditar.style.display = "flex";
-
-});
-
-
-  alert("Frase atualizada!");
-
-  carregarFrases();
-
-});
-    `;
-
-    card.querySelector(".btnExcluir").addEventListener("click", async () => {
-
-      if (!confirm("Deseja excluir esta frase?")) return;
-
-      await deleteDoc(doc(db, "frases", f.id));
-
-      carregarFrases();
-
-    });
-
-    listaFrases.appendChild(card);
-
-  });
-
-}
-function mostrarLista(lista) {
-
-    listaFrases.innerHTML = "";
-
-    lista.forEach((f) => {
-
-        const card = document.createElement("div");
-
-        card.className = "frase";
-
-        card.innerHTML = `
-            <h3>${f.categoria}</h3>
-            <p>${f.texto}</p>
-            <small>${f.autor || "Sem autor"}</small>
-
-            <br><br>
-
-            <button class="btnEditar">✏️ Editar</button>
-            <button class="btnExcluir">🗑️ Excluir</button>
-        `;
-
-        // Aqui permanece o mesmo código dos botões
-        // Editar e Excluir que você já possui.
-
-        listaFrases.appendChild(card);
-
-    });
-
-}
-btnSalvar.addEventListener("click", async () => {
-
-  if (texto.value.trim() === "") {
-
-    alert("Digite uma frase.");
-
-    return;
-
-  }
-
-  await addDoc(collection(db, "frases"), {
-
-    autor: autor.value,
-    categoria: categoria.value,
-    texto: texto.value,
-    data: new Date()
-
-  });
-
-  autor.value = "";
-  texto.value = "";
-
-  alert("Frase cadastrada com sucesso!");
-
-  carregarFrases();
-
-});
-btnAtualizar.addEventListener("click", async () => {
-
-    await updateDoc(
-        doc(db, "frases", editId.value),
-        {
-            autor: editAutor.value,
-            categoria: editCategoria.value,
-            texto: editTexto.value
-        }
-    );
-
-    modalEditar.style.display = "none";
-
-    alert("Frase atualizada com sucesso!");
-
-    carregarFrases();
-
-});
-btnCancelar.addEventListener("click", () => {
-
-    modalEditar.style.display = "none";
 
 });
