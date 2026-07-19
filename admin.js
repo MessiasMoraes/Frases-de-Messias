@@ -94,3 +94,84 @@ onAuthStateChanged(auth, (user) => {
   }
 
 });
+async function carregarFrases() {
+
+  frases = [];
+
+  listaFrases.innerHTML = "Carregando...";
+
+  const consulta = await getDocs(collection(db, "frases"));
+
+  consulta.forEach((item) => {
+
+    frases.push({
+      id: item.id,
+      ...item.data()
+    });
+
+  });
+
+  totalFrases.textContent = frases.length;
+
+  listaFrases.innerHTML = "";
+
+  frases.forEach((f) => {
+
+    const card = document.createElement("div");
+
+    card.className = "frase";
+
+    card.innerHTML = `
+      <h3>${f.categoria}</h3>
+      <p>${f.texto}</p>
+      <small>${f.autor || "Sem autor"}</small>
+      <br><br>
+
+      <button class="btnExcluir">
+        🗑️ Excluir
+      </button>
+    `;
+
+    card.querySelector(".btnExcluir").addEventListener("click", async () => {
+
+      if (!confirm("Deseja excluir esta frase?")) return;
+
+      await deleteDoc(doc(db, "frases", f.id));
+
+      carregarFrases();
+
+    });
+
+    listaFrases.appendChild(card);
+
+  });
+
+}
+
+btnSalvar.addEventListener("click", async () => {
+
+  if (texto.value.trim() === "") {
+
+    alert("Digite uma frase.");
+
+    return;
+
+  }
+
+  await addDoc(collection(db, "frases"), {
+
+    autor: autor.value,
+    categoria: categoria.value,
+    texto: texto.value,
+    data: new Date()
+
+  });
+
+  autor.value = "";
+  texto.value = "";
+
+  alert("Frase cadastrada com sucesso!");
+
+  carregarFrases();
+
+});
