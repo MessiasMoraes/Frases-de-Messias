@@ -1,231 +1,103 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel Administrativo - Frases de Messias</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Administrativo - Frases de Messias</title>
 
-<style>
-body{
-font-family:Arial,sans-serif;
-background:#f5f5f5;
-margin:0;
-padding:20px;
-}
-
-.container{
-max-width:900px;
-margin:auto;
-background:white;
-padding:20px;
-border-radius:12px;
-box-shadow:0 2px 10px rgba(0,0,0,.15);
-}
-
-h1{
-text-align:center;
-}
-
-input,textarea,select{
-width:100%;
-padding:12px;
-margin:8px 0;
-font-size:16px;
-}
-
-button{
-padding:12px 18px;
-margin:5px;
-cursor:pointer;
-border:none;
-border-radius:8px;
-font-size:16px;
-}
-
-.salvar{
-background:#2ecc71;
-color:white;
-}
-
-.exportar{
-background:#3498db;
-color:white;
-}
-
-.frase{
-background:#fafafa;
-padding:12px;
-margin-top:10px;
-border-radius:8px;
-border:1px solid #ddd;
-}
-</style>
-
+  <link rel="stylesheet" href="admin.css">
 </head>
-
 <body>
 
-<div class="container">
+<div class="login-container" id="loginContainer">
 
-<h1>📖 Painel - Frases de Messias</h1>
+  <h1>📖 Frases de Messias</h1>
 
-<input id="autor" placeholder="Autor">
+  <h2>Login do Administrador</h2>
 
-<select id="categoria">
-<option>Motivação</option>
-<option>Fé</option>
-<option>Amor</option>
-<option>Reflexão</option>
-<option>Amizade</option>
-<option>Bom Dia</option>
-<option>Boa Noite</option>
-<option>Esperança</option>
-<option>Gratidão</option>
-<option>Família</option>
-<option>Sucesso</option>
-<option>Vida</option>
-</select>
+  <input
+    type="email"
+    id="email"
+    placeholder="E-mail">
 
-<textarea
-id="texto"
-rows="5"
-placeholder="Digite a frase">
-</textarea>
+  <input
+    type="password"
+    id="senha"
+    placeholder="Senha">
 
-<button class="salvar" id="btnSalvar">
-Adicionar Frase
-</button>
-
-<button class="exportar" onclick="exportarJSON()">
-Exportar JSON
-</button>
-
-<hr>
-
-<div id="lista"></div>
+  <button id="btnLogin">
+    Entrar
+  </button>
 
 </div>
 
-<script type="module">
-import { db } from "./firebase.js";
+<div class="painel" id="painel" style="display:none;">
 
-import {
-  collection,
-  addDoc,
-  getDocs,
-  deleteDoc,
-  doc
-} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
-let frases =
-JSON.parse(localStorage.getItem("frasesAdmin")) || [];
+  <header>
 
-function atualizar(){
+    <h1>Painel Administrativo</h1>
 
-const lista=document.getElementById("lista");
+    <button id="btnSair">
+      Sair
+    </button>
 
-lista.innerHTML="";
+  </header>
 
-frases.forEach((f,i)=>{
+  <section class="estatisticas">
 
-lista.innerHTML+=`
-<div class="frase">
+    <div class="card">
+      <h2 id="totalFrases">0</h2>
+      <p>Frases cadastradas</p>
+    </div>
 
-<b>${f.categoria}</b><br>
+  </section>
 
-${f.texto}<br>
+  <section class="cadastro">
 
-<small>${f.autor}</small><br><br>
+    <input
+      id="autor"
+      placeholder="Autor">
 
-<button onclick="excluir(${i})">
-Excluir
-</button>
+    <select id="categoria">
+      <option>Motivação</option>
+      <option>Fé</option>
+      <option>Amor</option>
+      <option>Reflexão</option>
+      <option>Amizade</option>
+      <option>Bom Dia</option>
+      <option>Boa Noite</option>
+      <option>Esperança</option>
+      <option>Gratidão</option>
+      <option>Família</option>
+      <option>Sucesso</option>
+      <option>Vida</option>
+    </select>
+
+    <textarea
+      id="texto"
+      rows="5"
+      placeholder="Digite a frase">
+    </textarea>
+
+    <button id="btnSalvar">
+      Salvar Frase
+    </button>
+
+  </section>
+
+  <section>
+
+    <input
+      id="pesquisa"
+      placeholder="Pesquisar frase...">
+
+    <div id="listaFrases"></div>
+
+  </section>
 
 </div>
-`;
 
-});
-
-}
-
-async function adicionarFrase() {
-
-  const autor = document.getElementById("autor").value;
-  const categoria = document.getElementById("categoria").value;
-  const texto = document.getElementById("texto").value;
-
-  if (texto === "") {
-    alert("Digite uma frase.");
-    return;
-  }
-
-  await addDoc(collection(db, "frases"), {
-    autor: autor,
-    categoria: categoria,
-    texto: texto,
-    data: new Date()
-  });
-
-  alert("Frase salva no Firebase!");
-
-  document.getElementById("autor").value = "";
-  document.getElementById("texto").value = "";
-
-  carregarFirebase();
-}
-
-function excluir(i){
-
-frases.splice(i,1);
-
-localStorage.setItem(
-"frasesAdmin",
-JSON.stringify(frases)
-);
-
-atualizar();
-
-}
-
-function exportarJSON(){
-
-const blob=new Blob(
-
-[JSON.stringify(frases,null,2)],
-
-{type:"application/json"}
-
-);
-
-const a=document.createElement("a");
-
-a.href=URL.createObjectURL(blob);
-
-a.download="frases.json";
-
-a.click();
-
-}
-
-atualizar();
-document.getElementById("btnSalvar").addEventListener("click", adicionarFrase);
-
-async function carregarFirebase() {
-  frases = [];
-
-  const consulta = await getDocs(collection(db, "frases"));
-
-  consulta.forEach((item) => {
-    frases.push({
-      firebaseId: item.id,
-      ...item.data()
-    });
-  });
-carregarFirebase();
-  
-}
-
-carregarFirebase();
-</script>
+<script type="module" src="admin.js"></script>
 
 </body>
-  </html>
+</html>
