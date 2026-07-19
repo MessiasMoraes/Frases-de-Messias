@@ -135,6 +135,35 @@ async function carregarFrases() {
 <button class="btnExcluir">
   🗑️ Excluir
 </button>
+card.querySelector(".btnEditar").addEventListener("click", async () => {
+
+  const novoAutor = prompt(
+    "Digite o autor:",
+    f.autor || ""
+  );
+
+  const novaFrase = prompt(
+    "Digite a frase:",
+    f.texto
+  );
+
+  if (!novaFrase) return;
+
+
+  await updateDoc(
+    doc(db, "frases", f.id),
+    {
+      autor: novoAutor,
+      texto: novaFrase
+    }
+  );
+
+
+  alert("Frase atualizada!");
+
+  carregarFrases();
+
+});
     `;
 
     card.querySelector(".btnExcluir").addEventListener("click", async () => {
