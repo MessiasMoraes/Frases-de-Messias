@@ -112,3 +112,124 @@ onAuthStateChanged(auth, (user) => {
   }
 
 });
+// ==========================
+// CARREGAR FRASES
+// ==========================
+
+async function carregarFrases() {
+
+  frases = [];
+
+  listaFrases.innerHTML = "<p>Carregando frases...</p>";
+
+  try {
+
+    const consulta = await getDocs(collection(db, "frases"));
+
+    consulta.forEach((item) => {
+
+      frases.push({
+        id: item.id,
+        ...item.data()
+      });
+
+    });
+
+    totalFrases.textContent = frases.length;
+
+    mostrarLista(frases);
+
+  } catch (erro) {
+
+    console.error(erro);
+
+    listaFrases.innerHTML =
+      "<p>Erro ao carregar as frases.</p>";
+
+  }
+
+}
+
+// ==========================
+// MOSTRAR LISTA
+// ==========================
+
+function mostrarLista(lista) {
+
+  listaFrases.innerHTML = "";
+
+  if (lista.length === 0) {
+
+    listaFrases.innerHTML =
+      "<p>Nenhuma frase encontrada.</p>";
+
+    return;
+
+  }
+
+  lista.forEach((f) => {
+
+    const card = document.createElement("div");
+
+    card.className = "frase";
+
+    card.innerHTML = `
+      <h3>${f.categoria}</h3>
+
+      <p>${f.texto}</p>
+
+      <small>${f.autor || "Sem autor"}</small>
+
+      <br><br>
+
+      <button class="btnEditar">✏️ Editar</button>
+
+      <button class="btnExcluir">🗑️ Excluir</button>
+    `;
+
+    // EDITAR
+    card.querySelector(".btnEditar").addEventListener("click", () => {
+
+      editId.value = f.id;
+      editAutor.value = f.autor || "";
+      editCategoria.value = f.categoria;
+      editTexto.value = f.texto;
+
+      modalEditar.style.display = "flex";
+
+    });
+
+    // EXCLUIR
+    card.querySelector(".btnExcluir").addEventListener("click", async () => {
+
+      if (!confirm("Deseja excluir esta frase?")) return;
+
+      await deleteDoc(doc(db, "frases", f.id));
+
+      carregarFrases();
+
+    });
+
+    listaFrases.appendChild(card);
+
+  });
+
+}
+
+// ==========================
+// PESQUISA
+// ==========================
+
+pesquisa.addEventListener("input", () => {
+
+  const filtro = pesquisa.value.toLowerCase();
+
+  const resultado = frases.filter((f) =>
+    (f.texto || "").toLowerCase().includes(filtro) ||
+    (f.categoria || "").toLowerCase().includes(filtro) ||
+    (f.autor || "").toLowerCase().includes(filtro)
+  );
+
+  mostrarLista(resultado);
+
+});
