@@ -96,7 +96,52 @@
   </section>
 
 </div>
+<!-- Modal de edição -->
+<div id="modalEditar" class="modal">
 
+  <div class="modal-conteudo">
+
+    <h2>✏️ Editar Frase</h2>
+
+    <input type="hidden" id="editId">
+
+    <input
+      id="editAutor"
+      placeholder="Autor">
+
+    <select id="editCategoria">
+
+      <option>Motivação</option>
+      <option>Fé</option>
+      <option>Amor</option>
+      <option>Reflexão</option>
+      <option>Amizade</option>
+      <option>Bom Dia</option>
+      <option>Boa Noite</option>
+      <option>Esperança</option>
+      <option>Gratidão</option>
+      <option>Família</option>
+      <option>Sucesso</option>
+      <option>Vida</option>
+
+    </select>
+
+    <textarea
+      id="editTexto"
+      rows="6">
+    </textarea>
+
+    <button id="btnAtualizar">
+      💾 Salvar Alterações
+    </button>
+
+    <button id="btnCancelar">
+      ❌ Cancelar
+    </button>
+
+  </div>
+
+</div>
 <script type="module" src="admin.js"></script>
 
 </body>
