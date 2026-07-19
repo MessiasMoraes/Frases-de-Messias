@@ -48,3 +48,49 @@ const listaFrases = document.getElementById("listaFrases");
 const totalFrases = document.getElementById("totalFrases");
 
 let frases = [];
+btnLogin.addEventListener("click", async () => {
+
+  if (email.value.trim() === "" || senha.value.trim() === "") {
+    alert("Informe o e-mail e a senha.");
+    return;
+  }
+
+  try {
+
+    await signInWithEmailAndPassword(
+      auth,
+      email.value,
+      senha.value
+    );
+
+  } catch (erro) {
+
+    alert("E-mail ou senha inválidos.");
+
+  }
+
+});
+
+btnSair.addEventListener("click", async () => {
+
+  await signOut(auth);
+
+});
+
+onAuthStateChanged(auth, (user) => {
+
+  if (user) {
+
+    loginContainer.style.display = "none";
+    painel.style.display = "block";
+
+    carregarFrases();
+
+  } else {
+
+    loginContainer.style.display = "block";
+    painel.style.display = "none";
+
+  }
+
+});
