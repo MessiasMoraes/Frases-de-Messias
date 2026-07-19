@@ -46,38 +46,53 @@ async function carregarFrases() {
 }
 
 function mostrarFrases(filtro = "") {
+
   lista.innerHTML = "";
 
-  frases
-    .filter(f =>
-      f.texto.toLowerCase().includes(filtro.toLowerCase()) ||
-      f.categoria.toLowerCase().includes(filtro.toLowerCase())
-    )
-    .forEach(f => {
+  const frasesFiltradas = frases.filter(f =>
+    (f.texto || "").toLowerCase().includes(filtro.toLowerCase()) ||
+    (f.categoria || "").toLowerCase().includes(filtro.toLowerCase())
+  );
 
-      const card = document.createElement("div");
-      card.className = "frase";
+  if (frasesFiltradas.length === 0) {
+    lista.innerHTML = "<p>Nenhuma frase encontrada.</p>";
+    return;
+  }
 
-      card.innerHTML = `
-        <h3>${f.categoria}</h3>
-        <p>${f.texto}</p>
+  frasesFiltradas.forEach(f => {
 
-        <button onclick="copiar('${f.texto.replace(/'/g,"\\'")}')">
-        📋 Copiar
-        </button>
+    const card = document.createElement("div");
+    card.className = "frase";
 
-        <button onclick="compartilhar('${f.texto.replace(/'/g,"\\'")}')">
-        📤 Compartilhar
-        </button>
+    const titulo = document.createElement("h3");
+    titulo.textContent = f.categoria;
 
-        <button onclick="favoritar('${f.texto.replace(/'/g,"\\'")}')">
-        ❤️ Favoritar
-        </button>
-      `;
+    const texto = document.createElement("p");
+    texto.className = "textoFrase";
+    texto.textContent = f.texto;
 
-      lista.appendChild(card);
+    const btnCopiar = document.createElement("button");
+    btnCopiar.textContent = "📋 Copiar";
+    btnCopiar.addEventListener("click", () => copiar(f.texto));
 
-    });
+    const btnCompartilhar = document.createElement("button");
+    btnCompartilhar.textContent = "📤 Compartilhar";
+    btnCompartilhar.addEventListener("click", () => compartilhar(f.texto));
+
+    const btnFavoritar = document.createElement("button");
+    btnFavoritar.textContent = "❤️ Favoritar";
+    btnFavoritar.addEventListener("click", () => favoritar(f.texto));
+
+    card.appendChild(titulo);
+    card.appendChild(texto);
+    card.appendChild(btnCopiar);
+    card.appendChild(btnCompartilhar);
+    card.appendChild(btnFavoritar);
+
+    lista.appendChild(card);
+
+  });
+
 }
 
 function copiar(texto){
