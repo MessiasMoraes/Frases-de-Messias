@@ -143,28 +143,16 @@ async function carregarFrases() {
 <button class="btnExcluir">
   🗑️ Excluir
 </button>
-card.querySelector(".btnEditar").addEventListener("click", async () => {
+card.querySelector(".btnEditar").addEventListener("click", () => {
 
-  const novoAutor = prompt(
-    "Digite o autor:",
-    f.autor || ""
-  );
+    editId.value = f.id;
+    editAutor.value = f.autor || "";
+    editCategoria.value = f.categoria;
+    editTexto.value = f.texto;
 
-  const novaFrase = prompt(
-    "Digite a frase:",
-    f.texto
-  );
+    modalEditar.style.display = "flex";
 
-  if (!novaFrase) return;
-
-
-  await updateDoc(
-    doc(db, "frases", f.id),
-    {
-      autor: novoAutor,
-      texto: novaFrase
-    }
-  );
+});
 
 
   alert("Frase atualizada!");
