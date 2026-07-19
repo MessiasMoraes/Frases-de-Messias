@@ -128,9 +128,13 @@ async function carregarFrases() {
       <small>${f.autor || "Sem autor"}</small>
       <br><br>
 
-      <button class="btnExcluir">
-        🗑️ Excluir
-      </button>
+      <button class="btnEditar">
+  ✏️ Editar
+</button>
+
+<button class="btnExcluir">
+  🗑️ Excluir
+</button>
     `;
 
     card.querySelector(".btnExcluir").addEventListener("click", async () => {
