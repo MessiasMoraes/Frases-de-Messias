@@ -92,7 +92,7 @@ rows="5"
 placeholder="Digite a frase">
 </textarea>
 
-<button class="salvar" onclick="adicionarFrase()">
+<button class="salvar" id="btnSalvar">
 Adicionar Frase
 </button>
 
@@ -207,7 +207,24 @@ a.click();
 }
 
 atualizar();
+document.getElementById("btnSalvar").addEventListener("click", adicionarFrase);
 
+async function carregarFirebase() {
+  frases = [];
+
+  const consulta = await getDocs(collection(db, "frases"));
+
+  consulta.forEach((item) => {
+    frases.push({
+      firebaseId: item.id,
+      ...item.data()
+    });
+  });
+
+  atualizar();
+}
+
+carregarFirebase();
 </script>
 
 </body>
