@@ -205,3 +205,21 @@ btnSalvar.addEventListener("click", async () => {
   carregarFrases();
 
 });
+btnAtualizar.addEventListener("click", async () => {
+
+    await updateDoc(
+        doc(db, "frases", editId.value),
+        {
+            autor: editAutor.value,
+            categoria: editCategoria.value,
+            texto: editTexto.value
+        }
+    );
+
+    modalEditar.style.display = "none";
+
+    alert("Frase atualizada com sucesso!");
+
+    carregarFrases();
+
+});
