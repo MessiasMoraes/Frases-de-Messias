@@ -49,6 +49,14 @@ const listaFrases = document.getElementById("listaFrases");
 const totalFrases = document.getElementById("totalFrases");
 
 let frases = [];
+const modalEditar = document.getElementById("modalEditar");
+const editId = document.getElementById("editId");
+const editAutor = document.getElementById("editAutor");
+const editCategoria = document.getElementById("editCategoria");
+const editTexto = document.getElementById("editTexto");
+
+const btnAtualizar = document.getElementById("btnAtualizar");
+const btnCancelar = document.getElementById("btnCancelar");
 btnLogin.addEventListener("click", async () => {
 
   if (email.value.trim() === "" || senha.value.trim() === "") {
