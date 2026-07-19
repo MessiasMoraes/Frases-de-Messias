@@ -178,7 +178,35 @@ card.querySelector(".btnEditar").addEventListener("click", () => {
   });
 
 }
+function mostrarLista(lista) {
 
+    listaFrases.innerHTML = "";
+
+    lista.forEach((f) => {
+
+        const card = document.createElement("div");
+
+        card.className = "frase";
+
+        card.innerHTML = `
+            <h3>${f.categoria}</h3>
+            <p>${f.texto}</p>
+            <small>${f.autor || "Sem autor"}</small>
+
+            <br><br>
+
+            <button class="btnEditar">✏️ Editar</button>
+            <button class="btnExcluir">🗑️ Excluir</button>
+        `;
+
+        // Aqui permanece o mesmo código dos botões
+        // Editar e Excluir que você já possui.
+
+        listaFrases.appendChild(card);
+
+    });
+
+}
 btnSalvar.addEventListener("click", async () => {
 
   if (texto.value.trim() === "") {
