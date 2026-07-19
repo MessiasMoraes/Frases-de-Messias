@@ -140,4 +140,7 @@ copiarBtn.addEventListener("click",()=>{
 
 });
 
+window.copiar = copiar;
+window.compartilhar = compartilhar;
+window.favoritar = favoritar;
 carregarFrases();
