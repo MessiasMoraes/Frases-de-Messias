@@ -223,3 +223,8 @@ btnAtualizar.addEventListener("click", async () => {
     carregarFrases();
 
 });
+btnCancelar.addEventListener("click", () => {
+
+    modalEditar.style.display = "none";
+
+});
