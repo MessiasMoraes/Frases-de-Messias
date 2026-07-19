@@ -11,33 +11,25 @@ const pesquisa = document.getElementById("pesquisa");
 const copiarBtn = document.getElementById("copiarBtn");
 const fraseDia = document.getElementById("fraseDia");
 
-const arquivos = [
-  "frases_01.json",
-  "frases_02.json",
-  "frases_03.json",
-  "frases_04.json",
-  "frases_05.json",
-  "frases_06.json",
-  "frases_07.json",
-  "frases_08.json",
-  "frases_09.json",
-  "frases_10.json"
-];
 
 async function carregarFrases() {
+
   frases = [];
 
-  for (const arquivo of arquivos) {
-    try {
-      const resposta = await fetch(arquivo);
+  try {
 
-      if (resposta.ok) {
-        const dados = await resposta.json();
-        frases.push(...dados);
-      }
-    } catch (erro) {
-      console.log("Erro ao carregar " + arquivo);
-    }
+    const consulta = await getDocs(collection(db, "frases"));
+
+    consulta.forEach((doc) => {
+      frases.push(doc.data());
+    });
+
+  } catch (e) {
+
+    lista.innerHTML = "<p>Erro ao carregar frases.</p>";
+    console.error(e);
+    return;
+
   }
 
   if (frases.length === 0) {
@@ -46,9 +38,11 @@ async function carregarFrases() {
   }
 
   const indice = Math.floor(Math.random() * frases.length);
+
   fraseDia.textContent = `"${frases[indice].texto}"`;
 
   mostrarFrases();
+
 }
 
 function mostrarFrases(filtro = "") {
