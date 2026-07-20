@@ -264,6 +264,23 @@ pesquisa.addEventListener("input", () => {
   mostrarLista(resultado);
 
 });
+async function enviarImagem(arquivo) {
+
+    const formData = new FormData();
+    formData.append("image", arquivo);
+
+    const resposta = await fetch(
+        "https://api.imgbb.com/1/upload?key=SUA_API_KEY",
+        {
+            method: "POST",
+            body: formData
+        }
+    );
+
+    const dados = await resposta.json();
+
+    return dados.data.url;
+}
 // ==========================
 // ADICIONAR FRASE
 // ==========================
