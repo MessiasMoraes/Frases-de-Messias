@@ -298,10 +298,17 @@ btnSalvar.addEventListener("click", async () => {
 
   try {
 
+    let urlImagem = "";
+
+    if (imagem.files.length > 0) {
+        urlImagem = await enviarImagem(imagem.files[0]);
+    }
+
     await addDoc(collection(db, "frases"), {
       autor: novoAutor,
       categoria: novaCategoria,
       texto: novoTexto,
+      imagem: urlImagem,
       data: new Date()
     });
 
