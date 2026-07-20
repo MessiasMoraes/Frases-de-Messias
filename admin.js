@@ -83,7 +83,12 @@ btnLogin.addEventListener("click", async () => {
 
   } catch (e) {
 
-    alert("E-mail ou senha inválidos.");
+  console.error(e);
+
+  alert(
+    "Código: " + e.code +
+    "\n\nMensagem: " + e.message
+  );
 
   }
 
