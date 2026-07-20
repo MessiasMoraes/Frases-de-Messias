@@ -377,27 +377,9 @@ filtroCategoria.addEventListener("change", () => {
 // MODO ESCURO
 // ==========================
 
-// ==========================
-// MODO ESCURO
-// ==========================
-
 if (temaBtn) {
 
     // Carrega a preferência salva
-    if (localStorage.getItem("tema") === "dark") {
-
-        document.body.classList.add("dark");
-        temaBtn.textContent = "☀️ Modo Claro";
-
-    }
-
-    temaBtn.addEventListener("click", () => {
-
-
-}
-
-    if (temaBtn) {
-
     if (localStorage.getItem("tema") === "dark") {
         document.body.classList.add("dark");
         temaBtn.textContent = "☀️ Modo Claro";
@@ -417,4 +399,4 @@ if (temaBtn) {
 
     });
 
-    }
+}
