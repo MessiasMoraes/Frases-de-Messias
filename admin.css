@@ -129,3 +129,45 @@ header{
     padding:25px;
     border-radius:12px;
 }
+/* ==========================
+   MODO ESCURO
+========================== */
+
+body.dark{
+    background:#121212;
+    color:#ffffff;
+}
+
+body.dark .login-container,
+body.dark .painel,
+body.dark .card,
+body.dark .frase,
+body.dark .modal-conteudo{
+    background:#1e1e1e;
+    color:#ffffff;
+}
+
+body.dark input,
+body.dark select,
+body.dark textarea{
+    background:#2b2b2b;
+    color:#ffffff;
+    border:1px solid #555;
+}
+
+body.dark button{
+    background:#2563eb;
+}
+
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark p,
+body.dark small,
+body.dark label{
+    color:#ffffff;
+}
+
+#temaBtn{
+    margin-right:10px;
+}
