@@ -205,6 +205,8 @@ function mostrarLista(lista) {
     card.className = "frase";
 
     card.innerHTML = `
+      ${f.imagem ? `<img src="${f.imagem}" class="imagemFrase">` : ""}
+
       <h3>${f.categoria}</h3>
 
       <p>${f.texto}</p>
@@ -216,7 +218,7 @@ function mostrarLista(lista) {
       <button class="btnEditar">✏️ Editar</button>
 
       <button class="btnExcluir">🗑️ Excluir</button>
-    `;
+`;
 
     // EDITAR
     card.querySelector(".btnEditar").addEventListener("click", () => {
