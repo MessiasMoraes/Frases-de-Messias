@@ -44,6 +44,7 @@ const btnSair = document.getElementById("btnSair");
 const autor = document.getElementById("autor");
 const categoria = document.getElementById("categoria");
 const texto = document.getElementById("texto");
+const imagem = document.getElementById("imagem");
 const btnSalvar = document.getElementById("btnSalvar");
 
 // Lista
