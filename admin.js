@@ -139,7 +139,30 @@ async function carregarFrases() {
 
     totalFrases.textContent = frases.length;
 
-    mostrarLista(frases);
+// Atualiza estatísticas
+const categorias = [...new Set(frases.map(f => f.categoria))];
+const autores = [...new Set(frases.map(f => f.autor || "Sem autor"))];
+
+totalCategorias.textContent = categorias.length;
+totalAutores.textContent = autores.length;
+
+// Preenche o filtro de categorias
+filtroCategoria.innerHTML =
+'<option value="">📂 Todas as categorias</option>';
+
+categorias.forEach(categoria => {
+
+  const option = document.createElement("option");
+
+  option.value = categoria;
+  option.textContent = categoria;
+
+  filtroCategoria.appendChild(option);
+
+});
+
+// Mostra a lista
+mostrarLista(frases);
 
   } catch (erro) {
 
