@@ -171,3 +171,10 @@ body.dark label{
 #temaBtn{
     margin-right:10px;
 }
+.imagemFrase{
+    width:100%;
+    max-height:220px;
+    object-fit:cover;
+    border-radius:10px;
+    margin-bottom:10px;
+}
