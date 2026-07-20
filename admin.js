@@ -62,7 +62,7 @@ const editTexto = document.getElementById("editTexto");
 
 const btnAtualizar = document.getElementById("btnAtualizar");
 const btnCancelar = document.getElementById("btnCancelar");
-
+const temaBtn = document.getElementById("temaBtn");
 let frases = [];
 
 // LOGIN
