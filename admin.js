@@ -350,3 +350,21 @@ window.addEventListener("click", (e) => {
   }
 
 });
+filtroCategoria.addEventListener("change", () => {
+
+  const categoriaSelecionada = filtroCategoria.value;
+
+  if (categoriaSelecionada === "") {
+
+    mostrarLista(frases);
+    return;
+
+  }
+
+  const listaFiltrada = frases.filter(
+    f => f.categoria === categoriaSelecionada
+  );
+
+  mostrarLista(listaFiltrada);
+
+});
