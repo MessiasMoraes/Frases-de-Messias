@@ -50,7 +50,9 @@ const btnSalvar = document.getElementById("btnSalvar");
 const listaFrases = document.getElementById("listaFrases");
 const totalFrases = document.getElementById("totalFrases");
 const pesquisa = document.getElementById("pesquisa");
-
+const filtroCategoria = document.getElementById("filtroCategoria");
+const totalCategorias = document.getElementById("totalCategorias");
+const totalAutores = document.getElementById("totalAutores");
 // Modal
 const modalEditar = document.getElementById("modalEditar");
 const editId = document.getElementById("editId");
