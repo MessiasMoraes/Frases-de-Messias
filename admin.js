@@ -233,3 +233,95 @@ pesquisa.addEventListener("input", () => {
   mostrarLista(resultado);
 
 });
+// ==========================
+// ADICIONAR FRASE
+// ==========================
+
+btnSalvar.addEventListener("click", async () => {
+
+  const novoAutor = autor.value.trim();
+  const novaCategoria = categoria.value;
+  const novoTexto = texto.value.trim();
+
+  if (novoTexto === "") {
+    alert("Digite uma frase.");
+    return;
+  }
+
+  try {
+
+    await addDoc(collection(db, "frases"), {
+      autor: novoAutor,
+      categoria: novaCategoria,
+      texto: novoTexto,
+      data: new Date()
+    });
+
+    autor.value = "";
+    texto.value = "";
+
+    alert("✅ Frase adicionada com sucesso!");
+
+    carregarFrases();
+
+  } catch (erro) {
+
+    console.error(erro);
+
+    alert("Erro ao salvar a frase.");
+
+  }
+
+});
+
+// ==========================
+// ATUALIZAR FRASE
+// ==========================
+
+btnAtualizar.addEventListener("click", async () => {
+
+  try {
+
+    await updateDoc(
+      doc(db, "frases", editId.value),
+      {
+        autor: editAutor.value.trim(),
+        categoria: editCategoria.value,
+        texto: editTexto.value.trim()
+      }
+    );
+
+    modalEditar.style.display = "none";
+
+    alert("✅ Frase atualizada com sucesso!");
+
+    carregarFrases();
+
+  } catch (erro) {
+
+    console.error(erro);
+
+    alert("Erro ao atualizar a frase.");
+
+  }
+
+});
+
+// ==========================
+// FECHAR MODAL
+// ==========================
+
+btnCancelar.addEventListener("click", () => {
+
+  modalEditar.style.display = "none";
+
+});
+
+// Fechar clicando fora do modal
+window.addEventListener("click", (e) => {
+
+  if (e.target === modalEditar) {
+    modalEditar.style.display = "none";
+  }
+
+});
