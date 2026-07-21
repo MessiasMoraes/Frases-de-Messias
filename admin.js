@@ -272,7 +272,7 @@ async function enviarImagem(arquivo) {
     formData.append("image", arquivo);
 
     const resposta = await fetch(
-        "https://api.imgbb.com/1/upload?key=SUA_API_KEY",
+        "https://api.imgbb.com/1/upload?key=1f15b09ceff292f7ce016d4dea88b720",
         {
             method: "POST",
             body: formData
