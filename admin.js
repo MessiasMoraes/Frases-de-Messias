@@ -342,14 +342,19 @@ btnAtualizar.addEventListener("click", async () => {
 
   try {
 
-    await updateDoc(
-      doc(db, "frases", editId.value),
-      {
-        autor: editAutor.value.trim(),
-        categoria: editCategoria.value,
-        texto: editTexto.value.trim()
-      }
-    );
+    let urlImagem = "";
+
+    if (imagem.files.length > 0) {
+        urlImagem = await enviarImagem(imagem.files[0]);
+    }
+
+    await addDoc(collection(db, "frases"), {
+      autor: novoAutor,
+      categoria: novaCategoria,
+      texto: novoTexto,
+      imagem: urlImagem,
+      data: new Date()
+    });
 
     modalEditar.style.display = "none";
 
