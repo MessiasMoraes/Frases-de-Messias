@@ -325,7 +325,10 @@ btnSalvar.addEventListener("click", async () => {
 
     console.error(erro);
 
-    alert("Erro ao salvar a frase.");
+    alert(
+        "Erro: " + erro.message +
+        "\n\nCódigo: " + (erro.code || "Sem código")
+    );
 
   }
 
