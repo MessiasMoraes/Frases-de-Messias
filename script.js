@@ -136,13 +136,19 @@ function mostrarFrases(filtro = "") {
 
             <div class="estatisticas">
 
-                <span>❤️ ${Number(f.curtidas ?? 0).toLocaleString("pt-BR")} curtidas</span>
+    <span onclick="curtir('${f.id}')" style="cursor:pointer">
+        ❤️ ${Number(f.curtidas ?? 0).toLocaleString("pt-BR")} curtidas
+    </span>
 
-                <span>👁️ ${Number(f.visualizacoes ?? 0).toLocaleString("pt-BR")} visualizações</span>
+    <span>
+        👁️ ${Number(f.visualizacoes ?? 0).toLocaleString("pt-BR")} visualizações
+    </span>
 
-                <span>📤 ${Number(f.compartilhamentos ?? 0).toLocaleString("pt-BR")} compartilhamentos</span>
+    <span>
+        📤 ${Number(f.compartilhamentos ?? 0).toLocaleString("pt-BR")} compartilhamentos
+    </span>
 
-            </div>
+</div>
 
         `;
 
