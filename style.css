@@ -148,3 +148,97 @@ nav a{
 nav a:hover{
   text-decoration:underline;
 }
+/* ============================
+   CARD COM IMAGEM DE FUNDO
+============================ */
+
+.cardFrase{
+    position:relative;
+    width:100%;
+    height:450px;
+    margin:25px 0;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 10px 25px rgba(0,0,0,.25);
+}
+
+.imagemFrase{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.overlay{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:30px;
+    background:linear-gradient(
+        rgba(0,0,0,.25),
+        rgba(0,0,0,.55),
+        rgba(0,0,0,.75)
+    );
+}
+
+.aspas{
+    font-size:70px;
+    color:#ffffffaa;
+    margin-bottom:10px;
+}
+
+.textoFrase{
+    color:#fff;
+    font-size:30px;
+    font-weight:bold;
+    line-height:1.5;
+    text-shadow:2px 2px 10px #000;
+    max-width:85%;
+}
+
+.autorFrase{
+    margin-top:25px;
+    color:#fff;
+    font-size:20px;
+    font-style:italic;
+}
+
+.marca{
+    position:absolute;
+    bottom:20px;
+    right:20px;
+    color:white;
+    font-size:15px;
+    font-weight:bold;
+    opacity:.9;
+}
+
+.botoes{
+    position:absolute;
+    bottom:20px;
+    left:20px;
+    display:flex;
+    gap:10px;
+}
+
+.botoes button{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    font-size:22px;
+    border:none;
+    background:rgba(255,255,255,.2);
+    backdrop-filter:blur(10px);
+    color:white;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.botoes button:hover{
+    background:white;
+    color:#2563eb;
+    transform:scale(1.1);
+  }
