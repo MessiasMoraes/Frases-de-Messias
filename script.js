@@ -62,32 +62,48 @@ function mostrarFrases(filtro = "") {
   frasesFiltradas.forEach(f => {
 
     const card = document.createElement("div");
-    card.className = "frase";
+    card.className = "cardFrase";
 
-    const titulo = document.createElement("h3");
-    titulo.textContent = f.categoria;
+    card.innerHTML = `
+      <img
+        src="${f.imagem || 'img/fundo.jpg'}"
+        class="imagemFrase"
+      >
 
-    const texto = document.createElement("p");
-    texto.className = "textoFrase";
-    texto.textContent = f.texto;
+      <div class="overlay">
 
-    const btnCopiar = document.createElement("button");
-    btnCopiar.textContent = "📋 Copiar";
-    btnCopiar.addEventListener("click", () => copiar(f.texto));
+        <div class="aspas">❝</div>
 
-    const btnCompartilhar = document.createElement("button");
-    btnCompartilhar.textContent = "📤 Compartilhar";
-    btnCompartilhar.addEventListener("click", () => compartilhar(f.texto));
+        <p class="textoFrase">
+          ${f.texto}
+        </p>
 
-    const btnFavoritar = document.createElement("button");
-    btnFavoritar.textContent = "❤️ Favoritar";
-    btnFavoritar.addEventListener("click", () => favoritar(f.texto));
+        <span class="autorFrase">
+          ${f.autor || "Messias"}
+        </span>
 
-    card.appendChild(titulo);
-    card.appendChild(texto);
-    card.appendChild(btnCopiar);
-    card.appendChild(btnCompartilhar);
-    card.appendChild(btnFavoritar);
+        <div class="marca">
+          📖 Frases de Messias
+        </div>
+
+        <div class="botoes">
+
+          <button onclick="copiar(\`${f.texto}\`)">
+            📋
+          </button>
+
+          <button onclick="compartilhar(\`${f.texto}\`)">
+            📤
+          </button>
+
+          <button onclick="favoritar(\`${f.texto}\`)">
+            ❤️
+          </button>
+
+        </div>
+
+      </div>
+    `;
 
     lista.appendChild(card);
 
