@@ -148,3 +148,91 @@ function mostrarFrases(filtro = "") {
     });
 
                             }
+function copiar(texto){
+
+    navigator.clipboard.writeText(texto)
+    .then(() => {
+        alert("📋 Frase copiada com sucesso!");
+    })
+    .catch(() => {
+        alert("Não foi possível copiar a frase.");
+    });
+
+}
+
+function compartilhar(texto){
+
+    if(navigator.share){
+
+        navigator.share({
+            title: "Frases de Messias",
+            text: texto,
+            url: window.location.href
+        });
+
+    }else{
+
+        window.open(
+            "https://wa.me/?text=" + encodeURIComponent(texto),
+            "_blank"
+        );
+
+    }
+
+}
+
+function favoritar(texto){
+
+    if(!favoritos.includes(texto)){
+
+        favoritos.push(texto);
+
+        localStorage.setItem(
+            "favoritos",
+            JSON.stringify(favoritos)
+        );
+
+        alert("❤️ Frase adicionada aos favoritos!");
+
+    }else{
+
+        alert("Essa frase já está nos favoritos.");
+
+    }
+
+}
+
+function baixarImagem(botao){
+
+    const card = botao.closest(".cardFrase");
+
+    html2canvas(card).then(canvas => {
+
+        const link = document.createElement("a");
+
+        link.download = "frase-de-messias.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+
+    });
+
+}
+
+pesquisa.addEventListener("input", () => {
+
+    mostrarFrases(pesquisa.value);
+
+});
+
+copiarBtn.addEventListener("click", () => {
+
+    copiar(fraseDia.textContent.replace(/"/g, ""));
+
+});
+
+window.copiar = copiar;
+window.compartilhar = compartilhar;
+window.favoritar = favoritar;
+window.baixarImagem = baixarImagem;
+
+carregarFrases();
