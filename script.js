@@ -88,21 +88,15 @@ function mostrarFrases(filtro = "") {
 
         <div class="botoes">
 
-          <button onclick="copiar(\`${f.texto}\`)">
-            📋
-          </button>
+    <button onclick="copiar(\`${f.texto}\`)">📋</button>
 
-          <button onclick="compartilhar(\`${f.texto}\`)">
-            📤
-          </button>
+    <button onclick="compartilhar(\`${f.texto}\`)">📤</button>
 
-          <button onclick="favoritar(\`${f.texto}\`)">
-            ❤️
-          </button>
+    <button onclick="favoritar(\`${f.texto}\`)">❤️</button>
 
-        </div>
+    <button onclick="baixarImagem(this)">📥</button>
 
-      </div>
+</div>
     `;
 
     lista.appendChild(card);
