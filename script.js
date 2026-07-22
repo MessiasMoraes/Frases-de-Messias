@@ -12,36 +12,44 @@ const copiarBtn = document.getElementById("copiarBtn");
 const fraseDia = document.getElementById("fraseDia");
 
 
-async function carregarFrases() {
+async async function carregarFrases() {
 
-  frases = [];
+    frases = [];
+    lista.innerHTML = "<p>Carregando frases...</p>";
 
-  try {
+    try {
 
-    const consulta = await getDocs(collection(db, "frases"));
+        const consulta = await getDocs(collection(db, "frases"));
 
-    consulta.forEach((doc) => {
-      frases.push(doc.data());
-    });
+        consulta.forEach((doc) => {
 
-  } catch (e) {
+            frases.push({
+                id: doc.id,
+                ...doc.data()
+            });
 
-    lista.innerHTML = "<p>Erro ao carregar frases.</p>";
-    console.error(e);
-    return;
+        });
 
-  }
+    } catch (erro) {
 
-  if (frases.length === 0) {
-    lista.innerHTML = "<p>Nenhuma frase encontrada.</p>";
-    return;
-  }
+        console.error(erro);
+        lista.innerHTML = "<p>Erro ao carregar frases.</p>";
+        return;
 
-  const indice = Math.floor(Math.random() * frases.length);
+    }
 
-  fraseDia.textContent = `"${frases[indice].texto}"`;
+    if (frases.length === 0) {
 
-  mostrarFrases();
+        lista.innerHTML = "<p>Nenhuma frase encontrada.</p>";
+        return;
+
+    }
+
+    const indice = Math.floor(Math.random() * frases.length);
+
+    fraseDia.textContent = `"${frases[indice].texto}"`;
+
+    mostrarFrases();
 
 }
 
