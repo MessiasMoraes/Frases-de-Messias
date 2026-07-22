@@ -45,30 +45,77 @@ async function carregarFrases() {
 
 }
 
-<div class="botoes">
+function mostrarFrases(filtro = "") {
 
-    <button onclick="copiar(\`${f.texto}\`)">
-        📋 Copiar
-    </button>
+    lista.innerHTML = "";
 
-    <button onclick="favoritar(\`${f.texto}\`)">
-        ❤️ Favoritar
-    </button>
+    const frasesFiltradas = frases.filter(f =>
+        (f.texto || "").toLowerCase().includes(filtro.toLowerCase()) ||
+        (f.categoria || "").toLowerCase().includes(filtro.toLowerCase()) ||
+        (f.autor || "").toLowerCase().includes(filtro.toLowerCase())
+    );
 
-    <button onclick="compartilhar(\`${f.texto}\`)">
-        📤 Compartilhar
-    </button>
+    if (frasesFiltradas.length === 0) {
+        lista.innerHTML = "<p>Nenhuma frase encontrada.</p>";
+        return;
+    }
 
-    <button onclick="baixarImagem(this)">
-        📥 Baixar
-    </button>
+    frasesFiltradas.forEach(f => {
 
-</div>
-<div class="estatisticas">
-    ❤️ ${f.curtidas || 0} Curtidas
-    👁️ ${f.visualizacoes || 0} Visualizações
-    📤 ${f.compartilhamentos || 0} Compartilhamentos
-</div>
+        const card = document.createElement("div");
+        card.className = "cardFrase";
+
+        card.innerHTML = `
+            <div class="imagemFrase">
+
+                <img src="${f.imagem || "https://picsum.photos/800/1200"}">
+
+                <div class="overlay">
+
+                    <p class="textoFrase">
+                        "${f.texto}"
+                    </p>
+
+                    <span class="autorFrase">
+                        — ${f.autor || "Messias"}
+                    </span>
+
+                    <div class="marca">
+                        📖 Frases de Messias
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="botoes">
+
+                <button onclick="copiar(\`${f.texto}\`)">📋 Copiar</button>
+
+                <button onclick="favoritar(\`${f.texto}\`)">❤️ Favoritar</button>
+
+                <button onclick="compartilhar(\`${f.texto}\`)">📤 Compartilhar</button>
+
+                <button onclick="baixarImagem(this)">📥 Baixar</button>
+
+            </div>
+
+            <div class="estatisticas">
+
+                ❤️ ${f.curtidas || 0} Curtidas
+
+                👁️ ${f.visualizacoes || 0} Visualizações
+
+                📤 ${f.compartilhamentos || 0} Compartilhamentos
+
+            </div>
+        `;
+
+        lista.appendChild(card);
+
+    });
+
+}
 function copiar(texto){
     navigator.clipboard.writeText(texto);
     alert("Frase copiada!");
