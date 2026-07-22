@@ -55,8 +55,15 @@ async async function carregarFrases() {
 
 mostrarFrases()
 function copiar(texto){
-    navigator.clipboard.writeText(texto);
-    alert("Frase copiada!");
+
+    navigator.clipboard.writeText(texto)
+    .then(() => {
+        alert("📋 Frase copiada com sucesso!");
+    })
+    .catch(() => {
+        alert("Não foi possível copiar a frase.");
+    });
+
 }
 
 function compartilhar(texto){
