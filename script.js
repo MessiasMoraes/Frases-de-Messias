@@ -53,73 +53,7 @@ async async function carregarFrases() {
 
 }
 
-function mostrarFrases(filtro = "") {
-
-    lista.innerHTML = "";
-
-    const frasesFiltradas = frases.filter(f =>
-        (f.texto || "").toLowerCase().includes(filtro.toLowerCase()) ||
-        (f.categoria || "").toLowerCase().includes(filtro.toLowerCase()) ||
-        (f.autor || "").toLowerCase().includes(filtro.toLowerCase())
-    );
-
-    if (frasesFiltradas.length === 0) {
-        lista.innerHTML = "<p>Nenhuma frase encontrada.</p>";
-        return;
-    }
-
-    frasesFiltradas.forEach(f => {
-
-        const card = document.createElement("div");
-        card.className = "cardFrase";
-
-        card.innerHTML = `
-            <div class="imagemFrase">
-
-                <img src="${f.imagem || "https://picsum.photos/800/1200"}">
-
-                <div class="overlay">
-
-                    <p class="textoFrase">
-                        "${f.texto}"
-                    </p>
-
-                    <span class="autorFrase">
-                        — ${f.autor || "Messias"}
-                    </span>
-
-                    <div class="marca">
-                        📖 Frases de Messias
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="botoes">
-
-                <button onclick="copiar(\`${f.texto}\`)">📋 Copiar</button>
-
-                <button onclick="favoritar(\`${f.texto}\`)">❤️ Favoritar</button>
-
-                <button onclick="compartilhar(\`${f.texto}\`)">📤 Compartilhar</button>
-
-                <button onclick="baixarImagem(this)">📥 Baixar</button>
-
-            </div>
-
-            <div class="estatisticas">
-    <span>❤️ ${Number(f.curtidas || 245).toLocaleString("pt-BR")} curtidas</span>
-    <span>👁️ ${Number(f.visualizacoes || 1234).toLocaleString("pt-BR")} visualizações</span>
-    <span>📤 ${Number(f.compartilhamentos || 89).toLocaleString("pt-BR")} compartilhamentos</span>
-</div>
-        `;
-
-        lista.appendChild(card);
-
-    });
-
-}
+mostrarFrases()
 function copiar(texto){
     navigator.clipboard.writeText(texto);
     alert("Frase copiada!");
