@@ -243,3 +243,52 @@ nav a:hover{
     background:#1d4ed8;
     transform:translateY(-2px);
 }
+.cardFrase{
+    background:#fff;
+    margin:25px auto;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
+    max-width:500px;
+}
+
+.imagemFrase{
+    position:relative;
+}
+
+.imagemFrase img{
+    width:100%;
+    height:500px;
+    object-fit:cover;
+    display:block;
+}
+
+.overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    color:#fff;
+    text-align:center;
+    padding:20px;
+}
+
+.textoFrase{
+    font-size:26px;
+    font-weight:bold;
+    line-height:1.5;
+}
+
+.autorFrase{
+    margin-top:20px;
+    font-size:18px;
+}
+
+.marca{
+    margin-top:30px;
+    font-size:14px;
+    opacity:.9;
+}
