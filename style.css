@@ -292,3 +292,26 @@ nav a:hover{
     font-size:14px;
     opacity:.9;
 }
+.botoes{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    padding:15px;
+    background:#fff;
+}
+
+.botoes button{
+    background:#2563eb;
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    padding:10px 15px;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.botoes button:hover{
+    opacity:.9;
+}
