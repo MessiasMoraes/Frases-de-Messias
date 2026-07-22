@@ -66,7 +66,7 @@ function mostrarFrases(filtro = "") {
 
     card.innerHTML = `
       <img
-        src="${f.imagem || 'img/fundo.jpg'}"
+        src="${f.imagem || 'https://picsum.photos/800/1200'}"
         class="imagemFrase"
       >
 
