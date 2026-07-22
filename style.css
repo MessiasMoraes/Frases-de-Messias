@@ -315,3 +315,21 @@ nav a:hover{
 .botoes button:hover{
     opacity:.9;
 }
+.estatisticas{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:35px;
+    flex-wrap:wrap;
+    padding:15px;
+    font-size:16px;
+    font-weight:bold;
+    color:#555;
+    border-top:1px solid #eee;
+}
+
+.estatisticas span{
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
