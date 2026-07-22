@@ -169,3 +169,22 @@ window.copiar = copiar;
 window.compartilhar = compartilhar;
 window.favoritar = favoritar;
 carregarFrases();
+function baixarImagem(botao){
+
+    const card = botao.closest(".cardFrase");
+
+    html2canvas(card).then(canvas => {
+
+        const link = document.createElement("a");
+
+        link.download = "frase-de-messias.png";
+
+        link.href = canvas.toDataURL("image/png");
+
+        link.click();
+
+    });
+
+}
+
+window.baixarImagem = baixarImagem;
