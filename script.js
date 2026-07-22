@@ -64,7 +64,11 @@ async function carregarFrases() {
     </button>
 
 </div>
-
+<div class="estatisticas">
+    ❤️ ${f.curtidas || 0} Curtidas
+    👁️ ${f.visualizacoes || 0} Visualizações
+    📤 ${f.compartilhamentos || 0} Compartilhamentos
+</div>
 function copiar(texto){
     navigator.clipboard.writeText(texto);
     alert("Frase copiada!");
