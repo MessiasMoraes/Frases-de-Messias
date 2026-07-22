@@ -120,9 +120,9 @@ function mostrarFrases(filtro = "") {
                     📋 Copiar
                 </button>
 
-                <button onclick='favoritar(${JSON.stringify(f.texto)})'>
-                    ❤️ Favoritar
-                </button>
+                <button onclick="curtir('${f.id}')">
+    ❤️ Curtir
+</button>
 
                 <button onclick='compartilhar(${JSON.stringify(f.texto)})'>
                     📤 Compartilhar
