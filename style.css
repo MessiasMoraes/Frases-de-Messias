@@ -217,28 +217,29 @@ nav a:hover{
 }
 
 .botoes{
-    position:absolute;
-    bottom:20px;
-    left:20px;
     display:flex;
-    gap:10px;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:12px;
+    padding:18px;
+    background:#fff;
 }
 
 .botoes button{
-    width:48px;
-    height:48px;
-    border-radius:50%;
-    font-size:22px;
+    flex:1;
+    min-width:150px;
+    padding:14px 18px;
     border:none;
-    background:rgba(255,255,255,.2);
-    backdrop-filter:blur(10px);
-    color:white;
+    border-radius:10px;
+    background:#2563eb;
+    color:#fff;
+    font-size:16px;
+    font-weight:bold;
     cursor:pointer;
     transition:.3s;
 }
 
 .botoes button:hover{
-    background:white;
-    color:#2563eb;
-    transform:scale(1.1);
-  }
+    background:#1d4ed8;
+    transform:translateY(-2px);
+}
