@@ -305,12 +305,15 @@ btnSalvar.addEventListener("click", async () => {
     }
 
     await addDoc(collection(db, "frases"), {
-      autor: novoAutor,
-      categoria: novaCategoria,
-      texto: novoTexto,
-      imagem: urlImagem,
-      data: new Date()
-    });
+    autor: novoAutor,
+    categoria: novaCategoria,
+    texto: novoTexto,
+    imagem: urlImagem,
+    curtidas: 0,
+    visualizacoes: 0,
+    compartilhamentos: 0,
+    data: new Date()
+});
 
     autor.value = "";
     texto.value = "";
