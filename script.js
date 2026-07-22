@@ -233,7 +233,26 @@ async function curtir(id){
     }
 
 }
+async function visualizar(id){
 
+    try{
+
+        await updateDoc(
+            doc(db, "frases", id),
+            {
+                visualizacoes: increment(1)
+            }
+        );
+
+    }catch(erro){
+
+        console.error(erro);
+
+    }
+
+}
+
+window.visualizar = visualizar;
 window.curtir = curtir;
 function baixarImagem(botao){
 
