@@ -45,65 +45,25 @@ async function carregarFrases() {
 
 }
 
-function mostrarFrases(filtro = "") {
+<div class="botoes">
 
-  lista.innerHTML = "";
+    <button onclick="copiar(\`${f.texto}\`)">
+        📋 Copiar
+    </button>
 
-  const frasesFiltradas = frases.filter(f =>
-    (f.texto || "").toLowerCase().includes(filtro.toLowerCase()) ||
-    (f.categoria || "").toLowerCase().includes(filtro.toLowerCase())
-  );
+    <button onclick="favoritar(\`${f.texto}\`)">
+        ❤️ Favoritar
+    </button>
 
-  if (frasesFiltradas.length === 0) {
-    lista.innerHTML = "<p>Nenhuma frase encontrada.</p>";
-    return;
-  }
+    <button onclick="compartilhar(\`${f.texto}\`)">
+        📤 Compartilhar
+    </button>
 
-  frasesFiltradas.forEach(f => {
-
-    const card = document.createElement("div");
-    card.className = "cardFrase";
-
-    card.innerHTML = `
-      <img
-        src="${f.imagem || 'https://picsum.photos/800/1200'}"
-        class="imagemFrase"
-      >
-
-      <div class="overlay">
-
-        <div class="aspas">❝</div>
-
-        <p class="textoFrase">
-          ${f.texto}
-        </p>
-
-        <span class="autorFrase">
-          ${f.autor || "Messias"}
-        </span>
-
-        <div class="marca">
-          📖 Frases de Messias
-        </div>
-
-        <div class="botoes">
-
-    <button onclick="copiar(\`${f.texto}\`)">📋</button>
-
-    <button onclick="compartilhar(\`${f.texto}\`)">📤</button>
-
-    <button onclick="favoritar(\`${f.texto}\`)">❤️</button>
-
-    <button onclick="baixarImagem(this)">📥</button>
+    <button onclick="baixarImagem(this)">
+        📥 Baixar
+    </button>
 
 </div>
-    `;
-
-    lista.appendChild(card);
-
-  });
-
-}
 
 function copiar(texto){
     navigator.clipboard.writeText(texto);
