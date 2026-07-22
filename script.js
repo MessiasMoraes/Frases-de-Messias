@@ -101,14 +101,10 @@ function mostrarFrases(filtro = "") {
             </div>
 
             <div class="estatisticas">
-
-                ❤️ ${f.curtidas || 0} Curtidas
-
-                👁️ ${f.visualizacoes || 0} Visualizações
-
-                📤 ${f.compartilhamentos || 0} Compartilhamentos
-
-            </div>
+    <span>❤️ ${Number(f.curtidas || 245).toLocaleString("pt-BR")} curtidas</span>
+    <span>👁️ ${Number(f.visualizacoes || 1234).toLocaleString("pt-BR")} visualizações</span>
+    <span>📤 ${Number(f.compartilhamentos || 89).toLocaleString("pt-BR")} compartilhamentos</span>
+</div>
         `;
 
         lista.appendChild(card);
