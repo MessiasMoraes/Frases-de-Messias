@@ -205,6 +205,30 @@ function favoritar(texto){
 
 }
 
+async function curtir(id){
+
+    try{
+
+        await updateDoc(
+            doc(db, "frases", id),
+            {
+                curtidas: increment(1)
+            }
+        );
+
+        carregarFrases();
+
+    }catch(erro){
+
+        console.error(erro);
+
+        alert("Erro ao curtir a frase.");
+
+    }
+
+}
+
+window.curtir = curtir;
 function baixarImagem(botao){
 
     const card = botao.closest(".cardFrase");
