@@ -169,7 +169,22 @@ function copiar(texto){
 
 }
 
-function compartilhar(texto){
+async function compartilhar(id, texto){
+
+    try{
+
+        await updateDoc(
+            doc(db, "frases", id),
+            {
+                compartilhamentos: increment(1)
+            }
+        );
+
+    }catch(erro){
+
+        console.error(erro);
+
+    }
 
     if(navigator.share){
 
@@ -188,7 +203,11 @@ function compartilhar(texto){
 
     }
 
+    carregarFrases();
+
 }
+
+window.compartilhar = compartilhar;
 
 function favoritar(texto){
 
