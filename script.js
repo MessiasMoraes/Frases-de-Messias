@@ -124,9 +124,9 @@ function mostrarFrases(filtro = "") {
     ❤️ Curtir
 </button>
 
-                <button onclick='compartilhar(${JSON.stringify(f.texto)})'>
-                    📤 Compartilhar
-                </button>
+                <button onclick="compartilhar('${f.id}', ${JSON.stringify(f.texto)})">
+    📤 Compartilhar
+</button>
 
                 <button onclick="baixarImagem(this)">
                     📥 Baixar
