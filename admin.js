@@ -371,3 +371,68 @@ btnSalvar.addEventListener("click", async () => {
     }
 
 });
+// ==========================
+// ATUALIZAR FRASE
+// ==========================
+
+btnAtualizar.addEventListener("click", async () => {
+
+    try {
+
+        const dadosAtualizados = {
+            autor: editAutor.value.trim(),
+            categoria: editCategoria.value,
+            texto: editTexto.value.trim()
+        };
+
+        if (imagem.files.length > 0) {
+            dadosAtualizados.imagem = await enviarImagem(imagem.files[0]);
+        }
+
+        await updateDoc(
+            doc(db, "frases", editId.value),
+            dadosAtualizados
+        );
+
+        modalEditar.style.display = "none";
+
+        alert("✅ Frase atualizada com sucesso!");
+
+        carregarFrases();
+
+    } catch (erro) {
+
+        console.error(erro);
+
+        alert("Erro ao atualizar a frase.");
+
+    }
+
+});
+
+// ==========================
+// FECHAR MODAL
+// ==========================
+
+btnCancelar.addEventListener("click", () => {
+
+    modalEditar.style.display = "none";
+
+});
+
+window.addEventListener("click", (e) => {
+
+    if (e.target === modalEditar) {
+        modalEditar.style.display = "none";
+    }
+
+});
+
+// ==========================
+// MODO ESCURO
+// ==========================
+
+if (temaBtn) {
+
+    if (localStorage.getItem("tema") === "dark") {
+       
