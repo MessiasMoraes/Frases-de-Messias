@@ -34,6 +34,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+const storage = getStorage(app);
 // Login
 const loginContainer = document.getElementById("loginContainer");
 const painel = document.getElementById("painel");
