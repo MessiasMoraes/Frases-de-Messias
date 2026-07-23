@@ -277,3 +277,45 @@ function mostrarLista(lista) {
     });
 
               }
+// ==========================
+// PESQUISA
+// ==========================
+
+pesquisa.addEventListener("input", () => {
+
+    const filtro = pesquisa.value.toLowerCase();
+
+    const resultado = frases.filter((f) =>
+
+        (f.texto || "").toLowerCase().includes(filtro) ||
+        (f.autor || "").toLowerCase().includes(filtro) ||
+        (f.categoria || "").toLowerCase().includes(filtro)
+
+    );
+
+    mostrarLista(resultado);
+
+});
+
+// ==========================
+// FILTRO POR CATEGORIA
+// ==========================
+
+filtroCategoria.addEventListener("change", () => {
+
+    const categoriaSelecionada = filtroCategoria.value;
+
+    if (categoriaSelecionada === "") {
+
+        mostrarLista(frases);
+        return;
+
+    }
+
+    const listaFiltrada = frases.filter(
+        f => f.categoria === categoriaSelecionada
+    );
+
+    mostrarLista(listaFiltrada);
+
+});
