@@ -290,7 +290,23 @@ async function enviarImagem(arquivo) {
 // ==========================
 // ADICIONAR FRASE
 // ==========================
+async function enviarImagem(arquivo){
 
+    if(!arquivo){
+        return "";
+    }
+
+    const nomeArquivo = `frases/${Date.now()}_${arquivo.name}`;
+
+    const referencia = ref(storage, nomeArquivo);
+
+    await uploadBytes(referencia, arquivo);
+
+    const url = await getDownloadURL(referencia);
+
+    return url;
+
+}
 btnSalvar.addEventListener("click", async () => {
 
   const novoAutor = autor.value.trim();
