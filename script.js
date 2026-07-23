@@ -203,49 +203,35 @@ function favoritar(texto){
 
 }
 
-async function compartilhar(id,texto){
+async function compartilhar(id, texto){
 
-    try{
-
-        await updateDoc(
-            doc(db,"frases",id),
-            {
-                compartilhamentos: increment(1)
-            }
-        );
-
-    }catch(erro){
-
-        console.error(erro);
-
-    }
+    alert("Botão compartilhar clicado!");
 
     if(navigator.share){
 
         try{
 
             await navigator.share({
-                title:"Frases de Messias",
-                text:texto,
-                url:window.location.href
+                title: "Frases de Messias",
+                text: texto
             });
 
         }catch(e){
-            return;
+            console.log(e);
         }
 
     }else{
 
         window.open(
-            "https://wa.me/?text="+encodeURIComponent(texto),
+            "https://wa.me/?text=" + encodeURIComponent(texto),
             "_blank"
         );
 
     }
 
-    carregarFrases();
-
 }
+
+window.compartilhar = compartilhar;
 
 function baixarImagem(botao){
 
