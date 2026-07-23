@@ -150,6 +150,8 @@ function mostrarFrases(filtro = ""){
 
         lista.appendChild(card);
 
+visualizar(f.id);
+
     });
 
 }
