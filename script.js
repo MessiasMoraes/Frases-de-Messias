@@ -269,6 +269,34 @@ window.curtir = curtir;
 window.favoritar = favoritar;
 window.compartilhar = compartilhar;
 window.baixarImagem = baixarImagem;
+async function visualizar(id){
+
+    const chave = "view_" + id;
+
+    if(localStorage.getItem(chave)){
+        return;
+    }
+
+    try{
+
+        await updateDoc(
+            doc(db,"frases",id),
+            {
+                visualizacoes: increment(1)
+            }
+        );
+
+        localStorage.setItem(chave,"1");
+
+    }catch(erro){
+
+        console.error(erro);
+
+    }
+
+}
+
+window.visualizar = visualizar;
 function copiar(texto){
 
     navigator.clipboard.writeText(texto)
