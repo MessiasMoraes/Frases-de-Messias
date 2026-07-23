@@ -155,3 +155,60 @@ async function enviarImagem(arquivo) {
     return dados.data.url;
 
 }
+// ==========================
+// CARREGAR FRASES
+// ==========================
+
+async function carregarFrases() {
+
+    frases = [];
+
+    listaFrases.innerHTML = "<p>Carregando frases...</p>";
+
+    try {
+
+        const consulta = await getDocs(collection(db, "frases"));
+
+        consulta.forEach((item) => {
+
+            frases.push({
+                id: item.id,
+                ...item.data()
+            });
+
+        });
+
+        totalFrases.textContent = frases.length;
+
+        const categorias = [...new Set(frases.map(f => f.categoria || "Sem categoria"))];
+        const autores = [...new Set(frases.map(f => f.autor || "Sem autor"))];
+
+        totalCategorias.textContent = categorias.length;
+        totalAutores.textContent = autores.length;
+
+        filtroCategoria.innerHTML =
+            '<option value="">📂 Todas as categorias</option>';
+
+        categorias.forEach(cat => {
+
+            const option = document.createElement("option");
+
+            option.value = cat;
+            option.textContent = cat;
+
+            filtroCategoria.appendChild(option);
+
+        });
+
+        mostrarLista(frases);
+
+    } catch (erro) {
+
+        console.error(erro);
+
+        listaFrases.innerHTML =
+            "<p>Erro ao carregar as frases.</p>";
+
+    }
+
+}
