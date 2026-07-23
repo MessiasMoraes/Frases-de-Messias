@@ -158,7 +158,7 @@ visualizar(f.id);
     });
 
 }
-}
+
 async function curtir(id){
 
     try{
