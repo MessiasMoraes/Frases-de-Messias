@@ -68,3 +68,58 @@ const btnAtualizar = document.getElementById("btnAtualizar");
 const btnCancelar = document.getElementById("btnCancelar");
 
 const temaBtn = document.getElementById("temaBtn");
+// ==========================
+// LOGIN
+// ==========================
+
+btnLogin.addEventListener("click", async () => {
+
+    if (!email.value || !senha.value) {
+        alert("Informe o e-mail e a senha.");
+        return;
+    }
+
+    try {
+
+        await signInWithEmailAndPassword(
+            auth,
+            email.value,
+            senha.value
+        );
+
+    } catch (e) {
+
+        console.error(e);
+
+        alert(
+            "Código: " + e.code +
+            "\n\nMensagem: " + e.message
+        );
+
+    }
+
+});
+
+btnSair.addEventListener("click", async () => {
+
+    await signOut(auth);
+
+});
+
+onAuthStateChanged(auth, (user) => {
+
+    if (user) {
+
+        loginContainer.style.display = "none";
+        painel.style.display = "block";
+
+        carregarFrases();
+
+    } else {
+
+        loginContainer.style.display = "block";
+        painel.style.display = "none";
+
+    }
+
+});
