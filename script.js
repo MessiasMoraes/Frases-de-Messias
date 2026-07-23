@@ -188,11 +188,17 @@ async function compartilhar(id, texto){
 
     if(navigator.share){
 
-        navigator.share({
-            title: "Frases de Messias",
-            text: texto,
-            url: window.location.href
-        });
+        try{
+
+            await navigator.share({
+                title: "Frases de Messias",
+                text: texto,
+                url: window.location.href
+            });
+
+        }catch(e){
+            // Usuário cancelou o compartilhamento
+        }
 
     }else{
 
