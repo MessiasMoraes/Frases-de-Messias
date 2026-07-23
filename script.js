@@ -57,9 +57,12 @@ async function carregarFrases(){
 
     const indice=Math.floor(Math.random()*frases.length);
 
-    fraseDia.textContent=`"${frases[indice].texto}"`;
+    fraseDia.textContent = `"${frases[indice].texto}"`;
 
-    mostrarFrases();
+mostrarFrases();
+
+}
+
 function mostrarFrases(filtro = ""){
 
     lista.innerHTML = "";
