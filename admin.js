@@ -123,3 +123,35 @@ onAuthStateChanged(auth, (user) => {
     }
 
 });
+// ==========================
+// UPLOAD DE IMAGEM (ImgBB)
+// ==========================
+
+async function enviarImagem(arquivo) {
+
+    if (!arquivo) {
+        return "";
+    }
+
+    const apiKey = "1f15b09ceff292f7ce016d4dea88b720";
+
+    const formData = new FormData();
+    formData.append("image", arquivo);
+
+    const resposta = await fetch(
+        "https://api.imgbb.com/1/upload?key=" + apiKey,
+        {
+            method: "POST",
+            body: formData
+        }
+    );
+
+    const dados = await resposta.json();
+
+    if (!dados.success) {
+        throw new Error("Erro ao enviar a imagem para o ImgBB.");
+    }
+
+    return dados.data.url;
+
+}
