@@ -212,3 +212,68 @@ async function carregarFrases() {
     }
 
 }
+// ==========================
+// MOSTRAR LISTA
+// ==========================
+
+function mostrarLista(lista) {
+
+    listaFrases.innerHTML = "";
+
+    if (lista.length === 0) {
+
+        listaFrases.innerHTML =
+            "<p>Nenhuma frase encontrada.</p>";
+
+        return;
+
+    }
+
+    lista.forEach((f) => {
+
+        const card = document.createElement("div");
+
+        card.className = "frase";
+
+        card.innerHTML = `
+            ${f.imagem ? `<img src="${f.imagem}" class="imagemFrase">` : ""}
+
+            <h3>${f.categoria || "Sem categoria"}</h3>
+
+            <p>${f.texto}</p>
+
+            <small>${f.autor || "Sem autor"}</small>
+
+            <br><br>
+
+            <button class="btnEditar">✏️ Editar</button>
+
+            <button class="btnExcluir">🗑️ Excluir</button>
+        `;
+
+        card.querySelector(".btnEditar").addEventListener("click", () => {
+
+            editId.value = f.id;
+            editAutor.value = f.autor || "";
+            editCategoria.value = f.categoria || "";
+            editTexto.value = f.texto;
+
+            modalEditar.style.display = "flex";
+
+        });
+
+        card.querySelector(".btnExcluir").addEventListener("click", async () => {
+
+            if (!confirm("Deseja excluir esta frase?")) return;
+
+            await deleteDoc(doc(db, "frases", f.id));
+
+            carregarFrases();
+
+        });
+
+        listaFrases.appendChild(card);
+
+    });
+
+              }
