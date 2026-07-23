@@ -338,7 +338,9 @@ btnSalvar.addEventListener("click", async () => {
 });
 
     autor.value = "";
-    texto.value = "";
+categoria.selectedIndex = 0;
+texto.value = "";
+imagem.value = "";
 
     alert("✅ Frase adicionada com sucesso!");
 
