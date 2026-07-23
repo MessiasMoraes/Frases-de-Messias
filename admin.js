@@ -939,4 +939,30 @@ filtroCategoria.addEventListener("change", () => {
   mostrarLista(listaFiltrada);
 
 });
-const temaBtn = document.getElementById("temaBtn");
+// ==========================
+// MODO ESCURO
+// ==========================
+
+if (temaBtn) {
+
+// Carrega a preferência salva  
+if (localStorage.getItem("tema") === "dark") {  
+    document.body.classList.add("dark");  
+    temaBtn.textContent = "☀️ Modo Claro";  
+}  
+
+temaBtn.addEventListener("click", () => {  
+
+    document.body.classList.toggle("dark");  
+
+    if (document.body.classList.contains("dark")) {  
+        localStorage.setItem("tema", "dark");  
+        temaBtn.textContent = "☀️ Modo Claro";  
+    } else {  
+        localStorage.setItem("tema", "light");  
+        temaBtn.textContent = "🌙 Modo Escuro";  
+    }  
+
+});
+
+}
