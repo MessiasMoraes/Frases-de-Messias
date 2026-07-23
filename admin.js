@@ -758,6 +758,7 @@ filtroCategoria.addEventListener("change", () => {
   mostrarLista(listaFiltrada);
 
 });
+  const temaBtn = document.getElementById("temaBtn");
 // ==========================
 // MODO ESCURO
 // ==========================
