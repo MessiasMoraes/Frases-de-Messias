@@ -237,15 +237,17 @@ function baixarImagem(botao){
 
     const card = botao.closest(".cardFrase");
 
-    const texto = card.querySelector(".textoFrase").innerText
-        .replace(/[^a-zA-Z0-9]/g, "_")
-        .substring(0, 40);
+    const imagemFrase = card.querySelector(".imagemFrase");
 
-    html2canvas(card).then(canvas => {
+    html2canvas(imagemFrase, {
+        backgroundColor: null,
+        scale: 2
+    }).then(canvas => {
 
         const link = document.createElement("a");
 
         link.download = `frase-${Date.now()}.png`;
+
         link.href = canvas.toDataURL("image/png");
 
         link.click();
