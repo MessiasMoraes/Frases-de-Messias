@@ -237,13 +237,16 @@ function baixarImagem(botao){
 
     const card = botao.closest(".cardFrase");
 
-    html2canvas(card).then(canvas=>{
+    const texto = card.querySelector(".textoFrase").innerText
+        .replace(/[^a-zA-Z0-9]/g, "_")
+        .substring(0, 40);
 
-        const link=document.createElement("a");
+    html2canvas(card).then(canvas => {
 
-        link.download="frase-de-messias.png";
+        const link = document.createElement("a");
 
-        link.href=canvas.toDataURL("image/png");
+        link.download = texto + ".png";
+        link.href = canvas.toDataURL("image/png");
 
         link.click();
 
