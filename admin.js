@@ -18,12 +18,12 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "SUA_API_KEY",
-  authDomain: "SEU_AUTH_DOMAIN",
-  projectId: "SEU_PROJECT_ID",
-  storageBucket: "SEU_STORAGE_BUCKET",
-  messagingSenderId: "SEU_MESSAGING_SENDER_ID",
-  appId: "SEU_APP_ID"
+  apiKey: "AIzaSyAdPWj_82SH4EqALPRApgUYuLdxGgl-DGA",
+  authDomain: "frases-de-messias-ca952.firebaseapp.com",
+  projectId: "frases-de-messias-ca952",
+  storageBucket: "frases-de-messias-ca952.firebasestorage.app",
+  messagingSenderId: "450273738706",
+  appId: "1:450273738706:web:da402ceac24dc880f5520b"
 };
 
 const app = initializeApp(firebaseConfig);
