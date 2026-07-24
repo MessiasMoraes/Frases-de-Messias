@@ -178,3 +178,57 @@ async function enviarImagem(arquivo) {
 
     return dados.data.url;
 }
+// ==========================
+// SALVAR FRASE
+// ==========================
+
+btnSalvar.addEventListener("click", async () => {
+
+    const novoAutor = autor.value.trim();
+    const novaCategoria = categoria.value;
+    const novoTexto = texto.value.trim();
+
+    if (novoTexto === "") {
+        alert("Digite uma frase.");
+        return;
+    }
+
+    try {
+
+        let urlImagem = "";
+
+        if (imagem.files.length > 0) {
+            urlImagem = await enviarImagem(imagem.files[0]);
+        }
+
+        await addDoc(collection(db, "frases"), {
+            autor: novoAutor,
+            categoria: novaCategoria,
+            texto: novoTexto,
+            imagem: urlImagem,
+            curtidas: 0,
+            visualizacoes: 0,
+            compartilhamentos: 0,
+            data: new Date()
+        });
+
+        autor.value = "";
+        categoria.selectedIndex = 0;
+        texto.value = "";
+        imagem.value = "";
+
+        preview.src = "";
+        preview.style.display = "none";
+
+        alert("✅ Frase salva com sucesso!");
+
+        carregarFrases();
+
+    } catch (erro) {
+
+        console.error(erro);
+        alert("Erro ao salvar: " + erro.message);
+
+    }
+
+});
