@@ -232,3 +232,66 @@ btnSalvar.addEventListener("click", async () => {
     }
 
 });
+// ==========================
+// CARREGAR FRASES
+// ==========================
+
+async function carregarFrases() {
+
+    frases = [];
+
+    listaFrases.innerHTML = "<p>Carregando frases...</p>";
+
+    try {
+
+        const consulta = await getDocs(collection(db, "frases"));
+
+        consulta.forEach((docItem) => {
+
+            frases.push({
+                id: docItem.id,
+                ...docItem.data()
+            });
+
+        });
+
+        totalFrases.textContent = frases.length;
+
+        const categorias = [...new Set(frases.map(f => f.categoria || "Sem categoria"))];
+        const autores = [...new Set(frases.map(f => f.autor || "Sem autor"))];
+
+        totalCategorias.textContent = categorias.length;
+        totalAutores.textContent = autores.length;
+
+        listaFrases.innerHTML = "";
+
+        frases.forEach((f) => {
+
+            const card = document.createElement("div");
+
+            card.className = "frase";
+
+            card.innerHTML = `
+                ${f.imagem ? `<img src="${f.imagem}" class="imagemFrase">` : ""}
+
+                <h3>${f.categoria}</h3>
+
+                <p>${f.texto}</p>
+
+                <small>${f.autor || "Sem autor"}</small>
+            `;
+
+            listaFrases.appendChild(card);
+
+        });
+
+    } catch (erro) {
+
+        console.error(erro);
+
+        listaFrases.innerHTML =
+            "<p>Erro ao carregar as frases.</p>";
+
+    }
+
+    }
