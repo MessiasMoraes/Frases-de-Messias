@@ -245,7 +245,7 @@ function baixarImagem(botao){
 
         const link = document.createElement("a");
 
-        link.download = texto + ".png";
+        link.download = `frase-${Date.now()}.png`;
         link.href = canvas.toDataURL("image/png");
 
         link.click();
