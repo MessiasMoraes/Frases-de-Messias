@@ -272,14 +272,20 @@ async function carregarFrases() {
             card.className = "frase";
 
             card.innerHTML = `
-                ${f.imagem ? `<img src="${f.imagem}" class="imagemFrase">` : ""}
+    ${f.imagem ? `<img src="${f.imagem}" class="imagemFrase">` : ""}
 
-                <h3>${f.categoria}</h3>
+    <h3>${f.categoria}</h3>
 
-                <p>${f.texto}</p>
+    <p>${f.texto}</p>
 
-                <small>${f.autor || "Sem autor"}</small>
-            `;
+    <small>${f.autor || "Sem autor"}</small>
+
+    <br><br>
+
+    <button class="btnEditar">✏️ Editar</button>
+
+    <button class="btnExcluir">🗑️ Excluir</button>
+`;
 
             listaFrases.appendChild(card);
 
