@@ -1,197 +1,219 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Administrativo - Frases de Messias</title>
 
-  <link rel="stylesheet" href="admin.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Painel Administrativo - Frases de Messias</title>
+
+<link rel="stylesheet" href="admin.css">
+
 </head>
+
 <body>
 
-<div class="login-container" id="loginContainer">
+<!-- LOGIN -->
 
-  <h1>📖 Frases de Messias</h1>
+<div id="loginContainer" class="login-container">
 
-  <h2>Login do Administrador</h2>
+<h1>📖 Frases de Messias</h1>
 
-  <input
-    type="email"
-    id="email"
-    placeholder="E-mail">
+<h2>Login do Administrador</h2>
 
-  <input
-    type="password"
-    id="senha"
-    placeholder="Senha">
+<input
+type="email"
+id="email"
+placeholder="E-mail">
 
-  <button id="btnLogin">
-    Entrar
-  </button>
+<input
+type="password"
+id="senha"
+placeholder="Senha">
+
+<button id="btnLogin">
+Entrar
+</button>
 
 </div>
 
-<div class="painel" id="painel" style="display:none;">
+<!-- PAINEL -->
 
-  <header>
+<div id="painel" class="painel" style="display:none;">
 
-    <h1>Painel Administrativo</h1>
+<header>
 
-    <div>
-      <button id="temaBtn">
-        🌙 Modo Escuro
-      </button>
+<h1>Painel Administrativo</h1>
 
-      <button id="btnSair">
-        Sair
-      </button>
-    </div>
+<div>
 
-  </header>
+<button id="temaBtn">
+🌙 Modo Escuro
+</button>
 
-  <section class="estatisticas">
+<button id="btnSair">
+Sair
+</button>
 
-    <div class="card">
-      <h2 id="totalFrases">0</h2>
-      <section class="nova-frase">
+</div>
 
-    <h2>➕ Nova Frase</h2>
+</header>
 
-    <input type="text" id="texto" placeholder="Digite a frase">
+<!-- ESTATÍSTICAS -->
 
-    <input type="text" id="autor" placeholder="Autor">
+<section class="estatisticas">
 
-    <select id="categoria">
-        <option>Motivação</option>
-        <option>Fé</option>
-        <option>Amor</option>
-        <option>Amizade</option>
-        <option>Bom Dia</option>
-        <option>Boa Noite</option>
-    </select>
-
-    <input type="file" id="imagem" accept="image/*">
-
-    <img id="preview" style="display:none;width:250px;border-radius:10px;">
-
-    <button id="salvarFrase">
-        💾 Salvar Frase
-    </button>
-
-</section>
-      <p>Frases cadastradas</p>
-    </div>
 <div class="card">
-  <h2 id="totalCategorias">0</h2>
-  <p>Categorias</p>
+
+<h2 id="totalFrases">0</h2>
+
+<p>Frases</p>
+
 </div>
 
 <div class="card">
-  <h2 id="totalAutores">0</h2>
-  <p>Autores</p>
+
+<h2 id="totalCategorias">0</h2>
+
+<p>Categorias</p>
+
 </div>
-  </section>
 
-  <section class="cadastro">
+<div class="card">
 
-    <input
-      id="autor"
-      placeholder="Autor">
+<h2 id="totalAutores">0</h2>
 
-    <select id="categoria">
-      <input
-    type="file"
-    id="imagem"
-    accept="image/*">
-      <option>Motivação</option>
-      <option>Fé</option>
-      <option>Amor</option>
-      <option>Reflexão</option>
-      <option>Amizade</option>
-      <option>Bom Dia</option>
-      <option>Boa Noite</option>
-      <option>Esperança</option>
-      <option>Gratidão</option>
-      <option>Família</option>
-      <option>Sucesso</option>
-      <option>Vida</option>
-    </select>
-    <textarea
-      id="texto"
-      rows="5"
-      placeholder="Digite a frase">
-    </textarea>
+<p>Autores</p>
 
-    <button id="btnSalvar">
-      Salvar Frase
-    </button>
-
-  </section>
-
-  <section>
-
-    <section>
-
-    <select id="filtroCategoria">
-        <option value="">📂 Todas as categorias</option>
-    </select>
-
-    <input
-      id="pesquisa"
-      placeholder="Pesquisar frase...">
-
-    <div id="listaFrases"></div>
+</div>
 
 </section>
 
+<!-- CADASTRO -->
+
+<section class="cadastro">
+
+<h2>➕ Nova Frase</h2>
+
+<input
+type="text"
+id="autor"
+placeholder="Autor">
+
+<select id="categoria">
+
+<option>Motivação</option>
+<option>Fé</option>
+<option>Amor</option>
+<option>Reflexão</option>
+<option>Amizade</option>
+<option>Bom Dia</option>
+<option>Boa Noite</option>
+<option>Esperança</option>
+<option>Gratidão</option>
+<option>Família</option>
+<option>Sucesso</option>
+<option>Vida</option>
+
+</select>
+
+<textarea
+id="texto"
+rows="5"
+placeholder="Digite a frase">
+</textarea>
+
+<input
+type="file"
+id="imagem"
+accept="image/*">
+
+<img
+id="preview"
+style="display:none;max-width:250px;border-radius:12px;">
+
+<button id="btnSalvar">
+💾 Salvar Frase
+</button>
+
+</section>
+
+<!-- PESQUISA -->
+
+<section class="pesquisa">
+
+<select id="filtroCategoria">
+
+<option value="">
+📂 Todas as categorias
+</option>
+
+</select>
+
+<input
+id="pesquisa"
+placeholder="Pesquisar frase...">
+
+</section>
+
+<!-- LISTA -->
+
+<div id="listaFrases"></div>
+
 </div>
-<!-- Modal de edição -->
+
+<!-- MODAL -->
+
 <div id="modalEditar" class="modal">
 
-  <div class="modal-conteudo">
+<div class="modal-conteudo">
 
-    <h2>✏️ Editar Frase</h2>
+<h2>Editar Frase</h2>
 
-    <input type="hidden" id="editId">
+<input
+type="hidden"
+id="editId">
 
-    <input
-      id="editAutor"
-      placeholder="Autor">
+<input
+id="editAutor"
+placeholder="Autor">
 
-    <select id="editCategoria">
+<select id="editCategoria">
 
-      <option>Motivação</option>
-      <option>Fé</option>
-      <option>Amor</option>
-      <option>Reflexão</option>
-      <option>Amizade</option>
-      <option>Bom Dia</option>
-      <option>Boa Noite</option>
-      <option>Esperança</option>
-      <option>Gratidão</option>
-      <option>Família</option>
-      <option>Sucesso</option>
-      <option>Vida</option>
+<option>Motivação</option>
+<option>Fé</option>
+<option>Amor</option>
+<option>Reflexão</option>
+<option>Amizade</option>
+<option>Bom Dia</option>
+<option>Boa Noite</option>
+<option>Esperança</option>
+<option>Gratidão</option>
+<option>Família</option>
+<option>Sucesso</option>
+<option>Vida</option>
 
-    </select>
+</select>
 
-    <textarea
-      id="editTexto"
-      rows="6">
-    </textarea>
+<textarea
+id="editTexto"
+rows="6">
+</textarea>
 
-    <button id="btnAtualizar">
-      💾 Salvar Alterações
-    </button>
+<button id="btnAtualizar">
+Salvar Alterações
+</button>
 
-    <button id="btnCancelar">
-      ❌ Cancelar
-    </button>
-
-  </div>
+<button id="btnCancelar">
+Cancelar
+</button>
 
 </div>
+
+</div>
+
 <script type="module" src="admin.js"></script>
 
 </body>
 </html>
+    
