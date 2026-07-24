@@ -320,3 +320,88 @@ card.querySelector(".btnExcluir").addEventListener("click", async () => {
     }
 
     }
+// ==========================
+// PESQUISA
+// ==========================
+
+pesquisa.addEventListener("input", () => {
+
+    const filtro = pesquisa.value.toLowerCase();
+
+    mostrarLista(
+        frases.filter(f =>
+            (f.texto || "").toLowerCase().includes(filtro) ||
+            (f.autor || "").toLowerCase().includes(filtro) ||
+            (f.categoria || "").toLowerCase().includes(filtro)
+        )
+    );
+
+});
+
+// ==========================
+// FILTRO
+// ==========================
+
+filtroCategoria.addEventListener("change", () => {
+
+    if (filtroCategoria.value === "") {
+        mostrarLista(frases);
+        return;
+    }
+
+    mostrarLista(
+        frases.filter(f => f.categoria === filtroCategoria.value)
+    );
+
+});
+
+// ==========================
+// ATUALIZAR
+// ==========================
+
+btnAtualizar.addEventListener("click", async () => {
+
+    await updateDoc(doc(db, "frases", editId.value), {
+        autor: editAutor.value,
+        categoria: editCategoria.value,
+        texto: editTexto.value
+    });
+
+    modalEditar.style.display = "none";
+
+    carregarFrases();
+
+});
+
+// ==========================
+// FECHAR MODAL
+// ==========================
+
+btnCancelar.addEventListener("click", () => {
+
+    modalEditar.style.display = "none";
+
+});
+
+// ==========================
+// MODO ESCURO
+// ==========================
+
+if (temaBtn) {
+
+    if (localStorage.getItem("tema") === "dark") {
+        document.body.classList.add("dark");
+    }
+
+    temaBtn.addEventListener("click", () => {
+
+        document.body.classList.toggle("dark");
+
+        localStorage.setItem(
+            "tema",
+            document.body.classList.contains("dark") ? "dark" : "light"
+        );
+
+    });
+
+}
