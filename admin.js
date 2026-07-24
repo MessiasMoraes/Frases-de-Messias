@@ -130,3 +130,51 @@ onAuthStateChanged(auth, (user) => {
     }
 
 });
+// ==========================
+// PRÉ-VISUALIZAÇÃO DA IMAGEM
+// ==========================
+
+imagem.addEventListener("change", () => {
+
+    const arquivo = imagem.files[0];
+
+    if (!arquivo) {
+        preview.style.display = "none";
+        preview.src = "";
+        return;
+    }
+
+    preview.src = URL.createObjectURL(arquivo);
+    preview.style.display = "block";
+
+});
+
+// ==========================
+// UPLOAD PARA IMGBB
+// ==========================
+
+async function enviarImagem(arquivo) {
+
+    if (!arquivo) return "";
+
+    const apiKey = "1f15b09ceff292f7ce016d4dea88b720";
+
+    const formData = new FormData();
+    formData.append("image", arquivo);
+
+    const resposta = await fetch(
+        `https://api.imgbb.com/1/upload?key=${apiKey}`,
+        {
+            method: "POST",
+            body: formData
+        }
+    );
+
+    const dados = await resposta.json();
+
+    if (!dados.success) {
+        throw new Error("Erro ao enviar imagem.");
+    }
+
+    return dados.data.url;
+}
