@@ -71,7 +71,7 @@ const temaBtn = document.getElementById("temaBtn");
 // ==========================
 // LOGIN
 // ==========================
-
+alert("admin.js carregado");
 btnLogin.addEventListener("click", async () => {
 
     if (!email.value || !senha.value) {
