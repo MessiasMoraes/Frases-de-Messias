@@ -286,7 +286,26 @@ async function carregarFrases() {
 
     <button class="btnExcluir">🗑️ Excluir</button>
 `;
+card.querySelector(".btnEditar").addEventListener("click", () => {
 
+    editId.value = f.id;
+    editAutor.value = f.autor || "";
+    editCategoria.value = f.categoria || "";
+    editTexto.value = f.texto;
+
+    modalEditar.style.display = "flex";
+
+});
+
+card.querySelector(".btnExcluir").addEventListener("click", async () => {
+
+    if (!confirm("Deseja excluir esta frase?")) return;
+
+    await deleteDoc(doc(db, "frases", f.id));
+
+    carregarFrases();
+
+});
             listaFrases.appendChild(card);
 
         });
