@@ -93,9 +93,9 @@ function mostrarFrases(filtro = ""){
 
         <div class="imagemFrase">
 
-            <img src="${f.imagem || "https://picsum.photos/800/1200"}" alt="Frase">
+    ${f.imagem ? `<img src="${f.imagem}" alt="Frase">` : ""}
 
-            <div class="overlay">
+    <div class="overlay">
 
                 <p class="textoFrase">
                     "${f.texto}"
