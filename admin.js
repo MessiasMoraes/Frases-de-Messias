@@ -158,30 +158,20 @@ imagem.addEventListener("change", () => {
 // UPLOAD PARA IMGBB
 // ==========================
 
-async function enviarImagem(arquivo) {
+async function enviarImagem(arquivo){
 
-    if (!arquivo) return "";
+    if(!arquivo) return "";
 
-    const apiKey = "1f15b09ceff292f7ce016d4dea88b720";
+    const nomeArquivo = "frases/" + Date.now() + "_" + arquivo.name;
 
-    const formData = new FormData();
-    formData.append("image", arquivo);
+    const referencia = ref(storage, nomeArquivo);
 
-    const resposta = await fetch(
-        `https://api.imgbb.com/1/upload?key=${apiKey}`,
-        {
-            method: "POST",
-            body: formData
-        }
-    );
+    await uploadBytes(referencia, arquivo);
 
-    const dados = await resposta.json();
+    const url = await getDownloadURL(referencia);
 
-    if (!dados.success) {
-        throw new Error("Erro ao enviar imagem.");
-    }
+    return url;
 
-    return dados.data.url;
 }
 // ==========================
 // SALVAR FRASE
