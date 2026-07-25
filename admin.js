@@ -53,7 +53,7 @@ const imagem = document.getElementById("imagem");
 const preview = document.getElementById("preview");
 
 const btnSalvar = document.getElementById("salvarFrase");
-
+console.log(btnSalvar);
 const listaFrases = document.getElementById("listaFrases");
 const pesquisa = document.getElementById("pesquisa");
 const filtroCategoria = document.getElementById("filtroCategoria");
