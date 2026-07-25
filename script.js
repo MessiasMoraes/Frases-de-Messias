@@ -93,7 +93,11 @@ function mostrarFrases(filtro = ""){
 
         <div class="imagemFrase">
 
-    ${f.imagem ? `<img src="${f.imagem}" alt="Frase">` : ""}
+    <img
+        src="${f.imagem || `imagens/categorias/${(f.categoria || "motivacao").toLowerCase()}.jpg`}"
+        alt="${f.categoria}"
+        loading="lazy"
+    >
 
     <div class="overlay">
 
