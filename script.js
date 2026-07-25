@@ -235,12 +235,12 @@ window.compartilhar = compartilhar;
 
 function baixarImagem(botao){
 
-    const card = botao.closest(".cardFrase");
-
-    const imagemFrase = card.querySelector(".imagemFrase");
+    const imagemFrase = botao.closest(".cardFrase").querySelector(".imagemFrase");
 
     html2canvas(imagemFrase, {
-        backgroundColor: null,
+        useCORS: true,
+        allowTaint: false,
+        backgroundColor: "#ffffff",
         scale: 2
     }).then(canvas => {
 
