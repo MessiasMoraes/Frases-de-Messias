@@ -62,7 +62,20 @@ async function carregarFrases(){
 mostrarFrases();
 
 }
-
+const imagensCategorias = {
+    "Motivação": "imagens/categorias/motivacao.jpg",
+    "Fé": "imagens/categorias/fe.jpg",
+    "Amor": "imagens/categorias/amor.jpg",
+    "Reflexão": "imagens/categorias/reflexao.jpg",
+    "Amizade": "imagens/categorias/amizade.jpg",
+    "Bom Dia": "imagens/categorias/bom-dia.jpg",
+    "Boa Noite": "imagens/categorias/boa-noite.jpg",
+    "Esperança": "imagens/categorias/esperanca.jpg",
+    "Gratidão": "imagens/categorias/gratidao.jpg",
+    "Família": "imagens/categorias/familia.jpg",
+    "Sucesso": "imagens/categorias/sucesso.jpg",
+    "Vida": "imagens/categorias/vida.jpg"
+};
 function mostrarFrases(filtro = ""){
 
     lista.innerHTML = "";
