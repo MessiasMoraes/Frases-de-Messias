@@ -101,7 +101,7 @@ function mostrarFrases(filtro = ""){
 
         <div class="imagemFrase">
 
-    <img src="${f.imagem || imagensCategorias[f.categoria] || 'imagens/categorias/padrao.jpg'}" alt="Frase">
+    <img src="${f.imagem || categorias[f.categoria] || 'imagens/categorias/padrao.jpg'}" alt="Frase">
 
     <div class="overlay">
 
