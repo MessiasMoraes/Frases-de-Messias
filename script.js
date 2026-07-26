@@ -9,6 +9,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 let frases = [];
+let categorias = {};
 
 let favoritos =
 JSON.parse(localStorage.getItem("favoritos")) || [];
