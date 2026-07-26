@@ -156,7 +156,7 @@ async function enviarImagem(arquivo) {
 
     if (!arquivo) return "";
 
-    const apiKey = "SUA_CHAVE_IMGBB";
+    const apiKey = "1f15b09ceff292f7ce016d4dea88b720";
 
     const formData = new FormData();
     formData.append("image", arquivo);
