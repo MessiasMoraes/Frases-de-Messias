@@ -24,7 +24,14 @@ async function carregarFrases(){
     lista.innerHTML = "<p>Carregando frases...</p>";
 
     frases = [];
+categorias = {};
 
+const consultaCategorias = await getDocs(collection(db, "categorias"));
+
+consultaCategorias.forEach((doc) => {
+    const dados = doc.data();
+    categorias[dados.nome] = dados.imagem;
+});
     try{
 
         const consulta = await getDocs(collection(db,"frases"));
