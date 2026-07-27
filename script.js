@@ -18,7 +18,7 @@ const lista = document.getElementById("listaFrases");
 const pesquisa = document.getElementById("pesquisa");
 const copiarBtn = document.getElementById("copiarBtn");
 const fraseDia = document.getElementById("fraseDia");
-
+const listaCategorias = document.getElementById("listaCategorias");
 async function carregarFrases(){
 
     lista.innerHTML = "<p>Carregando frases...</p>";
