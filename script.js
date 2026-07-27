@@ -166,7 +166,34 @@ visualizar(f.id);
     });
 
 }
+function mostrarCategorias(){
 
+    listaCategorias.innerHTML = "";
+
+    Object.entries(categorias).forEach(([nome, imagem]) => {
+
+        const card = document.createElement("div");
+
+        card.className = "categoriaCard";
+
+        card.innerHTML = `
+            <img src="${imagem}" alt="${nome}">
+            <span>${nome}</span>
+        `;
+
+        card.onclick = () => {
+            mostrarFrases(nome);
+            window.scrollTo({
+                top: lista.offsetTop - 20,
+                behavior: "smooth"
+            });
+        };
+
+        listaCategorias.appendChild(card);
+
+    });
+
+}
 async function curtir(id){
 
     try{
