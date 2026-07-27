@@ -63,11 +63,12 @@ consultaCategorias.forEach((doc) => {
 
     }
 
-    const indice=Math.floor(Math.random()*frases.length);
+    const indice = Math.floor(Math.random() * frases.length);
 
-    fraseDia.textContent = `"${frases[indice].texto}"`;
+fraseDia.textContent = `"${frases[indice].texto}"`;
 
 mostrarFrases();
+mostrarCategorias();
 
 }
 
