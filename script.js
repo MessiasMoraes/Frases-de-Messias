@@ -167,23 +167,28 @@ visualizar(f.id);
     });
 
 }
-function mostrarCategorias(){
+async function mostrarCategorias() {
 
     listaCategorias.innerHTML = "";
 
-    Object.entries(categorias).forEach(([nome, imagem]) => {
+    const consulta = await getDocs(collection(db, "categorias"));
+
+    consulta.forEach((doc) => {
+
+        const categoria = doc.data();
 
         const card = document.createElement("div");
 
         card.className = "categoriaCard";
 
         card.innerHTML = `
-            <img src="${imagem}" alt="${nome}">
-            <span>${nome}</span>
+            <img src="${categoria.imagem}" alt="${categoria.nome}">
+            <span>${categoria.nome}</span>
         `;
 
         card.onclick = () => {
-            mostrarFrases(nome);
+            mostrarFrases(categoria.nome);
+
             window.scrollTo({
                 top: lista.offsetTop - 20,
                 behavior: "smooth"
