@@ -356,3 +356,4 @@ copiarBtn.addEventListener("click", () => {
 window.copiar = copiar;
 
 carregarFrases();
+mostrarCategorias();
