@@ -1,3 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frases de Messias</title>
+  <meta name="description" content="As melhores frases de motivação, amor, fé e reflexão.">
+
+  <!-- Vínculo do CSS com forçador de atualização de cache -->
+  <link rel="stylesheet" href="./style.css?v=2026">
+
+  <!-- Biblioteca html2canvas para permitir baixar os cards como imagem -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>📖 Frases de Messias</h1>
+
+    <nav>
+      <a href="index.html">🏠 Início</a>
+      <a href="favoritos.html">❤️ Favoritos</a>
+      <a href="sobre.html">ℹ️ Sobre</a>
+      <a href="contato.html">📞 Contato</a>
+    </nav>
+
+    <input
+      type="search"
+      id="pesquisa"
+      placeholder="Pesquisar frases..."
+    >
+  </div>
+</header>
+
+<section class="hero">
+  <h2>Frase do Dia</h2>
+
   <blockquote id="fraseDia">
     "Nunca desista dos seus sonhos. A persistência abre caminhos."
   </blockquote>
@@ -16,62 +54,62 @@
   <div class="grid">
 
     <div class="card" data-categoria="amizade">
-      <img src="imagens/categorias/amizade.png" alt="Amizade">
+      <img src="imagens/categorias/amizade.png" alt="Amizade" onerror="this.src='imagens/categorias/padrao.jpg'">
       <span>🤝 Amizade</span>
     </div>
 
     <div class="card" data-categoria="amor">
-      <img src="imagens/categorias/amor.png" alt="Amor">
+      <img src="imagens/categorias/amor.png" alt="Amor" onerror="this.src='imagens/categorias/padrao.jpg'">
       <span>❤️ Amor</span>
     </div>
 
     <div class="card" data-categoria="boa-noite">
-      <img src="imagens/categorias/boa-noite.png" alt="Boa Noite">
+      <img src="imagens/categorias/boa-noite.png" alt="Boa Noite" onerror="this.src='imagens/categorias/padrao.jpg'">
       <span>🌙 Boa Noite</span>
     </div>
 
     <div class="card" data-categoria="bom-dia">
-      <img src="imagens/categorias/bom-dia.png" alt="Bom Dia">
+      <img src="imagens/categorias/bom-dia.png" alt="Bom Dia" onerror="this.src='imagens/categorias/padrao.jpg'">
       <span>🌞 Bom Dia</span>
     </div>
 
     <div class="card" data-categoria="esperanca">
-      <img src="imagens/categorias/esperanca.png" alt="Esperança">
+      <img src="imagens/categorias/esperanca.png" alt="Esperança" onerror="this.src='imagens/categorias/padrao.jpg'">
       <span>🌱 Esperança</span>
     </div>
 
     <div class="card" data-categoria="familia">
-      <img src="imagens/categorias/familia.png" alt="Família">
+      <img src="imagens/categorias/familia.png" alt="Família" onerror="this.src='imagens/categorias/padrao.jpg'">
       <span>🏡 Família</span>
     </div>
 
     <div class="card" data-categoria="fe">
-      <img src="imagens/categorias/fe.png" alt="Fé">
+      <img src="imagens/categorias/fe.png" alt="Fé" onerror="this.src='imagens/categorias/padrao.jpg'">
       <span>🙏 Fé</span>
     </div>
 
     <div class="card" data-categoria="gratidao">
-      <img src="imagens/categorias/gratidao.png" alt="Gratidão">
+      <img src="imagens/categorias/gratidao.png" alt="Gratidão" onerror="this.src='imagens/categorias/padrao.jpg'">
       <span>✨ Gratidão</span>
     </div>
 
     <div class="card" data-categoria="motivacao">
-      <img src="imagens/categorias/motivacao.png" alt="Motivação">
+      <img src="imagens/categorias/motivacao.png" alt="Motivação" onerror="this.src='imagens/categorias/padrao.jpg'">
       <span>💪 Motivação</span>
     </div>
 
     <div class="card" data-categoria="reflexao">
-      <img src="imagens/categorias/reflexao.png" alt="Reflexão">
+      <img src="imagens/categorias/reflexao.png" alt="Reflexão" onerror="this.src='imagens/categorias/padrao.jpg'">
       <span>💡 Reflexão</span>
     </div>
 
     <div class="card" data-categoria="sucesso">
-      <img src="imagens/categorias/sucesso.png" alt="Sucesso">
+      <img src="imagens/categorias/sucesso.png" alt="Sucesso" onerror="this.src='imagens/categorias/padrao.jpg'">
       <span>🚀 Sucesso</span>
     </div>
 
     <div class="card" data-categoria="vida">
-      <img src="imagens/categorias/vida.png" alt="Vida">
+      <img src="imagens/categorias/vida.png" alt="Vida" onerror="this.src='imagens/categorias/padrao.jpg'">
       <span>🍃 Vida</span>
     </div>
 
@@ -80,6 +118,7 @@
 
 <section>
   <h2>Todas as Frases</h2>
+  <!-- Container onde as frases e os botões de Baixar serão renderizados pelo JS -->
   <div id="listaFrases"></div>
 </section>
 
@@ -89,9 +128,8 @@
 
 <button id="temaBtn">🌙 Modo Escuro</button>
 
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<!-- Script do projeto carregado como módulo JavaScript -->
 <script type="module" src="script.js"></script>
 
 </body>
 </html>
-
