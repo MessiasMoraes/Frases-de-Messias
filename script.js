@@ -212,15 +212,14 @@ async function compartilhar(id, texto) {
 
 async function baixarImagem(botao) {
   if (typeof html2canvas === 'undefined') {
-    alert("A biblioteca de download ainda está carregando ou não foi adicionada no HTML.");
+    alert("A biblioteca de geração de imagens não foi encontrada no HTML.");
     return;
   }
 
-  const card = botao.closest(".cardFrase") || botao.closest(".card") || botao.parentElement.parentElement;
+  const card = botao.closest(".cardFrase") || botao.parentElement.parentElement;
   if (!card) return;
 
-  // Localiza a área da imagem da frase
-  const elementoImagem = card.querySelector(".imagemFrase") || card.querySelector(".frase-card") || card;
+  const elementoImagem = card.querySelector(".imagemFrase") || card;
 
   const textoOriginal = botao.innerText;
   botao.innerText = "⏳ Gerando...";
@@ -229,40 +228,30 @@ async function baixarImagem(botao) {
   try {
     const canvas = await html2canvas(elementoImagem, {
       useCORS: true,
-      allowTaint: false,
+      allowTaint: true,
       logging: false,
       scale: 2,
       backgroundColor: null
     });
 
-    // Converte para Blob e força o download
-    canvas.toBlob((blob) => {
-      if (!blob) {
-        throw new Error("Falha ao gerar o arquivo de imagem.");
-      }
-
-      const url = URL.revokeObjectURL ? URL.createObjectURL(blob) : canvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      link.download = `frase-${Date.now()}.png`;
-      link.href = url;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-
-      botao.innerText = textoOriginal;
-      botao.disabled = false;
-    }, "image/png");
+    // Gera o link direto de download
+    const dataUrl = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.download = `frase-messias-${Date.now()}.png`;
+    link.href = dataUrl;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
   } catch (erro) {
     console.error("Erro ao gerar imagem:", erro);
-    alert("Não foi possível gerar o download direto devido às permissões da imagem de fundo.\n\nDica: Tire um print da tela!");
-    
+    alert("Não foi possível gerar o download direto devido a permissões de imagem externa.\n\nDica: Tire um print da tela!");
+  } finally {
     botao.innerText = textoOriginal;
     botao.disabled = false;
   }
 }
+
 
 
 async function visualizar(id) {
