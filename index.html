@@ -21,7 +21,6 @@
       <a href="contato.html">📞 Contato</a>
     </nav>
 
-
     <input
       type="search"
       id="pesquisa"
@@ -36,59 +35,97 @@
   <blockquote id="fraseDia">
     "Nunca desista dos seus sonhos. A persistência abre caminhos."
   </blockquote>
-<section class="categoriasDestaque">
 
-    <h2>📂 Categorias em Destaque</h2>
-
-    <div id="listaCategorias" class="gridCategorias"></div>
-
+  <button id="copiarBtn">Copiar Frase</button>
 </section>
-  <button id="copiarBtn">
-    Copiar Frase
-  </button>
+
+<section class="categoriasDestaque">
+    <h2>📂 Categorias em Destaque</h2>
+    <div id="listaCategorias" class="gridCategorias"></div>
 </section>
 
 <section class="categorias">
-
-  <h2>Categorias</h2>
+  <h2>Todas as Categorias</h2>
 
   <div class="grid">
 
-    <div class="card">💪 Motivação</div>
+    <div class="card" data-categoria="amizade">
+      <img src="imagens/categorias/amizade.png" alt="Amizade">
+      <span>🤝 Amizade</span>
+    </div>
 
-    <div class="card">❤️ Amor</div>
+    <div class="card" data-categoria="amor">
+      <img src="imagens/categorias/amor.png" alt="Amor">
+      <span>❤️ Amor</span>
+    </div>
 
-    <div class="card">🙏 Fé</div>
+    <div class="card" data-categoria="boa-noite">
+      <img src="imagens/categorias/boa-noite.png" alt="Boa Noite">
+      <span>🌙 Boa Noite</span>
+    </div>
 
-    <div class="card">🤝 Amizade</div>
+    <div class="card" data-categoria="bom-dia">
+      <img src="imagens/categorias/bom-dia.png" alt="Bom Dia">
+      <span>🌞 Bom Dia</span>
+    </div>
 
-    <div class="card">🌞 Bom Dia</div>
+    <div class="card" data-categoria="esperanca">
+      <img src="imagens/categorias/esperanca.png" alt="Esperança">
+      <span>🌱 Esperança</span>
+    </div>
 
-    <div class="card">🌙 Boa Noite</div>
+    <div class="card" data-categoria="familia">
+      <img src="imagens/categorias/familia.png" alt="Família">
+      <span>🏡 Família</span>
+    </div>
+
+    <div class="card" data-categoria="fe">
+      <img src="imagens/categorias/fe.png" alt="Fé">
+      <span>🙏 Fé</span>
+    </div>
+
+    <div class="card" data-categoria="gratidao">
+      <img src="imagens/categorias/gratidao.png" alt="Gratidão">
+      <span>✨ Gratidão</span>
+    </div>
+
+    <div class="card" data-categoria="motivacao">
+      <img src="imagens/categorias/motivacao.png" alt="Motivação">
+      <span>💪 Motivação</span>
+    </div>
+
+    <div class="card" data-categoria="reflexao">
+      <img src="imagens/categorias/reflexao.png" alt="Reflexão">
+      <span>💡 Reflexão</span>
+    </div>
+
+    <div class="card" data-categoria="sucesso">
+      <img src="imagens/categorias/sucesso.png" alt="Sucesso">
+      <span>🚀 Sucesso</span>
+    </div>
+
+    <div class="card" data-categoria="vida">
+      <img src="imagens/categorias/vida.png" alt="Vida">
+      <span>🍃 Vida</span>
+    </div>
 
   </div>
-
 </section>
 
 <section>
-
-<h2>Todas as Frases</h2>
-
-<div id="listaFrases"></div>
-
+  <h2>Todas as Frases</h2>
+  <div id="listaFrases"></div>
 </section>
 
 <footer>
-
-<p>
-© 2026 Frases de Messias
-</p>
-
+  <p>© 2026 Frases de Messias</p>
 </footer>
 
-  <button id="temaBtn">🌙 Modo Escuro</button>
+<button id="temaBtn">🌙 Modo Escuro</button>
+
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script type="module" src="script.js"></script>
 
 </body>
 </html>
+
