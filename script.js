@@ -212,7 +212,7 @@ async function compartilhar(id, texto) {
 
 async function baixarImagem(botao) {
   if (typeof html2canvas === 'undefined') {
-    alert("A biblioteca de geração de imagens não foi encontrada no HTML.");
+    alert("A biblioteca de download ainda está carregando.");
     return;
   }
 
@@ -228,13 +228,13 @@ async function baixarImagem(botao) {
   try {
     const canvas = await html2canvas(elementoImagem, {
       useCORS: true,
-      allowTaint: true,
+      allowTaint: false,
+      foreignObjectRendering: false,
       logging: false,
-      scale: 2,
-      backgroundColor: null
+      scale: 2
     });
 
-    // Gera o link direto de download
+    // Converte o canvas para imagem PNG e dispara o download
     const dataUrl = canvas.toDataURL("image/png");
     const link = document.createElement("a");
     link.download = `frase-messias-${Date.now()}.png`;
@@ -245,13 +245,12 @@ async function baixarImagem(botao) {
 
   } catch (erro) {
     console.error("Erro ao gerar imagem:", erro);
-    alert("Não foi possível gerar o download direto devido a permissões de imagem externa.\n\nDica: Tire um print da tela!");
+    alert("Ops! Por conta de permissões da imagem de fundo externa, o download automático foi bloqueado.\n\nDica: Você pode tirar um print da tela para salvar!");
   } finally {
     botao.innerText = textoOriginal;
     botao.disabled = false;
   }
 }
-
 
 
 async function visualizar(id) {
