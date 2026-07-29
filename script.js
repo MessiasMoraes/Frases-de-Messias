@@ -212,20 +212,41 @@ async function compartilhar(id, texto) {
 }
 
 function baixarImagem(botao) {
-  const imagemFrase = botao.closest(".cardFrase").querySelector(".imagemFrase");
+    if (typeof html2canvas === 'undefined') {
+        alert("A biblioteca de download ainda está carregando ou não foi adicionada no HTML.");
+        return;
+    }
 
-  html2canvas(imagemFrase, {
-    useCORS: true,
-    allowTaint: false,
-    backgroundColor: "#ffffff",
-    scale: 2
-  }).then(canvas => {
-    const link = document.createElement("a");
-    link.download = `frase-${Date.now()}.png`;
-    link.href = canvas.toDataURL("image/png");
-    link.click();
-  });
+    const card = botao.closest(".cardFrase");
+    const imagemFrase = card.querySelector(".imagemFrase");
+
+    // Desativa temporariamente o botão enquanto gera
+    const textoOriginal = botao.innerText;
+    botao.innerText = "⏳ Gerando...";
+    botao.disabled = true;
+
+    html2canvas(imagemFrase, {
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: null,
+        scale: 2
+    }).then(canvas => {
+        const link = document.createElement("a");
+        link.download = `frase-${Date.now()}.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+
+        // Restaura o botão
+        botao.innerText = textoOriginal;
+        botao.disabled = false;
+    }).catch(err => {
+        console.error("Erro ao baixar a imagem:", err);
+        alert("Não foi possível baixar a imagem. Tente tirar um print da tela!");
+        botao.innerText = textoOriginal;
+        botao.disabled = false;
+    });
 }
+
 
 async function visualizar(id) {
   const chave = "view_" + id;
