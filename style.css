@@ -72,21 +72,53 @@ button:hover{
 .categorias{
   max-width:1100px;
   margin:30px auto;
+  padding: 0 15px;
 }
 
+.categorias h2 {
+  margin-bottom: 20px;
+}
+
+/* ============================
+   GRID DE CARDS DAS CATEGORIAS (PNG)
+============================ */
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-  gap:15px;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:20px;
 }
 
 .card{
   background:#fff;
-  padding:20px;
-  border-radius:10px;
+  padding:0;
+  border-radius:16px;
   text-align:center;
   font-weight:bold;
-  box-shadow:0 2px 8px rgba(0,0,0,.08);
+  box-shadow:0 4px 12px rgba(0,0,0,.1);
+  overflow:hidden;
+  cursor:pointer;
+  transition:transform .3s ease, box-shadow .3s ease;
+  display:flex;
+  flex-direction:column;
+}
+
+.card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 8px 20px rgba(0,0,0,.15);
+}
+
+.card img{
+  width:100%;
+  height:140px;
+  object-fit:cover;
+  display:block;
+}
+
+.card span{
+  display:block;
+  padding:14px 10px;
+  font-size:16px;
+  color:#222;
 }
 
 #listaFrases{
@@ -109,6 +141,10 @@ footer{
   padding:20px;
   margin-top:40px;
 }
+
+/* ============================
+   MODO ESCURO
+============================ */
 .dark{
     background:#121212;
     color:#ffffff;
@@ -121,6 +157,19 @@ footer{
     color:#ffffff;
 }
 
+.dark .card span{
+    color:#ffffff;
+}
+
+.dark .botoes{
+    background:#1e1e1e;
+}
+
+.dark .estatisticas{
+    color:#ccc;
+    border-top:1px solid #333;
+}
+
 #temaBtn{
     position:fixed;
     right:20px;
@@ -131,7 +180,9 @@ footer{
     background:#2563eb;
     color:white;
     cursor:pointer;
-  }
+    z-index: 1000;
+}
+
 nav{
   display:flex;
   gap:15px;
@@ -148,100 +199,10 @@ nav a{
 nav a:hover{
   text-decoration:underline;
 }
+
 /* ============================
    CARD COM IMAGEM DE FUNDO
 ============================ */
-
-.cardFrase{
-    background:#fff;
-    border-radius:20px;
-    overflow:hidden;
-    margin:25px auto;
-    max-width:500px;
-    box-shadow:0 8px 20px rgba(0,0,0,.15);
-}
-
-.imagemFrase{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
-.overlay{
-    position:absolute;
-    inset:0;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    padding:30px;
-    background:linear-gradient(
-        rgba(0,0,0,.25),
-        rgba(0,0,0,.55),
-        rgba(0,0,0,.75)
-    );
-}
-
-.aspas{
-    font-size:70px;
-    color:#ffffffaa;
-    margin-bottom:10px;
-}
-
-.textoFrase{
-    color:#fff;
-    font-size:30px;
-    font-weight:bold;
-    line-height:1.5;
-    text-shadow:2px 2px 10px #000;
-    max-width:85%;
-}
-
-.autorFrase{
-    margin-top:25px;
-    color:#fff;
-    font-size:20px;
-    font-style:italic;
-}
-
-.marca{
-    position:absolute;
-    bottom:20px;
-    right:20px;
-    color:white;
-    font-size:15px;
-    font-weight:bold;
-    opacity:.9;
-}
-
-.botoes{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:12px;
-    padding:18px;
-    background:#fff;
-}
-
-.botoes button{
-    flex:1;
-    min-width:150px;
-    padding:14px 18px;
-    border:none;
-    border-radius:10px;
-    background:#2563eb;
-    color:#fff;
-    font-size:16px;
-    font-weight:bold;
-    cursor:pointer;
-    transition:.3s;
-}
-
-.botoes button:hover{
-    background:#1d4ed8;
-    transform:translateY(-2px);
-}
 .cardFrase{
     background:#fff;
     margin:25px auto;
@@ -275,22 +236,36 @@ nav a:hover{
     padding:20px;
 }
 
+.aspas{
+    font-size:70px;
+    color:#ffffffaa;
+    margin-bottom:10px;
+}
+
 .textoFrase{
     font-size:26px;
     font-weight:bold;
     line-height:1.5;
+    text-shadow:2px 2px 10px #000;
+    max-width:85%;
 }
 
 .autorFrase{
     margin-top:20px;
     font-size:18px;
+    font-style:italic;
 }
 
 .marca{
-    margin-top:30px;
+    position:absolute;
+    bottom:20px;
+    right:20px;
+    color:white;
     font-size:14px;
+    font-weight:bold;
     opacity:.9;
 }
+
 .botoes{
     display:flex;
     justify-content:center;
@@ -309,11 +284,13 @@ nav a:hover{
     padding:10px 15px;
     cursor:pointer;
     font-size:15px;
+    transition:.3s;
 }
 
 .botoes button:hover{
     opacity:.9;
 }
+
 .estatisticas{
     display:flex;
     justify-content:center;
@@ -332,6 +309,10 @@ nav a:hover{
     align-items:center;
     gap:6px;
 }
+
+/* ============================
+   CATEGORIAS EM DESTAQUE
+============================ */
 .categoriasDestaque{
     max-width:1100px;
     margin:40px auto;
