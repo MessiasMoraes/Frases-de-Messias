@@ -315,3 +315,4 @@ window.copiar = copiar;
 
 // Execução Inicial
 carregarFrases();
+window.baixarImagem = baixarImagem;
