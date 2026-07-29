@@ -210,40 +210,58 @@ async function compartilhar(id, texto) {
   }
 }
 
-function baixarImagem(botao) {
-    if (typeof html2canvas === 'undefined') {
-        alert("A biblioteca de download ainda está carregando ou não foi adicionada no HTML.");
-        return;
-    }
+async function baixarImagem(botao) {
+  if (typeof html2canvas === 'undefined') {
+    alert("A biblioteca de download ainda está carregando ou não foi adicionada no HTML.");
+    return;
+  }
 
-    const card = botao.closest(".cardFrase");
-    const imagemFrase = card.querySelector(".imagemFrase");
+  const card = botao.closest(".cardFrase") || botao.closest(".card") || botao.parentElement.parentElement;
+  if (!card) return;
 
-    // Desativa temporariamente o botão enquanto gera
-    const textoOriginal = botao.innerText;
-    botao.innerText = "⏳ Gerando...";
-    botao.disabled = true;
+  // Localiza a área da imagem da frase
+  const elementoImagem = card.querySelector(".imagemFrase") || card.querySelector(".frase-card") || card;
 
-    html2canvas(imagemFrase, {
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: null,
-        scale: 2
-    }).then(canvas => {
-        const link = document.createElement("a");
-        link.download = `frase-${Date.now()}.png`;
-        link.href = canvas.toDataURL("image/png");
-        link.click();
+  const textoOriginal = botao.innerText;
+  botao.innerText = "⏳ Gerando...";
+  botao.disabled = true;
 
-        // Restaura o botão
-        botao.innerText = textoOriginal;
-        botao.disabled = false;
-    }).catch(err => {
-        console.error("Erro ao baixar a imagem:", err);
-        alert("Não foi possível baixar a imagem. Tente tirar um print da tela!");
-        botao.innerText = textoOriginal;
-        botao.disabled = false;
+  try {
+    const canvas = await html2canvas(elementoImagem, {
+      useCORS: true,
+      allowTaint: false,
+      logging: false,
+      scale: 2,
+      backgroundColor: null
     });
+
+    // Converte para Blob e força o download
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        throw new Error("Falha ao gerar o arquivo de imagem.");
+      }
+
+      const url = URL.revokeObjectURL ? URL.createObjectURL(blob) : canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.download = `frase-${Date.now()}.png`;
+      link.href = url;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+      botao.innerText = textoOriginal;
+      botao.disabled = false;
+    }, "image/png");
+
+  } catch (erro) {
+    console.error("Erro ao gerar imagem:", erro);
+    alert("Não foi possível gerar o download direto devido às permissões da imagem de fundo.\n\nDica: Tire um print da tela!");
+    
+    botao.innerText = textoOriginal;
+    botao.disabled = false;
+  }
 }
 
 
