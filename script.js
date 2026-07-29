@@ -145,41 +145,47 @@ async function mostrarCategorias() {
   if (!listaCategorias) return;
   listaCategorias.innerHTML = "";
 
-  try {
-    const consulta = await getDocs(collection(db, "categorias"));
+  // Lista fixa com as 12 categorias oficiais
+  const categoriasFixas = [
+    { nome: "Amizade", chave: "amizade" },
+    { nome: "Amor", chave: "amor" },
+    { nome: "Boa Noite", chave: "boa-noite" },
+    { nome: "Bom Dia", chave: "bom-dia" },
+    { nome: "Esperança", chave: "esperanca" },
+    { nome: "Família", chave: "familia" },
+    { nome: "Fé", chave: "fe" },
+    { nome: "Gratidão", chave: "gratidao" },
+    { nome: "Motivação", chave: "motivacao" },
+    { nome: "Reflexão", chave: "reflexao" },
+    { nome: "Sucesso", chave: "sucesso" },
+    { nome: "Vida", chave: "vida" }
+  ];
 
-    consulta.forEach((doc) => {
-      const categoria = doc.data();
-      const nome = categoria.nome || doc.id || "Categoria";
-      
-      // Monta o caminho relativo da imagem (.png)
-      const caminhoLocal = `imagens/categorias/${nome.toLowerCase().replace(/\s+/g, '-')}.png`;
-      const imagem = categoria.imagem || categoria.foto || categoria.url || caminhoLocal;
+  categoriasFixas.forEach((cat) => {
+    const imagem = `imagens/categorias/${cat.chave}.png`;
 
-      const card = document.createElement("div");
-      card.className = "categoriaCard";
+    const card = document.createElement("div");
+    card.className = "categoriaCard";
 
-      card.innerHTML = `
-        <img src="${imagem}" alt="${nome}" onerror="this.src='${caminhoLocal}'">
-        <span>${nome}</span>
-      `;
+    card.innerHTML = `
+      <img src="${imagem}" alt="${cat.nome}" onerror="this.src='imagens/categorias/padrao.jpg'">
+      <span>${cat.nome}</span>
+    `;
 
-      card.onclick = () => {
-        mostrarFrases(nome);
-        if (lista) {
-          window.scrollTo({
-            top: lista.offsetTop - 20,
-            behavior: "smooth"
-          });
-        }
-      };
+    card.onclick = () => {
+      mostrarFrases(cat.nome);
+      if (lista) {
+        window.scrollTo({
+          top: lista.offsetTop - 20,
+          behavior: "smooth"
+        });
+      }
+    };
 
-      listaCategorias.appendChild(card);
-    });
-  } catch (erro) {
-    console.error("Erro ao mostrar categorias:", erro);
-  }
+    listaCategorias.appendChild(card);
+  });
 }
+
 
 async function curtir(id) {
   try {
