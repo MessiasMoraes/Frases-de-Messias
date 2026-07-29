@@ -125,23 +125,27 @@ function mostrarFrases(filtro = "") {
   });
 }
 
+  function mostrarCategorias() {
+  if (!listaCategorias) return;
+  listaCategorias.innerHTML = "";
+
   const categoriasFixas = [
-    { nome: "Amizade", chave: "amizade.png" },
-    { nome: "Amor", chave: "amor.png" },
-    { nome: "Boa Noite", chave: "boa noite .png" },
-    { nome: "Bom Dia", chave: "bom dia.png" },
-    { nome: "Esperança", chave: "esperança.png" },
-    { nome: "Família", chave: "família.png" },
-    { nome: "Fé", chave: "fé.png" },
-    { nome: "Gratidão", chave: "gratidão.png" },
-    { nome: "Motivação", chave: "motivação.png" },
-    { nome: "Reflexão", chave: "reflexão.png" },
-    { nome: "Sucesso", chave: "sucesso.png" },
-    { nome: "Vida", chave: "vida.png" }
+    { nome: "Amizade", chave: "amizade" },
+    { nome: "Amor", chave: "amor" },
+    { nome: "Boa Noite", chave: "boa-noite" },
+    { nome: "Bom Dia", chave: "bom-dia" },
+    { nome: "Esperança", chave: "esperanca" },
+    { nome: "Família", chave: "familia" },
+    { nome: "Fé", chave: "fe" },
+    { nome: "Gratidão", chave: "gratidao" },
+    { nome: "Motivação", chave: "motivacao" },
+    { nome: "Reflexão", chave: "reflexao" },
+    { nome: "Sucesso", chave: "sucesso" },
+    { nome: "Vida", chave: "vida" }
   ];
 
   categoriasFixas.forEach((cat) => {
-    const caminhoLocal = `imagens/categorias/${cat.chave}`;
+    const caminhoLocal = `imagens/categorias/${cat.chave}.png`;
 
     const card = document.createElement("div");
     card.className = "categoriaCard";
@@ -163,7 +167,7 @@ function mostrarFrases(filtro = "") {
 
     listaCategorias.appendChild(card);
   });
-
+}
 
 
 async function curtir(id) {
