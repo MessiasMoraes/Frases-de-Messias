@@ -23,23 +23,7 @@ async function carregarFrases() {
   if (lista) lista.innerHTML = "<p>Carregando frases...</p>";
 
   frases = [];
-  categorias = {};
 
-  // 1. Carrega o mapa de categorias
-  try {
-    const consultaCategorias = await getDocs(collection(db, "categorias"));
-    consultaCategorias.forEach((doc) => {
-      const dados = doc.data();
-      const nomeCat = dados.nome || doc.id;
-      // Busca imagem no Firestore ou gera o caminho padrão local
-      const imgCat = dados.imagem || dados.foto || dados.url || `imagens/categorias/${nomeCat.toLowerCase().replace(/\s+/g, '-')}.png`;
-      categorias[nomeCat] = imgCat;
-    });
-  } catch (e) {
-    console.error("Erro ao carregar categorias do Firestore:", e);
-  }
-
-  // 2. Carrega as frases
   try {
     const consulta = await getDocs(collection(db, "frases"));
     consulta.forEach((item) => {
@@ -59,7 +43,6 @@ async function carregarFrases() {
     return;
   }
 
-  // Define frase do dia
   const indice = Math.floor(Math.random() * frases.length);
   if (fraseDia) {
     fraseDia.textContent = `"${frases[indice].texto}"`;
@@ -68,6 +51,7 @@ async function carregarFrases() {
   mostrarFrases();
   mostrarCategorias();
 }
+
 
 function mostrarFrases(filtro = "") {
   if (!lista) return;
