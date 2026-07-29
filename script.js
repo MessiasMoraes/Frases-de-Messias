@@ -125,11 +125,10 @@ function mostrarFrases(filtro = "") {
   });
 }
 
-async function mostrarCategorias() {
+function mostrarCategorias() {
   if (!listaCategorias) return;
   listaCategorias.innerHTML = "";
 
-  // Lista fixa com as 12 categorias oficiais
   const categoriasFixas = [
     { nome: "Amizade", chave: "amizade" },
     { nome: "Amor", chave: "amor" },
@@ -146,13 +145,13 @@ async function mostrarCategorias() {
   ];
 
   categoriasFixas.forEach((cat) => {
-    const imagem = `imagens/categorias/${cat.chave}.png`;
+    const caminhoLocal = `imagens/categorias/${cat.chave}.png`;
 
     const card = document.createElement("div");
     card.className = "categoriaCard";
 
     card.innerHTML = `
-      <img src="${imagem}" alt="${cat.nome}" onerror="this.src='imagens/categorias/padrao.jpg'">
+      <img src="${caminhoLocal}" alt="${cat.nome}" onerror="this.src='imagens/categorias/padrao.jpg'">
       <span>${cat.nome}</span>
     `;
 
@@ -169,6 +168,7 @@ async function mostrarCategorias() {
     listaCategorias.appendChild(card);
   });
 }
+
 
 
 async function curtir(id) {
