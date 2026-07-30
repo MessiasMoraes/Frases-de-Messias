@@ -412,3 +412,127 @@ async function copiar(texto){
     }
 
 }
+
+async function baixarImagem(botao){
+
+    const card = botao.closest(".cardFrase");
+
+    const imagem = card.querySelector(".imagemFrase img");
+
+    const area = card.querySelector(".imagemFrase");
+
+    botao.disabled = true;
+    botao.innerHTML = "⏳ Gerando...";
+
+    try{
+
+        if(!imagem.complete){
+
+            await new Promise(resolve=>{
+
+                imagem.onload = resolve;
+                imagem.onerror = resolve;
+
+            });
+
+        }
+
+        const canvas = await html2canvas(area,{
+
+            useCORS:true,
+            allowTaint:false,
+            scale:3,
+            backgroundColor:null,
+            imageTimeout:0
+
+        });
+
+        const link=document.createElement("a");
+
+        link.download=`frase-${Date.now()}.png`;
+
+        link.href=canvas.toDataURL("image/png",1);
+
+        link.click();
+
+    }catch(e){
+
+        console.error(e);
+
+        alert("Erro ao gerar a imagem.");
+
+    }
+
+    botao.disabled=false;
+
+    botao.innerHTML="📥 Baixar";
+
+}
+
+function fraseDoDia(){
+
+    if(!fraseDia) return;
+
+    const indice=Math.floor(Math.random()*frases.length);
+
+    fraseDia.textContent=`"${frases[indice].texto}"`;
+
+}
+
+if(temaBtn){
+
+    if(localStorage.getItem("tema")=="dark"){
+
+        document.body.classList.add("dark");
+
+    }
+
+    temaBtn.onclick=()=>{
+
+        document.body.classList.toggle("dark");
+
+        localStorage.setItem(
+
+            "tema",
+
+            document.body.classList.contains("dark")
+            ?"dark":"light"
+
+        );
+
+    };
+
+}
+
+if(pesquisa){
+
+    pesquisa.oninput=()=>{
+
+        mostrarFrases(pesquisa.value);
+
+    };
+
+}
+
+if(copiarBtn){
+
+    copiarBtn.onclick=()=>{
+
+        copiar(fraseDia.textContent.replace(/"/g,""));
+
+    };
+
+}
+
+window.curtir=curtir;
+window.favoritar=favoritar;
+window.compartilhar=compartilhar;
+window.baixarImagem=baixarImagem;
+window.visualizar=visualizar;
+window.copiar=copiar;
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+    carregarFrases();
+
+});
