@@ -270,3 +270,145 @@ function mostrarCategorias(){
     });
 
 }
+
+async function curtir(id){
+
+    try{
+
+        await updateDoc(doc(db,"frases",id),{
+            curtidas: increment(1)
+        });
+
+        const frase = frases.find(f => f.id === id);
+
+        if(frase){
+            frase.curtidas = Number(frase.curtidas || 0) + 1;
+        }
+
+        mostrarFrases(pesquisa?.value || "");
+
+    }catch(e){
+
+        console.error(e);
+        alert("Erro ao curtir.");
+
+    }
+
+}
+
+function favoritar(texto){
+
+    if(favoritos.includes(texto)){
+
+        alert("⭐ Essa frase já está nos favoritos.");
+        return;
+
+    }
+
+    favoritos.push(texto);
+
+    localStorage.setItem(
+        "favoritos",
+        JSON.stringify(favoritos)
+    );
+
+    alert("❤️ Adicionado aos favoritos!");
+
+}
+
+async function compartilhar(id,texto){
+
+    try{
+
+        await updateDoc(doc(db,"frases",id),{
+            compartilhamentos: increment(1)
+        });
+
+        const frase = frases.find(f=>f.id===id);
+
+        if(frase){
+            frase.compartilhamentos =
+                Number(frase.compartilhamentos||0)+1;
+        }
+
+        if(navigator.share){
+
+            await navigator.share({
+
+                title:"Frases de Messias",
+
+                text:texto,
+
+                url:location.href
+
+            });
+
+        }else{
+
+            navigator.clipboard.writeText(texto);
+
+            alert("📋 Frase copiada para compartilhar.");
+
+        }
+
+        mostrarFrases(pesquisa?.value || "");
+
+    }catch(e){
+
+        console.error(e);
+
+    }
+
+}
+
+async function visualizar(id){
+
+    const chave="view_"+id;
+
+    if(localStorage.getItem(chave))
+        return;
+
+    try{
+
+        await updateDoc(doc(db,"frases",id),{
+
+            visualizacoes:increment(1)
+
+        });
+
+        localStorage.setItem(chave,"1");
+
+        const frase = frases.find(f=>f.id===id);
+
+        if(frase){
+
+            frase.visualizacoes =
+                Number(frase.visualizacoes||0)+1;
+
+        }
+
+    }catch(e){
+
+        console.error(e);
+
+    }
+
+}
+
+async function copiar(texto){
+
+    try{
+
+        await navigator.clipboard.writeText(texto);
+
+        alert("📋 Frase copiada!");
+
+    }catch(e){
+
+        console.error(e);
+
+        alert("Não foi possível copiar.");
+
+    }
+
+}
