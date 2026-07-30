@@ -107,3 +107,166 @@ async function carregarFrases(){
     mostrarFrases();
 
 }
+
+function mostrarFrases(filtro = "") {
+
+    if (!lista) return;
+
+    lista.innerHTML = "";
+
+    filtro = filtro.toLowerCase().trim();
+
+    const resultado = frases.filter(f => {
+
+        if (filtro === "") return true;
+
+        return (
+            (f.texto || "").toLowerCase().includes(filtro) ||
+            (f.autor || "").toLowerCase().includes(filtro) ||
+            (f.categoria || "").toLowerCase().includes(filtro)
+        );
+
+    });
+
+    if (resultado.length === 0) {
+
+        lista.innerHTML = `
+            <div class="semResultado">
+                😔 Nenhuma frase encontrada.
+            </div>
+        `;
+
+        return;
+
+    }
+
+    resultado.forEach(criarCardFrase);
+
+}
+
+function criarCardFrase(f){
+
+    const imagemCategoria =
+        categorias[f.categoria] ||
+        `imagens/categorias/${(f.categoria || "padrao")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g,"")
+            .toLowerCase()
+            .replace(/\s+/g,"-")}.png`;
+
+    const card = document.createElement("div");
+
+    card.className = "cardFrase";
+
+    card.innerHTML = `
+
+        <div class="imagemFrase">
+
+            <img
+                loading="lazy"
+                crossorigin="anonymous"
+                src="${f.imagem || imagemCategoria}"
+                alt="${f.categoria}"
+                onerror="this.src='imagens/categorias/padrao.png'"
+            >
+
+            <div class="overlay">
+
+                <p class="textoFrase">
+                    "${f.texto}"
+                </p>
+
+                <div class="autorFrase">
+                    — ${f.autor || "Messias"}
+                </div>
+
+                <div class="marca">
+                    📖 Frases de Messias
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="botoes">
+
+            <button onclick="curtir('${f.id}')">
+                ❤️ Curtir
+            </button>
+
+            <button onclick='favoritar(${JSON.stringify(f.texto)})'>
+                ⭐ Favoritar
+            </button>
+
+            <button onclick='compartilhar("${f.id}",${JSON.stringify(f.texto)})'>
+                📤 Compartilhar
+            </button>
+
+            <button onclick="baixarImagem(this)">
+                📥 Baixar
+            </button>
+
+        </div>
+
+        <div class="estatisticas">
+
+            <span>❤️ ${Number(f.curtidas || 0).toLocaleString("pt-BR")}</span>
+
+            <span>👁️ ${Number(f.visualizacoes || 0).toLocaleString("pt-BR")}</span>
+
+            <span>📤 ${Number(f.compartilhamentos || 0).toLocaleString("pt-BR")}</span>
+
+        </div>
+
+    `;
+
+    lista.appendChild(card);
+
+    visualizar(f.id);
+
+}
+
+function mostrarCategorias(){
+
+    if(!listaCategorias) return;
+
+    listaCategorias.innerHTML = "";
+
+    Object.entries(categorias).forEach(([nome, imagem]) =>{
+
+        const card = document.createElement("div");
+
+        card.className = "categoriaCard";
+
+        card.innerHTML = `
+
+            <img
+                loading="lazy"
+                src="${imagem}"
+                alt="${nome}"
+                onerror="this.src='imagens/categorias/padrao.png'"
+            >
+
+            <span>${nome}</span>
+
+        `;
+
+        card.onclick = ()=>{
+
+            mostrarFrases(nome);
+
+            window.scrollTo({
+
+                top: lista.offsetTop - 20,
+
+                behavior:"smooth"
+
+            });
+
+        };
+
+        listaCategorias.appendChild(card);
+
+    });
+
+}
