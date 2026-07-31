@@ -1,0 +1,16 @@
+{
+  "name": "Frases de Messias",
+  "short_name": "Frases",
+  "description": "Aplicativo de frases inspiradoras, motivação e reflexão.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4A90E2",
+  "icons": [
+    {
+      "src": "imagens/1785461694182.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
