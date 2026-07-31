@@ -3,9 +3,7 @@ const GEMINI_API_KEY = "AQ.Ab8RN6JwOx1BCXtyFkGYM0Ghuo63JNhh9lDiqo9UdoGdwIYRNQ";
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 /**
- * Envia uma mensagem para a Gemini API e retorna o texto gerado.
- * @param {string} prompt Texto ou pergunta enviada pelo usuário.
- * @returns {Promise<string>} Resposta gerada pela IA.
+ * Envia o tema/prompt para a Gemini API e retorna a frase gerada.
  */
 async function enviarParaGemini(prompt) {
     try {
@@ -18,7 +16,7 @@ async function enviarParaGemini(prompt) {
                 contents: [
                     {
                         parts: [
-                            { text: prompt }
+                            { text: `Escreva uma frase curta e inspiradora sobre o tema: ${prompt}` }
                         ]
                     }
                 ]
@@ -27,12 +25,10 @@ async function enviarParaGemini(prompt) {
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.error?.message || `Erro ${response.status}: Falha na requisição`);
+            throw new Error(errorData.error?.message || `Erro ${response.status}`);
         }
 
         const data = await response.json();
-        
-        // Extrai o texto da resposta
         const respostaTexto = data.candidates?.[0]?.content?.parts?.[0]?.text;
         
         if (!respostaTexto) {
@@ -42,30 +38,47 @@ async function enviarParaGemini(prompt) {
         return respostaTexto;
 
     } catch (error) {
-        console.error("Erro ao chamar a Gemini API:", error);
+        console.error("Erro na Gemini API:", error);
         throw error;
     }
 }
 
-// Exemplo de integração simples com formulário ou interface no PWA
+// Vinculação com os elementos da tela
 document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('chat-form');
-    const input = document.getElementById('user-input');
-    const output = document.getElementById('output');
+    // Busca o botão pelo texto ou tag
+    const botoes = Array.from(document.querySelectorAll('button'));
+    const btnGerar = botoes.find(b => b.textContent.includes('Gerar Frase')) || document.querySelector('#btn-gerar');
+    
+    // Busca o input de texto
+    const inputTema = document.querySelector('input[placeholder*="Pesquisar"], input[type="text"]') || document.querySelector('#input-tema');
 
-    if (form && input && output) {
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const prompt = input.value.trim();
-            if (!prompt) return;
+    if (btnGerar && inputTema) {
+        btnGerar.addEventListener('click', async () => {
+            const tema = inputTema.value.trim();
+            if (!tema) {
+                alert('Por favor, digite um tema para gerar a frase!');
+                return;
+            }
 
-            output.textContent = 'Pensando...';
-            
+            const textoOriginalBotao = btnGerar.textContent;
+            btnGerar.textContent = 'Gerando...';
+            btnGerar.disabled = true;
+
             try {
-                const resposta = await enviarParaGemini(prompt);
-                output.textContent = resposta;
+                const fraseGerada = await enviarParaGemini(tema);
+                
+                // Exibe o resultado na tela (substitui na área de Frase do Dia ou via alert)
+                const areaFrase = document.querySelector('blockquote, .frase-resultado, p');
+                if (areaFrase) {
+                    areaFrase.textContent = `"${fraseGerada.trim()}"`;
+                } else {
+                    alert(fraseGerada);
+                }
             } catch (err) {
-                output.textContent = 'Ops! Ocorreu um erro ao obter a resposta. Verifique o console.';
+                alert('Erro ao gerar a frase. Tente novamente em alguns instantes.');
+            } finally {
+                btnGerar.textContent = textoOriginalBotao;
+                btnGerar.disabled = false;
             }
         });
     }
