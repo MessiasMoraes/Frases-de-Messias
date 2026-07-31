@@ -365,7 +365,7 @@ if ('serviceWorker' in navigator) {
 }
 
 // Integracao do Gerador de Frases com IA (Gemini API)
-const GEMINI_API_KEY = "AQ.Ab8RN6KB1IGgxHjltWNjX6SP_AkmmE0IZP-9FYm9vFF-cwxQEg"; 
+const GEMINI_API_KEY = "AQ.Ab8RN6KY1FqK9IfO0mB0UrudEaLgPlUzeonmI-Gt4AmUTZ3J2g"; 
 
 const promptInput = document.getElementById('promptIA');
 const gerarBtn = document.getElementById('gerarIaBtn');
@@ -383,7 +383,7 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
     resultadoIaDiv.innerText = "🤖 Criando sua frase inspiradora...";
 
     try {
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -398,6 +398,13 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
       });
 
       const data = await response.json();
+
+      if (!response.ok) {
+        const msg = data.error?.message || "Erro na requisição.";
+        resultadoIaDiv.innerText = `⚠️ Erro da IA: ${msg}`;
+        return;
+      }
+
       const fraseGerada = data.candidates[0].content.parts[0].text;
 
       resultadoIaDiv.innerHTML = `
@@ -407,7 +414,7 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
       `;
     } catch (error) {
       console.error(error);
-      resultadoIaDiv.innerText = "Ops! Ocorreu um erro ao gerar a frase. Tente novamente em instantes.";
+      resultadoIaDiv.innerText = "Ops! Ocorreu um erro de conexão. Tente novamente.";
     }
   });
 }
