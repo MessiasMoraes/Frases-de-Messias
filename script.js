@@ -280,43 +280,93 @@ async function copiar(texto){
 
 // FUNÇÃO DE DOWNLOAD OTIMIZADA
 async function baixarImagem(botao) {
-    const card = botao.closest(".cardFrase");
-    const area = card?.querySelector(".imagemFrase");
 
-    if (!card || !area) return;
+    if (botao.disabled) return;
+
+    if (typeof html2canvas === "undefined") {
+        alert("A biblioteca html2canvas não foi carregada.");
+        return;
+    }
+
+    const card = botao.closest(".cardFrase");
+    const area = card.querySelector(".imagemFrase");
 
     botao.disabled = true;
-    botao.textContent = "⏳ Gerando...";
+    botao.innerHTML = "⏳ Preparando...";
 
     try {
+
         const canvas = await html2canvas(area, {
             useCORS: true,
-            allowTaint: true,
+            allowTaint: false,
             backgroundColor: null,
-            scale: 2,
-            logging: false,
-            imageTimeout: 5000
+            scale: window.devicePixelRatio || 2
         });
 
-        const idUnico = Date.now();
-        const link = document.createElement("a");
-        link.download = `frase-messias-${idUnico}.png`;
-        link.href = canvas.toDataURL("image/png");
-        link.click();
+        canvas.toBlob(async (blob) => {
 
-    } catch (e) {
-        console.error("Erro ao gerar imagem:", e);
-        
-        const textoFrase = card.querySelector(".textoFrase")?.textContent.trim() || "";
-        if (textoFrase) {
-            await navigator.clipboard.writeText(textoFrase);
-            alert("⚠️ A imagem do servidor não permitiu a captura direta.\n\nA frase foi copiada para a sua área de transferência!");
-        } else {
-            alert("Erro ao gerar a imagem. Tente novamente.");
-        }
-    } finally {
+            if (!blob) {
+                alert("Erro ao gerar a imagem.");
+                return;
+            }
+
+            const arquivo = new File(
+                [blob],
+                `frase-${Date.now()}.png`,
+                { type: "image/png" }
+            );
+
+            // Android: abre o menu Compartilhar
+            if (
+                navigator.canShare &&
+                navigator.canShare({ files: [arquivo] })
+            ) {
+
+                try {
+
+                    await navigator.share({
+                        title: "Frases de Messias",
+                        text: "Confira esta frase inspiradora.",
+                        files: [arquivo]
+                    });
+
+                } catch (e) {
+                    console.log("Compartilhamento cancelado.");
+                }
+
+            } else {
+
+                // Fallback para navegadores sem suporte
+                const url = URL.createObjectURL(blob);
+
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = arquivo.name;
+
+                document.body.appendChild(link);
+                link.click();
+
+                setTimeout(() => {
+                    URL.revokeObjectURL(url);
+                    link.remove();
+                }, 1000);
+
+            }
+
+            botao.disabled = false;
+            botao.innerHTML = "📥 Baixar";
+
+        }, "image/png");
+
+    } catch (erro) {
+
+        console.error(erro);
+
         botao.disabled = false;
-        botao.textContent = "📥 Baixar";
+        botao.innerHTML = "📥 Baixar";
+
+        alert("Erro ao gerar a imagem.");
+
     }
 }
 
