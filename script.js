@@ -501,7 +501,7 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
     });
 }
 
-// --- SCRIPT PARTE 1 (Amor, Fé, Motivação e Sabedoria) ---
+// --- SCRIPT PARTE 1 (CORRIGIDO) ---
 
 const frasesParte1 = [
     // --- AMOR ---
@@ -533,10 +533,21 @@ const frasesParte1 = [
     { texto: "Saber a hora certa de falar é importante, mas saber a hora de calar é fundamental.", autor: "Messias", categoria: "Sabedoria", imagem: "https://picsum.photos/seed/sabedoria5/800/600" }
 ];
 
-async function enviarParte1() {
-    try {
-        for (const item of frasesParte1) {
-            await addDoc(collection(db, "frases"), {
+async function enviarParte1Segura() {
+    // Busca as funções globais do Firebase importadas no seu app.js
+    const dbInstancia = window.db || db;
+    const funcAddDoc = window.addDoc || addDoc;
+    const funcCollection = window.collection || collection;
+
+    if (!dbInstancia || !funcAddDoc || !funcCollection) {
+        alert("❌ Erro: O Firebase ainda não foi inicializado. Aguarde alguns segundos e tente novamente.");
+        return;
+    }
+
+    let enviados = 0;
+    for (const item of frasesParte1) {
+        try {
+            await funcAddDoc(funcCollection(dbInstancia, "frases"), {
                 texto: item.texto,
                 autor: item.autor,
                 categoria: item.categoria,
@@ -545,16 +556,21 @@ async function enviarParte1() {
                 visualizacoes: Math.floor(Math.random() * 300) + 50,
                 compartilhamentos: Math.floor(Math.random() * 15) + 2
             });
+            enviados++;
+        } catch (erro) {
+            console.error("Erro no item:", erro);
         }
-        alert("🎉 Parte 1 cadastrada com sucesso!");
+    }
+
+    if (enviados > 0) {
+        alert(`🎉 Sucesso! ${enviados} frases da Parte 1 foram cadastradas.`);
         location.reload();
-    } catch (erro) {
-        alert("❌ Erro ao enviar: " + erro.message);
-        console.error(erro);
+    } else {
+        alert("❌ Ocorreu um erro ao salvar as frases. Verifique o console.");
     }
 }
 
-// Botão Flutuante da Parte 1
+// Criar botão na tela
 if (!document.getElementById("btnImportarParte1")) {
     const btn = document.createElement("button");
     btn.id = "btnImportarParte1";
@@ -565,6 +581,7 @@ if (!document.getElementById("btnImportarParte1")) {
     btn.onclick = async () => {
         btn.innerText = "⏳ Cadastrando...";
         btn.disabled = true;
-        await enviarParte1();
+        await enviarParte1Segura();
     };
-}
+        }
+                
