@@ -289,3 +289,96 @@ footer{
   cursor:pointer;
   z-index:1000;
 }
+#cardExportacao{
+
+    width:1080px;
+    height:1920px;
+
+    position:relative;
+
+    overflow:hidden;
+
+    border-radius:40px;
+
+    background:#111;
+
+}
+
+#cardExportacao img{
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+    position:absolute;
+
+    inset:0;
+
+}
+
+.fundoEscuro{
+
+    position:absolute;
+
+    inset:0;
+
+    background:rgba(0,0,0,.45);
+
+}
+
+.conteudoExportacao{
+
+    position:absolute;
+
+    inset:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:90px;
+
+    text-align:center;
+
+}
+
+#textoExportacao{
+
+    color:white;
+
+    font-size:72px;
+
+    line-height:1.5;
+
+    font-weight:bold;
+
+}
+
+#autorExportacao{
+
+    margin-top:70px;
+
+    color:white;
+
+    font-size:44px;
+
+}
+
+.logoExportacao{
+
+    position:absolute;
+
+    bottom:70px;
+
+    color:white;
+
+    font-size:38px;
+
+    opacity:.9;
+
+}
