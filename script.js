@@ -20,9 +20,9 @@ const copiarBtn = document.getElementById("copiarBtn");
 const fraseDia = document.getElementById("fraseDia");
 const temaBtn = document.getElementById("temaBtn");
 
-function mostrarCarregando(){
-    if(lista){
-        lista.innerHTML=`
+function mostrarCarregando() {
+    if (lista) {
+        lista.innerHTML = `
             <div class="loading">
                 ⏳ Carregando frases...
             </div>
@@ -30,9 +30,9 @@ function mostrarCarregando(){
     }
 }
 
-function mostrarErro(msg){
-    if(lista){
-        lista.innerHTML=`
+function mostrarErro(msg) {
+    if (lista) {
+        lista.innerHTML = `
             <div class="erro">
                 ${msg}
             </div>
@@ -40,32 +40,32 @@ function mostrarErro(msg){
     }
 }
 
-async function carregarFrases(){
+async function carregarFrases() {
     mostrarCarregando();
-    frases=[];
-    categorias={};
+    frases = [];
+    categorias = {};
 
-    try{
-        const consultaCategorias=await getDocs(collection(db,"categorias"));
-        consultaCategorias.forEach(docSnap=>{
-            const dados=docSnap.data();
-            categorias[dados.nome]=dados.imagem;
+    try {
+        const consultaCategorias = await getDocs(collection(db, "categorias"));
+        consultaCategorias.forEach(docSnap => {
+            const dados = docSnap.data();
+            categorias[dados.nome] = dados.imagem;
         });
 
-        const consultaFrases=await getDocs(collection(db,"frases"));
-        consultaFrases.forEach(docSnap=>{
+        const consultaFrases = await getDocs(collection(db, "frases"));
+        consultaFrases.forEach(docSnap => {
             frases.push({
-                id:docSnap.id,
+                id: docSnap.id,
                 ...docSnap.data()
             });
         });
-    }catch(e){
+    } catch (e) {
         console.error(e);
         mostrarErro("Erro ao carregar as frases.");
         return;
     }
 
-    if(frases.length===0){
+    if (frases.length === 0) {
         mostrarErro("Nenhuma frase encontrada.");
         return;
     }
@@ -101,22 +101,23 @@ function mostrarFrases(filtro = "") {
     resultado.forEach(criarCardFrase);
 }
 
-function criarCardFrase(f){
-    const imagem = f.imagem && f.imagem.trim() !== ""
-    ? f.imagem
-    : categorias[f.categoria] || "imagens/categorias/padrao.png";
+function criarCardFrase(f) {
+    // Garante uma imagem única via ID da frase se não houver imagem customizada ou de categoria
+    const imagem = (f.imagem && f.imagem.trim() !== "")
+        ? f.imagem
+        : (categorias[f.categoria] || `https://picsum.photos/seed/${f.id}/800/600`);
 
     const card = document.createElement("div");
     card.className = "cardFrase";
     card.innerHTML = `
         <div class="imagemFrase">
             <img
-    loading="lazy"
-    crossorigin="anonymous"
-    src="${imagem}"
-    alt="${f.categoria}"
-    onerror="this.src='imagens/categorias/padrao.png'"
->
+                loading="lazy"
+                crossorigin="anonymous"
+                src="${imagem}"
+                alt="${f.categoria || 'Frase'}"
+                onerror="this.src='imagens/categorias/padrao.png'"
+            >
             <div class="overlay">
                 <p class="textoFrase">
                     "${f.texto}"
@@ -159,11 +160,11 @@ function criarCardFrase(f){
     visualizar(f.id);
 }
 
-function mostrarCategorias(){
-    if(!listaCategorias) return;
+function mostrarCategorias() {
+    if (!listaCategorias) return;
     listaCategorias.innerHTML = "";
 
-    Object.entries(categorias).forEach(([nome, imagem]) =>{
+    Object.entries(categorias).forEach(([nome, imagem]) => {
         const card = document.createElement("div");
         card.className = "categoriaCard";
         card.innerHTML = `
@@ -176,11 +177,11 @@ function mostrarCategorias(){
             <span>${nome}</span>
         `;
 
-        card.onclick = ()=>{
+        card.onclick = () => {
             mostrarFrases(nome);
             window.scrollTo({
                 top: lista.offsetTop - 20,
-                behavior:"smooth"
+                behavior: "smooth"
             });
         };
 
@@ -188,26 +189,26 @@ function mostrarCategorias(){
     });
 }
 
-async function curtir(id){
-    try{
-        await updateDoc(doc(db,"frases",id),{
+async function curtir(id) {
+    try {
+        await updateDoc(doc(db, "frases", id), {
             curtidas: increment(1)
         });
 
         const frase = frases.find(f => f.id === id);
-        if(frase){
+        if (frase) {
             frase.curtidas = Number(frase.curtidas || 0) + 1;
         }
 
         mostrarFrases(pesquisa?.value || "");
-    }catch(e){
+    } catch (e) {
         console.error(e);
         alert("Erro ao curtir.");
     }
 }
 
-function favoritar(texto){
-    if(favoritos.includes(texto)){
+function favoritar(texto) {
+    if (favoritos.includes(texto)) {
         alert("⭐ Essa frase já está nos favoritos.");
         return;
     }
@@ -217,210 +218,166 @@ function favoritar(texto){
     alert("❤️ Adicionado aos favoritos!");
 }
 
-async function compartilhar(id,texto){
-    try{
-        await updateDoc(doc(db,"frases",id),{
+async function compartilhar(id, texto) {
+    try {
+        await updateDoc(doc(db, "frases", id), {
             compartilhamentos: increment(1)
         });
 
-        const frase = frases.find(f=>f.id===id);
-        if(frase){
-            frase.compartilhamentos = Number(frase.compartilhamentos||0)+1;
+        const frase = frases.find(f => f.id === id);
+        if (frase) {
+            frase.compartilhamentos = Number(frase.compartilhamentos || 0) + 1;
         }
 
-        if(navigator.share){
+        if (navigator.share) {
             await navigator.share({
-                title:"Frases de Messias",
-                text:texto,
-                url:location.href
+                title: "Frases de Messias",
+                text: texto,
+                url: location.href
             });
-        }else{
-            navigator.clipboard.writeText(texto);
+        } else {
+            await navigator.clipboard.writeText(texto);
             alert("📋 Frase copiada para compartilhar.");
         }
 
         mostrarFrases(pesquisa?.value || "");
-    }catch(e){
+    } catch (e) {
         console.error(e);
     }
 }
 
-async function visualizar(id){
-    const chave="view_"+id;
-    if(localStorage.getItem(chave)) return;
+async function visualizar(id) {
+    const chave = "view_" + id;
+    if (localStorage.getItem(chave)) return;
 
-    try{
-        await updateDoc(doc(db,"frases",id),{
-            visualizacoes:increment(1)
+    try {
+        await updateDoc(doc(db, "frases", id), {
+            visualizacoes: increment(1)
         });
 
-        localStorage.setItem(chave,"1");
-        const frase = frases.find(f=>f.id===id);
-        if(frase){
-            frase.visualizacoes = Number(frase.visualizacoes||0)+1;
+        localStorage.setItem(chave, "1");
+        const frase = frases.find(f => f.id === id);
+        if (frase) {
+            frase.visualizacoes = Number(frase.visualizacoes || 0) + 1;
         }
-    }catch(e){
+    } catch (e) {
         console.error(e);
     }
 }
 
-async function copiar(texto){
-    try{
+async function copiar(texto) {
+    try {
         await navigator.clipboard.writeText(texto);
         alert("📋 Frase copiada com sucesso!");
-    }catch(e){
+    } catch (e) {
         console.error(e);
         alert("Não foi possível copiar a frase.");
     }
 }
 
-// FUNÇÃO DE DOWNLOAD OTIMIZADA
+// FUNÇÃO DE DOWNLOAD OTIMIZADA E CORRIGIDA
 async function baixarImagem(botao) {
-
     const card = botao.closest(".cardFrase");
     if (!card) return;
 
     botao.disabled = true;
     botao.innerHTML = "⏳ Preparando...";
 
+    let exportacao = null;
+
     try {
+        const imgElement = card.querySelector(".imagemFrase img");
+        const imgSrc = imgElement ? imgElement.src : "";
+        const texto = card.querySelector(".textoFrase")?.innerText || "";
+        const autor = card.querySelector(".autorFrase")?.innerText || "";
 
-        const img = card.querySelector(".imagemFrase img").src;
-        const texto = card.querySelector(".textoFrase").innerText;
-        const autor = card.querySelector(".autorFrase").innerText;
-
-        const exportacao = document.createElement("div");
-
+        // Container oculto para renderizar imagem HD em alta resolução
+        exportacao = document.createElement("div");
         exportacao.style.cssText = `
-            position:fixed;
-            left:-99999px;
-            top:0;
-            width:1080px;
-            height:1920px;
-            overflow:hidden;
-            border-radius:40px;
-            background:#111;
-            font-family:Arial,sans-serif;
+            position: fixed;
+            left: -9999px;
+            top: 0;
+            width: 1080px;
+            height: 1920px;
+            overflow: hidden;
+            background: #111;
+            font-family: Arial, sans-serif;
+            z-index: -9999;
         `;
 
         exportacao.innerHTML = `
-            <img src="${img}"
-                 style="
-                    position:absolute;
-                    inset:0;
-                    width:100%;
-                    height:100%;
-                    object-fit:cover;">
-
-            <div style="
-                position:absolute;
-                inset:0;
-                background:rgba(0,0,0,.45);">
-            </div>
-
-            <div style="
-                position:absolute;
-                inset:0;
-                display:flex;
-                flex-direction:column;
-                justify-content:center;
-                align-items:center;
-                padding:90px;
-                text-align:center;
-                color:white;">
-
-                <div style="
-                    font-size:70px;
-                    font-weight:bold;
-                    line-height:1.5;">
-                    ${texto}
-                </div>
-
-                <div style="
-                    margin-top:70px;
-                    font-size:42px;">
-                    ${autor}
-                </div>
-
-                <div style="
-                    position:absolute;
-                    bottom:70px;
-                    font-size:34px;">
-                    📖 Frases de Messias
-                </div>
-
+            <img src="${imgSrc}" crossorigin="anonymous" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">
+            <div style="position:absolute; inset:0; background:rgba(0,0,0,.45);"></div>
+            <div style="position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:90px; text-align:center; color:white;">
+                <div style="font-size:70px; font-weight:bold; line-height:1.5;">${texto}</div>
+                <div style="margin-top:70px; font-size:42px;">${autor}</div>
+                <div style="position:absolute; bottom:70px; font-size:34px;">📖 Frases de Messias</div>
             </div>
         `;
 
         document.body.appendChild(exportacao);
 
-        const canvas = await html2canvas(exportacao,{
-            useCORS:true,
-            scale:2,
-            backgroundColor:null
+        // Pequena pausa para garantir renderização no DOM antes da captura
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        const canvas = await html2canvas(exportacao, {
+            useCORS: true,
+            allowTaint: true,
+            scale: 1,
+            backgroundColor: null,
+            imageTimeout: 4000
         });
 
-        document.body.removeChild(exportacao);
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));
 
-        const blob = await new Promise(resolve =>
-            canvas.toBlob(resolve,"image/png")
-        );
+        if (!blob) throw new Error("Erro ao converter canvas em imagem.");
 
-        if(!blob){
-            throw new Error("Erro ao gerar imagem.");
-        }
+        const arquivo = new File([blob], `frase-${Date.now()}.png`, { type: "image/png" });
 
-        const arquivo = new File(
-            [blob],
-            `frase-${Date.now()}.png`,
-            {type:"image/png"}
-        );
-
-        if(navigator.canShare && navigator.canShare({files:[arquivo]})){
-
+        if (navigator.canShare && navigator.canShare({ files: [arquivo] })) {
             await navigator.share({
-                title:"Frases de Messias",
-                files:[arquivo]
+                title: "Frases de Messias",
+                files: [arquivo]
             });
-
-        }else{
-
-            const url=URL.createObjectURL(blob);
-
-            const a=document.createElement("a");
-            a.href=url;
-            a.download=arquivo.name;
+        } else {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = arquivo.name;
             a.click();
-
             URL.revokeObjectURL(url);
         }
 
-    }catch(e){
-
-        console.error(e);
-        alert("Erro ao gerar a imagem.");
-
-    }finally{
-
-        botao.disabled=false;
-        botao.innerHTML="📥 Baixar";
-
+    } catch (e) {
+        console.error("Erro ao gerar imagem:", e);
+        const textoCard = card.querySelector(".textoFrase")?.innerText || "";
+        if (textoCard) {
+            await navigator.clipboard.writeText(textoCard);
+            alert("⚠️ Ocorreu uma restrição de imagem externa, mas copiei o texto da frase para você!");
+        } else {
+            alert("Erro ao gerar a imagem.");
+        }
+    } finally {
+        if (exportacao && exportacao.parentNode) {
+            document.body.removeChild(exportacao);
+        }
+        botao.disabled = false;
+        botao.innerHTML = "📥 Baixar";
     }
-
 }
 
-function fraseDoDia(){
-    if(!fraseDia) return;
-    const indice=Math.floor(Math.random()*frases.length);
-    fraseDia.textContent=`"${frases[indice].texto}"`;
+function fraseDoDia() {
+    if (!fraseDia || frases.length === 0) return;
+    const indice = Math.floor(Math.random() * frases.length);
+    fraseDia.textContent = `"${frases[indice].texto}"`;
 }
 
-if(temaBtn){
-    if(localStorage.getItem("tema")=="dark"){
+if (temaBtn) {
+    if (localStorage.getItem("tema") === "dark") {
         document.body.classList.add("dark");
     }
 
-    temaBtn.onclick=()=>{
+    temaBtn.onclick = () => {
         document.body.classList.toggle("dark");
         localStorage.setItem(
             "tema",
@@ -429,40 +386,42 @@ if(temaBtn){
     };
 }
 
-if(pesquisa){
-    pesquisa.oninput=()=>{
+if (pesquisa) {
+    pesquisa.oninput = () => {
         mostrarFrases(pesquisa.value);
     };
 }
 
-if(copiarBtn){
-    copiarBtn.onclick=()=>{
-        copiar(fraseDia.textContent.replace(/"/g,""));
+if (copiarBtn) {
+    copiarBtn.onclick = () => {
+        if (fraseDia) {
+            copiar(fraseDia.textContent.replace(/"/g, ""));
+        }
     };
 }
 
-window.curtir=curtir;
-window.favoritar=favoritar;
-window.compartilhar=compartilhar;
-window.baixarImagem=baixarImagem;
-window.visualizar=visualizar;
-window.copiar=copiar;
+window.curtir = curtir;
+window.favoritar = favoritar;
+window.compartilhar = compartilhar;
+window.baixarImagem = baixarImagem;
+window.visualizar = visualizar;
+window.copiar = copiar;
 
-document.addEventListener("DOMContentLoaded",()=>{
+document.addEventListener("DOMContentLoaded", () => {
     carregarFrases();
 });
 
 // Registro do Service Worker para o PWA
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-      .then(reg => console.log('Service Worker registrado com sucesso!', reg))
-      .catch(err => console.log('Erro ao registrar Service Worker:', err));
-  });
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('Service Worker registrado com sucesso!', reg))
+            .catch(err => console.log('Erro ao registrar Service Worker:', err));
+    });
 }
 
 // Integração do Gerador de Frases com IA (Gemini API via x-goog-api-key)
-const GEMINI_API_KEY = "AQ.Ab8RN6KY1FqK9IfO0mB0UrudEaLgPlUzeonmI-Gt4AmUTZ3J2g"; 
+const GEMINI_API_KEY = "AQ.Ab8RN6KY1FqK9IfO0mB0UrudEaLgPlUzeonmI-Gt4AmUTZ3J2g";
 const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
 
 const promptInput = document.getElementById('promptIA');
@@ -470,30 +429,50 @@ const gerarBtn = document.getElementById('gerarIaBtn');
 const resultadoIaDiv = document.getElementById('resultadoIA');
 
 if (gerarBtn && promptInput && resultadoIaDiv) {
-  gerarBtn.addEventListener('click', async () => {
-    const textoUsuario = promptInput.value.trim();
+    gerarBtn.addEventListener('click', async () => {
+        const textoUsuario = promptInput.value.trim();
 
-    if (!textoUsuario) {
-      resultadoIaDiv.innerText = "Por favor, digite um tema ou sentimento!";
-      return;
-    }
+        if (!textoUsuario) {
+            resultadoIaDiv.innerText = "Por favor, digite um tema ou sentimento!";
+            return;
+        }
 
-    resultadoIaDiv.innerText = "🤖 Criando sua frase inspiradora...";
+        resultadoIaDiv.innerText = "🤖 Criando sua frase inspiradora...";
 
-    try {
-      const response = await fetch(GEMINI_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-goog-api-key": GEMINI_API_KEY
-        },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{
-              text: `Escreva uma frase curta, inspiradora e emocionante em português sobre o tema ou sentimento: "${textoUsuario}". Retorne apenas a frase entre aspas e nada mais.`
-            }]
-          }]
-        })
-      });
+        try {
+            const response = await fetch(GEMINI_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-goog-api-key": GEMINI_API_KEY
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: `Escreva uma frase curta, inspiradora e emocionante em português sobre o tema ou sentimento: "${textoUsuario}". Retorne apenas a frase entre aspas e nada mais.`
+                        }]
+                    }]
+                })
+            });
 
+            const data = await response.json();
 
+            if (!response.ok) {
+                const msg = data.error?.message || "Erro na requisição.";
+                resultadoIaDiv.innerText = `⚠️ Erro da IA: ${msg}`;
+                return;
+            }
+
+            const fraseGerada = data.candidates?.[0]?.content?.parts?.[0]?.text || "Não foi possível gerar a frase.";
+
+            resultadoIaDiv.innerHTML = `
+                <blockquote style="background: white; padding: 15px; border-left: 4px solid #4A90E2; border-radius: 6px; display: inline-block; text-align: left; margin-top: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); color: #333;">
+                    ${fraseGerada}
+                </blockquote>
+            `;
+        } catch (error) {
+            console.error(error);
+            resultadoIaDiv.innerText = "Ops! Ocorreu um erro de conexão. Tente novamente.";
+        }
+    });
+}
