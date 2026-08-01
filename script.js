@@ -141,6 +141,9 @@ function criarCardFrase(f){
             <button onclick='favoritar(${JSON.stringify(f.texto)})'>
                 ⭐ Favoritar
             </button>
+            <button onclick='copiar(${JSON.stringify(f.texto)})'>
+                📋 Copiar
+            </button>
             <button onclick='compartilhar("${f.id}",${JSON.stringify(f.texto)})'>
                 📤 Compartilhar
             </button>
@@ -268,14 +271,14 @@ async function visualizar(id){
 async function copiar(texto){
     try{
         await navigator.clipboard.writeText(texto);
-        alert("📋 Frase copiada!");
+        alert("📋 Frase copiada com sucesso!");
     }catch(e){
         console.error(e);
-        alert("Não foi possível copiar.");
+        alert("Não foi possível copiar a frase.");
     }
 }
 
-// FUNÇÃO DE DOWNLOAD OTIMIZADA (Resolver problema de travar no "Gerando...")
+// FUNÇÃO DE DOWNLOAD OTIMIZADA
 async function baixarImagem(botao) {
     const card = botao.closest(".cardFrase");
     const area = card?.querySelector(".imagemFrase");
@@ -292,7 +295,7 @@ async function baixarImagem(botao) {
             backgroundColor: null,
             scale: 2,
             logging: false,
-            imageTimeout: 5000 // Timeout de 5 segundos para imagens externas travadas
+            imageTimeout: 5000
         });
 
         const idUnico = Date.now();
@@ -304,7 +307,6 @@ async function baixarImagem(botao) {
     } catch (e) {
         console.error("Erro ao gerar imagem:", e);
         
-        // Plano de contingência se a imagem externa for totalmente bloqueada por CORS
         const textoFrase = card.querySelector(".textoFrase")?.textContent.trim() || "";
         if (textoFrase) {
             await navigator.clipboard.writeText(textoFrase);
@@ -313,7 +315,6 @@ async function baixarImagem(botao) {
             alert("Erro ao gerar a imagem. Tente novamente.");
         }
     } finally {
-        // Garante que o botão SEMPRE voltará ao estado original
         botao.disabled = false;
         botao.textContent = "📥 Baixar";
     }
