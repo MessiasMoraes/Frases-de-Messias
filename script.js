@@ -102,7 +102,6 @@ function mostrarFrases(filtro = "") {
 }
 
 function criarCardFrase(f) {
-    // Garante uma imagem única via ID da frase se não houver imagem customizada ou de categoria
     const imagem = (f.imagem && f.imagem.trim() !== "")
         ? f.imagem
         : (categorias[f.categoria] || `https://picsum.photos/seed/${f.id}/800/600`);
@@ -144,9 +143,15 @@ function criarCardFrase(f) {
             <button onclick='compartilhar("${f.id}",${JSON.stringify(f.texto)})'>
                 📤 Compartilhar
             </button>
-            <button onclick="baixarImagem(this)">
+            <button onclick="mostrarOpcoesDownload(this)">
                 📥 Baixar
             </button>
+        </div>
+
+        <div class="opcoesDownload" style="display:none; margin-top:10px; text-align:center;">
+            <p style="font-size:13px; margin-bottom:5px; font-weight:bold;">Escolha o formato:</p>
+            <button onclick="baixarImagem(this, 'story')" style="margin-right:5px; font-size:12px; padding:6px 12px;">📱 Story (9:16)</button>
+            <button onclick="baixarImagem(this, 'feed')" style="font-size:12px; padding:6px 12px;">📸 Feed (1:1)</button>
         </div>
 
         <div class="estatisticas">
@@ -158,6 +163,15 @@ function criarCardFrase(f) {
 
     lista.appendChild(card);
     visualizar(f.id);
+}
+
+function mostrarOpcoesDownload(botao) {
+    const card = botao.closest(".cardFrase");
+    if (!card) return;
+    const opcoes = card.querySelector(".opcoesDownload");
+    if (opcoes) {
+        opcoes.style.display = opcoes.style.display === "none" ? "block" : "none";
+    }
 }
 
 function mostrarCategorias() {
@@ -275,13 +289,17 @@ async function copiar(texto) {
     }
 }
 
-// FUNÇÃO DE DOWNLOAD OTIMIZADA E CORRIGIDA
-async function baixarImagem(botao) {
+// FUNÇÃO DE DOWNLOAD COM DUAS OPÇÕES DE TAMANHO
+async function baixarImagem(botao, formato = "story") {
     const card = botao.closest(".cardFrase");
     if (!card) return;
 
+    const btnOpcoes = card.querySelector(".opcoesDownload");
+    if (btnOpcoes) btnOpcoes.style.display = "none";
+
+    const textoBotaoOriginal = botao.innerHTML;
     botao.disabled = true;
-    botao.innerHTML = "⏳ Preparando...";
+    botao.innerHTML = "⏳ Gerando...";
 
     let exportacao = null;
 
@@ -291,14 +309,20 @@ async function baixarImagem(botao) {
         const texto = card.querySelector(".textoFrase")?.innerText || "";
         const autor = card.querySelector(".autorFrase")?.innerText || "";
 
-        // Container oculto para renderizar imagem HD em alta resolução
+        // Dimensões segundo o formato escolhido
+        const largura = 1080;
+        const altura = formato === "feed" ? 1080 : 1920;
+        const tamanhoFonteTexto = formato === "feed" ? "52px" : "70px";
+        const tamanhoFonteAutor = formato === "feed" ? "34px" : "42px";
+        const tamanhoFonteMarca = formato === "feed" ? "26px" : "34px";
+
         exportacao = document.createElement("div");
         exportacao.style.cssText = `
             position: fixed;
             left: -9999px;
             top: 0;
-            width: 1080px;
-            height: 1920px;
+            width: ${largura}px;
+            height: ${altura}px;
             overflow: hidden;
             background: #111;
             font-family: Arial, sans-serif;
@@ -308,16 +332,15 @@ async function baixarImagem(botao) {
         exportacao.innerHTML = `
             <img src="${imgSrc}" crossorigin="anonymous" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">
             <div style="position:absolute; inset:0; background:rgba(0,0,0,.45);"></div>
-            <div style="position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:90px; text-align:center; color:white;">
-                <div style="font-size:70px; font-weight:bold; line-height:1.5;">${texto}</div>
-                <div style="margin-top:70px; font-size:42px;">${autor}</div>
-                <div style="position:absolute; bottom:70px; font-size:34px;">📖 Frases de Messias</div>
+            <div style="position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:60px; text-align:center; color:white;">
+                <div style="font-size:${tamanhoFonteTexto}; font-weight:bold; line-height:1.4;">${texto}</div>
+                <div style="margin-top:50px; font-size:${tamanhoFonteAutor};">${autor}</div>
+                <div style="position:absolute; bottom:50px; font-size:${tamanhoFonteMarca};">📖 Frases de Messias</div>
             </div>
         `;
 
         document.body.appendChild(exportacao);
 
-        // Pequena pausa para garantir renderização no DOM antes da captura
         await new Promise(resolve => setTimeout(resolve, 300));
 
         const canvas = await html2canvas(exportacao, {
@@ -330,9 +353,9 @@ async function baixarImagem(botao) {
 
         const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));
 
-        if (!blob) throw new Error("Erro ao converter canvas em imagem.");
+        if (!blob) throw new Error("Erro ao gerar imagem.");
 
-        const arquivo = new File([blob], `frase-${Date.now()}.png`, { type: "image/png" });
+        const arquivo = new File([blob], `frase-${formato}-${Date.now()}.png`, { type: "image/png" });
 
         if (navigator.canShare && navigator.canShare({ files: [arquivo] })) {
             await navigator.share({
@@ -353,7 +376,7 @@ async function baixarImagem(botao) {
         const textoCard = card.querySelector(".textoFrase")?.innerText || "";
         if (textoCard) {
             await navigator.clipboard.writeText(textoCard);
-            alert("⚠️ Ocorreu uma restrição de imagem externa, mas copiei o texto da frase para você!");
+            alert("⚠️ Não foi possível gerar a imagem, mas copiei o texto da frase para você!");
         } else {
             alert("Erro ao gerar a imagem.");
         }
@@ -362,7 +385,7 @@ async function baixarImagem(botao) {
             document.body.removeChild(exportacao);
         }
         botao.disabled = false;
-        botao.innerHTML = "📥 Baixar";
+        botao.innerHTML = textoBotaoOriginal;
     }
 }
 
@@ -404,6 +427,7 @@ window.curtir = curtir;
 window.favoritar = favoritar;
 window.compartilhar = compartilhar;
 window.baixarImagem = baixarImagem;
+window.mostrarOpcoesDownload = mostrarOpcoesDownload;
 window.visualizar = visualizar;
 window.copiar = copiar;
 
@@ -411,16 +435,16 @@ document.addEventListener("DOMContentLoaded", () => {
     carregarFrases();
 });
 
-// Registro do Service Worker para o PWA
+// Service Worker PWA
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('Service Worker registrado com sucesso!', reg))
-            .catch(err => console.log('Erro ao registrar Service Worker:', err));
+            .then(reg => console.log('Service Worker registrado!', reg))
+            .catch(err => console.log('Erro no Service Worker:', err));
     });
 }
 
-// Integração do Gerador de Frases com IA (Gemini API via x-goog-api-key)
+// Gemini IA Integration
 const GEMINI_API_KEY = "AQ.Ab8RN6KY1FqK9IfO0mB0UrudEaLgPlUzeonmI-Gt4AmUTZ3J2g";
 const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
 
@@ -476,3 +500,4 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
         }
     });
 }
+    
