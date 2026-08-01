@@ -275,6 +275,7 @@ async function copiar(texto){
     }
 }
 
+// FUNÇÃO DE DOWNLOAD CORRIGIDA (Nome de arquivo dinâmico)
 async function baixarImagem(botao) {
     const card = botao.closest(".cardFrase");
     const area = card.querySelector(".imagemFrase");
@@ -283,7 +284,6 @@ async function baixarImagem(botao) {
     botao.textContent = "⏳ Gerando...";
 
     try {
-
         const canvas = await html2canvas(area, {
             useCORS: true,
             allowTaint: false,
@@ -292,16 +292,18 @@ async function baixarImagem(botao) {
             logging: false
         });
 
+        // Extrai a categoria ou texto para formar um nome dinâmico único
+        const textoFrase = card.querySelector(".textoFrase")?.textContent.trim() || "";
+        const idUnico = Date.now(); // Gera timestamp para garantir que o nome nunca se repita
+
         const link = document.createElement("a");
-        link.download = "frase-messias.png";
+        link.download = `frase-messias-${idUnico}.png`;
         link.href = canvas.toDataURL("image/png");
         link.click();
 
     } catch (e) {
-
         console.error(e);
         alert("Erro ao gerar a imagem.");
-
     }
 
     botao.disabled = false;
@@ -360,8 +362,9 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// Integracao do Gerador de Frases com IA (Gemini API)
+// Integracao do Gerador de Frases com IA (Gemini API com x-goog-api-key)
 const GEMINI_API_KEY = "AQ.Ab8RN6KY1FqK9IfO0mB0UrudEaLgPlUzeonmI-Gt4AmUTZ3J2g"; 
+const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
 
 const promptInput = document.getElementById('promptIA');
 const gerarBtn = document.getElementById('gerarIaBtn');
@@ -379,10 +382,11 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
     resultadoIaDiv.innerText = "🤖 Criando sua frase inspiradora...";
 
     try {
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+      const response = await fetch(GEMINI_URL, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "x-goog-api-key": GEMINI_API_KEY
         },
         body: JSON.stringify({
           contents: [{
