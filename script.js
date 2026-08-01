@@ -275,41 +275,37 @@ async function copiar(texto){
     }
 }
 
-async function baixarImagem(botao){
+async function baixarImagem(botao) {
     const card = botao.closest(".cardFrase");
-    const imagem = card.querySelector(".imagemFrase img");
     const area = card.querySelector(".imagemFrase");
 
     botao.disabled = true;
-    botao.innerHTML = "⏳ Gerando...";
+    botao.textContent = "⏳ Gerando...";
 
-    try{
-        if(!imagem.complete){
-            await new Promise(resolve=>{
-                imagem.onload = resolve;
-                imagem.onerror = resolve;
-            });
-        }
+    try {
 
-        const canvas = await html2canvas(area,{
-            useCORS:true,
-            allowTaint:false,
-            scale:3,
-            backgroundColor:null,
-            imageTimeout:0
+        const canvas = await html2canvas(area, {
+            useCORS: true,
+            allowTaint: false,
+            backgroundColor: null,
+            scale: 2,
+            logging: false
         });
 
-        const link=document.createElement("a");
-        link.download=`frase-${Date.now()}.png`;
-        link.href=canvas.toDataURL("image/png",1);
+        const link = document.createElement("a");
+        link.download = "frase-messias.png";
+        link.href = canvas.toDataURL("image/png");
         link.click();
-    }catch(e){
+
+    } catch (e) {
+
         console.error(e);
         alert("Erro ao gerar a imagem.");
+
     }
 
-    botao.disabled=false;
-    botao.innerHTML="📥 Baixar";
+    botao.disabled = false;
+    botao.textContent = "📥 Baixar";
 }
 
 function fraseDoDia(){
