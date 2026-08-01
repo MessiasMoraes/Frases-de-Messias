@@ -501,7 +501,7 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
     });
 }
 
-// --- SCRIPT PARTE 1 (CORRIGIDO) ---
+// --- SCRIPT PARTE 1 (COM EXPORT GLOBAL) ---
 
 const frasesParte1 = [
     // --- AMOR ---
@@ -533,21 +533,12 @@ const frasesParte1 = [
     { texto: "Saber a hora certa de falar é importante, mas saber a hora de calar é fundamental.", autor: "Messias", categoria: "Sabedoria", imagem: "https://picsum.photos/seed/sabedoria5/800/600" }
 ];
 
-async function enviarParte1Segura() {
-    // Busca as funções globais do Firebase importadas no seu app.js
-    const dbInstancia = window.db || db;
-    const funcAddDoc = window.addDoc || addDoc;
-    const funcCollection = window.collection || collection;
-
-    if (!dbInstancia || !funcAddDoc || !funcCollection) {
-        alert("❌ Erro: O Firebase ainda não foi inicializado. Aguarde alguns segundos e tente novamente.");
-        return;
-    }
-
-    let enviados = 0;
+// Função que executa dentro do escopo do seu app.js (onde db, addDoc e collection já existem)
+async function rodarImportacao() {
+    let contador = 0;
     for (const item of frasesParte1) {
         try {
-            await funcAddDoc(funcCollection(dbInstancia, "frases"), {
+            await addDoc(collection(db, "frases"), {
                 texto: item.texto,
                 autor: item.autor,
                 categoria: item.categoria,
@@ -556,21 +547,16 @@ async function enviarParte1Segura() {
                 visualizacoes: Math.floor(Math.random() * 300) + 50,
                 compartilhamentos: Math.floor(Math.random() * 15) + 2
             });
-            enviados++;
-        } catch (erro) {
-            console.error("Erro no item:", erro);
+            contador++;
+        } catch (e) {
+            console.error("Erro item:", e);
         }
     }
-
-    if (enviados > 0) {
-        alert(`🎉 Sucesso! ${enviados} frases da Parte 1 foram cadastradas.`);
-        location.reload();
-    } else {
-        alert("❌ Ocorreu um erro ao salvar as frases. Verifique o console.");
-    }
+    alert(`🎉 Sucesso! ${contador} frases da Parte 1 cadastradas!`);
+    location.reload();
 }
 
-// Criar botão na tela
+// Criar o botão flutuante e conectar diretamente à função
 if (!document.getElementById("btnImportarParte1")) {
     const btn = document.createElement("button");
     btn.id = "btnImportarParte1";
@@ -578,10 +564,11 @@ if (!document.getElementById("btnImportarParte1")) {
     btn.style.cssText = "position:fixed; bottom:20px; right:20px; z-index:99999; padding:16px 22px; background:#ffc107; color:#000; font-size:16px; font-weight:bold; border:none; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.5);";
     document.body.appendChild(btn);
 
-    btn.onclick = async () => {
+    btn.addEventListener("click", async () => {
         btn.innerText = "⏳ Cadastrando...";
         btn.disabled = true;
-        await enviarParte1Segura();
-    };
-        }
+        await rodarImportacao();
+    });
+}
+
                 
