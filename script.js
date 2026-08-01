@@ -102,25 +102,21 @@ function mostrarFrases(filtro = "") {
 }
 
 function criarCardFrase(f){
-    const imagemCategoria =
-        categorias[f.categoria] ||
-        `imagens/categorias/${(f.categoria || "padrao")
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g,"")
-            .toLowerCase()
-            .replace(/\s+/g,"-")}.png`;
+    const imagem = f.imagem && f.imagem.trim() !== ""
+    ? f.imagem
+    : categorias[f.categoria] || "imagens/categorias/padrao.png";
 
     const card = document.createElement("div");
     card.className = "cardFrase";
     card.innerHTML = `
         <div class="imagemFrase">
             <img
-                loading="lazy"
-                crossorigin="anonymous"
-                src="${f.imagem || imagemCategoria}"
-                alt="${f.categoria}"
-                onerror="this.src='imagens/categorias/padrao.png'"
-            >
+    loading="lazy"
+    crossorigin="anonymous"
+    src="${imagem}"
+    alt="${f.categoria}"
+    onerror="this.src='imagens/categorias/padrao.png'"
+>
             <div class="overlay">
                 <p class="textoFrase">
                     "${f.texto}"
