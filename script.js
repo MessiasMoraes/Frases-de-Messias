@@ -500,4 +500,5 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
         }
     });
 }
-    
+
+                                  
