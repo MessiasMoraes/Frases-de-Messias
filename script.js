@@ -40,6 +40,13 @@ function mostrarErro(msg) {
     }
 }
 
+// Função auxiliar para remover emojis e espaços extras das pontas
+function sanitizarTexto(texto = "") {
+    return texto
+        .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1F004}\u{1F0CF}\u{1F170}-\u{1F251}]/gu, '')
+        .trim();
+}
+
 async function carregarFrases() {
     mostrarCarregando();
     frases = [];
@@ -49,7 +56,11 @@ async function carregarFrases() {
         const consultaCategorias = await getDocs(collection(db, "categorias"));
         consultaCategorias.forEach(docSnap => {
             const dados = docSnap.data();
-            categorias[dados.nome] = dados.imagem;
+            // Sanitiza o nome para evitar problemas com espaços extras ou emojis
+            const nomeLimpo = sanitizarTexto(dados.nome || "");
+            if (nomeLimpo) {
+                categorias[nomeLimpo] = dados.imagem;
+            }
         });
 
         const consultaFrases = await getDocs(collection(db, "frases"));
@@ -75,18 +86,11 @@ async function carregarFrases() {
     mostrarFrases();
 }
 
-// Função auxiliar para remover emojis e caracteres especiais
-function sanitizarTexto(texto = "") {
-    return texto
-        .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1F004}\u{1F0CF}\u{1F170}-\u{1F251}]/gu, '')
-        .trim();
-}
-
 function mostrarFrases(filtro = "") {
     if (!lista) return;
     lista.innerHTML = "";
     
-    // Limpa emoji e normaliza para busca sem distinção de acento/caixa
+    // Limpa emojis e espaços soltos do termo pesquisado
     const filtroLimpo = sanitizarTexto(filtro).toLowerCase();
 
     const resultado = frases.filter(f => {
@@ -94,7 +98,7 @@ function mostrarFrases(filtro = "") {
         
         const textoFrase = (f.texto || "").toLowerCase();
         const autorFrase = (f.autor || "").toLowerCase();
-        const categoriaFrase = (f.categoria || "").toLowerCase();
+        const categoriaFrase = sanitizarTexto(f.categoria || "").toLowerCase();
 
         return (
             textoFrase.includes(filtroLimpo) ||
@@ -116,9 +120,10 @@ function mostrarFrases(filtro = "") {
 }
 
 function criarCardFrase(f) {
+    const categoriaLimpa = sanitizarTexto(f.categoria || "");
     const imagem = (f.imagem && f.imagem.trim() !== "")
         ? f.imagem
-        : (categorias[f.categoria] || `https://picsum.photos/seed/${f.id}/800/600`);
+        : (categorias[categoriaLimpa] || `https://picsum.photos/seed/${f.id}/800/600`);
 
     const card = document.createElement("div");
     card.className = "cardFrase";
@@ -128,7 +133,7 @@ function criarCardFrase(f) {
                 loading="lazy"
                 crossorigin="anonymous"
                 src="${imagem}"
-                alt="${f.categoria || 'Frase'}"
+                alt="${categoriaLimpa || 'Frase'}"
                 onerror="this.src='imagens/categorias/padrao.png'"
             >
             <div class="overlay">
@@ -206,7 +211,6 @@ function mostrarCategorias() {
         `;
 
         card.onclick = () => {
-            // Remove emojis antes de realizar a busca por categoria
             const categoriaLimpa = sanitizarTexto(nome);
             mostrarFrases(categoriaLimpa);
 
