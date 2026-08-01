@@ -501,41 +501,41 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
     });
 }
 
-// --- SCRIPT PARTE 3 (Família, Sucesso, Vida e Reflexão) ---
+// --- SCRIPT PARTE 1 (Amor, Fé, Motivação e Sabedoria) ---
 
-const frasesParte3 = [
-    // --- FAMÍLIA ---
-    { texto: "Família é o porto seguro onde o amor nunca diminui e o apoio é infinito.", autor: "Messias", categoria: "Família", imagem: "https://picsum.photos/seed/familia1/800/600" },
-    { texto: "A maior riqueza da vida não são bens materiais, mas sim a união da família.", autor: "Messias", categoria: "Família", imagem: "https://picsum.photos/seed/familia2/800/600" },
-    { texto: "Em casa, o amor não precisa ser perfeito, apenas verdadeiro e constante.", autor: "Messias", categoria: "Família", imagem: "https://picsum.photos/seed/familia3/800/600" },
-    { texto: "A família é onde nossa história começa e o amor nunca termina.", autor: "Messias", categoria: "Família", imagem: "https://picsum.photos/seed/familia4/800/600" },
-    { texto: "Proteger e honrar sua família é construir um alicerce que o tempo não destrói.", autor: "Messias", categoria: "Família", imagem: "https://picsum.photos/seed/familia5/800/600" },
+const frasesParte1 = [
+    // --- AMOR ---
+    { texto: "O amor verdadeiro não é aquele que se vê, mas o que se sente e se cultiva todos os dias.", autor: "Messias", categoria: "Amor", imagem: "https://picsum.photos/seed/amor1/800/600" },
+    { texto: "Amar é encontrar na felicidade do outro a sua própria razão de sorrir.", autor: "Messias", categoria: "Amor", imagem: "https://picsum.photos/seed/amor2/800/600" },
+    { texto: "Onde há amor, os dias são mais leves e o coração encontra a sua casa.", autor: "Messias", categoria: "Amor", imagem: "https://picsum.photos/seed/amor3/800/600" },
+    { texto: "Cuidar de quem amamos é a forma mais bonita de dizer 'você é importante para mim'.", autor: "Messias", categoria: "Amor", imagem: "https://picsum.photos/seed/amor4/800/600" },
+    { texto: "O amor é a ponte que une corações mesmo nas maiores distâncias.", autor: "Messias", categoria: "Amor", imagem: "https://picsum.photos/seed/amor5/800/600" },
 
-    // --- SUCESSO ---
-    { texto: "O sucesso é a soma de pequenos esforços repetidos dia após dia.", autor: "Messias", categoria: "Sucesso", imagem: "https://picsum.photos/seed/sucesso1/800/600" },
-    { texto: "Não espere pelas oportunidades ideais: crie-as com o seu trabalho.", autor: "Messias", categoria: "Sucesso", imagem: "https://picsum.photos/seed/sucesso2/800/600" },
-    { texto: "O segredo da vitória é não desistir quando as coisas ficam difíceis.", autor: "Messias", categoria: "Sucesso", imagem: "https://picsum.photos/seed/sucesso3/800/600" },
-    { texto: "Trabalhe duro em silêncio e deixe que os seus resultados façam barulho.", autor: "Messias", categoria: "Sucesso", imagem: "https://picsum.photos/seed/sucesso4/800/600" },
-    { texto: "Sucesso não é sobre ser o melhor, mas sobre dar o seu melhor sempre.", autor: "Messias", categoria: "Sucesso", imagem: "https://picsum.photos/seed/sucesso5/800/600" },
+    // --- FÉ ---
+    { texto: "Mesmo que o caminho pareça incerto, a fé nos dá a certeza de que nunca caminhamos sós.", autor: "Messias", categoria: "Fé", imagem: "https://picsum.photos/seed/fe1/800/600" },
+    { texto: "A fé abre portas onde o medo só enxerga barreiras.", autor: "Messias", categoria: "Fé", imagem: "https://picsum.photos/seed/fe2/800/600" },
+    { texto: "Quando colocamos nossa confiança em Deus, até as tempestades se tornam aprendizado.", autor: "Messias", categoria: "Fé", imagem: "https://picsum.photos/seed/fe3/800/600" },
+    { texto: "A fé não faz as coisas ficarem fáceis, faz elas se tornarem possíveis.", autor: "Messias", categoria: "Fé", imagem: "https://picsum.photos/seed/fe4/800/600" },
+    { texto: "Mantenha sua fé firme, pois o que é seu encontrará um jeito de chegar até você.", autor: "Messias", categoria: "Fé", imagem: "https://picsum.photos/seed/fe5/800/600" },
 
-    // --- VIDA ---
-    { texto: "A vida é uma jornada de aprendizado constante, aproveite cada curva do caminho.", autor: "Messias", categoria: "Vida", imagem: "https://picsum.photos/seed/vida1/800/600" },
-    { texto: "Viva o hoje de forma intensa, pois o ontem já passou e o amanhã é uma incerteza.", autor: "Messias", categoria: "Vida", imagem: "https://picsum.photos/seed/vida2/800/600" },
-    { texto: "A simplicidade é o ingrediente secreto para uma vida cheia de significado.", autor: "Messias", categoria: "Vida", imagem: "https://picsum.photos/seed/vida3/800/600" },
-    { texto: "Colecione momentos reais e memórias inesquecíveis, não coisas materiais.", autor: "Messias", categoria: "Vida", imagem: "https://picsum.photos/seed/vida4/800/600" },
-    { texto: "A vida se torna muito mais bonita quando aprendemos a valorizar quem caminha ao nosso lado.", autor: "Messias", categoria: "Vida", imagem: "https://picsum.photos/seed/vida5/800/600" },
+    // --- MOTIVAÇÃO ---
+    { texto: "O único limite para os seus objetivos é o tamanho da sua determinação.", autor: "Messias", categoria: "Motivação", imagem: "https://picsum.photos/seed/motivacao1/800/600" },
+    { texto: "Não espere o momento perfeito; pegue o momento presente e faça dele algo incrível.", autor: "Messias", categoria: "Motivação", imagem: "https://picsum.photos/seed/motivacao2/800/600" },
+    { texto: "Grandes conquistas exigem tempo, paciência e a coragem de dar o primeiro passo.", autor: "Messias", categoria: "Motivação", imagem: "https://picsum.photos/seed/motivacao3/800/600" },
+    { texto: "Seja mais forte do que a sua melhor desculpa.", autor: "Messias", categoria: "Motivação", imagem: "https://picsum.photos/seed/motivacao4/800/600" },
+    { texto: "Você é capaz de ir muito mais longe do que imagina, basta continuar em frente.", autor: "Messias", categoria: "Motivação", imagem: "https://picsum.photos/seed/motivacao5/800/600" },
 
-    // --- REFLEXÃO ---
-    { texto: "Às vezes, o silêncio é a resposta mais sabia que podemos oferecer.", autor: "Messias", categoria: "Reflexão", imagem: "https://picsum.photos/seed/reflexao1/800/600" },
-    { texto: "Nem tudo o que perdemos é um prejuízo; muitas vezes é apenas um livramento.", autor: "Messias", categoria: "Reflexão", imagem: "https://picsum.photos/seed/reflexao2/800/600" },
-    { texto: "Mude suas atitudes quando quiser resultados diferentes na sua caminhada.", autor: "Messias", categoria: "Reflexão", imagem: "https://picsum.photos/seed/reflexao3/800/600" },
-    { texto: "Suas escolhas de hoje constroem o lugar onde você estará amanhã.", autor: "Messias", categoria: "Reflexão", imagem: "https://picsum.photos/seed/reflexao4/800/600" },
-    { texto: "Pense bem no que você cultiva no coração, pois a vida sempre devolve a mesma semente.", autor: "Messias", categoria: "Reflexão", imagem: "https://picsum.photos/seed/reflexao5/800/600" }
+    // --- SABEDORIA ---
+    { texto: "A sabedoria não está em ter todas as respostas, mas em saber o momento de ouvir.", autor: "Messias", categoria: "Sabedoria", imagem: "https://picsum.photos/seed/sabedoria1/800/600" },
+    { texto: "Aprenda com o passado, viva o presente e não se afobe pelo futuro.", autor: "Messias", categoria: "Sabedoria", imagem: "https://picsum.photos/seed/sabedoria2/800/600" },
+    { texto: "Quem domina a própria paciência domina quase qualquer situação.", autor: "Messias", categoria: "Sabedoria", imagem: "https://picsum.photos/seed/sabedoria3/800/600" },
+    { texto: "Sábio é aquele que transforma pedras no caminho em degraus de crescimento.", autor: "Messias", categoria: "Sabedoria", imagem: "https://picsum.photos/seed/sabedoria4/800/600" },
+    { texto: "Saber a hora certa de falar é importante, mas saber a hora de calar é fundamental.", autor: "Messias", categoria: "Sabedoria", imagem: "https://picsum.photos/seed/sabedoria5/800/600" }
 ];
 
-async function enviarParte3() {
+async function enviarParte1() {
     try {
-        for (const item of frasesParte3) {
+        for (const item of frasesParte1) {
             await addDoc(collection(db, "frases"), {
                 texto: item.texto,
                 autor: item.autor,
@@ -546,7 +546,7 @@ async function enviarParte3() {
                 compartilhamentos: Math.floor(Math.random() * 15) + 2
             });
         }
-        alert("🎉 Parte 3 cadastrada com sucesso!");
+        alert("🎉 Parte 1 cadastrada com sucesso!");
         location.reload();
     } catch (erro) {
         alert("❌ Erro ao enviar: " + erro.message);
@@ -554,17 +554,17 @@ async function enviarParte3() {
     }
 }
 
-// Botão Flutuante da Parte 3
-if (!document.getElementById("btnImportarParte3")) {
+// Botão Flutuante da Parte 1
+if (!document.getElementById("btnImportarParte1")) {
     const btn = document.createElement("button");
-    btn.id = "btnImportarParte3";
-    btn.innerText = "🚀 IMPORTAR PARTE 3";
-    btn.style.cssText = "position:fixed; bottom:20px; right:20px; z-index:99999; padding:16px 22px; background:#0d6efd; color:white; font-size:16px; font-weight:bold; border:none; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.5);";
+    btn.id = "btnImportarParte1";
+    btn.innerText = "🚀 IMPORTAR PARTE 1";
+    btn.style.cssText = "position:fixed; bottom:20px; right:20px; z-index:99999; padding:16px 22px; background:#ffc107; color:#000; font-size:16px; font-weight:bold; border:none; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.5);";
     document.body.appendChild(btn);
 
     btn.onclick = async () => {
         btn.innerText = "⏳ Cadastrando...";
         btn.disabled = true;
-        await enviarParte3();
+        await enviarParte1();
     };
 }
