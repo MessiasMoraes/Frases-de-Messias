@@ -496,24 +496,4 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
         })
       });
 
-      const data = await response.json();
 
-      if (!response.ok) {
-        const msg = data.error?.message || "Erro na requisição.";
-        resultadoIaDiv.innerText = `⚠️ Erro da IA: ${msg}`;
-        return;
-      }
-
-      const fraseGerada = data.candidates[0].content.parts[0].text;
-
-      resultadoIaDiv.innerHTML = `
-        <blockquote style="background: white; padding: 15px; border-left: 4px solid #4A90E2; border-radius: 6px; display: inline-block; text-align: left; margin-top: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); color: #333;">
-          ${fraseGerada}
-        </blockquote>
-      `;
-    } catch (error) {
-      console.error(error);
-      resultadoIaDiv.innerText = "Ops! Ocorreu um erro de conexão. Tente novamente.";
-    }
-  });
-}
