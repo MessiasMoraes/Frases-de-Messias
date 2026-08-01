@@ -281,97 +281,82 @@ async function copiar(texto){
 // FUNÇÃO DE DOWNLOAD OTIMIZADA
 async function baixarImagem(botao) {
 
-    if (botao.disabled) return;
-
-    if (typeof html2canvas === "undefined") {
-        alert("A biblioteca html2canvas não foi carregada.");
-        return;
-    }
-
     const card = botao.closest(".cardFrase");
-    const area = card.querySelector(".imagemFrase");
+    if (!card) return;
 
     botao.disabled = true;
     botao.innerHTML = "⏳ Preparando...";
 
     try {
 
-        const canvas = await html2canvas(area, {
-    useCORS: true,
-    allowTaint: false,
-    backgroundColor: "#ffffff",
-    width: 1080,
-    height: 1920,
-    windowWidth: area.scrollWidth,
-    windowHeight: area.scrollHeight,
-    scale: 3
-});
+        const imgOriginal = card.querySelector(".imagemFrase img");
+
+        document.getElementById("imgExportacao").src = imgOriginal.src;
+        document.getElementById("textoExportacao").textContent =
+            card.querySelector(".textoFrase").textContent.trim();
+
+        document.getElementById("autorExportacao").textContent =
+            card.querySelector(".autorFrase").textContent.trim();
+
+        const template = document.getElementById("cardExportacao");
+
+        template.style.display = "block";
+
+        const canvas = await html2canvas(template, {
+            useCORS: true,
+            allowTaint: false,
+            scale: 2,
+            backgroundColor: null
+        });
+
+        template.style.display = "";
 
         canvas.toBlob(async (blob) => {
 
-            if (!blob) {
-                alert("Erro ao gerar a imagem.");
-                return;
-            }
+            if (!blob) return;
 
             const arquivo = new File(
                 [blob],
                 `frase-${Date.now()}.png`,
-                { type: "image/png" }
+                {
+                    type: "image/png"
+                }
             );
 
-            // Android: abre o menu Compartilhar
             if (
                 navigator.canShare &&
                 navigator.canShare({ files: [arquivo] })
             ) {
 
-                try {
-
-                    await navigator.share({
-                        title: "Frases de Messias",
-                        text: "Confira esta frase inspiradora.",
-                        files: [arquivo]
-                    });
-
-                } catch (e) {
-                    console.log("Compartilhamento cancelado.");
-                }
+                await navigator.share({
+                    title: "Frases de Messias",
+                    text: "Confira esta frase inspiradora.",
+                    files: [arquivo]
+                });
 
             } else {
 
-                // Fallback para navegadores sem suporte
                 const url = URL.createObjectURL(blob);
 
-                const link = document.createElement("a");
-                link.href = url;
-                link.download = arquivo.name;
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = arquivo.name;
+                a.click();
 
-                document.body.appendChild(link);
-                link.click();
-
-                setTimeout(() => {
-                    URL.revokeObjectURL(url);
-                    link.remove();
-                }, 1000);
-
+                URL.revokeObjectURL(url);
             }
 
-            botao.disabled = false;
-            botao.innerHTML = "📥 Baixar";
-
-        }, "image/png");
+        });
 
     } catch (erro) {
 
         console.error(erro);
-
-        botao.disabled = false;
-        botao.innerHTML = "📥 Baixar";
-
         alert("Erro ao gerar a imagem.");
 
     }
+
+    botao.disabled = false;
+    botao.innerHTML = "📥 Baixar";
 }
 
 function fraseDoDia(){
