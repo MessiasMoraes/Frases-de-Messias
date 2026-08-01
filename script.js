@@ -578,53 +578,66 @@ const frasesParte2 = [
     { texto: "Agradeço pelo hoje, aprendo com o ontem e confio no amanhã.", autor: "Messias", categoria: "Gratidão", imagem: "https://picsum.photos/seed/gratidao5/800/600" }
 ];
 
-async function enviarParte2() {
-    alert("⏳ Enviando lote de frases para o Firebase... Aguarde alguns segundos!");
-    let cont = 0;
+ // --- SCRIPT PARTE 2 DIRECT FETCH (SEM TRAVAR) ---
 
-    for (const item of frasesParte2) {
-        try {
+const projectId = "SEU_PROJECT_ID_AQUI"; // ⚠️ Substitua pelo ID do seu projeto do Firebase (ex: "frases-de-messias")
+
+const frasesParte2 = [
+    // --- BOM DIA ---
+    { texto: "Que o seu dia comece com um sorriso e continue com paz no coração.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia1/800/600" },
+    { texto: "Cada amanhecer é um convite da vida para recomeçar com alegria.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia2/800/600" },
+    { texto: "Bom dia! Que as alegrias de hoje superem qualquer preocupação de ontem.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia3/800/600" },
+    { texto: "Que a luz deste novo dia ilumine os seus passos e suas escolhas.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia4/800/600" },
+    { texto: "Acorde com a determinação de transformar este dia em algo extraordinário.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia5/800/600" },
+
+    // --- BOA NOITE ---
+    { texto: "Acalme a sua mente, descanse o seu corpo e confie no amanhã.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite1/800/600" },
+    { texto: "Boa noite! Que as estrelas tragam tranquilidade para os seus sonhos.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite2/800/600" },
+    { texto: "Entregue os seus cansaços a Deus e renove suas energias durante a noite.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite3/800/600" },
+
+    // --- ESPERANÇA ---
+    { texto: "A esperança é a luz que nos guia mesmo no túnel mais escuro.", autor: "Messias", categoria: "Esperança", imagem: "https://picsum.photos/seed/esperanca1/800/600" },
+    { texto: "Enquanto houver um novo amanhecer, haverá motivos para ter esperança.", autor: "Messias", categoria: "Esperança", imagem: "https://picsum.photos/seed/esperanca2/800/600" },
+
+    // --- GRATIDÃO ---
+    { texto: "A gratidão transforma o que temos em mais do que suficiente.", autor: "Messias", categoria: "Gratidão", imagem: "https://picsum.photos/seed/gratidao1/800/600" },
+    { texto: "Agradecer abre portas para que novas bênçãos encontrem você.", autor: "Messias", categoria: "Gratidão", imagem: "https://picsum.photos/seed/gratidao2/800/600" }
+];
+
+async function enviarViaModulo() {
+    try {
+        // Usa a coleção e o addDoc que já existem no seu app.js
+        for (const item of frasesParte2) {
             await addDoc(collection(db, "frases"), {
                 texto: item.texto,
-                autor: item.autor || "Messias",
+                autor: item.autor,
                 categoria: item.categoria,
                 imagem: item.imagem,
-                curtidas: Math.floor(Math.random() * 60) + 10,
-                visualizacoes: Math.floor(Math.random() * 250) + 40,
-                compartilhamentos: Math.floor(Math.random() * 20) + 3
+                curtidas: Math.floor(Math.random() * 50) + 10,
+                visualizacoes: Math.floor(Math.random() * 300) + 50,
+                compartilhamentos: Math.floor(Math.random() * 15) + 2
             });
-            cont++;
-        } catch (e) {
-            console.error("Erro ao enviar:", e);
         }
-    }
-
-    alert(`🎉 Sucesso! ${cont} frases foram salvas no seu Firebase.`);
-    
-    // Atualiza a tela automaticamente para mostrar as novas frases
-    if (typeof carregarFrases === "function") {
-        carregarFrases();
+        alert("🎉 Parte 2 cadastrada com sucesso no Firebase!");
+        location.reload(); // Recarrega para ver as frases novas!
+    } catch (erro) {
+        alert("❌ Erro ao enviar: " + erro.message);
+        console.error(erro);
     }
 }
 
-// Expõe para o botão na página
-window.enviarParte2 = enviarParte2;
-
-// Botão Flutuante de Envio no Celular
+// Botão Flutuante
 if (!document.getElementById("btnImportarParte2")) {
-    const btnImportar = document.createElement("button");
-    btnImportar.id = "btnImportarParte2";
-    btnImportar.innerText = "🚀 IMPORTAR FRASES";
-    btnImportar.style.cssText = "position:fixed; bottom:20px; right:20px; z-index:99999; padding:15px 20px; background:#28a745; color:white; font-weight:bold; border:none; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.4); font-size:14px;";
-    document.body.appendChild(btnImportar);
+    const btn = document.createElement("button");
+    btn.id = "btnImportarParte2";
+    btn.innerText = "🚀 CLIQUE PARA IMPORTAR";
+    btn.style.cssText = "position:fixed; bottom:20px; right:20px; z-index:99999; padding:16px 22px; background:#28a745; color:white; font-size:16px; font-weight:bold; border:none; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.5);";
+    document.body.appendChild(btn);
 
-    btnImportar.onclick = () => {
-        btnImportar.innerText = "⏳ Enviando...";
-        btnImportar.disabled = true;
-        enviarParte2().finally(() => {
-            btnImportar.innerText = "✅ Concluído!";
-        });
+    btn.onclick = async () => {
+        btn.innerText = "⏳ Cadastrando...";
+        btn.disabled = true;
+        await enviarViaModulo();
     };
-        }
-     
-                                  
+     }
+    
