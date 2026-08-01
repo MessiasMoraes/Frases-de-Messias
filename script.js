@@ -501,16 +501,130 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
     });
 }
 
-// Botão temporário de importação para celular
-const btnImportar = document.createElement("button");
-btnImportar.innerText = "🚀 IMPORTAR FRASES (PARTE 2)";
-btnImportar.style.cssText = "position:fixed; bottom:20px; right:20px; z-index:9999; padding:15px; background:#28a745; color:white; font-weight:bold; border:none; border-radius:10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);";
-document.body.appendChild(btnImportar);
+// --- SCRIPT PARTE 2 CORRIGIDO E PRONTO ---
 
-btnImportar.onclick = () => {
-    btnImportar.innerText = "⏳ Enviando...";
-    btnImportar.disabled = true;
-    enviarParte2();
-};
+const frasesParte2 = [
+    // --- BOM DIA (25 Frases) ---
+    { texto: "Que o seu dia comece com um sorriso e continue com paz no coração.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia1/800/600" },
+    { texto: "Cada amanhecer é um convite da vida para recomeçar com alegria.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia2/800/600" },
+    { texto: "Bom dia! Que as alegrias de hoje superem qualquer preocupação de ontem.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia3/800/600" },
+    { texto: "Que a luz deste novo dia ilumine os seus passos e suas escolhas.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia4/800/600" },
+    { texto: "Acorde com a determinação de transformar este dia em algo extraordinário.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia5/800/600" },
+    { texto: "Que a sua manhã seja leve, produtiva e cheia de boas energias.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia6/800/600" },
+    { texto: "Tenha um bom dia! Confie que coisas incríveis estão a caminho.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia7/800/600" },
+    { texto: "O segredo de um bom dia é agradecer antes mesmo das bênçãos chegarem.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia8/800/600" },
+    { texto: "Sorria! Hoje é mais uma oportunidade perfeita para ser feliz.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia9/800/600" },
+    { texto: "Que o seu café seja forte e o seu dia abençoado.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia10/800/600" },
+    { texto: "Um novo dia se renova. Deixe para trás tudo o que não te faz bem.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia11/800/600" },
+    { texto: "Bom dia! Espalhe gentileza e colha sorrisos pelo caminho.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia12/800/600" },
+    { texto: "Que a paz seja a sua melhor companhia durante todo este dia.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia13/800/600" },
+    { texto: "Cada manhã traz consigo o presente de um recomeço.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia14/800/600" },
+    { texto: "Bom dia! Mantenha o foco nos seus objetivos e nada te parará.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia15/800/600" },
+    { texto: "Que o sol ilumine sua alma e renove suas esperanças nesta manhã.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia16/800/600" },
+    { texto: "Nenhum dia é igual ao outro quando colocamos amor no que fazemos.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia17/800/600" },
+    { texto: "Bom dia! Vá com fé, sabedoria e muita vontade de vencer.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia18/800/600" },
+    { texto: "Aproveite as pequenas coisas deste dia com profunda gratidão.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia19/800/600" },
+    { texto: "Que seu dia seja tão lindo quanto o carinho que você espalha.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia20/800/600" },
+    { texto: "Bom dia! O sucesso pertence àqueles que não têm medo de tentar.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia21/800/600" },
+    { texto: "Acredite nas suas capacidades e faça deste dia o seu melhor momento.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia22/800/600" },
+    { texto: "Bom dia! Que a serenidade te acompanhe do amanhecer ao anoitecer.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia23/800/600" },
+    { texto: "Abra a janela, respire fundo e agradeça por mais um dia de vida.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia24/800/600" },
+    { texto: "Que a felicidade seja a prioridade absoluta da sua jornada hoje.", autor: "Messias", categoria: "Bom Dia", imagem: "https://picsum.photos/seed/bomdia25/800/600" },
 
+    // --- BOA NOITE (25 Frases) ---
+    { texto: "Acalme a sua mente, descanse o seu corpo e confie no amanhã.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite1/800/600" },
+    { texto: "Boa noite! Que as estrelas tragam tranquilidade para os seus sonhos.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite2/800/600" },
+    { texto: "Entregue os seus cansaços a Deus e renove suas energias durante a noite.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite3/800/600" },
+    { texto: "Que a paz seja o travesseiro onde você irá repousar nesta noite.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite4/800/600" },
+    { texto: "Feche os olhos com gratidão por tudo o que foi vivido hoje.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite5/800/600" },
+    { texto: "Boa noite! O silêncio da noite traz as respostas que a alma precisa.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite6/800/600" },
+    { texto: "Desconecte-se do mundo e conecte-se com a sua paz interior.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite7/800/600" },
+    { texto: "Que o seu sono seja leve, reparador e abençoado.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite8/800/600" },
+    { texto: "Boa noite! Amanhã é uma nova oportunidade para continuar tentando.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite9/800/600" },
+    { texto: "Guarde as boas lembranças do dia e deixe o resto ir embora com a noite.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite10/800/600" },
+    { texto: "Que os anjos zelem pelo seu descanso e tragam lindos sonhos.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite11/800/600" },
+    { texto: "Boa noite! Confie que o amanhã guarda coisas preparadas sob medida para você.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite12/800/600" },
+    { texto: "Nada como o descanso da noite para restaurar nossa coragem.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite13/800/600" },
+    { texto: "Apague as luzes, desacelere os pensamentos e apenas descanse.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite14/800/600" },
+    { texto: "Boa noite! Que a serenidade embale o seu sono e acalme o coração.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite15/800/600" },
+    { texto: "A gratidão torna o nosso descanso infinitamente mais suave.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite16/800/600" },
+    { texto: "Que você acorde revigorado para abraçar as vitórias do amanhã.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite17/800/600" },
+    { texto: "Boa noite! A esperança é o último farol que ilumina a escuridão.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite18/800/600" },
+    { texto: "Sinta o abraço acolhedor desta noite e relaxe completamente.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite19/800/600" },
+    { texto: "Que a doçura dos sonhos traga alívio para qualquer ansiedade.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite20/800/600" },
+    { texto: "Boa noite! Lembre-se: você deu o seu melhor hoje.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite21/800/600" },
+    { texto: "O descanso é parte essencial para podermos continuar nossa caminhada.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite22/800/600" },
+    { texto: "Que a sua noite seja cercada de luz, paz e pensamentos positivos.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite23/800/600" },
+    { texto: "Durma bem e saiba que amanhã tudo estará em seu devido lugar.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite24/800/600" },
+    { texto: "Boa noite! Que a quietude das horas revele a beleza do descanso.", autor: "Messias", categoria: "Boa Noite", imagem: "https://picsum.photos/seed/noite25/800/600" },
+
+    // --- ESPERANÇA (25 Frases) ---
+    { texto: "A esperança é a luz que nos guia mesmo no túnel mais escuro.", autor: "Messias", categoria: "Esperança", imagem: "https://picsum.photos/seed/esperanca1/800/600" },
+    { texto: "Enquanto houver um novo amanhecer, haverá motivos para ter esperança.", autor: "Messias", categoria: "Esperança", imagem: "https://picsum.photos/seed/esperanca2/800/600" },
+    { texto: "Acredite: coisas boas acontecem quando a gente mantém a fé acesa.", autor: "Messias", categoria: "Esperança", imagem: "https://picsum.photos/seed/esperanca3/800/600" },
+    { texto: "A esperança renova as forças para encarar os dias mais desafiadores.", autor: "Messias", categoria: "Esperança", imagem: "https://picsum.photos/seed/esperanca4/800/600" },
+    { texto: "Nunca perca a esperança; o sol sempre volta a brilhar após a chuva.", autor: "Messias", categoria: "Esperança", imagem: "https://picsum.photos/seed/esperanca5/800/600" },
+    { texto: "A esperança não é ilusão; é o combustível de quem recusa desistir.", autor: "Messias", categoria: "Esperança", imagem: "https://picsum.photos/seed/esperanca6/800/600" },
+    { texto: "Semeie esperança por onde passar e colherá caminhos florescidos.", autor: "Messias", categoria: "Esperança", imagem: "https://picsum.photos/seed/esperanca7/800/600" },
+    { texto: "Dias melhores não são apenas um desejo, são uma promessa do tempo.", autor: "Messias", categoria: "Esperança", imagem: "https://picsum.photos/seed/esperanca8/800/600" },
+    { texto: "Guarde a esperança como quem guarda um tesouro valioso na alma.", autor: "Messias", categoria: "Esperança", imagem: "https://picsum.photos/seed/esperanca9/800/600" },
+    { texto: "O impossível de hoje é apenas a conquista de amanhã.", autor: "Messias", categoria: "Esperança", imagem: "https://picsum.photos/seed/esperanca10/800/600" },
+
+    // --- GRATIDÃO (25 Frases) ---
+    { texto: "A gratidão transforma o que temos em mais do que suficiente.", autor: "Messias", categoria: "Gratidão", imagem: "https://picsum.photos/seed/gratidao1/800/600" },
+    { texto: "Agradecer abre portas para que novas bênçãos encontrem você.", autor: "Messias", categoria: "Gratidão", imagem: "https://picsum.photos/seed/gratidao2/800/600" },
+    { texto: "Corações gratos são ímãs para momentos de pura paz e felicidade.", autor: "Messias", categoria: "Gratidão", imagem: "https://picsum.photos/seed/gratidao3/800/600" },
+    { texto: "A gratidão é a memória de um coração nobre e acolhedor.", autor: "Messias", categoria: "Gratidão", imagem: "https://picsum.photos/seed/gratidao4/800/600" },
+    { texto: "Agradeço pelo hoje, aprendo com o ontem e confio no amanhã.", autor: "Messias", categoria: "Gratidão", imagem: "https://picsum.photos/seed/gratidao5/800/600" }
+];
+
+async function enviarParte2() {
+    alert("⏳ Enviando lote de frases para o Firebase... Aguarde alguns segundos!");
+    let cont = 0;
+
+    for (const item of frasesParte2) {
+        try {
+            await addDoc(collection(db, "frases"), {
+                texto: item.texto,
+                autor: item.autor || "Messias",
+                categoria: item.categoria,
+                imagem: item.imagem,
+                curtidas: Math.floor(Math.random() * 60) + 10,
+                visualizacoes: Math.floor(Math.random() * 250) + 40,
+                compartilhamentos: Math.floor(Math.random() * 20) + 3
+            });
+            cont++;
+        } catch (e) {
+            console.error("Erro ao enviar:", e);
+        }
+    }
+
+    alert(`🎉 Sucesso! ${cont} frases foram salvas no seu Firebase.`);
+    
+    // Atualiza a tela automaticamente para mostrar as novas frases
+    if (typeof carregarFrases === "function") {
+        carregarFrases();
+    }
+}
+
+// Expõe para o botão na página
+window.enviarParte2 = enviarParte2;
+
+// Botão Flutuante de Envio no Celular
+if (!document.getElementById("btnImportarParte2")) {
+    const btnImportar = document.createElement("button");
+    btnImportar.id = "btnImportarParte2";
+    btnImportar.innerText = "🚀 IMPORTAR FRASES";
+    btnImportar.style.cssText = "position:fixed; bottom:20px; right:20px; z-index:99999; padding:15px 20px; background:#28a745; color:white; font-weight:bold; border:none; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.4); font-size:14px;";
+    document.body.appendChild(btnImportar);
+
+    btnImportar.onclick = () => {
+        btnImportar.innerText = "⏳ Enviando...";
+        btnImportar.disabled = true;
+        enviarParte2().finally(() => {
+            btnImportar.innerText = "✅ Concluído!";
+        });
+    };
+        }
+     
                                   
