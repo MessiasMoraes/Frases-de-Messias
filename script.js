@@ -466,8 +466,7 @@ if ('serviceWorker' in navigator) {
 }
 
 // Gemini IA Integration
-const GEMINI_API_KEY = "AQ.Ab8RN6KY1FqK9IfO0mB0UrudEaLgPlUzeonmI-Gt4AmUTZ3J2g";
-const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+const GEMINI_API_KEY = "SUA_CHAVE_AQUI"; // <-- Cole a sua chave gerada no Google AI Studio aqui
 
 const promptInput = document.getElementById('promptIA');
 const gerarBtn = document.getElementById('gerarIaBtn');
@@ -482,14 +481,21 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
             return;
         }
 
+        if (!GEMINI_API_KEY || GEMINI_API_KEY === "SUA_CHAVE_AQUI") {
+            resultadoIaDiv.innerText = "⚠️ Adicione a sua chave de API no arquivo app.js";
+            return;
+        }
+
         resultadoIaDiv.innerText = "🤖 Criando sua frase inspiradora...";
 
+        // URL montada dinamicamente com a chave
+        const urlComChave = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+
         try {
-            const response = await fetch(GEMINI_URL, {
+            const response = await fetch(urlComChave, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
-                    "x-goog-api-key": GEMINI_API_KEY
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
                     contents: [{
