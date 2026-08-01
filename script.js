@@ -75,17 +75,31 @@ async function carregarFrases() {
     mostrarFrases();
 }
 
+// Função auxiliar para remover emojis e caracteres especiais
+function sanitizarTexto(texto = "") {
+    return texto
+        .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1F004}\u{1F0CF}\u{1F170}-\u{1F251}]/gu, '')
+        .trim();
+}
+
 function mostrarFrases(filtro = "") {
     if (!lista) return;
     lista.innerHTML = "";
-    filtro = filtro.toLowerCase().trim();
+    
+    // Limpa emoji e normaliza para busca sem distinção de acento/caixa
+    const filtroLimpo = sanitizarTexto(filtro).toLowerCase();
 
     const resultado = frases.filter(f => {
-        if (filtro === "") return true;
+        if (filtroLimpo === "") return true;
+        
+        const textoFrase = (f.texto || "").toLowerCase();
+        const autorFrase = (f.autor || "").toLowerCase();
+        const categoriaFrase = (f.categoria || "").toLowerCase();
+
         return (
-            (f.texto || "").toLowerCase().includes(filtro) ||
-            (f.autor || "").toLowerCase().includes(filtro) ||
-            (f.categoria || "").toLowerCase().includes(filtro)
+            textoFrase.includes(filtroLimpo) ||
+            autorFrase.includes(filtroLimpo) ||
+            categoriaFrase.includes(filtroLimpo)
         );
     });
 
@@ -192,7 +206,10 @@ function mostrarCategorias() {
         `;
 
         card.onclick = () => {
-            mostrarFrases(nome);
+            // Remove emojis antes de realizar a busca por categoria
+            const categoriaLimpa = sanitizarTexto(nome);
+            mostrarFrases(categoriaLimpa);
+
             window.scrollTo({
                 top: lista.offsetTop - 20,
                 behavior: "smooth"
@@ -500,4 +517,3 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
         }
     });
 }
-                
