@@ -12,7 +12,7 @@ let frases = [];
 let categorias = {};
 let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
 
-// Elementos
+// Elementos da Interface
 const lista = document.getElementById("listaFrases");
 const listaCategorias = document.getElementById("listaCategorias");
 const pesquisa = document.getElementById("pesquisa");
@@ -275,10 +275,12 @@ async function copiar(texto){
     }
 }
 
-// FUNÇÃO DE DOWNLOAD CORRIGIDA (Nome de arquivo dinâmico)
+// FUNÇÃO DE DOWNLOAD OTIMIZADA (Resolver problema de travar no "Gerando...")
 async function baixarImagem(botao) {
     const card = botao.closest(".cardFrase");
-    const area = card.querySelector(".imagemFrase");
+    const area = card?.querySelector(".imagemFrase");
+
+    if (!card || !area) return;
 
     botao.disabled = true;
     botao.textContent = "⏳ Gerando...";
@@ -286,28 +288,35 @@ async function baixarImagem(botao) {
     try {
         const canvas = await html2canvas(area, {
             useCORS: true,
-            allowTaint: false,
+            allowTaint: true,
             backgroundColor: null,
             scale: 2,
-            logging: false
+            logging: false,
+            imageTimeout: 5000 // Timeout de 5 segundos para imagens externas travadas
         });
 
-        // Extrai a categoria ou texto para formar um nome dinâmico único
-        const textoFrase = card.querySelector(".textoFrase")?.textContent.trim() || "";
-        const idUnico = Date.now(); // Gera timestamp para garantir que o nome nunca se repita
-
+        const idUnico = Date.now();
         const link = document.createElement("a");
         link.download = `frase-messias-${idUnico}.png`;
         link.href = canvas.toDataURL("image/png");
         link.click();
 
     } catch (e) {
-        console.error(e);
-        alert("Erro ao gerar a imagem.");
+        console.error("Erro ao gerar imagem:", e);
+        
+        // Plano de contingência se a imagem externa for totalmente bloqueada por CORS
+        const textoFrase = card.querySelector(".textoFrase")?.textContent.trim() || "";
+        if (textoFrase) {
+            await navigator.clipboard.writeText(textoFrase);
+            alert("⚠️ A imagem do servidor não permitiu a captura direta.\n\nA frase foi copiada para a sua área de transferência!");
+        } else {
+            alert("Erro ao gerar a imagem. Tente novamente.");
+        }
+    } finally {
+        // Garante que o botão SEMPRE voltará ao estado original
+        botao.disabled = false;
+        botao.textContent = "📥 Baixar";
     }
-
-    botao.disabled = false;
-    botao.textContent = "📥 Baixar";
 }
 
 function fraseDoDia(){
@@ -362,7 +371,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// Integracao do Gerador de Frases com IA (Gemini API com x-goog-api-key)
+// Integração do Gerador de Frases com IA (Gemini API via x-goog-api-key)
 const GEMINI_API_KEY = "AQ.Ab8RN6KY1FqK9IfO0mB0UrudEaLgPlUzeonmI-Gt4AmUTZ3J2g"; 
 const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
 
