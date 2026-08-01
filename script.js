@@ -297,11 +297,15 @@ async function baixarImagem(botao) {
     try {
 
         const canvas = await html2canvas(area, {
-            useCORS: true,
-            allowTaint: false,
-            backgroundColor: null,
-            scale: window.devicePixelRatio || 2
-        });
+    useCORS: true,
+    allowTaint: false,
+    backgroundColor: "#ffffff",
+    width: 1080,
+    height: 1920,
+    windowWidth: area.scrollWidth,
+    windowHeight: area.scrollHeight,
+    scale: 3
+});
 
         canvas.toBlob(async (blob) => {
 
