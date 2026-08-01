@@ -289,74 +289,128 @@ async function baixarImagem(botao) {
 
     try {
 
-        const imgOriginal = card.querySelector(".imagemFrase img");
+        const img = card.querySelector(".imagemFrase img").src;
+        const texto = card.querySelector(".textoFrase").innerText;
+        const autor = card.querySelector(".autorFrase").innerText;
 
-        document.getElementById("imgExportacao").src = imgOriginal.src;
-        document.getElementById("textoExportacao").textContent =
-            card.querySelector(".textoFrase").textContent.trim();
+        const exportacao = document.createElement("div");
 
-        document.getElementById("autorExportacao").textContent =
-            card.querySelector(".autorFrase").textContent.trim();
+        exportacao.style.cssText = `
+            position:fixed;
+            left:-99999px;
+            top:0;
+            width:1080px;
+            height:1920px;
+            overflow:hidden;
+            border-radius:40px;
+            background:#111;
+            font-family:Arial,sans-serif;
+        `;
 
-        const template = document.getElementById("cardExportacao");
+        exportacao.innerHTML = `
+            <img src="${img}"
+                 style="
+                    position:absolute;
+                    inset:0;
+                    width:100%;
+                    height:100%;
+                    object-fit:cover;">
 
-        template.style.display = "block";
+            <div style="
+                position:absolute;
+                inset:0;
+                background:rgba(0,0,0,.45);">
+            </div>
 
-        const canvas = await html2canvas(template, {
-            useCORS: true,
-            allowTaint: false,
-            scale: 2,
-            backgroundColor: null
+            <div style="
+                position:absolute;
+                inset:0;
+                display:flex;
+                flex-direction:column;
+                justify-content:center;
+                align-items:center;
+                padding:90px;
+                text-align:center;
+                color:white;">
+
+                <div style="
+                    font-size:70px;
+                    font-weight:bold;
+                    line-height:1.5;">
+                    ${texto}
+                </div>
+
+                <div style="
+                    margin-top:70px;
+                    font-size:42px;">
+                    ${autor}
+                </div>
+
+                <div style="
+                    position:absolute;
+                    bottom:70px;
+                    font-size:34px;">
+                    📖 Frases de Messias
+                </div>
+
+            </div>
+        `;
+
+        document.body.appendChild(exportacao);
+
+        const canvas = await html2canvas(exportacao,{
+            useCORS:true,
+            scale:2,
+            backgroundColor:null
         });
 
-        template.style.display = "";
+        document.body.removeChild(exportacao);
 
-        canvas.toBlob(async (blob) => {
+        const blob = await new Promise(resolve =>
+            canvas.toBlob(resolve,"image/png")
+        );
 
-            if (!blob) return;
+        if(!blob){
+            throw new Error("Erro ao gerar imagem.");
+        }
 
-            const arquivo = new File(
-                [blob],
-                `frase-${Date.now()}.png`,
-                {
-                    type: "image/png"
-                }
-            );
+        const arquivo = new File(
+            [blob],
+            `frase-${Date.now()}.png`,
+            {type:"image/png"}
+        );
 
-            if (
-                navigator.canShare &&
-                navigator.canShare({ files: [arquivo] })
-            ) {
+        if(navigator.canShare && navigator.canShare({files:[arquivo]})){
 
-                await navigator.share({
-                    title: "Frases de Messias",
-                    text: "Confira esta frase inspiradora.",
-                    files: [arquivo]
-                });
+            await navigator.share({
+                title:"Frases de Messias",
+                files:[arquivo]
+            });
 
-            } else {
+        }else{
 
-                const url = URL.createObjectURL(blob);
+            const url=URL.createObjectURL(blob);
 
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = arquivo.name;
-                a.click();
+            const a=document.createElement("a");
+            a.href=url;
+            a.download=arquivo.name;
+            a.click();
 
-                URL.revokeObjectURL(url);
-            }
+            URL.revokeObjectURL(url);
+        }
 
-        });
+    }catch(e){
 
-    } catch (erro) {
-
-        console.error(erro);
+        console.error(e);
         alert("Erro ao gerar a imagem.");
+
+    }finally{
+
+        botao.disabled=false;
+        botao.innerHTML="📥 Baixar";
 
     }
 
-    botao.disabled = false;
-    botao.innerHTML = "📥 Baixar";
 }
 
 function fraseDoDia(){
