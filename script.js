@@ -501,4 +501,16 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
     });
 }
 
+// Botão temporário de importação para celular
+const btnImportar = document.createElement("button");
+btnImportar.innerText = "🚀 IMPORTAR FRASES (PARTE 2)";
+btnImportar.style.cssText = "position:fixed; bottom:20px; right:20px; z-index:9999; padding:15px; background:#28a745; color:white; font-weight:bold; border:none; border-radius:10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);";
+document.body.appendChild(btnImportar);
+
+btnImportar.onclick = () => {
+    btnImportar.innerText = "⏳ Enviando...";
+    btnImportar.disabled = true;
+    enviarParte2();
+};
+
                                   
