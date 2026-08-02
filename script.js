@@ -478,7 +478,7 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
             return;
         }
 
-        if (!OPENAI_API_KEY || OPENAI_API_KEY ===  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 ) {
+        if (!OPENAI_API_KEY || OPENAI_API_KEY ===  (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) {
             resultadoIaDiv.innerText = "⚠️ Adicione a sua chave da OpenAI no arquivo app.js";
             return;
         }
@@ -525,7 +525,7 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
             `;
         } catch (error) {
             console.error(error);
-            resultadoIaDiv.innerText = "Ops! Ocorreu um erro de conexão. Tente novamente.";
+            .innerText = "Ops! Ocorreu um erro de conexão. Tente novamente.";
         }
     });
 }
