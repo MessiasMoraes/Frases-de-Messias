@@ -531,3 +531,4 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
     }
 
 
+        
