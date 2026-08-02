@@ -530,4 +530,4 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
     });
     }
 
-                
+
