@@ -481,7 +481,8 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
             return;
         }
 
-        if (!GEMINI_API_KEY || GEMINI_API_KEY === "SUA_CHAVE_AQUI") {
+        if (!GEMINI_API_KEY || GEMINI_API_KEY === "sk-proj-L8LKjYgt0kpny4mUVMAt1lgeGziB6ylIm2xyiGzAITM2r8aJuCLk7_7yAMxytBBh3JV3PFVfxCT3BlbkFJg1mVwUSMb8SJQZ7sqfMWp3eja5oXcOL38WffRGpEeA0Jgdmuhm31_lIn9ciyQ1vY2xf8TvrKI
+            ") {
             resultadoIaDiv.innerText = "⚠️ Adicione a sua chave de API no arquivo app.js";
             return;
         }
