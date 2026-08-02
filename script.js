@@ -529,4 +529,5 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
         }
     });
     }
-        
+
+                
