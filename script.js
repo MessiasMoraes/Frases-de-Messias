@@ -528,4 +528,5 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
             .innerText = "Ops! Ocorreu um erro de conexão. Tente novamente.";
         }
     });
-}
+    }
+        
