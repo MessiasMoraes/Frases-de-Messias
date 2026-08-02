@@ -463,7 +463,7 @@ if ('serviceWorker' in navigator) {
 }
 
 // OpenAI Integration (GPT-4o-mini)
-const OPENAI_API_KEY = "SUA_NOVA_CHAVE_AQUI"; // <-- Cole sua NOVA chave 'sk-proj-...' criada no painel da OpenAI aqui
+const OPENAI_API_KEY = "COLE_SUA_NOVA_CHAVE_AQUI"; // <-- Substitua apenas essa string pela sua chave novinha gerada
 
 const promptInput = document.getElementById('promptIA');
 const gerarBtn = document.getElementById('gerarIaBtn');
@@ -478,7 +478,7 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
             return;
         }
 
-        if (!OPENAI_API_KEY || OPENAI_API_KEY === "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") {
+        if (!OPENAI_API_KEY || OPENAI_API_KEY === "COLE_SUA_NOVA_CHAVE_AQUI") {
             resultadoIaDiv.innerText = "⚠️ Adicione a sua chave da OpenAI no arquivo app.js";
             return;
         }
