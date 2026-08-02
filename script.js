@@ -532,4 +532,5 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
 
 
 
-        
+
+    
