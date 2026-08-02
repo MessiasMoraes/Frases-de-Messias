@@ -478,7 +478,7 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
             return;
         }
 
-        if (!OPENAI_API_KEY || OPENAI_API_KEY === "COLE_SUA_NOVA_CHAVE_AQUI") {
+        if (!OPENAI_API_KEY || OPENAI_API_KEY ===  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 ) {
             resultadoIaDiv.innerText = "⚠️ Adicione a sua chave da OpenAI no arquivo app.js";
             return;
         }
