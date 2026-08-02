@@ -460,4 +460,5 @@ if ('serviceWorker' in navigator) {
             .then(reg => console.log('Service Worker registrado!', reg))
             .catch(err => console.log('Erro no Service Worker:', err));
     });
-}
+            }
+                      
