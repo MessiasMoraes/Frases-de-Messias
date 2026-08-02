@@ -56,7 +56,6 @@ async function carregarFrases() {
         const consultaCategorias = await getDocs(collection(db, "categorias"));
         consultaCategorias.forEach(docSnap => {
             const dados = docSnap.data();
-            // Sanitiza o nome para evitar problemas com espaços extras ou emojis
             const nomeLimpo = sanitizarTexto(dados.nome || "");
             if (nomeLimpo) {
                 categorias[nomeLimpo] = dados.imagem;
@@ -90,7 +89,6 @@ function mostrarFrases(filtro = "") {
     if (!lista) return;
     lista.innerHTML = "";
     
-    // Limpa emojis e espaços soltos do termo pesquisado
     const filtroLimpo = sanitizarTexto(filtro).toLowerCase();
 
     const resultado = frases.filter(f => {
@@ -330,7 +328,6 @@ async function baixarImagem(botao, formato = "story") {
         const texto = card.querySelector(".textoFrase")?.innerText || "";
         const autor = card.querySelector(".autorFrase")?.innerText || "";
 
-        // Dimensões segundo o formato escolhido
         const largura = 1080;
         const altura = formato === "feed" ? 1080 : 1920;
         const tamanhoFonteTexto = formato === "feed" ? "52px" : "70px";
@@ -465,8 +462,8 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// Gemini IA Integration
-const GEMINI_API_KEY = "SUA_CHAVE_AQUI"; // <-- Cole a sua chave gerada no Google AI Studio aqui
+// OpenAI Integration (GPT-4o-mini)
+const OPENAI_API_KEY = "SUA_NOVA_CHAVE_AQUI"; // <-- Cole sua NOVA chave 'sk-proj-...' criada no painel da OpenAI aqui
 
 const promptInput = document.getElementById('promptIA');
 const gerarBtn = document.getElementById('gerarIaBtn');
@@ -481,29 +478,33 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
             return;
         }
 
-        if (!GEMINI_API_KEY || GEMINI_API_KEY === "sk-proj-L8LKjYgt0kpny4mUVMAt1lgeGziB6ylIm2xyiGzAITM2r8aJuCLk7_7yAMxytBBh3JV3PFVfxCT3BlbkFJg1mVwUSMb8SJQZ7sqfMWp3eja5oXcOL38WffRGpEeA0Jgdmuhm31_lIn9ciyQ1vY2xf8TvrKI
-            ") {
-            resultadoIaDiv.innerText = "⚠️ Adicione a sua chave de API no arquivo app.js";
+        if (!OPENAI_API_KEY || OPENAI_API_KEY === "SUA_NOVA_CHAVE_AQUI") {
+            resultadoIaDiv.innerText = "⚠️ Adicione a sua chave da OpenAI no arquivo app.js";
             return;
         }
 
         resultadoIaDiv.innerText = "🤖 Criando sua frase inspiradora...";
 
-        // URL montada dinamicamente com a chave
-        const urlComChave = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-
         try {
-            const response = await fetch(urlComChave, {
+            const response = await fetch("https://api.openai.com/v1/chat/completions", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${OPENAI_API_KEY}`
                 },
                 body: JSON.stringify({
-                    contents: [{
-                        parts: [{
-                            text: `Escreva uma frase curta, inspiradora e emocionante em português sobre o tema ou sentimento: "${textoUsuario}". Retorne apenas a frase entre aspas e nada mais.`
-                        }]
-                    }]
+                    model: "gpt-4o-mini",
+                    messages: [
+                        {
+                            role: "system",
+                            content: "Você é um assistente especialista em criar frases curtas, inspiradoras, marcantes e emocionantes em português. Retorne apenas a frase entre aspas e nada mais."
+                        },
+                        {
+                            role: "user",
+                            content: `Escreva uma frase sobre o tema ou sentimento: "${textoUsuario}".`
+                        }
+                    ],
+                    temperature: 0.7
                 })
             });
 
@@ -511,14 +512,14 @@ if (gerarBtn && promptInput && resultadoIaDiv) {
 
             if (!response.ok) {
                 const msg = data.error?.message || "Erro na requisição.";
-                resultadoIaDiv.innerText = `⚠️ Erro da IA: ${msg}`;
+                resultadoIaDiv.innerText = `⚠️ Erro da OpenAI: ${msg}`;
                 return;
             }
 
-            const fraseGerada = data.candidates?.[0]?.content?.parts?.[0]?.text || "Não foi possível gerar a frase.";
+            const fraseGerada = data.choices?.[0]?.message?.content || "Não foi possível gerar a frase.";
 
             resultadoIaDiv.innerHTML = `
-                <blockquote style="background: white; padding: 15px; border-left: 4px solid #4A90E2; border-radius: 6px; display: inline-block; text-align: left; margin-top: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); color: #333;">
+                <blockquote style="background: white; padding: 15px; border-left: 4px solid #10a37f; border-radius: 6px; display: inline-block; text-align: left; margin-top: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); color: #333;">
                     ${fraseGerada}
                 </blockquote>
             `;
