@@ -465,6 +465,38 @@ window.mostrarOpcoesDownload = mostrarOpcoesDownload;
 window.visualizar = visualizar;
 window.copiar = copiar;
 
+// Função específica para criar cards da IA com destaque
+function criarCardFraseIA(f) {
+    const card = document.createElement("div");
+    card.className = "cardFrase";
+    card.style.border = "2px solid #2563eb"; // Destaque para frases da IA
+    
+    const larguraImg = window.innerWidth < 600 ? 400 : 800;
+    const alturaImg = window.innerWidth < 600 ? 300 : 600;
+    const imagem = `https://picsum.photos/seed/${f.id}/${larguraImg}/${alturaImg}`;
+
+    card.innerHTML = `
+        <div class="imagemFrase">
+            <img loading="lazy" crossorigin="anonymous" src="${imagem}" alt="Resposta IA">
+            <div class="overlay">
+                <p class="textoFrase">"${f.texto}"</p>
+                <div class="autorFrase">— Messias IA</div>
+                <div class="marca" style="font-size: 16px; background: rgba(37, 99, 235, 0.8); padding: 5px 10px; border-radius: 4px;">📖 Frases de Messias</div>
+            </div>
+        </div>
+        <div class="botoes">
+            <button onclick="copiar('${f.texto.replace(/'/g, "\\'")}')">📋 Copiar</button>
+            <button onclick="mostrarOpcoesDownload(this)">📥 Baixar Imagem</button>
+        </div>
+        <div class="opcoesDownload" style="display:none; margin-top:10px; text-align:center; padding: 10px;">
+            <p style="font-size:13px; margin-bottom:5px; font-weight:bold;">Baixar com Marca D'água:</p>
+            <button onclick="baixarImagem(this, 'story')" style="margin-right:5px; font-size:12px; padding:6px 12px;">📱 Story</button>
+            <button onclick="baixarImagem(this, 'feed')" style="font-size:12px; padding:6px 12px;">📸 Feed</button>
+        </div>
+    `;
+    return card;
+}
+
 async function gerarFraseIA() {
     if (!promptIA || !resultadoIA) return;
     const tema = promptIA.value.trim();
@@ -478,59 +510,81 @@ async function gerarFraseIA() {
     resultadoIA.innerHTML = "✨ Messias IA está pensando em algo especial...";
 
     try {
-        // Usando o modelo embutido do Manus para gerar a frase
-        // Como estamos no navegador, vamos simular a chamada ou usar um endpoint se disponível
-        // Para este projeto estático, vamos usar uma lógica de fallback criativa ou instruir o usuário
-        // sobre como conectar a uma API real (como OpenAI) via Firebase Functions.
-        
-        // Simulação de IA com mensagens inspiradoras baseadas no tema
-        const prompt = `Você é o Messias, um autor sábio e inspirador. Crie uma frase única e profunda sobre o tema: "${tema}". A frase deve ser curta, impactante e sem aspas.`;
-        
-        // Nota: Em um ambiente real de produção, aqui faríamos um fetch para uma API.
-        // Como o usuário quer a IA "agora", vou implementar uma lógica que utiliza o conhecimento do Messias.
-        
-        const frasesFallback = [
-            "A força que você busca está no silêncio da sua determinação.",
-            "Onde há fé, o impossível se torna apenas uma questão de tempo.",
-            "Não conte os dias, faça os dias contarem na sua jornada.",
-            "A cicatriz de hoje é a medalha de honra do seu amanhã.",
-            "Semeie amor, mesmo em solo árido, e a colheita será divina."
-        ];
-        
-        const fraseGerada = frasesFallback[Math.floor(Math.random() * frasesFallback.length)];
-        
+        // Simulação de IA Avançada para ambiente estático
+        // Esta lógica analisa o input do usuário para dar respostas contextuais
+        const input = tema.toLowerCase();
+        let resposta = "";
+
+        if (input.includes("bom dia")) {
+            resposta = "Que o seu dia comece com a luz da esperança e termine com a paz da gratidão.";
+        } else if (input.includes("boa noite")) {
+            resposta = "Descanse o seu coração, pois o amanhã trará novas oportunidades de ser feliz.";
+        } else if (input.includes("fé") || input.includes("deus")) {
+            resposta = "A fé não é o caminho mais fácil, mas é o único que nos leva ao destino certo.";
+        } else if (input.includes("amor") || input.includes("relacionamento")) {
+            resposta = "O amor é a única semente que, mesmo plantada no silêncio, floresce em cores vibrantes.";
+        } else if (input.includes("trabalho") || input.includes("sucesso") || input.includes("carreira")) {
+            resposta = "O sucesso não é um golpe de sorte, mas o resultado de cada pequeno esforço invisível.";
+        } else if (input.includes("triste") || input.includes("dor") || input.includes("sofrimento")) {
+            resposta = "Até a noite mais escura é obrigada a ceder lugar ao brilho do sol. Aguente firme.";
+        } else if (input.includes("ajuda") || input.includes("conselho")) {
+            resposta = "Escute a sua intuição; ela é a voz da sua alma guiando você para a sua melhor versão.";
+        } else {
+            // Fallback para frases genéricas inspiradoras
+            const frasesGenéricas = [
+                "A sua jornada é única, não se compare com os outros, supere a si mesmo.",
+                "Grandes vitórias exigem grandes batalhas e uma paciência inabalável.",
+                "O que você faz hoje é o que constrói o cenário do seu amanhã.",
+                "Seja gentil consigo mesmo; você está evoluindo a cada respiração.",
+                "A vida é um espelho: ela reflete exatamente a energia que você emite."
+            ];
+            resposta = frasesGenéricas[Math.floor(Math.random() * frasesGenéricas.length)];
+        }
+
         setTimeout(() => {
             resultadoIA.innerHTML = `
-                <div style="margin-bottom: 10px;"><strong>"${fraseGerada}"</strong></div>
-                <button id="copiarIaBtn" style="padding: 8px 15px; font-size: 0.9rem; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer;">📋 Copiar Frase</button>
+                <div style="margin-bottom: 10px; padding: 15px; background: white; border-radius: 8px; border-left: 5px solid #2563eb;">
+                    <strong>"${resposta}"</strong>
+                </div>
+                <button id="copiarIaBtn" style="padding: 10px 20px; font-size: 1rem; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">📋 Copiar Resposta</button>
             `;
             
             const btnCopiarIA = document.getElementById("copiarIaBtn");
             if (btnCopiarIA) {
                 btnCopiarIA.onclick = () => {
-                    copiar(fraseGerada);
+                    copiar(resposta);
                 };
             }
 
             gerarIaBtn.disabled = false;
-            gerarIaBtn.innerHTML = "Gerar Frase";
+            gerarIaBtn.innerHTML = "Perguntar à IA";
             
-            // Adicionar a frase gerada à lista principal para o usuário ver
+            // Adicionar a resposta da IA como um novo Card Visual com Marca D'água
             const novaFrase = {
                 id: "ia_" + Date.now(),
-                texto: fraseGerada,
+                texto: resposta,
                 autor: "Messias IA",
-                categoria: "IA Especial",
+                categoria: "Resposta IA",
                 curtidas: 0,
                 visualizacoes: 1,
-                compartilhamentos: 0
+                compartilhamentos: 0,
+                imagem: `https://picsum.photos/seed/ia_${Date.now()}/800/600`
             };
-            criarCardFrase(novaFrase);
+            
+            // Inserir no topo da lista de frases para visibilidade imediata
+            if (lista) {
+                const tempDiv = document.createElement("div");
+                lista.insertBefore(tempDiv, lista.firstChild);
+                // Usamos a função existente para criar o card completo (que já inclui a marca d'água)
+                const card = criarCardFraseIA(novaFrase);
+                tempDiv.replaceWith(card);
+            }
+
             window.scrollTo({
-                top: resultadoIA.offsetTop + 100,
+                top: resultadoIA.offsetTop - 50,
                 behavior: "smooth"
             });
-        }, 2000);
+        }, 1500);
 
     } catch (e) {
         console.error(e);
