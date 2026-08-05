@@ -123,9 +123,14 @@ function mostrarFrases(filtro = "") {
 
 function criarCardFrase(f) {
     const categoriaLimpa = sanitizarTexto(f.categoria || "");
+    
+    // Otimização: Imagens menores para mobile (400x300) e maiores para desktop (800x600)
+    const larguraImg = window.innerWidth < 600 ? 400 : 800;
+    const alturaImg = window.innerWidth < 600 ? 300 : 600;
+    
     const imagem = (f.imagem && f.imagem.trim() !== "")
         ? f.imagem
-        : (categorias[categoriaLimpa] || `https://picsum.photos/seed/${f.id}/800/600`);
+        : (categorias[categoriaLimpa] || `https://picsum.photos/seed/${f.id}/${larguraImg}/${alturaImg}`);
 
     const card = document.createElement("div");
     card.className = "cardFrase";

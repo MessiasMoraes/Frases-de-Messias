@@ -165,6 +165,16 @@ button:hover{
   position:relative;
   width:100%;
   height:450px;
+  background: #eee; /* Placeholder enquanto carrega */
+}
+
+@media (max-width: 600px) {
+  .imagemFrase {
+    height: 300px; /* Menor no mobile para carregar mais rápido */
+  }
+  .textoFrase {
+    font-size: 18px; /* Ajuste de fonte para telas menores */
+  }
 }
 
 .imagemFrase img{
