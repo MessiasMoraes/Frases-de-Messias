@@ -500,7 +500,18 @@ async function gerarFraseIA() {
         const fraseGerada = frasesFallback[Math.floor(Math.random() * frasesFallback.length)];
         
         setTimeout(() => {
-            resultadoIA.innerHTML = `<strong>"${fraseGerada}"</strong>`;
+            resultadoIA.innerHTML = `
+                <div style="margin-bottom: 10px;"><strong>"${fraseGerada}"</strong></div>
+                <button id="copiarIaBtn" style="padding: 8px 15px; font-size: 0.9rem; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer;">📋 Copiar Frase</button>
+            `;
+            
+            const btnCopiarIA = document.getElementById("copiarIaBtn");
+            if (btnCopiarIA) {
+                btnCopiarIA.onclick = () => {
+                    copiar(fraseGerada);
+                };
+            }
+
             gerarIaBtn.disabled = false;
             gerarIaBtn.innerHTML = "Gerar Frase";
             
