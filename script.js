@@ -374,24 +374,18 @@ async function baixarImagem(botao, formato = "story") {
         });
 
         const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+	
+	        if (!blob) throw new Error("Erro ao gerar imagem.");
 
-        if (!blob) throw new Error("Erro ao gerar imagem.");
-
-        const arquivo = new File([blob], `frase-${formato}-${Date.now()}.png`, { type: "image/png" });
-
-        if (navigator.canShare && navigator.canShare({ files: [arquivo] })) {
-            await navigator.share({
-                title: "Frases de Messias",
-                files: [arquivo]
-            });
-        } else {
+            // Forçar download direto em vez de abrir o menu de compartilhamento do sistema
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
-            a.download = arquivo.name;
+            a.download = `frase-${formato}-${Date.now()}.png`;
+            document.body.appendChild(a);
             a.click();
+            document.body.removeChild(a);
             URL.revokeObjectURL(url);
-        }
 
     } catch (e) {
         console.error("Erro ao gerar imagem:", e);
