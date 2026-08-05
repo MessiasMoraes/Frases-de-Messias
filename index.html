@@ -29,6 +29,15 @@
 
   <!-- Biblioteca html2canvas para permitir baixar os cards como imagem -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <!-- Google Analytics (Substitua G-XXXXXXXXXX pelo seu ID quando tiver) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
 </head>
   <div id="templateExportacao" style="display:none;">
 
@@ -127,6 +136,9 @@
 
 <footer>
   <p>© 2026 Frases de Messias</p>
+  <div style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">
+    🚀 <span id="contadorGlobal">...</span> visitas ao portal
+  </div>
 </footer>
 
 <button id="temaBtn">🌙 Modo Escuro</button>

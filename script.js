@@ -50,7 +50,35 @@ function sanitizarTexto(texto = "") {
         .trim();
 }
 
+async function contarVisitaGlobal() {
+    const chaveVisita = "visita_global_registrada";
+    const contadorElemento = document.getElementById("contadorGlobal");
+    
+    try {
+        const docRef = doc(db, "estatisticas", "global");
+        
+        // Se o usuário ainda não foi contado nesta sessão
+        if (!sessionStorage.getItem(chaveVisita)) {
+            await updateDoc(docRef, {
+                visitas: increment(1)
+            });
+            sessionStorage.setItem(chaveVisita, "true");
+        }
+        
+        // Buscar o valor atualizado para exibir
+        const consulta = await getDocs(collection(db, "estatisticas"));
+        consulta.forEach(d => {
+            if (d.id === "global" && contadorElemento) {
+                contadorElemento.textContent = Number(d.data().visitas || 0).toLocaleString("pt-BR");
+            }
+        });
+    } catch (e) {
+        console.error("Erro ao contar visita global:", e);
+    }
+}
+
 async function carregarFrases() {
+    contarVisitaGlobal();
     mostrarCarregando();
     frases = [];
     categorias = {};
