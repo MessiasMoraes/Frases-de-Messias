@@ -207,30 +207,24 @@ function mostrarCategorias() {
     if (!listaCategorias) return;
     listaCategorias.innerHTML = "";
 
-    Object.entries(categorias).forEach(([nome, imagem]) => {
-        const card = document.createElement("div");
-        card.className = "categoriaCard";
-        card.innerHTML = `
-            <img
-                loading="lazy"
-                src="${imagem}"
-                alt="${nome}"
-                onerror="this.src='imagens/categorias/padrao.png'"
-            >
-            <span>${nome}</span>
-        `;
+    Object.keys(categorias).forEach((nome) => {
+        const btn = document.createElement("button");
+        btn.className = "btn-categoria";
+        btn.textContent = nome;
 
-        card.onclick = () => {
+        btn.onclick = () => {
             const categoriaLimpa = sanitizarTexto(nome);
+            if (pesquisa) pesquisa.value = categoriaLimpa;
             mostrarFrases(categoriaLimpa);
 
+            const offset = lista.getBoundingClientRect().top + window.pageYOffset - 100;
             window.scrollTo({
-                top: lista.offsetTop - 20,
+                top: offset,
                 behavior: "smooth"
             });
         };
 
-        listaCategorias.appendChild(card);
+        listaCategorias.appendChild(btn);
     });
 }
 
@@ -597,20 +591,16 @@ async function gerarFraseIA() {
 document.addEventListener("DOMContentLoaded", () => {
     carregarFrases();
 
-    // Adicionar eventos para as categorias estáticas da página inicial
-    const cardsEstaticos = document.querySelectorAll(".categorias .card");
-    cardsEstaticos.forEach(card => {
-        card.style.cursor = "pointer";
-        card.onclick = () => {
-            const nomeCategoria = card.querySelector("span")?.textContent || "";
+    // Adicionar eventos para os botões de categorias estáticos
+    const botoesEstaticos = document.querySelectorAll(".btn-categoria");
+    botoesEstaticos.forEach(btn => {
+        btn.onclick = () => {
+            const nomeCategoria = btn.textContent || "";
             const nomeLimpo = sanitizarTexto(nomeCategoria);
             
-            // Atualizar o campo de pesquisa para mostrar o que está filtrado
             if (pesquisa) pesquisa.value = nomeLimpo;
-            
             mostrarFrases(nomeLimpo);
 
-            // Rolar suavemente para a lista de frases
             const offset = lista.getBoundingClientRect().top + window.pageYOffset - 100;
             window.scrollTo({
                 top: offset,
