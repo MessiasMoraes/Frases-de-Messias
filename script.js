@@ -85,18 +85,22 @@ async function carregarFrases() {
     mostrarFrases();
 }
 
+function normalizarParaBusca(texto) {
+    return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
+
 function mostrarFrases(filtro = "") {
     if (!lista) return;
     lista.innerHTML = "";
     
-    const filtroLimpo = sanitizarTexto(filtro).toLowerCase();
+    const filtroLimpo = normalizarParaBusca(sanitizarTexto(filtro));
 
     const resultado = frases.filter(f => {
         if (filtroLimpo === "") return true;
         
-        const textoFrase = (f.texto || "").toLowerCase();
-        const autorFrase = (f.autor || "").toLowerCase();
-        const categoriaFrase = sanitizarTexto(f.categoria || "").toLowerCase();
+        const textoFrase = normalizarParaBusca(f.texto || "");
+        const autorFrase = normalizarParaBusca(f.autor || "");
+        const categoriaFrase = normalizarParaBusca(sanitizarTexto(f.categoria || ""));
 
         return (
             textoFrase.includes(filtroLimpo) ||
@@ -451,6 +455,28 @@ window.copiar = copiar;
 
 document.addEventListener("DOMContentLoaded", () => {
     carregarFrases();
+
+    // Adicionar eventos para as categorias estáticas da página inicial
+    const cardsEstaticos = document.querySelectorAll(".categorias .card");
+    cardsEstaticos.forEach(card => {
+        card.style.cursor = "pointer";
+        card.onclick = () => {
+            const nomeCategoria = card.querySelector("span")?.textContent || "";
+            const nomeLimpo = sanitizarTexto(nomeCategoria);
+            
+            // Atualizar o campo de pesquisa para mostrar o que está filtrado
+            if (pesquisa) pesquisa.value = nomeLimpo;
+            
+            mostrarFrases(nomeLimpo);
+
+            // Rolar suavemente para a lista de frases
+            const offset = lista.getBoundingClientRect().top + window.pageYOffset - 100;
+            window.scrollTo({
+                top: offset,
+                behavior: "smooth"
+            });
+        };
+    });
 });
 
 // Service Worker PWA
