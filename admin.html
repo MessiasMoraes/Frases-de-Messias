@@ -8,6 +8,7 @@
 <title>Painel Administrativo - Frases de Messias</title>
 
 <link rel="stylesheet" href="admin.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 </head>
 
@@ -87,6 +88,14 @@ Sair
 
 </div>
 
+<div class="card">
+
+<h2 id="totalVisitas">0</h2>
+
+<p>Visitas</p>
+
+</div>
+
 </section>
 
 <!-- CADASTRO -->
@@ -95,45 +104,73 @@ Sair
 
 <h2>➕ Nova Frase</h2>
 
+<div class="form-row">
+
 <input
 type="text"
 id="autor"
-placeholder="Autor">
+placeholder="Autor"
+class="form-input">
 
-<select id="categoria">
+<select id="categoria" class="form-input">
 
-<option>Motivação</option>
-<option>Fé</option>
-<option>Amor</option>
-<option>Reflexão</option>
-<option>Amizade</option>
-<option>Bom Dia</option>
-<option>Boa Noite</option>
-<option>Esperança</option>
-<option>Gratidão</option>
-<option>Família</option>
-<option>Sucesso</option>
-<option>Vida</option>
+<option value="">Selecione uma categoria</option>
 
 </select>
 
+</div>
+
 <textarea
 id="texto"
-rows="5"
-placeholder="Digite a frase">
+rows="4"
+placeholder="Digite a frase"
+class="form-input">
 </textarea>
+
+<div class="form-row">
 
 <input
 type="file"
 id="imagem"
-accept="image/*">
+accept="image/*"
+class="form-input">
+
+<button id="gerarIaBtn" class="btn-ia">
+✨ Gerar com IA
+</button>
+
+</div>
 
 <img
 id="preview"
-style="display:none;max-width:250px;border-radius:12px;">
+style="display:none;max-width:250px;border-radius:12px;margin:10px 0;">
 
-<button id="salvarFrase">
-    💾 Salvar Frase
+<!-- PREVIEW DO CARD -->
+
+<div id="previewCard" class="preview-card" style="display:none;">
+
+<h3>Pré-visualização do Card</h3>
+
+<div id="cardPreview" class="card-preview">
+
+<img id="previewImg" src="" style="display:none;width:100%;height:200px;object-fit:cover;border-radius:8px;">
+
+<div class="preview-content">
+
+<p id="previewTexto"></p>
+
+<small id="previewAutor"></small>
+
+<div class="preview-logo">📖 Frases de Messias</div>
+
+</div>
+
+</div>
+
+</div>
+
+<button id="salvarFrase" class="btn-salvar">
+💾 Salvar Frase
 </button>
 
 </section>
@@ -142,7 +179,7 @@ style="display:none;max-width:250px;border-radius:12px;">
 
 <section class="pesquisa">
 
-<select id="filtroCategoria">
+<select id="filtroCategoria" class="form-input">
 
 <option value="">
 📂 Todas as categorias
@@ -152,7 +189,8 @@ style="display:none;max-width:250px;border-radius:12px;">
 
 <input
 id="pesquisa"
-placeholder="Pesquisar frase...">
+placeholder="Pesquisar frase..."
+class="form-input">
 
 </section>
 
@@ -176,37 +214,78 @@ id="editId">
 
 <input
 id="editAutor"
-placeholder="Autor">
+placeholder="Autor"
+class="form-input">
 
-<select id="editCategoria">
+<select id="editCategoria" class="form-input">
 
-<option>Motivação</option>
-<option>Fé</option>
-<option>Amor</option>
-<option>Reflexão</option>
-<option>Amizade</option>
-<option>Bom Dia</option>
-<option>Boa Noite</option>
-<option>Esperança</option>
-<option>Gratidão</option>
-<option>Família</option>
-<option>Sucesso</option>
-<option>Vida</option>
+<option value="">Selecione uma categoria</option>
 
 </select>
 
 <textarea
 id="editTexto"
-rows="6">
+rows="6"
+class="form-input">
 </textarea>
 
-<button id="btnAtualizar">
-Salvar Alterações
+<div class="modal-buttons">
+
+<button id="btnAtualizar" class="btn-salvar">
+✅ Salvar Alterações
 </button>
 
-<button id="btnCancelar">
-Cancelar
+<button id="btnCancelar" class="btn-cancelar">
+❌ Cancelar
 </button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- MODAL IA -->
+
+<div id="modalIA" class="modal">
+
+<div class="modal-conteudo">
+
+<h2>✨ Gerar Frase com IA</h2>
+
+<input
+type="text"
+id="iaPrompt"
+placeholder="Ex: Frase sobre sucesso, motivação para acordar cedo, etc."
+class="form-input">
+
+<select id="iaCategoria" class="form-input">
+
+<option value="">Selecione uma categoria</option>
+
+</select>
+
+<div class="modal-buttons">
+
+<button id="btnGerarIA" class="btn-salvar">
+🚀 Gerar Frase
+</button>
+
+<button id="btnCancelarIA" class="btn-cancelar">
+❌ Cancelar
+</button>
+
+</div>
+
+<div id="iaResultado" style="margin-top:15px;display:none;">
+
+<p id="iaTexto" style="font-style:italic;font-size:1.1em;margin-bottom:10px;"></p>
+
+<button id="btnUsarIA" class="btn-salvar">
+✅ Usar Esta Frase
+</button>
+
+</div>
 
 </div>
 
@@ -216,4 +295,3 @@ Cancelar
 
 </body>
 </html>
-    
