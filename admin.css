@@ -307,6 +307,17 @@ color:#fff;
 border:1px solid #555;
 }
 
+/* Garante que as opções do select sejam legíveis em qualquer tema */
+select option {
+background-color: #fff;
+color: #222;
+}
+
+.dark select option {
+background-color: #2b2b2b;
+color: #fff;
+}
+
 .dark .preview-card {
 background: #2b2b2b;
 border-color: #667eea;
