@@ -341,7 +341,7 @@ btnGerarIA.addEventListener("click", async () => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${import.meta.env.VITE_OPENAI_API_KEY || ""}`
+                "Authorization": `Bearer ${window.OPENAI_API_KEY || ""}`
             },
             body: JSON.stringify({
                 model: "gpt-3.5-turbo",
@@ -360,7 +360,12 @@ btnGerarIA.addEventListener("click", async () => {
         });
 
         if (!response.ok) {
-            throw new Error("Erro ao conectar com a IA. Tente novamente.");
+            const erroDados = await response.json();
+            console.error("Erro OpenAI:", erroDados);
+            if (response.status === 401) {
+                throw new Error("Chave de API inválida ou não configurada.");
+            }
+            throw new Error(erroDados.error?.message || "Erro ao conectar com a IA.");
         }
 
         const dados = await response.json();
@@ -656,4 +661,24 @@ if (temaBtn) {
 
     });
 
+}
+
+// ==========================
+// CONFIGURAÇÃO DE API KEY
+// ==========================
+
+const btnConfig = document.getElementById("btnConfig");
+
+// Carregar chave salva
+window.OPENAI_API_KEY = localStorage.getItem("openai_api_key") || "";
+
+if (btnConfig) {
+    btnConfig.addEventListener("click", () => {
+        const novaChave = prompt("Insira sua API Key da OpenAI:", window.OPENAI_API_KEY);
+        if (novaChave !== null) {
+            window.OPENAI_API_KEY = novaChave.trim();
+            localStorage.setItem("openai_api_key", window.OPENAI_API_KEY);
+            alert("✅ Chave de API salva localmente!");
+        }
+    });
 }
