@@ -164,13 +164,17 @@ async function carregarCategorias() {
         categorias = [];
 
         consulta.forEach((docItem) => {
-
             categorias.push({
                 id: docItem.id,
                 nome: docItem.data().nome
             });
-
         });
+
+        // Fallback: Se não houver categorias no banco, usar as padrão
+        if (categorias.length === 0) {
+            const padrao = ["Motivação", "Fé", "Amor", "Reflexão", "Amizade", "Bom Dia", "Boa Noite", "Esperança", "Gratidão", "Família", "Sucesso", "Vida"];
+            categorias = padrao.map(nome => ({ id: nome, nome: nome }));
+        }
 
         // Atualizar selects
         categoria.innerHTML = '<option value="">Selecione uma categoria</option>';
