@@ -25,7 +25,7 @@ const resultadoIA = document.getElementById("resultadoIA");
 function mostrarCarregando() {
     if (lista) {
         lista.innerHTML = `
-            <div class="loading">
+            <div class="loading" style="text-align:center; padding: 30px; font-weight: bold;">
                 ⏳ Carregando frases...
             </div>
         `;
@@ -35,14 +35,13 @@ function mostrarCarregando() {
 function mostrarErro(msg) {
     if (lista) {
         lista.innerHTML = `
-            <div class="erro">
+            <div class="erro" style="text-align:center; padding: 30px; color: #ef4444; font-weight: bold;">
                 ${msg}
             </div>
         `;
     }
 }
 
-// Função auxiliar para remover emojis e espaços extras das pontas
 function sanitizarTexto(texto = "") {
     return texto
         .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1F004}\u{1F0CF}\u{1F170}-\u{1F251}]/gu, '')
@@ -56,7 +55,6 @@ async function contarVisitaGlobal() {
     try {
         const docRef = doc(db, "estatisticas", "global");
         
-        // Se o usuário ainda não foi contado nesta sessão
         if (!sessionStorage.getItem(chaveVisita)) {
             await updateDoc(docRef, {
                 visitas: increment(1)
@@ -64,7 +62,6 @@ async function contarVisitaGlobal() {
             sessionStorage.setItem(chaveVisita, "true");
         }
         
-        // Buscar o valor atualizado para exibir
         const consulta = await getDocs(collection(db, "estatisticas"));
         consulta.forEach(d => {
             if (d.id === "global" && contadorElemento) {
@@ -77,12 +74,14 @@ async function contarVisitaGlobal() {
 }
 
 async function carregarFrases() {
-    contarVisitaGlobal();
     mostrarCarregando();
     frases = [];
     categorias = {};
 
     try {
+        contarVisitaGlobal();
+
+        // Buscar Categorias no Firestore
         const consultaCategorias = await getDocs(collection(db, "categorias"));
         consultaCategorias.forEach(docSnap => {
             const dados = docSnap.data();
@@ -92,6 +91,7 @@ async function carregarFrases() {
             }
         });
 
+        // Buscar Frases no Firestore
         const consultaFrases = await getDocs(collection(db, "frases"));
         consultaFrases.forEach(docSnap => {
             frases.push({
@@ -99,20 +99,22 @@ async function carregarFrases() {
                 ...docSnap.data()
             });
         });
+
     } catch (e) {
-        console.error(e);
-        mostrarErro("Erro ao carregar as frases.");
+        console.error("Erro no Firebase:", e);
+        mostrarErro("Erro ao conectar ao banco de dados. Verifique a conexão.");
         return;
     }
 
     if (frases.length === 0) {
-        mostrarErro("Nenhuma frase encontrada.");
+        mostrarErro("Nenhuma frase cadastrada no momento.");
         return;
     }
 
     fraseDoDia();
     mostrarCategorias();
     mostrarFrases();
+    configurarBotoesCategoriasFixos();
 }
 
 function normalizarParaBusca(texto) {
@@ -141,8 +143,8 @@ function mostrarFrases(filtro = "") {
 
     if (resultado.length === 0) {
         lista.innerHTML = `
-            <div class="semResultado">
-                😔 Nenhuma frase encontrada.
+            <div class="semResultado" style="text-align:center; padding: 20px;">
+                😔 Nenhuma frase encontrada para a busca realizada.
             </div>
         `;
         return;
@@ -153,8 +155,6 @@ function mostrarFrases(filtro = "") {
 
 function criarCardFrase(f) {
     const categoriaLimpa = sanitizarTexto(f.categoria || "");
-    
-    // Otimização: Imagens menores para mobile (400x300) e maiores para desktop (800x600)
     const larguraImg = window.innerWidth < 600 ? 400 : 800;
     const alturaImg = window.innerWidth < 600 ? 300 : 600;
     
@@ -187,21 +187,11 @@ function criarCardFrase(f) {
         </div>
 
         <div class="botoes">
-            <button onclick="curtir('${f.id}')">
-                ❤️ Curtir
-            </button>
-            <button onclick='favoritar(${JSON.stringify(f.texto)})'>
-                ⭐ Favoritar
-            </button>
-            <button onclick='copiar(${JSON.stringify(f.texto)})'>
-                📋 Copiar
-            </button>
-            <button onclick='compartilhar("${f.id}",${JSON.stringify(f.texto)})'>
-                📤 Compartilhar
-            </button>
-            <button onclick="mostrarOpcoesDownload(this)">
-                📥 Baixar
-            </button>
+            <button onclick="curtir('${f.id}')">❤️ Curtir</button>
+            <button onclick='favoritar(${JSON.stringify(f.texto)})'>⭐ Favoritar</button>
+            <button onclick='copiar(${JSON.stringify(f.texto)})'>📋 Copiar</button>
+            <button onclick='compartilhar("${f.id}",${JSON.stringify(f.texto)})'>📤 Compartilhar</button>
+            <button onclick="mostrarOpcoesDownload(this)">📥 Baixar</button>
         </div>
 
         <div class="opcoesDownload" style="display:none; margin-top:10px; text-align:center;">
@@ -221,6 +211,20 @@ function criarCardFrase(f) {
 
     lista.appendChild(card);
     visualizar(f.id);
+}
+
+function configurarBotoesCategoriasFixos() {
+    const botoes = document.querySelectorAll(".grid-botoes .btn-categoria");
+    botoes.forEach(btn => {
+        btn.onclick = () => {
+            const cat = btn.getAttribute("data-categoria") || btn.innerText;
+            if (pesquisa) pesquisa.value = sanitizarTexto(cat);
+            mostrarFrases(cat);
+            
+            const offset = lista.getBoundingClientRect().top + window.pageYOffset - 100;
+            window.scrollTo({ top: offset, behavior: "smooth" });
+        };
+    });
 }
 
 function mostrarOpcoesDownload(botao) {
@@ -343,7 +347,7 @@ async function copiar(texto) {
     }
 }
 
-// FUNÇÃO DE DOWNLOAD DE IMAGEM
+// DOWNLOAD DE IMAGEM
 async function baixarImagem(botao, formato = "story") {
     const card = botao.closest(".cardFrase");
     if (!card) return;
@@ -405,7 +409,7 @@ async function baixarImagem(botao, formato = "story") {
         });
 
         const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));
-	
+
         if (!blob) throw new Error("Erro ao gerar imagem.");
 
         const url = URL.createObjectURL(blob);
@@ -422,7 +426,7 @@ async function baixarImagem(botao, formato = "story") {
         const textoCard = card.querySelector(".textoFrase")?.innerText || "";
         if (textoCard) {
             await navigator.clipboard.writeText(textoCard);
-            alert("⚠️ Não foi possível gerar a imagem, mas copiei o texto da frase para você!");
+            alert("⚠️ Não foi possível gerar a imagem, mas o texto da frase foi copiado!");
         } else {
             alert("Erro ao gerar a imagem.");
         }
@@ -435,171 +439,240 @@ async function baixarImagem(botao, formato = "story") {
     }
 }
 
-// FUNÇÃO PARA GERAR VÍDEO (Compatível com Android, iOS/Safari e Chrome)
+// ==========================================
+// GERAR VÍDEO DA FRASE
+// ==========================================
+
 async function gerarVideo(botao, formato = "story") {
+
     const card = botao.closest(".cardFrase");
+
     if (!card) return;
 
     const btnOpcoes = card.querySelector(".opcoesDownload");
-    if (btnOpcoes) btnOpcoes.style.display = "none";
 
-    const textoBotaoOriginal = botao.innerHTML;
+    if (btnOpcoes) {
+        btnOpcoes.style.display = "none";
+    }
+
+    const textoOriginal = botao.innerHTML;
+
     botao.disabled = true;
-    botao.innerHTML = "🎬 Criando Vídeo...";
+    botao.innerHTML = "⏳ Criando vídeo...";
+
+    let stream = null;
 
     try {
-        const texto = card.querySelector(".textoFrase")?.innerText || "";
-        const autor = card.querySelector(".autorFrase")?.innerText || "";
+
+        // -------------------------------
+        // PEGAR DADOS DO CARD
+        // -------------------------------
+
+        const imagemElemento =
+            card.querySelector(".imagemFrase img");
+
+        const textoElemento =
+            card.querySelector(".textoFrase");
+
+        const autorElemento =
+            card.querySelector(".autorFrase");
+
+        const texto =
+            textoElemento?.innerText
+            ?.replace(/^["']|["']$/g, "")
+            .trim() || "";
+
+        const autor =
+            autorElemento?.innerText || "— Messias";
+
+        const imagemURL =
+            imagemElemento?.src || "";
+
+        if (!texto) {
+            throw new Error("A frase não foi encontrada.");
+        }
+
+        // -------------------------------
+        // TAMANHO DO VÍDEO
+        // -------------------------------
 
         const largura = 1080;
-        const altura = formato === "feed" ? 1080 : 1920;
 
-        const canvas = document.createElement("canvas");
+        const altura =
+            formato === "feed"
+                ? 1080
+                : 1920;
+
+        const canvas =
+            document.createElement("canvas");
+
         canvas.width = largura;
         canvas.height = altura;
-        const ctx = canvas.getContext("2d");
+
+        const ctx =
+            canvas.getContext("2d");
+
+        // -------------------------------
+        // VERIFICAR SUPORTE
+        // -------------------------------
 
         if (!canvas.captureStream) {
-            alert("⚠️ Seu navegador não suporta a criação de vídeos diretamente.");
-            botao.disabled = false;
-            botao.innerHTML = textoBotaoOriginal;
-            return;
+
+            throw new Error(
+                "Seu navegador não suporta geração de vídeo."
+            );
+
         }
 
-        const stream = canvas.captureStream(30);
+        if (typeof MediaRecorder === "undefined") {
 
-        // Identifica o formato aceito pelo navegador do usuário
-        let mimeType = "video/webm";
-        if (typeof MediaRecorder !== "undefined" && MediaRecorder.isTypeSupported) {
-            if (MediaRecorder.isTypeSupported("video/mp4")) {
-                mimeType = "video/mp4";
-            } else if (MediaRecorder.isTypeSupported("video/webm;codecs=vp9")) {
-                mimeType = "video/webm;codecs=vp9";
-            } else if (MediaRecorder.isTypeSupported("video/webm")) {
-                mimeType = "video/webm";
-            }
+            throw new Error(
+                "Seu navegador não suporta gravação de vídeo."
+            );
+
         }
 
-        const mediaRecorder = new MediaRecorder(stream, { mimeType });
-        const chunks = [];
+        // -------------------------------
+        // CARREGAR IMAGEM
+        // -------------------------------
 
-        mediaRecorder.ondataavailable = (e) => {
-            if (e.data && e.data.size > 0) chunks.push(e.data);
-        };
+        const imagem =
+            new Image();
 
-        mediaRecorder.onstop = () => {
-            const ext = mimeType.includes("mp4") ? "mp4" : "webm";
-            const blob = new Blob(chunks, { type: mimeType });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `video-frase-${formato}-${Date.now()}.${ext}`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+        imagem.crossOrigin = "anonymous";
 
-            botao.disabled = false;
-            botao.innerHTML = textoBotaoOriginal;
-        };
+        await new Promise((resolve, reject) => {
 
-        mediaRecorder.start();
+            imagem.onload = resolve;
 
-        let frame = 0;
-        const totalFrames = 90; // 3 segundos de animação (30 fps)
+            imagem.onerror = () => {
 
-        function animar() {
-            if (frame >= totalFrames) {
-                mediaRecorder.stop();
-                return;
+                reject(
+                    new Error(
+                        "Não foi possível carregar a imagem da frase."
+                    )
+                );
+
+            };
+
+            imagem.src = imagemURL;
+
+        });
+
+        // -------------------------------
+        // STREAM
+        // -------------------------------
+
+        stream =
+            canvas.captureStream(30);
+
+        // -------------------------------
+        // ESCOLHER FORMATO
+        // -------------------------------
+
+        let mimeType = "";
+
+        const formatos = [
+
+            "video/webm;codecs=vp9",
+
+            "video/webm;codecs=vp8",
+
+            "video/webm"
+
+        ];
+
+        for (const formatoVideo of formatos) {
+
+            if (
+                MediaRecorder.isTypeSupported(
+                    formatoVideo
+                )
+            ) {
+
+                mimeType =
+                    formatoVideo;
+
+                break;
+
             }
 
-            // Fundo Escuro Gradiente
-            const gradient = ctx.createLinearGradient(0, 0, 0, altura);
-            gradient.addColorStop(0, "#0f172a");
-            gradient.addColorStop(1, "#1e1b4b");
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, largura, altura);
+        }
 
-            // Animação de Opacidade/Aparecimento
-            ctx.globalAlpha = Math.min(frame / 20, 1);
+        if (!mimeType) {
 
-            // Texto da Frase
-            ctx.fillStyle = "#FFFFFF";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
+            throw new Error(
+                "Seu navegador não suporta um formato de vídeo compatível."
+            );
 
-            const fontSizeTexto = formato === "feed" ? 48 : 64;
-            ctx.font = `bold ${fontSizeTexto}px Arial, sans-serif`;
+        }
 
-            const palavras = texto.split(" ");
-            let linha = "";
-            let y = altura / 2 - 40;
-            const maxWidth = largura - 140;
+        // -------------------------------
+        // GRAVADOR
+        // -------------------------------
 
-            for (let i = 0; i < palavras.length; i++) {
-                let testeLinha = linha + palavras[i] + " ";
-                let metrics = ctx.measureText(testeLinha);
-                if (metrics.width > maxWidth && i > 0) {
-                    ctx.fillText(linha, largura / 2, y);
-                    linha = palavras[i] + " ";
-                    y += fontSizeTexto * 1.3;
-                } else {
-                    linha = testeLinha;
+        const partes = [];
+
+        const recorder =
+            new MediaRecorder(
+                stream,
+                {
+                    mimeType: mimeType,
+                    videoBitsPerSecond: 5_000_000
                 }
-            }
-            ctx.fillText(linha, largura / 2, y);
+            );
 
-            // Autor e Marca
-            ctx.font = `${formato === "feed" ? 32 : 40}px Arial`;
-            ctx.fillStyle = "#CBD5E1";
-            ctx.fillText(autor, largura / 2, y + 80);
+        recorder.ondataavailable =
+            evento => {
 
-            ctx.font = `${formato === "feed" ? 24 : 32}px Arial`;
-            ctx.fillStyle = "#94A3B8";
-            ctx.fillText("📖 Frases de Messias", largura / 2, altura - 80);
+                if (
+                    evento.data &&
+                    evento.data.size > 0
+                ) {
 
-            frame++;
-            requestAnimationFrame(animar);
-        }
+                    partes.push(
+                        evento.data
+                    );
 
-        animar();
+                }
 
-    } catch (e) {
-        console.error("Erro ao gerar vídeo:", e);
-        alert("O seu navegador bloqueou a gravação do vídeo.");
-        botao.disabled = false;
-        botao.innerHTML = textoBotaoOriginal;
-    }
-}
+            };
 
-function fraseDoDia() {
-    if (!fraseDia || frases.length === 0) return;
-    const indice = Math.floor(Math.random() * frases.length);
-    fraseDia.textContent = `"${frases[indice].texto}"`;
-}
+        // -------------------------------
+        // INICIAR GRAVAÇÃO
+        // -------------------------------
 
-if (temaBtn) {
-    if (localStorage.getItem("tema") === "dark") {
-        document.body.classList.add("dark");
-    }
+        recorder.start();
 
-    temaBtn.onclick = () => {
-        document.body.classList.toggle("dark");
-        localStorage.setItem(
-            "tema",
-            document.body.classList.contains("dark") ? "dark" : "light"
-        );
-    };
-}
+        const duracao = 10000;
 
-if (pesquisa) {
-    pesquisa.oninput = () => {
-        mostrarFrases(pesquisa.value);
-    };
-}
+        const inicio =
+            performance.now();
 
-if (copiarBtn) {
-    copiarBtn.onclick = () => {
-        if (fraseDia) {
-            copiar(fraseDia.textCont
+        // -------------------------------
+        // DESENHAR TEXTO
+        // -------------------------------
+
+        function quebrarTexto(
+            texto,
+            larguraMaxima
+        ) {
+
+            const palavras =
+                texto.split(/\s+/);
+
+            const linhas = [];
+
+            let linha = "";
+
+            for (
+                const palavra of palavras
+            ) {
+
+                const teste =
+                    linha
+                        ? linha + " " + palavra
+                        : palavra;
+
+                const larguraTexto =
+                    ctx.m
