@@ -110,6 +110,15 @@ module.exports = async function renderVideo(req, res) {
     const imageUrl = validateImageUrl(String(body.imageUrl || "").slice(0, MAX_IMAGE_URL_LENGTH));
     if (!texto) throw new Error("A frase não pode ficar vazia.");
 
+    const snapshotId = String(process.env.SANDBOX_SNAPSHOT_ID || "").trim();
+    if (!snapshotId) {
+      sendJson(res, 503, {
+        ok: false,
+        error: "Configuração pendente: adicione SANDBOX_SNAPSHOT_ID nas variáveis da Vercel após preparar o snapshot com FFmpeg.",
+      });
+      return;
+    }
+
     const { Sandbox } = await import("@vercel/sandbox");
     const { put } = await import("@vercel/blob");
     const width = 1080;
@@ -121,8 +130,9 @@ module.exports = async function renderVideo(req, res) {
 
     sandbox = await Sandbox.create({
       name: `frases-video-${crypto.randomUUID()}`,
+      source: { type: "snapshot", snapshotId },
       resources: { vcpus: 2 },
-      timeout: 5 * 60 * 1000,
+      timeout: 4 * 60 * 1000,
       persistent: false,
       networkPolicy: "allow-all",
     });
@@ -144,7 +154,8 @@ module.exports = async function renderVideo(req, res) {
       `fade=t=out:st=${RENDER_SECONDS - 1}:d=1`,
     ].join(",");
 
-    await runCommand(sandbox, "ffmpeg", [
+    const ffmpegPath = String(process.env.FFMPEG_PATH || "/vercel/sandbox/ffmpeg");
+    await runCommand(sandbox, ffmpegPath, [
       "-y", "-loop", "1", "-i", "/tmp/input.jpg", "-vf", vf,
       "-frames:v", String(RENDER_SECONDS * FPS), "-an", "-c:v", "libx264",
       "-preset", "veryfast", "-crf", "23", "-pix_fmt", "yuv420p",
@@ -169,11 +180,19 @@ module.exports = async function renderVideo(req, res) {
   } catch (error) {
     console.error("[render-video]", error);
     const sdkError = error && typeof error === "object" ? error : null;
+    const serializeDetail = (value) => {
+      if (typeof value === "string" && value.trim()) return value;
+      if (value && typeof value === "object") {
+        try { return JSON.stringify(value); } catch { return ""; }
+      }
+      return "";
+    };
     const details = [
-      sdkError?.json?.error,
-      sdkError?.json?.message,
-      sdkError?.text,
-    ].find((value) => typeof value === "string" && value.trim());
+      serializeDetail(sdkError?.json?.error),
+      serializeDetail(sdkError?.json?.message),
+      serializeDetail(sdkError?.json),
+      serializeDetail(sdkError?.text),
+    ].find((value) => value);
     const message = String(details || (error instanceof Error ? error.message : "Falha desconhecida.")).slice(0, 1200);
     sendJson(res, 500, {
       ok: false,
