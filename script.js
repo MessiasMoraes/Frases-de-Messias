@@ -343,7 +343,7 @@ async function copiar(texto) {
     }
 }
 
-// FUNÇÃO DE DOWNLOAD COM DUAS OPÇÕES DE TAMANHO
+// FUNÇÃO DE DOWNLOAD DE IMAGEM
 async function baixarImagem(botao, formato = "story") {
     const card = botao.closest(".cardFrase");
     if (!card) return;
@@ -406,17 +406,16 @@ async function baixarImagem(botao, formato = "story") {
 
         const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));
 	
-	        if (!blob) throw new Error("Erro ao gerar imagem.");
+        if (!blob) throw new Error("Erro ao gerar imagem.");
 
-            // Forçar download direto em vez de abrir o menu de compartilhamento do sistema
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `frase-${formato}-${Date.now()}.png`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `frase-${formato}-${Date.now()}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
 
     } catch (e) {
         console.error("Erro ao gerar imagem:", e);
@@ -431,6 +430,144 @@ async function baixarImagem(botao, formato = "story") {
         if (exportacao && exportacao.parentNode) {
             document.body.removeChild(exportacao);
         }
+        botao.disabled = false;
+        botao.innerHTML = textoBotaoOriginal;
+    }
+}
+
+// FUNÇÃO PARA GERAR VÍDEO (Compatível com Android, iOS/Safari e Chrome)
+async function gerarVideo(botao, formato = "story") {
+    const card = botao.closest(".cardFrase");
+    if (!card) return;
+
+    const btnOpcoes = card.querySelector(".opcoesDownload");
+    if (btnOpcoes) btnOpcoes.style.display = "none";
+
+    const textoBotaoOriginal = botao.innerHTML;
+    botao.disabled = true;
+    botao.innerHTML = "🎬 Criando Vídeo...";
+
+    try {
+        const texto = card.querySelector(".textoFrase")?.innerText || "";
+        const autor = card.querySelector(".autorFrase")?.innerText || "";
+
+        const largura = 1080;
+        const altura = formato === "feed" ? 1080 : 1920;
+
+        const canvas = document.createElement("canvas");
+        canvas.width = largura;
+        canvas.height = altura;
+        const ctx = canvas.getContext("2d");
+
+        if (!canvas.captureStream) {
+            alert("⚠️ Seu navegador não suporta a criação de vídeos diretamente.");
+            botao.disabled = false;
+            botao.innerHTML = textoBotaoOriginal;
+            return;
+        }
+
+        const stream = canvas.captureStream(30);
+
+        // Identifica o formato aceito pelo navegador do usuário
+        let mimeType = "video/webm";
+        if (typeof MediaRecorder !== "undefined" && MediaRecorder.isTypeSupported) {
+            if (MediaRecorder.isTypeSupported("video/mp4")) {
+                mimeType = "video/mp4";
+            } else if (MediaRecorder.isTypeSupported("video/webm;codecs=vp9")) {
+                mimeType = "video/webm;codecs=vp9";
+            } else if (MediaRecorder.isTypeSupported("video/webm")) {
+                mimeType = "video/webm";
+            }
+        }
+
+        const mediaRecorder = new MediaRecorder(stream, { mimeType });
+        const chunks = [];
+
+        mediaRecorder.ondataavailable = (e) => {
+            if (e.data && e.data.size > 0) chunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = () => {
+            const ext = mimeType.includes("mp4") ? "mp4" : "webm";
+            const blob = new Blob(chunks, { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `video-frase-${formato}-${Date.now()}.${ext}`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            botao.disabled = false;
+            botao.innerHTML = textoBotaoOriginal;
+        };
+
+        mediaRecorder.start();
+
+        let frame = 0;
+        const totalFrames = 90; // 3 segundos de animação (30 fps)
+
+        function animar() {
+            if (frame >= totalFrames) {
+                mediaRecorder.stop();
+                return;
+            }
+
+            // Fundo Escuro Gradiente
+            const gradient = ctx.createLinearGradient(0, 0, 0, altura);
+            gradient.addColorStop(0, "#0f172a");
+            gradient.addColorStop(1, "#1e1b4b");
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, largura, altura);
+
+            // Animação de Opacidade/Aparecimento
+            ctx.globalAlpha = Math.min(frame / 20, 1);
+
+            // Texto da Frase
+            ctx.fillStyle = "#FFFFFF";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+
+            const fontSizeTexto = formato === "feed" ? 48 : 64;
+            ctx.font = `bold ${fontSizeTexto}px Arial, sans-serif`;
+
+            const palavras = texto.split(" ");
+            let linha = "";
+            let y = altura / 2 - 40;
+            const maxWidth = largura - 140;
+
+            for (let i = 0; i < palavras.length; i++) {
+                let testeLinha = linha + palavras[i] + " ";
+                let metrics = ctx.measureText(testeLinha);
+                if (metrics.width > maxWidth && i > 0) {
+                    ctx.fillText(linha, largura / 2, y);
+                    linha = palavras[i] + " ";
+                    y += fontSizeTexto * 1.3;
+                } else {
+                    linha = testeLinha;
+                }
+            }
+            ctx.fillText(linha, largura / 2, y);
+
+            // Autor e Marca
+            ctx.font = `${formato === "feed" ? 32 : 40}px Arial`;
+            ctx.fillStyle = "#CBD5E1";
+            ctx.fillText(autor, largura / 2, y + 80);
+
+            ctx.font = `${formato === "feed" ? 24 : 32}px Arial`;
+            ctx.fillStyle = "#94A3B8";
+            ctx.fillText("📖 Frases de Messias", largura / 2, altura - 80);
+
+            frame++;
+            requestAnimationFrame(animar);
+        }
+
+        animar();
+
+    } catch (e) {
+        console.error("Erro ao gerar vídeo:", e);
+        alert("O seu navegador bloqueou a gravação do vídeo.");
         botao.disabled = false;
         botao.innerHTML = textoBotaoOriginal;
     }
@@ -465,97 +602,4 @@ if (pesquisa) {
 if (copiarBtn) {
     copiarBtn.onclick = () => {
         if (fraseDia) {
-            copiar(fraseDia.textContent.replace(/"/g, ""));
-        }
-    };
-}
-
-if (gerarIaBtn) {
-    gerarIaBtn.onclick = gerarFraseIA;
-}
-
-if (promptIA) {
-    promptIA.onkeypress = (e) => {
-        if (e.key === 'Enter') gerarFraseIA();
-    };
-}
-
-window.curtir = curtir;
-window.favoritar = favoritar;
-window.compartilhar = compartilhar;
-window.baixarImagem = baixarImagem;
-window.mostrarOpcoesDownload = mostrarOpcoesDownload;
-window.visualizar = visualizar;
-window.copiar = copiar;
-
-// Função específica para criar cards da IA com destaque
-function criarCardFraseIA(f) {
-    const card = document.createElement("div");
-    card.className = "cardFrase";
-    card.style.border = "2px solid #2563eb"; // Destaque para frases da IA
-    
-    const larguraImg = window.innerWidth < 600 ? 400 : 800;
-    const alturaImg = window.innerWidth < 600 ? 300 : 600;
-    const imagem = `https://picsum.photos/seed/${f.id}/${larguraImg}/${alturaImg}`;
-
-    card.innerHTML = `
-        <div class="imagemFrase">
-            <img loading="lazy" crossorigin="anonymous" src="${imagem}" alt="Resposta IA">
-            <div class="overlay">
-                <p class="textoFrase">"${f.texto}"</p>
-                <div class="autorFrase">— Messias IA</div>
-                <div class="marca" style="font-size: 16px; background: rgba(37, 99, 235, 0.8); padding: 5px 10px; border-radius: 4px;">📖 Frases de Messias</div>
-            </div>
-        </div>
-        <div class="botoes">
-            <button onclick="copiar('${f.texto.replace(/'/g, "\\'")}')">📋 Copiar</button>
-            <button onclick="mostrarOpcoesDownload(this)">📥 Baixar Imagem</button>
-        </div>
-        <div class="opcoesDownload" style="display:none; margin-top:10px; text-align:center; padding: 10px;">
-            <p style="font-size:13px; margin-bottom:5px; font-weight:bold;">Baixar com Marca D'água:</p>
-            <button onclick="baixarImagem(this, 'story')" style="margin-right:5px; font-size:12px; padding:6px 12px;">📱 Story</button>
-            <button onclick="baixarImagem(this, 'feed')" style="font-size:12px; padding:6px 12px;">📸 Feed</button>
-            <button onclick="gerarVideo(this, 'story')" style="margin-top:8px; margin-right:5px; font-size:12px; padding:6px 12px; background:#ff6b6b; color:white; border:none; border-radius:4px; cursor:pointer;">🎬 Video Story</button>
-            <button onclick="gerarVideo(this, 'feed')" style="margin-top:8px; font-size:12px; padding:6px 12px; background:#ff6b6b; color:white; border:none; border-radius:4px; cursor:pointer;">🎬 Video Feed</button>
-        </div>
-    `;
-    return card;
-}
-
-async function gerarFraseIA() {
-    if (!promptIA || !resultadoIA) return;
-    const tema = promptIA.value.trim();
-    if (!tema) {
-        alert("Por favor, digite um tema ou sentimento.");
-        return;
-    }
-
-    gerarIaBtn.disabled = true;
-    gerarIaBtn.innerHTML = "⏳ Criando...";
-    resultadoIA.innerHTML = "✨ Messias IA está pensando em algo especial...";
-
-    try {
-        // Simulação de IA Avançada para ambiente estático
-        // Esta lógica analisa o input do usuário para dar respostas contextuais
-        const input = tema.toLowerCase();
-        let resposta = "";
-
-        if (input.includes("bom dia")) {
-            resposta = "Que o seu dia comece com a luz da esperança e termine com a paz da gratidão.";
-        } else if (input.includes("boa noite")) {
-            resposta = "Descanse o seu coração, pois o amanhã trará novas oportunidades de ser feliz.";
-        } else if (input.includes("fé") || input.includes("deus")) {
-            resposta = "A fé não é o caminho mais fácil, mas é o único que nos leva ao destino certo.";
-        } else if (input.includes("amor") || input.includes("relacionamento")) {
-            resposta = "O amor é a única semente que, mesmo plantada no silêncio, floresce em cores vibrantes.";
-        } else if (input.includes("trabalho") || input.includes("sucesso") || input.includes("carreira")) {
-            resposta = "O sucesso não é um golpe de sorte, mas o resultado de cada pequeno esforço invisível.";
-        } else if (input.includes("triste") || input.includes("dor") || input.includes("sofrimento")) {
-            resposta = "Até a noite mais escura é obrigada a ceder lugar ao brilho do sol. Aguente firme.";
-        } else if (input.includes("ajuda") || input.includes("conselho")) {
-            resposta = "Escute a sua intuição; ela é a voz da sua alma guiando você para a sua melhor versão.";
-        } else {
-            // Fallback para frases genéricas inspiradoras
-            const frasesGenéricas = [
-                "A sua jornada é única, não se compare com os outros, supere a si mesmo.",
-                "Grandes vitórias exigem grandes batalh
+            copiar(fraseDia.textCont
