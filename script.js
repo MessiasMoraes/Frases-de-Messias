@@ -443,9 +443,89 @@ window.fecharModoCinema = function() {
 };
 
 // ======================
+// MESSIAS IA
+// ======================
+async function inicializarIA() {
+    const gerarIaBtn = document.getElementById("gerarIaBtn");
+    const promptIA = document.getElementById("promptIA");
+    const resultadoIA = document.getElementById("resultadoIA");
+
+    if (!gerarIaBtn || !promptIA || !resultadoIA) return;
+
+    gerarIaBtn.addEventListener("click", async () => {
+        const prompt = promptIA.value.trim();
+        if (!prompt) {
+            alert("Por favor, digite um assunto ou pergunta para a IA.");
+            return;
+        }
+
+        const apiKey = localStorage.getItem("openai_api_key");
+        if (!apiKey) {
+            alert("⚠️ API Key da OpenAI não configurada. Por favor, configure-a no Painel Administrativo (ícone ⚙️).");
+            return;
+        }
+
+        gerarIaBtn.disabled = true;
+        gerarIaBtn.innerHTML = "⏳ Pensando...";
+        resultadoIA.innerHTML = "<p>🔍 Messias IA está refletindo...</p>";
+
+        try {
+            const response = await fetch("https://api.openai.com/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: "gpt-3.5-turbo",
+                    messages: [
+                        {
+                            role: "system",
+                            content: "Você é Messias, um mentor sábio e inspirador. Responda de forma curta, poética e motivacional. Se pedirem uma frase, gere apenas a frase. Se for uma pergunta, responda com sabedoria em no máximo 3 frases."
+                        },
+                        { role: "user", content: prompt }
+                    ],
+                    max_tokens: 150
+                })
+            });
+
+            if (!response.ok) throw new Error("Erro na comunicação com a IA.");
+
+            const data = await response.json();
+            const resposta = data.choices[0].message.content.trim();
+
+            // Criar um card especial para o resultado da IA
+            const fraseFake = {
+                id: "ia-" + Date.now(),
+                texto: resposta,
+                autor: "Messias IA",
+                categoria: "Sabedoria IA",
+                curtidas: 0,
+                visualizacoes: 0,
+                compartilhamentos: 0
+            };
+
+            resultadoIA.innerHTML = `<p style="margin-bottom:15px; color:#2563eb; font-weight:bold;">✨ Resposta da Messias IA:</p>`;
+            criarCardFrase(fraseFake, resultadoIA);
+            
+            // Rolar até o resultado
+            resultadoIA.scrollIntoView({ behavior: "smooth", block: "center" });
+
+        } catch (error) {
+            console.error(error);
+            resultadoIA.innerHTML = `<p style="color:#ef4444;">❌ Erro: Não foi possível obter resposta da IA. Verifique sua chave.</p>`;
+        } finally {
+            gerarIaBtn.disabled = false;
+            gerarIaBtn.innerHTML = "Perguntar à IA";
+        }
+    });
+}
+
+// ======================
 // INICIALIZAÇÃO
 // ======================
 document.addEventListener("DOMContentLoaded", () => {
+    inicializarIA();
     const lista = document.getElementById("listaFrases");
     const listaCategorias = document.getElementById("listaCategorias");
     const pesquisa = document.getElementById("pesquisa");
