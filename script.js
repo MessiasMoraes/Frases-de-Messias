@@ -350,13 +350,18 @@ window.baixarImagem = async function(botao, formato = "story") {
         if (!blob) throw new Error("Erro ao gerar imagem.");
 
         const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `frase-${formato}-${Date.now()}.png`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        
+        // Em vez de forçar download, mostra a imagem para o usuário salvar manualmente
+        // Isso resolve bloqueios de download em celulares
+        const modalDownload = document.createElement("div");
+        modalDownload.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;color:white;text-align:center;";
+        modalDownload.innerHTML = `
+            <p style="margin-bottom:15px; font-weight:bold;">✨ Imagem Gerada!</p>
+            <img src="${url}" style="max-width:100%; max-height:70vh; border-radius:10px; box-shadow:0 0 20px rgba(0,0,0,0.5); margin-bottom:20px;">
+            <p style="font-size:14px; margin-bottom:20px;">📱 <b>Pressione e segure</b> na imagem acima e selecione <b>'Fazer download da imagem'</b> ou <b>'Salvar imagem'</b>.</p>
+            <button onclick="this.parentElement.remove()" style="padding:10px 25px; background:#ef4444; color:white; border:none; border-radius:5px; font-weight:bold; cursor:pointer;">Fechar</button>
+        `;
+        document.body.appendChild(modalDownload);
 
     } catch (e) {
         console.error("Erro ao gerar imagem:", e);
