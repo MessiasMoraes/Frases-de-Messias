@@ -184,9 +184,9 @@ function criarCardFrase(f, lista) {
             <button onclick="favoritar('${f.texto.replace(/'/g, "\\'")}')">⭐ Favoritar</button>
             <button onclick="copiar('${f.texto.replace(/'/g, "\\'")}')">📋 Copiar</button>
             <button onclick="compartilhar('${f.id}', '${f.texto.replace(/'/g, "\\'")}')">📤 Compartilhar</button>
-            <button onclick="mostrarOpcoesDownload(this)">📥 Baixar</button>
+            <button type="button" class="btn-baixar" onclick="mostrarOpcoesDownload(this)" aria-expanded="false">📥 Baixar</button>
         </div>
-        <div class="opcoesDownload" style="display:none; margin-top:10px; text-align:center;">
+        <div class="opcoesDownload" hidden style="margin-top:10px; text-align:center;">
             <p style="font-size:13px; margin-bottom:5px; font-weight:bold;">Escolha o formato:</p>
             <button onclick="baixarImagem(this, 'story')" style="margin-right:5px; font-size:12px; padding:6px 12px;">📱 Story (9:16)</button>
             <button onclick="baixarImagem(this, 'feed')" style="font-size:12px; padding:6px 12px;">📸 Feed (1:1)</button>
@@ -284,7 +284,16 @@ window.mostrarOpcoesDownload = function(botao) {
     const card = botao.closest(".cardFrase");
     if (!card) return;
     const opcoes = card.querySelector(".opcoesDownload");
-    if (opcoes) opcoes.style.display = opcoes.style.display === "none" ? "block" : "none";
+    if (!opcoes) return;
+
+    const abrir = opcoes.hidden;
+    opcoes.hidden = !abrir;
+    opcoes.classList.toggle("aberta", abrir);
+    botao.setAttribute("aria-expanded", String(abrir));
+
+    if (abrir) {
+        requestAnimationFrame(() => opcoes.scrollIntoView({ behavior: "smooth", block: "nearest" }));
+    }
 };
 
 async function visualizar(id) {

@@ -567,3 +567,72 @@ button[onclick*="gerarVideo"]:disabled {
         max-width: 600px;
     }
 }
+
+/* Opções de download: compatibilidade com celulares */
+.opcoesDownload[hidden] {
+  display: none !important;
+}
+
+.opcoesDownload.aberta {
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 10px 14px;
+  background: #f8fafc;
+  border-top: 1px solid #e5e7eb;
+}
+
+.opcoesDownload.aberta p {
+  flex: 0 0 100%;
+}
+
+.opcoesDownload.aberta button {
+  min-height: 44px;
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 12px !important;
+  cursor: pointer;
+  font-size: 14px !important;
+  touch-action: manipulation;
+}
+
+.opcoesDownload.aberta button[onclick*="gerarVideo"] {
+  background: #ef5350 !important;
+  color: #fff !important;
+}
+
+@media (max-width: 600px) {
+  .opcoesDownload.aberta button {
+    flex: 1 1 calc(50% - 8px);
+    min-width: 135px;
+  }
+}
+
+.dark-mode .opcoesDownload.aberta {
+  background: #242424;
+  border-top-color: #444;
+  color: #fff;
+}
+
+.dark-mode .opcoesDownload.aberta button:not([onclick*="gerarVideo"]) {
+  background: #2563eb;
+  color: #fff;
+}
+
+/* Alguns navegadores Android ignoram estilos de display em elementos hidden sem esta regra */
+[hidden] {
+  display: none !important;
+}
+
+.opcoesDownload.aberta[hidden] {
+  display: flex !important;
+}
+
+@media (max-width: 600px) {
+  .botoes button {
+    min-height: 44px;
+    font-size: 15px;
+  }
+}
