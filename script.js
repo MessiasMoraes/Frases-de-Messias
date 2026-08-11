@@ -182,7 +182,7 @@ function criarCardFrase(f, lista) {
             </div>
         </div>
         <div class="botoes">
-            <button onclick="favoritar('${f.texto.replace(/'/g, "\\'")}')">⭐ Favoritar</button>
+            <button onclick="curtir('${f.id}')">❤️ Curtir</button>
             <button onclick="copiar('${f.texto.replace(/'/g, "\\'")}')">📋 Copiar</button>
             <button onclick="compartilhar('${f.id}', '${f.texto.replace(/'/g, "\\'")}')">📤 Compartilhar</button>
             <button type="button" class="btn-baixar" onclick="mostrarOpcoesDownload(this)" aria-expanded="false">📥 Baixar</button>
@@ -243,14 +243,25 @@ function configurarBotoesCategoriasFixos(pesquisa, lista) {
 // ======================
 // FUNÇÕES GLOBAIS
 // ======================
-window.favoritar = function(texto) {
-    if (favoritos.includes(texto)) {
-        alert("Esta frase já está nos seus favoritos!");
+window.curtir = async function(id) {
+    const chaveLike = "like_" + id;
+    if (localStorage.getItem(chaveLike)) {
+        alert("Você já curtiu esta frase!");
         return;
     }
-    favoritos.push(texto);
-    localStorage.setItem("favoritos", JSON.stringify(favoritos));
-    alert("❤️ Adicionado aos favoritos!");
+    try {
+        await updateDoc(doc(db, "frases", id), { curtidas: increment(1) });
+        localStorage.setItem(chaveLike, "1");
+        const frase = frases.find(f => f.id === id);
+        if (frase) {
+            frase.curtidas = Number(frase.curtidas || 0) + 1;
+        }
+        mostrarFrases(document.getElementById("listaFrases"), document.getElementById("pesquisa")?.value || "");
+        alert("❤️ Curtida registrada com sucesso!");
+    } catch (e) {
+        console.error("Erro ao curtir:", e);
+        alert("Não foi possível registrar a curtida.");
+    }
 };
 
 window.compartilhar = async function(id, texto) {
