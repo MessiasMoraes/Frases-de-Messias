@@ -4,7 +4,8 @@
   "description": "Aplicativo de frases inspiradoras de Messias",
   "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "snapshot:ffmpeg": "node scripts/build-ffmpeg-snapshot.mjs"
   },
   "keywords": [
     "frases",

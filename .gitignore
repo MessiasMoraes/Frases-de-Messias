@@ -27,3 +27,6 @@ ios/App/Pods/
 *.mp4
 *.webm
 video-output/
+
+# Registros locais de validação
+validation_findings.md
