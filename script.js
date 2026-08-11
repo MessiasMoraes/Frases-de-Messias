@@ -172,9 +172,26 @@ function criarCardFrase(f, lista) {
 
     const card = document.createElement("div");
     card.className = "cardFrase";
+    card.innerHTML = `
+        <div class="imagemFrase">
+            <img src="${imagem}" alt="Frase de Messias" loading="lazy">
+        </div>
+        <div class="conteudoFrase">
+            <p class="textoFrase">"${f.texto}"</p>
+            <p class="autorFrase">— ${f.autor || "Messias"}</p>
+        </div>
+        <div class="botoes">
+            <button onclick="favoritar('${f.texto.replace(/'/g, "\\'")}')">⭐ Favoritar</button>
+            <button onclick="copiar('${f.texto.replace(/'/g, "\\'")}')">📋 Copiar</button>
+            <button onclick="compartilhar('${f.id}', '${f.texto.replace(/'/g, "\\'")}')">📤 Compartilhar</button>
+            <button onclick="mostrarOpcoesDownload(this)">📥 Baixar</button>
+        </div>
+        <div class="opcoesDownload" style="display:none; margin-top:10px; text-align:center;">
             <p style="font-size:13px; margin-bottom:5px; font-weight:bold;">Escolha o formato:</p>
             <button onclick="baixarImagem(this, 'story')" style="margin-right:5px; font-size:12px; padding:6px 12px;">📱 Story (9:16)</button>
             <button onclick="baixarImagem(this, 'feed')" style="font-size:12px; padding:6px 12px;">📸 Feed (1:1)</button>
+            <button onclick="gerarVideo(this, 'story')" style="margin-top:8px; margin-right:5px; font-size:12px; padding:6px 12px; background:#ff6b6b; color:white; border:none; border-radius:4px; cursor:pointer;">🎬 Vídeo Story</button>
+            <button onclick="gerarVideo(this, 'feed')" style="margin-top:8px; font-size:12px; padding:6px 12px; background:#ff6b6b; color:white; border:none; border-radius:4px; cursor:pointer;">🎬 Vídeo Feed</button>
         </div>
         <div class="estatisticas">
             <span>❤️ ${Number(f.curtidas || 0).toLocaleString("pt-BR")}</span>
@@ -218,14 +235,24 @@ function configurarBotoesCategoriasFixos(pesquisa, lista) {
             mostrarFrases(lista, cat);
             const offset = lista.getBoundingClientRect().top + window.pageYOffset - 100;
             window.scrollTo({ top: offset, behavior: "smooth" });
-;
+        };
+    });
+}
+
+// ======================
+// FUNÇÕES GLOBAIS
+// ======================
+window.favoritar = function(texto) {
+    if (favoritos.includes(texto)) {
+        alert("Esta frase já está nos seus favoritos!");
+        return;
     }
     favoritos.push(texto);
     localStorage.setItem("favoritos", JSON.stringify(favoritos));
     alert("❤️ Adicionado aos favoritos!");
-}
+};
 
-async function compartilhar(id, texto) {
+window.compartilhar = async function(id, texto) {
     try {
         await updateDoc(doc(db, "frases", id), { compartilhamentos: increment(1) });
         const frase = frases.find(f => f.id === id);
@@ -237,13 +264,28 @@ async function compartilhar(id, texto) {
             await navigator.clipboard.writeText(texto);
             alert("📋 Frase copiada para compartilhar.");
         }
-        const lista = document.getElementById("listaFrases");
-        const pesquisa = document.getElementById("pesquisa");
-        mostrarFrases(lista, pesquisa?.value || "");
+        mostrarFrases(document.getElementById("listaFrases"), document.getElementById("pesquisa")?.value || "");
     } catch (e) {
         console.error(e);
     }
-}
+};
+
+window.copiar = async function(texto) {
+    try {
+        await navigator.clipboard.writeText(texto);
+        alert("📋 Frase copiada com sucesso!");
+    } catch (e) {
+        console.error(e);
+        alert("Não foi possível copiar a frase.");
+    }
+};
+
+window.mostrarOpcoesDownload = function(botao) {
+    const card = botao.closest(".cardFrase");
+    if (!card) return;
+    const opcoes = card.querySelector(".opcoesDownload");
+    if (opcoes) opcoes.style.display = opcoes.style.display === "none" ? "block" : "none";
+};
 
 async function visualizar(id) {
     const chave = "view_" + id;
@@ -258,27 +300,10 @@ async function visualizar(id) {
     }
 }
 
-async function copiar(texto) {
-    try {
-        await navigator.clipboard.writeText(texto);
-        alert("📋 Frase copiada com sucesso!");
-    } catch (e) {
-        console.error(e);
-        alert("Não foi possível copiar a frase.");
-    }
-}
-
-function mostrarOpcoesDownload(botao) {
-    const card = botao.closest(".cardFrase");
-    if (!card) return;
-    const opcoes = card.querySelector(".opcoesDownload");
-    if (opcoes) opcoes.style.display = opcoes.style.display === "none" ? "block" : "none";
-}
-
 // ======================
 // DOWNLOAD DE IMAGEM
 // ======================
-async function baixarImagem(botao, formato = "story") {
+window.baixarImagem = async function(botao, formato = "story") {
     const card = botao.closest(".cardFrase");
     if (!card) return;
     const btnOpcoes = card.querySelector(".opcoesDownload");
@@ -347,7 +372,70 @@ async function baixarImagem(botao, formato = "story") {
         botao.disabled = false;
         botao.innerHTML = textoBotaoOriginal;
     }
-}
+};
+
+// ======================
+// MODO CINEMA (VÍDEO)
+// ======================
+window.gerarVideo = async function(botao, formato = "story") {
+    const card = botao.closest(".cardFrase");
+    if (!card) return;
+
+    const imgElement = card.querySelector(".imagemFrase img");
+    const imgSrc = imgElement ? imgElement.src : "";
+    const texto = card.querySelector(".textoFrase")?.innerText || "";
+    const autor = card.querySelector(".autorFrase")?.innerText || "";
+
+    const overlay = document.getElementById("modoCinema");
+    const bg = document.getElementById("cinemaBackground");
+    const txt = document.getElementById("cinemaTexto");
+    const aut = document.getElementById("cinemaAutor");
+
+    if (!overlay || !bg || !txt || !aut) return;
+
+    // Configurar conteúdo
+    bg.style.backgroundImage = `url('${imgSrc}')`;
+    txt.innerText = texto;
+    aut.innerText = autor;
+
+    // Ajustar proporção se for feed
+    const content = overlay.querySelector(".cinema-content");
+    if (formato === "feed") {
+        content.style.aspectRatio = "1/1";
+        content.style.maxHeight = "80vh";
+        content.style.marginTop = "10vh";
+    } else {
+        content.style.aspectRatio = "auto";
+        content.style.maxHeight = "100%";
+        content.style.marginTop = "0";
+    }
+
+    // Mostrar overlay
+    overlay.style.display = "flex";
+    document.body.style.overflow = "hidden";
+
+    // Reiniciar animações
+    txt.style.animation = 'none';
+    aut.style.animation = 'none';
+    bg.style.animation = 'none';
+    
+    setTimeout(() => {
+        txt.style.animation = '';
+        aut.style.animation = '';
+        bg.style.animation = '';
+    }, 10);
+};
+
+window.fecharModoCinema = function() {
+    const overlay = document.getElementById("modoCinema");
+    if (overlay) {
+        overlay.style.display = "none";
+        document.body.style.overflow = "auto";
+        document.getElementById("cinemaBackground").style.backgroundImage = "";
+        document.getElementById("cinemaTexto").innerText = "";
+        document.getElementById("cinemaAutor").innerText = "";
+    }
+};
 
 // ======================
 // INICIALIZAÇÃO
@@ -358,7 +446,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const pesquisa = document.getElementById("pesquisa");
     const fraseDiaElemento = document.getElementById("fraseDia");
 
-    // Busca em tempo real
+    if (pesquisa) {
+        pesquisa.addEventListener("input", (e) => mostrarFrases(lista, e.target.value));
+    }
 
+    carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa);
+    configurarBotoesCategoriasFixos(pesquisa, lista);
 
-                             
+    // Modo Escuro
+    const temaBtn = document.getElementById("temaBtn");
+    if (temaBtn) {
+        temaBtn.addEventListener("click", () => {
+            document.body.classList.toggle("dark-mode");
+            temaBtn.innerText = document.body.classList.contains("dark-mode") ? "☀️ Modo Claro" : "🌙 Modo Escuro";
+        });
+    }
+});
