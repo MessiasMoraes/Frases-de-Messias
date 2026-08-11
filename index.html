@@ -143,9 +143,26 @@
 
 <button id="temaBtn">🌙 Modo Escuro</button>
 
-<!-- Script do projeto carregado como módulo JavaScript -->
-<script type="module" src="script.js"></script>
+  <!-- Modo Cinema Animado Overlay -->
+  <div id="modoCinema" class="modo-cinema-overlay" style="display:none;">
+    <div class="cinema-content">
+      <div id="cinemaBackground" class="cinema-bg"></div>
+      <div class="cinema-overlay-dark"></div>
+      <div class="cinema-text-container">
+        <p id="cinemaTexto" class="cinema-frase"></p>
+        <div id="cinemaAutor" class="cinema-autor"></div>
+        <div class="cinema-marca">📖 Frases de Messias</div>
+      </div>
+    </div>
+    <div class="cinema-controls">
+      <button onclick="fecharModoCinema()" class="btn-fechar-cinema">✖ Fechar</button>
+      <p class="instrucao-gravacao">Dica: Use o "Gravador de Tela" do seu celular para capturar esta animação! 📱</p>
+    </div>
+  </div>
 
-</body>
+  <!-- Script do projeto carregado como módulo JavaScript -->
+  <script type="module" src="script.js"></script>
+  
+  </body>
 </html>
 

@@ -654,171 +654,58 @@ if ('serviceWorker' in navigator) {
 
 // FUNÇÃO DE GERAÇÃO DE VÍDEO ANIMADO
 async function gerarVideo(botao, formato = "story") {
-    if (!window.MediaRecorder) {
-        alert("⚠️ Seu navegador não suporta a gravação de vídeos. Tente usar o Chrome ou Firefox atualizados.");
-        return;
-    }
     const card = botao.closest(".cardFrase");
     if (!card) return;
 
-    const btnOpcoes = card.querySelector(".opcoesDownload");
-    if (btnOpcoes) btnOpcoes.style.display = "none";
+    const imgElement = card.querySelector(".imagemFrase img");
+    const imgSrc = imgElement ? imgElement.src : "";
+    const texto = card.querySelector(".textoFrase")?.innerText || "";
+    const autor = card.querySelector(".autorFrase")?.innerText || "";
 
-    const textoBotaoOriginal = botao.innerHTML;
-    botao.disabled = true;
-    botao.innerHTML = "⏳ Gerando vídeo...";
+    const overlay = document.getElementById("modoCinema");
+    const bg = document.getElementById("cinemaBackground");
+    const txt = document.getElementById("cinemaTexto");
+    const aut = document.getElementById("cinemaAutor");
 
-    let canvas = null;
-    let stream = null;
-    let mediaRecorder = null;
+    if (!overlay || !bg || !txt || !aut) return;
 
-    try {
-        const imgElement = card.querySelector(".imagemFrase img");
-        const imgSrc = imgElement ? imgElement.src : "";
-        const texto = card.querySelector(".textoFrase")?.innerText || "";
-        const autor = card.querySelector(".autorFrase")?.innerText || "";
+    // Configurar conteúdo
+    bg.style.backgroundImage = `url('${imgSrc}')`;
+    txt.innerText = texto;
+    aut.innerText = autor;
 
-        // Dimensões do vídeo
-        const largura = 1080;
-        const altura = formato === "feed" ? 1080 : 1920;
-        const duracao = 5000; // 5 segundos de vídeo
-        const fps = 30;
-
-        // Criar canvas para renderizar a animação
-        canvas = document.createElement("canvas");
-        canvas.width = largura;
-        canvas.height = altura;
-        const ctx = canvas.getContext("2d");
-
-        // Carregar a imagem de fundo
-        const img = new Image();
-        img.crossOrigin = "anonymous";
-        
-        await new Promise((resolve, reject) => {
-            img.onload = resolve;
-            img.onerror = reject;
-            img.src = imgSrc;
-        });
-
-        // Obter o stream do canvas
-        stream = canvas.captureStream(fps);
-        
-        // Criar MediaRecorder com detecção automática de formato suportado
-        let mimeType = 'video/webm;codecs=vp9';
-        
-        if (!MediaRecorder.isTypeSupported(mimeType)) {
-            mimeType = 'video/webm;codecs=vp8';
-        }
-        if (!MediaRecorder.isTypeSupported(mimeType)) {
-            mimeType = 'video/webm';
-        }
-        if (!MediaRecorder.isTypeSupported(mimeType)) {
-            mimeType = 'video/mp4'; // Tentativa para alguns dispositivos mobile
-        }
-
-        const options = {
-            mimeType: mimeType,
-            videoBitsPerSecond: 2500000
-        };
-
-        console.log("Iniciando gravação com mimeType:", mimeType);
-        mediaRecorder = new MediaRecorder(stream, options);
-        const chunks = [];
-
-        mediaRecorder.ondataavailable = (e) => {
-            if (e.data.size > 0) {
-                chunks.push(e.data);
-            }
-        };
-
-        mediaRecorder.onstop = () => {
-            const blob = new Blob(chunks, { type: mediaRecorder.mimeType });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `frase-video-${formato}-${Date.now()}.webm`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-
-            botao.disabled = false;
-            botao.innerHTML = textoBotaoOriginal;
-        };
-
-        mediaRecorder.start();
-
-        // Animar o canvas
-        let startTime = Date.now();
-        const animarFrame = () => {
-            const elapsed = Date.now() - startTime;
-            const progress = Math.min(elapsed / duracao, 1);
-
-            // Desenhar imagem de fundo
-            ctx.drawImage(img, 0, 0, largura, altura);
-
-            // Overlay escuro
-            ctx.fillStyle = "rgba(0, 0, 0, 0.45)";
-            ctx.fillRect(0, 0, largura, altura);
-
-            // Calcular opacidade do texto (fade-in)
-            const opacidade = Math.min(progress * 1.5, 1);
-            ctx.globalAlpha = opacidade;
-
-            // Desenhar texto
-            ctx.fillStyle = "white";
-            ctx.font = `bold ${formato === "feed" ? "52px" : "70px"} Arial`;
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-
-            // Quebrar texto em múltiplas linhas
-            const palavras = texto.replace(/"/g, "").split(" ");
-            let linha = "";
-            const linhas = [];
-            const maxLargura = largura - 120;
-
-            palavras.forEach((palavra) => {
-                const teste = linha + (linha ? " " : "") + palavra;
-                const metricas = ctx.measureText(teste);
-                if (metricas.width > maxLargura && linha) {
-                    linhas.push(linha);
-                    linha = palavra;
-                } else {
-                    linha = teste;
-                }
-            });
-            if (linha) linhas.push(linha);
-
-            const alturaTexto = linhas.length * 80;
-            let yTexto = altura / 2 - alturaTexto / 2;
-
-            linhas.forEach((l) => {
-                ctx.fillText(l, largura / 2, yTexto);
-                yTexto += 80;
-            });
-
-            // Desenhar autor
-            ctx.font = `${formato === "feed" ? "34px" : "42px"} Arial`;
-            ctx.fillText(autor, largura / 2, altura / 2 + alturaTexto / 2 + 80);
-
-            // Desenhar marca d'água
-            ctx.globalAlpha = 1;
-            ctx.font = `${formato === "feed" ? "26px" : "34px"} Arial`;
-            ctx.fillText("📖 Frases de Messias", largura / 2, altura - 80);
-
-            if (progress < 1) {
-                requestAnimationFrame(animarFrame);
-            } else {
-                mediaRecorder.stop();
-            }
-        };
-
-        animarFrame();
-
-    } catch (e) {
-        console.error("Erro ao gerar vídeo:", e);
-        alert("⚠️ Erro ao gerar vídeo: " + e.message + "\n\nCertifique-se de que o navegador tem permissão para capturar o canvas.");
-        botao.disabled = false;
-        botao.innerHTML = textoBotaoOriginal;
+    // Ajustar proporção se for feed
+    const content = overlay.querySelector(".cinema-content");
+    if (formato === "feed") {
+        content.style.aspectRatio = "1/1";
+        content.style.maxHeight = "80vh";
+        content.style.marginTop = "10vh";
+    } else {
+        content.style.aspectRatio = "auto";
+        content.style.maxHeight = "100%";
+        content.style.marginTop = "0";
     }
+
+    // Mostrar overlay
+    overlay.style.display = "flex";
+    document.body.style.overflow = "hidden"; // Travar scroll do site
+
+    // Reiniciar animações (removendo e readicionando a classe)
+    txt.style.animation = 'none';
+    aut.style.animation = 'none';
+    bg.style.animation = 'none';
+    
+    setTimeout(() => {
+        txt.style.animation = '';
+        aut.style.animation = '';
+        bg.style.animation = '';
+    }, 10);
 }
+
+window.fecharModoCinema = function() {
+    const overlay = document.getElementById("modoCinema");
+    if (overlay) {
+        overlay.style.display = "none";
+        document.body.style.overflow = "auto";
+    }
+};
