@@ -531,7 +531,11 @@ async function inicializarIA() {
                 })
             });
 
-            if (!response.ok) throw new Error("Erro na comunicação com a IA.");
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                const errMsg = errData.error?.message || response.statusText;
+                throw new Error(`Erro ${response.status}: ${errMsg}`);
+            }
 
             const data = await response.json();
             const resposta = data.choices[0].message.content.trim();
@@ -555,7 +559,7 @@ async function inicializarIA() {
 
         } catch (error) {
             console.error(error);
-            resultadoIA.innerHTML = `<p style="color:#ef4444;">❌ Erro: Não foi possível obter resposta da IA. Verifique sua chave.</p>`;
+            resultadoIA.innerHTML = `<p style="color:#ef4444;">❌ Erro da IA: ${error.message}</p>`;
         } finally {
             gerarIaBtn.disabled = false;
             gerarIaBtn.innerHTML = "Perguntar à IA";
