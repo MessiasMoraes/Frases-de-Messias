@@ -175,10 +175,11 @@ function criarCardFrase(f, lista) {
     card.innerHTML = `
         <div class="imagemFrase">
             <img src="${imagem}" alt="Frase de Messias" loading="lazy">
-        </div>
-        <div class="conteudoFrase">
-            <p class="textoFrase">"${f.texto}"</p>
-            <p class="autorFrase">— ${f.autor || "Messias"}</p>
+            <div class="overlay">
+                <p class="textoFrase">"${f.texto}"</p>
+                <p class="autorFrase">— ${f.autor || "Messias"}</p>
+                <div class="marca">📖 Frases de Messias</div>
+            </div>
         </div>
         <div class="botoes">
             <button onclick="favoritar('${f.texto.replace(/'/g, "\\'")}')">⭐ Favoritar</button>
