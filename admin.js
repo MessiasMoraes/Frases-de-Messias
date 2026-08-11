@@ -7,7 +7,9 @@ import {
   getDocs,
   updateDoc,
   deleteDoc,
-  doc
+  doc,
+  getDoc,
+  setDoc
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 import {
@@ -673,16 +675,35 @@ if (temaBtn) {
 
 const btnConfig = document.getElementById("btnConfig");
 
-// Carregar chave salva
+// Carregar chave salva (localStorage + Firestore)
 window.OPENAI_API_KEY = localStorage.getItem("openai_api_key") || "";
 
+async function carregarChaveRemota() {
+    try {
+        const docSnap = await getDoc(doc(db, "config", "settings"));
+        if (docSnap.exists() && docSnap.data().openai_api_key) {
+            window.OPENAI_API_KEY = docSnap.data().openai_api_key;
+            localStorage.setItem("openai_api_key", window.OPENAI_API_KEY);
+        }
+    } catch (e) {
+        console.error("Erro ao carregar chave remota:", e);
+    }
+}
+carregarChaveRemota();
+
 if (btnConfig) {
-    btnConfig.addEventListener("click", () => {
+    btnConfig.addEventListener("click", async () => {
         const novaChave = prompt("Insira sua API Key da OpenAI:", window.OPENAI_API_KEY);
         if (novaChave !== null) {
             window.OPENAI_API_KEY = novaChave.trim();
             localStorage.setItem("openai_api_key", window.OPENAI_API_KEY);
-            alert("✅ Chave de API salva localmente!");
+            try {
+                await setDoc(doc(db, "config", "settings"), { openai_api_key: window.OPENAI_API_KEY }, { merge: true });
+                alert("✅ Chave de API salva com sucesso no painel e na nuvem!");
+            } catch (e) {
+                console.error("Erro ao salvar no Firestore:", e);
+                alert("✅ Chave salva localmente (erro ao salvar na nuvem).");
+            }
         }
     });
 }

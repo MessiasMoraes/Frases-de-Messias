@@ -2,6 +2,7 @@ import { db } from "./firebase.js";
 import {
     collection,
     getDocs,
+    getDoc,
     doc,
     updateDoc,
     increment
@@ -488,7 +489,19 @@ async function inicializarIA() {
             return;
         }
 
-        const apiKey = localStorage.getItem("openai_api_key");
+        let apiKey = localStorage.getItem("openai_api_key");
+        if (!apiKey) {
+            try {
+                const configDoc = await getDoc(doc(db, "config", "settings"));
+                if (configDoc.exists() && configDoc.data().openai_api_key) {
+                    apiKey = configDoc.data().openai_api_key;
+                    localStorage.setItem("openai_api_key", apiKey);
+                }
+            } catch (err) {
+                console.error("Erro ao buscar chave do Firestore:", err);
+            }
+        }
+
         if (!apiKey) {
             alert("⚠️ API Key da OpenAI não configurada. Por favor, configure-a no Painel Administrativo (ícone ⚙️).");
             return;
