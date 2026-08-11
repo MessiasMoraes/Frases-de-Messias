@@ -388,3 +388,45 @@ footer{
     opacity:.9;
 
 }
+
+
+/* ============================
+   BOTÕES DE VÍDEO
+============================ */
+button[onclick*="gerarVideo"] {
+    background: linear-gradient(135deg, #ff6b6b, #ff5252) !important;
+    color: white !important;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
+}
+
+button[onclick*="gerarVideo"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(255, 107, 107, 0.4);
+    opacity: 1 !important;
+}
+
+button[onclick*="gerarVideo"]:active {
+    transform: translateY(0);
+}
+
+button[onclick*="gerarVideo"]:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Animação de carregamento para botão de vídeo */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+button[onclick*="gerarVideo"]:disabled {
+    animation: pulse 1.5s infinite;
+}

@@ -208,6 +208,8 @@ function criarCardFrase(f) {
             <p style="font-size:13px; margin-bottom:5px; font-weight:bold;">Escolha o formato:</p>
             <button onclick="baixarImagem(this, 'story')" style="margin-right:5px; font-size:12px; padding:6px 12px;">📱 Story (9:16)</button>
             <button onclick="baixarImagem(this, 'feed')" style="font-size:12px; padding:6px 12px;">📸 Feed (1:1)</button>
+            <button onclick="gerarVideo(this, 'story')" style="margin-top:8px; margin-right:5px; font-size:12px; padding:6px 12px; background:#ff6b6b; color:white; border:none; border-radius:4px; cursor:pointer;">🎬 Vídeo Story</button>
+            <button onclick="gerarVideo(this, 'feed')" style="margin-top:8px; font-size:12px; padding:6px 12px; background:#ff6b6b; color:white; border:none; border-radius:4px; cursor:pointer;">🎬 Vídeo Feed</button>
         </div>
 
         <div class="estatisticas">
@@ -513,6 +515,8 @@ function criarCardFraseIA(f) {
             <p style="font-size:13px; margin-bottom:5px; font-weight:bold;">Baixar com Marca D'água:</p>
             <button onclick="baixarImagem(this, 'story')" style="margin-right:5px; font-size:12px; padding:6px 12px;">📱 Story</button>
             <button onclick="baixarImagem(this, 'feed')" style="font-size:12px; padding:6px 12px;">📸 Feed</button>
+            <button onclick="gerarVideo(this, 'story')" style="margin-top:8px; margin-right:5px; font-size:12px; padding:6px 12px; background:#ff6b6b; color:white; border:none; border-radius:4px; cursor:pointer;">🎬 Video Story</button>
+            <button onclick="gerarVideo(this, 'feed')" style="margin-top:8px; font-size:12px; padding:6px 12px; background:#ff6b6b; color:white; border:none; border-radius:4px; cursor:pointer;">🎬 Video Feed</button>
         </div>
     `;
     return card;
@@ -646,3 +650,166 @@ if ('serviceWorker' in navigator) {
     });
             }
                       
+
+
+// FUNÇÃO DE GERAÇÃO DE VÍDEO ANIMADO
+async function gerarVideo(botao, formato = "story") {
+    const card = botao.closest(".cardFrase");
+    if (!card) return;
+
+    const btnOpcoes = card.querySelector(".opcoesDownload");
+    if (btnOpcoes) btnOpcoes.style.display = "none";
+
+    const textoBotaoOriginal = botao.innerHTML;
+    botao.disabled = true;
+    botao.innerHTML = "⏳ Gerando vídeo...";
+
+    let canvas = null;
+    let stream = null;
+    let mediaRecorder = null;
+
+    try {
+        const imgElement = card.querySelector(".imagemFrase img");
+        const imgSrc = imgElement ? imgElement.src : "";
+        const texto = card.querySelector(".textoFrase")?.innerText || "";
+        const autor = card.querySelector(".autorFrase")?.innerText || "";
+
+        // Dimensões do vídeo
+        const largura = 1080;
+        const altura = formato === "feed" ? 1080 : 1920;
+        const duracao = 5000; // 5 segundos de vídeo
+        const fps = 30;
+
+        // Criar canvas para renderizar a animação
+        canvas = document.createElement("canvas");
+        canvas.width = largura;
+        canvas.height = altura;
+        const ctx = canvas.getContext("2d");
+
+        // Carregar a imagem de fundo
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        
+        await new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = reject;
+            img.src = imgSrc;
+        });
+
+        // Obter o stream do canvas
+        stream = canvas.captureStream(fps);
+        
+        // Criar MediaRecorder
+        const options = {
+            mimeType: 'video/webm;codecs=vp9',
+            videoBitsPerSecond: 2500000
+        };
+
+        // Fallback se vp9 não for suportado
+        if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+            options.mimeType = 'video/webm;codecs=vp8';
+        }
+        if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+            options.mimeType = 'video/webm';
+        }
+
+        mediaRecorder = new MediaRecorder(stream, options);
+        const chunks = [];
+
+        mediaRecorder.ondataavailable = (e) => {
+            if (e.data.size > 0) {
+                chunks.push(e.data);
+            }
+        };
+
+        mediaRecorder.onstop = () => {
+            const blob = new Blob(chunks, { type: mediaRecorder.mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `frase-video-${formato}-${Date.now()}.webm`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            botao.disabled = false;
+            botao.innerHTML = textoBotaoOriginal;
+        };
+
+        mediaRecorder.start();
+
+        // Animar o canvas
+        let startTime = Date.now();
+        const animarFrame = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duracao, 1);
+
+            // Desenhar imagem de fundo
+            ctx.drawImage(img, 0, 0, largura, altura);
+
+            // Overlay escuro
+            ctx.fillStyle = "rgba(0, 0, 0, 0.45)";
+            ctx.fillRect(0, 0, largura, altura);
+
+            // Calcular opacidade do texto (fade-in)
+            const opacidade = Math.min(progress * 1.5, 1);
+            ctx.globalAlpha = opacidade;
+
+            // Desenhar texto
+            ctx.fillStyle = "white";
+            ctx.font = `bold ${formato === "feed" ? "52px" : "70px"} Arial`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+
+            // Quebrar texto em múltiplas linhas
+            const palavras = texto.replace(/"/g, "").split(" ");
+            let linha = "";
+            const linhas = [];
+            const maxLargura = largura - 120;
+
+            palavras.forEach((palavra) => {
+                const teste = linha + (linha ? " " : "") + palavra;
+                const metricas = ctx.measureText(teste);
+                if (metricas.width > maxLargura && linha) {
+                    linhas.push(linha);
+                    linha = palavra;
+                } else {
+                    linha = teste;
+                }
+            });
+            if (linha) linhas.push(linha);
+
+            const alturaTexto = linhas.length * 80;
+            let yTexto = altura / 2 - alturaTexto / 2;
+
+            linhas.forEach((l) => {
+                ctx.fillText(l, largura / 2, yTexto);
+                yTexto += 80;
+            });
+
+            // Desenhar autor
+            ctx.font = `${formato === "feed" ? "34px" : "42px"} Arial`;
+            ctx.fillText(autor, largura / 2, altura / 2 + alturaTexto / 2 + 80);
+
+            // Desenhar marca d'água
+            ctx.globalAlpha = 1;
+            ctx.font = `${formato === "feed" ? "26px" : "34px"} Arial`;
+            ctx.fillText("📖 Frases de Messias", largura / 2, altura - 80);
+
+            if (progress < 1) {
+                requestAnimationFrame(animarFrame);
+            } else {
+                mediaRecorder.stop();
+            }
+        };
+
+        animarFrame();
+
+    } catch (e) {
+        console.error("Erro ao gerar vídeo:", e);
+        alert("⚠️ Não foi possível gerar o vídeo. Seu navegador pode não suportar essa funcionalidade.");
+        botao.disabled = false;
+        botao.innerHTML = textoBotaoOriginal;
+    }
+}
