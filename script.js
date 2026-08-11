@@ -402,33 +402,102 @@ window.baixarImagem = async function(botao, formato = "story") {
 };
 
 // ======================
-// MODO CINEMA (VÍDEO)
+// MODO CINEMA E DOWNLOAD MP4
 // ======================
+function mostrarErroVideo(mensagem) {
+    const texto = mensagem || "Não foi possível gerar o vídeo agora.";
+    alert(`⚠️ ${texto}`);
+}
+
+function mostrarMp4Gerado(url, filename, formato) {
+    const modal = document.createElement("div");
+    modal.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;color:#fff;text-align:center;overflow:auto;";
+
+    const titulo = document.createElement("p");
+    titulo.textContent = `✅ Vídeo MP4 ${formato === "feed" ? "Feed" : "Story"} pronto!`;
+    titulo.style.cssText = "font-weight:bold;font-size:18px;margin:0 0 14px;";
+
+    const video = document.createElement("video");
+    video.src = url;
+    video.controls = true;
+    video.playsInline = true;
+    video.preload = "metadata";
+    video.style.cssText = `max-width:100%;max-height:62vh;object-fit:contain;border-radius:10px;${formato === "feed" ? "aspect-ratio:1/1;" : "aspect-ratio:9/16;"}`;
+
+    const baixar = document.createElement("a");
+    baixar.href = url;
+    baixar.download = filename;
+    baixar.target = "_blank";
+    baixar.rel = "noopener";
+    baixar.textContent = "⬇️ Baixar MP4";
+    baixar.style.cssText = "display:inline-block;margin-top:18px;padding:12px 24px;background:#2563eb;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;";
+
+    const ajuda = document.createElement("p");
+    ajuda.textContent = "Se o iPhone abrir o vídeo em vez de salvar, toque em Compartilhar e escolha Salvar em Arquivos ou Salvar Vídeo.";
+    ajuda.style.cssText = "font-size:13px;line-height:1.4;max-width:360px;margin:14px 0;";
+
+    const fechar = document.createElement("button");
+    fechar.type = "button";
+    fechar.textContent = "Fechar";
+    fechar.style.cssText = "padding:10px 24px;background:#ef4444;color:#fff;border:0;border-radius:6px;font-weight:bold;";
+    fechar.onclick = () => modal.remove();
+
+    modal.append(titulo, video, baixar, ajuda, fechar);
+    document.body.appendChild(modal);
+}
+
 window.gerarVideo = async function(botao, formato = "story") {
     const card = botao.closest(".cardFrase");
     if (!card) return;
 
     const imgElement = card.querySelector(".imagemFrase img");
-    const imgSrc = imgElement ? imgElement.src : "";
-    const texto = card.querySelector(".textoFrase")?.innerText || "";
-    const autor = card.querySelector(".autorFrase")?.innerText || "";
+    const imageUrl = imgElement?.currentSrc || imgElement?.src || "";
+    const texto = card.querySelector(".textoFrase")?.innerText?.trim() || "";
+    const autor = card.querySelector(".autorFrase")?.innerText?.trim() || "— Messias";
+    const textoOriginal = botao.innerHTML;
 
+    if (!imageUrl || !texto) {
+        mostrarErroVideo("A frase ou a imagem não foi encontrada neste card.");
+        return;
+    }
+
+    botao.disabled = true;
+    botao.innerHTML = "⏳ Gerando MP4...";
+    try {
+        const response = await fetch("/api/render-video", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ imageUrl, texto, autor, formato })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || !data.ok || !data.url) {
+            throw new Error(data.error || `Falha HTTP ${response.status}.`);
+        }
+        mostrarMp4Gerado(data.url, data.filename || `frases-de-messias-${formato}.mp4`, formato);
+    } catch (error) {
+        console.error("Erro ao gerar MP4:", error);
+        mostrarErroVideo(error.message);
+    } finally {
+        botao.disabled = false;
+        botao.innerHTML = textoOriginal;
+    }
+};
+
+// Pré-visualização local continua disponível para teste e fallback visual.
+window.abrirModoCinema = function(card, formato = "story") {
+    const imgSrc = card?.querySelector(".imagemFrase img")?.src || "";
+    const texto = card?.querySelector(".textoFrase")?.innerText || "";
+    const autor = card?.querySelector(".autorFrase")?.innerText || "";
     const overlay = document.getElementById("modoCinema");
     const bg = document.getElementById("cinemaBackground");
     const txt = document.getElementById("cinemaTexto");
     const aut = document.getElementById("cinemaAutor");
-
     if (!overlay || !bg || !txt || !aut) return;
-
-    // Configurar conteúdo
     bg.style.backgroundImage = `url('${imgSrc}')`;
     txt.innerText = texto;
     aut.innerText = autor;
-
-    // Ajustar proporção se for feed
     const content = overlay.querySelector(".cinema-content");
     if (formato === "feed") {
-        // Mantém o vídeo visualmente quadrado em telas largas e estreitas.
         const tamanhoFeed = "min(100%, 80vh)";
         content.style.aspectRatio = "1 / 1";
         content.style.width = tamanhoFeed;
@@ -444,20 +513,15 @@ window.gerarVideo = async function(botao, formato = "story") {
         content.style.maxHeight = "100%";
         content.style.margin = "0";
     }
-
-    // Mostrar overlay
     overlay.style.display = "flex";
     document.body.style.overflow = "hidden";
-
-    // Reiniciar animações
-    txt.style.animation = 'none';
-    aut.style.animation = 'none';
-    bg.style.animation = 'none';
-    
+    txt.style.animation = "none";
+    aut.style.animation = "none";
+    bg.style.animation = "none";
     setTimeout(() => {
-        txt.style.animation = '';
-        aut.style.animation = '';
-        bg.style.animation = '';
+        txt.style.animation = "";
+        aut.style.animation = "";
+        bg.style.animation = "";
     }, 10);
 };
 

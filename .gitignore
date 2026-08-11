@@ -1,0 +1,29 @@
+node_modules/
+.DS_Store
+*.pyc
+__pycache__/
+*.png
+relatorio_viabilidade_video.md
+research_video_rendering.md
+cost_analysis.py
+vercel_usage_projection.png
+.env
+.env.*
+!.env.example
+npm-debug.log*
+pnpm-debug.log*
+.yarn-debug.log*
+.yarn-error.log*
+package-lock.json
+
+# Capacitor generated folders
+android/.gradle/
+ios/App/Pods/
+
+# Local Vercel metadata
+.vercel/
+
+# Generated video previews
+*.mp4
+*.webm
+video-output/
