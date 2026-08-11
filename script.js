@@ -654,6 +654,10 @@ if ('serviceWorker' in navigator) {
 
 // FUNÇÃO DE GERAÇÃO DE VÍDEO ANIMADO
 async function gerarVideo(botao, formato = "story") {
+    if (!window.MediaRecorder) {
+        alert("⚠️ Seu navegador não suporta a gravação de vídeos. Tente usar o Chrome ou Firefox atualizados.");
+        return;
+    }
     const card = botao.closest(".cardFrase");
     if (!card) return;
 
@@ -699,20 +703,25 @@ async function gerarVideo(botao, formato = "story") {
         // Obter o stream do canvas
         stream = canvas.captureStream(fps);
         
-        // Criar MediaRecorder
+        // Criar MediaRecorder com detecção automática de formato suportado
+        let mimeType = 'video/webm;codecs=vp9';
+        
+        if (!MediaRecorder.isTypeSupported(mimeType)) {
+            mimeType = 'video/webm;codecs=vp8';
+        }
+        if (!MediaRecorder.isTypeSupported(mimeType)) {
+            mimeType = 'video/webm';
+        }
+        if (!MediaRecorder.isTypeSupported(mimeType)) {
+            mimeType = 'video/mp4'; // Tentativa para alguns dispositivos mobile
+        }
+
         const options = {
-            mimeType: 'video/webm;codecs=vp9',
+            mimeType: mimeType,
             videoBitsPerSecond: 2500000
         };
 
-        // Fallback se vp9 não for suportado
-        if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-            options.mimeType = 'video/webm;codecs=vp8';
-        }
-        if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-            options.mimeType = 'video/webm';
-        }
-
+        console.log("Iniciando gravação com mimeType:", mimeType);
         mediaRecorder = new MediaRecorder(stream, options);
         const chunks = [];
 
@@ -808,7 +817,7 @@ async function gerarVideo(botao, formato = "story") {
 
     } catch (e) {
         console.error("Erro ao gerar vídeo:", e);
-        alert("⚠️ Não foi possível gerar o vídeo. Seu navegador pode não suportar essa funcionalidade.");
+        alert("⚠️ Erro ao gerar vídeo: " + e.message + "\n\nCertifique-se de que o navegador tem permissão para capturar o canvas.");
         botao.disabled = false;
         botao.innerHTML = textoBotaoOriginal;
     }
