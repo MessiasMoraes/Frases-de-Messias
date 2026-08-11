@@ -415,13 +415,21 @@ window.gerarVideo = async function(botao, formato = "story") {
     // Ajustar proporção se for feed
     const content = overlay.querySelector(".cinema-content");
     if (formato === "feed") {
-        content.style.aspectRatio = "1/1";
-        content.style.maxHeight = "80vh";
-        content.style.marginTop = "10vh";
+        // Mantém o vídeo visualmente quadrado em telas largas e estreitas.
+        const tamanhoFeed = "min(100%, 80vh)";
+        content.style.aspectRatio = "1 / 1";
+        content.style.width = tamanhoFeed;
+        content.style.height = tamanhoFeed;
+        content.style.flex = "0 0 auto";
+        content.style.maxHeight = "none";
+        content.style.margin = "auto";
     } else {
         content.style.aspectRatio = "auto";
+        content.style.width = "100%";
+        content.style.height = "100%";
+        content.style.flex = "1 1 auto";
         content.style.maxHeight = "100%";
-        content.style.marginTop = "0";
+        content.style.margin = "0";
     }
 
     // Mostrar overlay
