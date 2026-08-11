@@ -168,7 +168,13 @@ module.exports = async function renderVideo(req, res) {
     });
   } catch (error) {
     console.error("[render-video]", error);
-    const message = error instanceof Error ? error.message : "Falha desconhecida.";
+    const sdkError = error && typeof error === "object" ? error : null;
+    const details = [
+      sdkError?.json?.error,
+      sdkError?.json?.message,
+      sdkError?.text,
+    ].find((value) => typeof value === "string" && value.trim());
+    const message = String(details || (error instanceof Error ? error.message : "Falha desconhecida.")).slice(0, 1200);
     sendJson(res, 500, {
       ok: false,
       error: message,
