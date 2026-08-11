@@ -172,23 +172,6 @@ function criarCardFrase(f, lista) {
 
     const card = document.createElement("div");
     card.className = "cardFrase";
-    card.innerHTML = `
-        <div class="imagemFrase">
-            <img loading="lazy" crossorigin="anonymous" src="${imagem}" alt="${categoriaLimpa || 'Frase'}" onerror="this.src='imagens/categorias/padrao.png'">
-            <div class="overlay">
-                <p class="textoFrase">"${f.texto}"</p>
-                <div class="autorFrase">— ${f.autor || "Messias"}</div>
-                <div class="marca">📖 Frases de Messias</div>
-            </div>
-        </div>
-        <div class="botoes">
-            <button onclick="curtir('${f.id}')">❤️ Curtir</button>
-            <button onclick='favoritar(${JSON.stringify(f.texto)})'>⭐ Favoritar</button>
-            <button onclick='copiar(${JSON.stringify(f.texto)})'>📋 Copiar</button>
-            <button onclick='compartilhar("${f.id}",${JSON.stringify(f.texto)})'>📤 Compartilhar</button>
-            <button onclick="mostrarOpcoesDownload(this)">📥 Baixar</button>
-        </div>
-        <div class="opcoesDownload" style="display:none; margin-top:10px; text-align:center;">
             <p style="font-size:13px; margin-bottom:5px; font-weight:bold;">Escolha o formato:</p>
             <button onclick="baixarImagem(this, 'story')" style="margin-right:5px; font-size:12px; padding:6px 12px;">📱 Story (9:16)</button>
             <button onclick="baixarImagem(this, 'feed')" style="font-size:12px; padding:6px 12px;">📸 Feed (1:1)</button>
@@ -235,31 +218,7 @@ function configurarBotoesCategoriasFixos(pesquisa, lista) {
             mostrarFrases(lista, cat);
             const offset = lista.getBoundingClientRect().top + window.pageYOffset - 100;
             window.scrollTo({ top: offset, behavior: "smooth" });
-        };
-    });
-}
-
-// ======================
-// AÇÕES DOS BOTÕES
-// ======================
-async function curtir(id) {
-    try {
-        await updateDoc(doc(db, "frases", id), { curtidas: increment(1) });
-        const frase = frases.find(f => f.id === id);
-        if (frase) frase.curtidas = Number(frase.curtidas || 0) + 1;
-        const lista = document.getElementById("listaFrases");
-        const pesquisa = document.getElementById("pesquisa");
-        mostrarFrases(lista, pesquisa?.value || "");
-    } catch (e) {
-        console.error(e);
-        alert("Erro ao curtir.");
-    }
-}
-
-function favoritar(texto) {
-    if (favoritos.includes(texto)) {
-        alert("⭐ Essa frase já está nos favoritos.");
-        return;
+;
     }
     favoritos.push(texto);
     localStorage.setItem("favoritos", JSON.stringify(favoritos));
@@ -400,22 +359,5 @@ document.addEventListener("DOMContentLoaded", () => {
     const fraseDiaElemento = document.getElementById("fraseDia");
 
     // Busca em tempo real
-    if (pesquisa) {
-        pesquisa.addEventListener("input", () => mostrarFrases(lista, pesquisa.value));
-    }
 
-    // Carregar tudo
-    carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa);
-    configurarBotoesCategoriasFixos(pesquisa, lista);
-});
-
-// ======================
-// EXPOR FUNÇÕES GLOBAIS (para os botões onclick)
-// ======================
-window.curtir = curtir;
-window.favoritar = favoritar;
-window.copiar = copiar;
-window.compartilhar = compartilhar;
-window.mostrarOpcoesDownload = mostrarOpcoesDownload;
-window.baixarImagem = baixarImagem;
                 
