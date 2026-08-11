@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contato - Frases de Messias</title>
+    <meta name="description" content="Entre em contato com Messias para sugestões, dúvidas ou parcerias.">
+    
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://messiasmoraes.github.io/Frases-de-Messias/contato.html">
+    <meta property="og:title" content="📞 Contato - Frases de Messias">
+    <meta property="og:description" content="Tem alguma sugestão ou dúvida? Fale diretamente com o autor das Frases de Messias.">
+    <meta property="og:image" content="https://messiasmoraes.github.io/Frases-de-Messias/imagens/1785461694182.png">
+
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .contato-form {
+            text-align: left;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .dark .form-group input, .dark .form-group textarea {
+            background: #2a2a2a;
+            border-color: #444;
+            color: #fff;
+        }
+        .btn-enviar {
+            width: 100%;
+            margin-top: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .redes-sociais {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .redes-sociais a {
+            font-size: 24px;
+            text-decoration: none;
+            color: #2563eb;
+        }
+        .dark .redes-sociais a {
+            color: #60a5fa;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="container">
+        <h1>📖 Frases de Messias</h1>
+        <nav>
+            <a href="index.html">🏠 Início</a>
+            <a href="favoritos.html">❤️ Favoritos</a>
+            <a href="sobre.html">ℹ️ Sobre</a>
+            <a href="contato.html">📞 Contato</a>
+        </nav>
+    </div>
+</header>
+
+<main class="hero">
+    <h2>Entre em contato</h2>
+    <p>Tem alguma sugestão, dúvida ou gostaria de ver sua frase aqui? Preencha o formulário abaixo ou envie um e-mail para: <strong>moraesoficialll@gmail.com</strong></p>
+
+    <form action="https://formspree.io/moraesoficialll@gmail.com" method="POST" class="contato-form">
+        <div class="form-group">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required>
+        </div>
+        <div class="form-group">
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" placeholder="seu@email.com" required>
+        </div>
+        <div class="form-group">
+            <label for="assunto">Assunto:</label>
+            <input type="text" id="assunto" name="assunto" placeholder="Ex: Sugestão de frase" required>
+        </div>
+        <div class="form-group">
+            <label for="mensagem">Mensagem:</label>
+            <textarea id="mensagem" name="mensagem" rows="5" placeholder="Escreva sua mensagem aqui..." required></textarea>
+        </div>
+        <button type="submit" class="btn-enviar">Enviar Mensagem</button>
+    </form>
+
+    <div class="redes-sociais">
+        <p>Siga-me também nas redes sociais:</p>
+        <br>
+        <!-- Links de exemplo, podem ser ajustados pelo usuário -->
+        <a href="#" title="Instagram">📸 Instagram</a>
+        <a href="#" title="Facebook">👥 Facebook</a>
+        <a href="#" title="WhatsApp">💬 WhatsApp</a>
+    </div>
+</main>
+
+<footer>
+    <p>© 2026 Frases de Messias</p>
+</footer>
+
+<button id="temaBtn">🌙 Modo Escuro</button>
+
+<script>
+    // Lógica do Modo Escuro
+    const temaBtn = document.getElementById("temaBtn");
+    
+    if (localStorage.getItem("tema") === "dark") {
+        document.body.classList.add("dark");
+        temaBtn.textContent = "☀️ Modo Claro";
+    }
+
+    temaBtn.addEventListener("click", () => {
+        document.body.classList.toggle("dark");
+        const isDark = document.body.classList.contains("dark");
+        localStorage.setItem("tema", isDark ? "dark" : "light");
+        temaBtn.textContent = isDark ? "☀️ Modo Claro" : "🌙 Modo Escuro";
+    });
+</script>
+
+</body>
+</html>

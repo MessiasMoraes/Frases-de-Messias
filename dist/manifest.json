@@ -1,0 +1,54 @@
+{
+  "id": "com.messiasmoraes.frases",
+  "name": "Frases de Messias - Inspiração Diária",
+  "short_name": "Frases Messias",
+  "description": "Encontre motivação, fé e amor com a coleção exclusiva de frases de Messias. Baixe imagens para Story e Feed e compartilhe inspiração.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "categories": ["lifestyle", "entertainment"],
+  "icons": [
+    {
+      "src": "imagens/1785461694182.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "imagens/1785461694182.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "imagens/screenshot-mobile.png",
+      "sizes": "720x1600",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Página Inicial no Celular"
+    },
+    {
+      "src": "imagens/screenshot-desktop.png",
+      "sizes": "1280x800",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Página Inicial no Computador"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Ver Favoritos",
+      "url": "favoritos.html",
+      "icons": [{ "src": "imagens/categorias/amor.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Contato",
+      "url": "contato.html",
+      "icons": [{ "src": "imagens/categorias/amizade.png", "sizes": "96x96" }]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Favoritos - Frases de Messias</title>
+  <meta name="description" content="Minha coleção pessoal de frases inspiradoras salvas no portal Frases de Messias.">
+  
+  <!-- Open Graph / Facebook / WhatsApp -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://messiasmoraes.github.io/Frases-de-Messias/favoritos.html">
+  <meta property="og:title" content="❤️ Meus Favoritos - Frases de Messias">
+  <meta property="og:description" content="Veja as frases que mais me inspiraram no portal Frases de Messias.">
+  <meta property="og:image" content="https://messiasmoraes.github.io/Frases-de-Messias/imagens/1785461694182.png">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>❤️ Frases Favoritas</h1>
+  <a href="index.html">← Voltar para a página inicial</a>
+</header>
+
+<main id="listaFavoritos"></main>
+
+<script>
+const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+const lista = document.getElementById("listaFavoritos");
+
+if (favoritos.length === 0) {
+  lista.innerHTML = "<p>Você ainda não salvou nenhuma frase.</p>";
+} else {
+  favoritos.forEach(frase => {
+    const card = document.createElement("div");
+    card.className = "frase";
+    card.innerHTML = `<p>${frase}</p>`;
+    lista.appendChild(card);
+  });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,602 @@
+[
+  {
+    "categoria": "Motivação",
+    "autor": "Messias",
+    "texto": "Acredite no seu potencial e vá além dos seus limites."
+  },
+  {
+    "categoria": "Motivação",
+    "autor": "Messias",
+    "texto": "Cada novo dia é uma chance de recomeçar e fazer diferente."
+  },
+  {
+    "categoria": "Motivação",
+    "autor": "Messias",
+    "texto": "Não espere por oportunidades, crie-as."
+  },
+  {
+    "categoria": "Motivação",
+    "autor": "Messias",
+    "texto": "Seja a mudança que você deseja ver no mundo."
+  },
+  {
+    "categoria": "Motivação",	
+    "autor": "Messias",
+    "texto": "O sucesso é a soma de pequenos esforços repetidos diariamente."
+  },
+  {
+    "categoria": "Motivação",
+    "autor": "Messias",
+    "texto": "Nunca desista dos seus sonhos, eles são o combustível da sua alma."
+  },
+  {
+    "categoria": "Motivação",
+    "autor": "Messias",
+    "texto": "A persistência realiza o impossível."
+  },
+  {
+    "categoria": "Motivação",
+    "autor": "Messias",
+    "texto": "Transforme seus medos em força e seus desafios em oportunidades."
+  },
+  {
+    "categoria": "Motivação",
+    "autor": "Messias",
+    "texto": "Sua única limitação é aquela que você impõe a si mesmo."
+  },
+  {
+    "categoria": "Motivação",
+    "autor": "Messias",
+    "texto": "O futuro pertence àqueles que acreditam na beleza de seus sonhos."
+  },
+  {
+    "categoria": "Esperança",
+    "autor": "Messias",
+    "texto": "A esperança é a luz que guia nos momentos de escuridão."
+  },
+  {
+    "categoria": "Esperança",
+    "autor": "Messias",
+    "texto": "Enquanto há vida, há esperança."
+  },
+  {
+    "categoria": "Esperança",
+    "autor": "Messias",
+    "texto": "Plante a semente da esperança e colha a felicidade."
+  },
+  {
+    "categoria": "Esperança",
+    "autor": "Messias",
+    "texto": "Que a esperança seja seu guia em cada novo amanhecer."
+  },
+  {
+    "categoria": "Esperança",
+    "autor": "Messias",
+    "texto": "Acredite que dias melhores virão."
+  },
+  {
+    "categoria": "Esperança",
+    "autor": "Messias",
+    "texto": "A fé em Deus renova a esperança em nossos corações."
+  },
+  {
+    "categoria": "Esperança",
+    "autor": "Messias",
+    "texto": "Não perca a esperança, ela é a última que morre."
+  },
+  {
+    "categoria": "Esperança",
+    "autor": "Messias",
+    "texto": "A esperança é a âncora da alma."
+  },
+  {
+    "categoria": "Esperança",
+    "autor": "Messias",
+    "texto": "Com esperança, tudo é possível."
+  },
+  {
+    "categoria": "Esperança",
+    "autor": "Messias",
+    "texto": "Amanhã será um novo dia, cheio de novas esperanças."
+  },
+  {
+    "categoria": "Reflexão",
+    "autor": "Messias",
+    "texto": "A vida é um eco. O que você envia, volta. O que você planta, colhe."
+  },
+  {
+    "categoria": "Reflexão",
+    "autor": "Messias",
+    "texto": "Refletir é a arte de se encontrar em meio ao caos."
+  },
+  {
+    "categoria": "Reflexão",
+    "autor": "Messias",
+    "texto": "A maior sabedoria é saber que nada se sabe."
+  },
+  {
+    "categoria": "Reflexão",
+    "autor": "Messias",
+    "texto": "Pense antes de agir, pois as palavras têm poder."
+  },
+  {
+    "categoria": "Reflexão",
+    "autor": "Messias",
+    "texto": "A felicidade não é um destino, é uma jornada."
+  },
+  {
+    "categoria": "Reflexão",
+    "autor": "Messias",
+    "texto": "O silêncio é a resposta mais sábia para a ignorância."
+  },
+  {
+    "categoria": "Reflexão",
+    "autor": "Messias",
+    "texto": "A verdadeira riqueza está na simplicidade da vida."
+  },
+  {
+    "categoria": "Reflexão",
+    "autor": "Messias",
+    "texto": "Cada erro é uma lição disfarçada."
+  },
+  {
+    "categoria": "Reflexão",
+    "autor": "Messias",
+    "texto": "Não se preocupe com o que os outros pensam, viva a sua verdade."
+  },
+  {
+    "categoria": "Reflexão",
+    "autor": "Messias",
+    "texto": "A gratidão transforma o que temos em suficiente."
+  },
+  {
+    "categoria": "Fé",
+    "autor": "Messias",
+    "texto": "A fé move montanhas e ilumina os caminhos."
+  },
+  {
+    "categoria": "Fé",
+    "autor": "Messias",
+    "texto": "Confie em Deus e Ele fará o impossível."
+  },
+  {
+    "categoria": "Fé",
+    "autor": "Messias",
+    "texto": "A fé é a certeza das coisas que se esperam, a convicção de fatos que se não veem."
+  },
+  {
+    "categoria": "Fé",
+    "autor": "Messias",
+    "texto": "Que a sua fé seja maior que os seus medos."
+  },
+  {
+    "categoria": "Fé",
+    "autor": "Messias",
+    "texto": "Deus está no controle de todas as coisas."
+  },
+  {
+    "categoria": "Fé",
+    "autor": "Messias",
+    "texto": "A fé é o alicerce da vida."
+  },
+  {
+    "categoria": "Fé",
+    "autor": "Messias",
+    "texto": "Com fé, tudo é possível."
+  },
+  {
+    "categoria": "Fé",
+    "autor": "Messias",
+    "texto": "A fé nos dá força para seguir em frente."
+  },
+  {
+    "categoria": "Fé",
+    "autor": "Messias",
+    "texto": "Deus é fiel e justo."
+  },
+  {
+    "categoria": "Fé",
+    "autor": "Messias",
+    "texto": "A fé é um dom precioso."
+  },
+  {
+    "categoria": "Amor",
+    "autor": "Messias",
+    "texto": "O amor é a força mais poderosa do universo."
+  },
+  {
+    "categoria": "Amor",
+    "autor": "Messias",
+    "texto": "Amar é cuidar, respeitar e proteger."
+  },
+  {
+    "categoria": "Amor",
+    "autor": "Messias",
+    "texto": "O verdadeiro amor nunca se acaba, apenas se transforma."
+  },
+  {
+    "categoria": "Amor",
+    "autor": "Messias",
+    "texto": "Plante amor e colha felicidade."
+  },
+  {
+    "categoria": "Amor",
+    "autor": "Messias",
+    "texto": "O amor é a essência da vida."
+  },
+  {
+    "categoria": "Amor",
+    "autor": "Messias",
+    "texto": "Amar é encontrar a sua própria felicidade na felicidade do outro."
+  },
+  {
+    "categoria": "Amor",
+    "autor": "Messias",
+    "texto": "O amor é paciente, o amor é bondoso."
+  },
+  {
+    "categoria": "Amor",
+    "autor": "Messias",
+    "texto": "Ame como se não houvesse amanhã."
+  },
+  {
+    "categoria": "Amor",
+    "autor": "Messias",
+    "texto": "O amor é a resposta para todas as perguntas."
+  },
+  {
+    "categoria": "Amor",
+    "autor": "Messias",
+    "texto": "O amor é a maior aventura da vida."
+  },
+  {
+    "categoria": "Amizade",
+    "autor": "Messias",
+    "texto": "A verdadeira amizade é um tesouro que dura para sempre."
+  },
+  {
+    "categoria": "Amizade",
+    "autor": "Messias",
+    "texto": "Amigos são a família que a vida nos permite escolher."
+  },
+  {
+    "categoria": "Amizade",
+    "autor": "Messias",
+    "texto": "Um amigo fiel é um porto seguro na tempestade."
+  },
+  {
+    "categoria": "Amizade",
+    "autor": "Messias",
+    "texto": "A amizade é o tempero da vida."
+  },
+  {
+    "categoria": "Amizade",
+    "autor": "Messias",
+    "texto": "Compartilhe risadas e momentos com seus amigos."
+  },
+  {
+    "categoria": "Amizade",
+    "autor": "Messias",
+    "texto": "A amizade verdadeira não tem preço."
+  },
+  {
+    "categoria": "Amizade",
+    "autor": "Messias",
+    "texto": "Amigos são anjos que nos levantam quando nossas asas esquecem como voar."
+  },
+  {
+    "categoria": "Amizade",
+    "autor": "Messias",
+    "texto": "A amizade é um abraço para a alma."
+  },
+  {
+    "categoria": "Amizade",
+    "autor": "Messias",
+    "texto": "Cultive suas amizades, elas são um jardim de alegrias."
+  },
+  {
+    "categoria": "Amizade",
+    "autor": "Messias",
+    "texto": "A amizade é um presente de Deus."
+  },
+  {
+    "categoria": "Bom Dia",
+    "autor": "Messias",
+    "texto": "Que seu dia seja repleto de luz, paz e muitas alegrias."
+  },
+  {
+    "categoria": "Bom Dia",
+    "autor": "Messias",
+    "texto": "Bom dia! Que a felicidade te encontre em cada amanhecer."
+  },
+  {
+    "categoria": "Bom Dia",
+    "autor": "Messias",
+    "texto": "Comece o dia com um sorriso e a alma leve."
+  },
+  {
+    "categoria": "Bom Dia",
+    "autor": "Messias",
+    "texto": "Que a paz de Deus esteja com você neste novo dia."
+  },
+  {
+    "categoria": "Bom Dia",
+    "autor": "Messias",
+    "texto": "Aproveite cada momento deste lindo dia."
+  },
+  {
+    "categoria": "Bom Dia",
+    "autor": "Messias",
+    "texto": "Bom dia! Que a esperança renove suas forças."
+  },
+  {
+    "categoria": "Bom Dia",
+    "autor": "Messias",
+    "texto": "Que a gratidão seja seu primeiro pensamento ao acordar."
+  },
+  {
+    "categoria": "Bom Dia",
+    "autor": "Messias",
+    "texto": "Tenha um dia abençoado e cheio de realizações."
+  },
+  {
+    "categoria": "Bom Dia",
+    "autor": "Messias",
+    "texto": "Bom dia! Que a alegria transborde em seu coração."
+  },
+  {
+    "categoria": "Bom Dia",
+    "autor": "Messias",
+    "texto": "Que a luz divina ilumine seus passos neste dia."
+  },
+  {
+    "categoria": "Boa Noite",
+    "autor": "Messias",
+    "texto": "Descanse em paz e sonhe com as estrelas."
+  },
+  {
+    "categoria": "Boa Noite",
+    "autor": "Messias",
+    "texto": "Que a noite traga serenidade e um sono tranquilo."
+  },
+  {
+    "categoria": "Boa Noite",
+    "autor": "Messias",
+    "texto": "Boa noite! Que a paz de Deus acalme sua alma."
+  },
+  {
+    "categoria": "Boa Noite",
+    "autor": "Messias",
+    "texto": "Agradeça pelo dia que se foi e prepare-se para o amanhã."
+  },
+  {
+    "categoria": "Boa Noite",
+    "autor": "Messias",
+    "texto": "Que os anjos da guarda protejam seu sono."
+  },
+  {
+    "categoria": "Boa Noite",
+    "autor": "Messias",
+    "texto": "Boa noite! Que a esperança renove suas energias."
+  },
+  {
+    "categoria": "Boa Noite",
+    "autor": "Messias",
+    "texto": "Durma bem e acorde com a alma renovada."
+  },
+  {
+    "categoria": "Boa Noite",
+    "autor": "Messias",
+    "texto": "Que a noite seja de descanso e sonhos lindos."
+  },
+  {
+    "categoria": "Boa Noite",
+    "autor": "Messias",
+    "texto": "Boa noite! Que a paz invada seu coração."
+  },
+  {
+    "categoria": "Boa Noite",
+    "autor": "Messias",
+    "texto": "Que a luz da lua guie seus sonhos."
+  },
+  {
+    "categoria": "Família",
+    "autor": "Messias",
+    "texto": "A família é o alicerce da vida, o porto seguro do coração."
+  },
+  {
+    "categoria": "Família",
+    "autor": "Messias",
+    "texto": "O amor em família é o maior presente."
+  },
+  {
+    "categoria": "Família",
+    "autor": "Messias",
+    "texto": "Cultive o amor e a união em sua família."
+  },
+  {
+    "categoria": "Família",
+    "autor": "Messias",
+    "texto": "A família é onde a vida começa e o amor nunca termina."
+  },
+  {
+    "categoria": "Família",
+    "autor": "Messias",
+    "texto": "Valorize cada momento com sua família."
+  },
+  {
+    "categoria": "Família",
+    "autor": "Messias",
+    "texto": "A família é o nosso bem mais precioso."
+  },
+  {
+    "categoria": "Família",
+    "autor": "Messias",
+    "texto": "O amor familiar é incondicional."
+  },
+  {
+    "categoria": "Família",
+    "autor": "Messias",
+    "texto": "A família é o nosso refúgio."
+  },
+  {
+    "categoria": "Família",
+    "autor": "Messias",
+    "texto": "A família é a base de tudo."
+  },
+  {
+    "categoria": "Família",
+    "autor": "Messias",
+    "texto": "A família é um presente de Deus."
+  },
+  {
+    "categoria": "Gratidão",
+    "autor": "Messias",
+    "texto": "A gratidão transforma o que temos em suficiente."
+  },
+  {
+    "categoria": "Gratidão",
+    "autor": "Messias",
+    "texto": "Seja grato por cada amanhecer e por cada benção."
+  },
+  {
+    "categoria": "Gratidão",
+    "autor": "Messias",
+    "texto": "A gratidão é a memória do coração."
+  },
+  {
+    "categoria": "Gratidão",
+    "autor": "Messias",
+    "texto": "Agradeça mais, reclame menos."
+  },
+  {
+    "categoria": "Gratidão",
+    "autor": "Messias",
+    "texto": "A gratidão abre as portas para a felicidade."
+  },
+  {
+    "categoria": "Gratidão",
+    "autor": "Messias",
+    "texto": "Seja grato por tudo que você tem."
+  },
+  {
+    "categoria": "Gratidão",
+    "autor": "Messias",
+    "texto": "A gratidão é a chave para a abundância."
+  },
+  {
+    "categoria": "Gratidão",
+    "autor": "Messias",
+    "texto": "Agradeça a Deus por mais um dia."
+  },
+  {
+    "categoria": "Gratidão",
+    "autor": "Messias",
+    "texto": "A gratidão é um sentimento nobre."
+  },
+  {
+    "categoria": "Gratidão",
+    "autor": "Messias",
+    "texto": "A gratidão é a melhor oração."
+  },
+  {
+    "categoria": "Sucesso",
+    "autor": "Messias",
+    "texto": "O sucesso é a consequência de um trabalho árduo e dedicação."
+  },
+  {
+    "categoria": "Sucesso",
+    "autor": "Messias",
+    "texto": "Busque o sucesso com paixão e determinação."
+  },
+  {
+    "categoria": "Sucesso",
+    "autor": "Messias",
+    "texto": "O caminho para o sucesso é construído com persistência."
+  },
+  {
+    "categoria": "Sucesso",
+    "autor": "Messias",
+    "texto": "Celebre cada pequena vitória no seu caminho para o sucesso."
+  },
+  {
+    "categoria": "Sucesso",
+    "autor": "Messias",
+    "texto": "O sucesso não é o final, é a jornada."
+  },
+  {
+    "categoria": "Sucesso",
+    "autor": "Messias",
+    "texto": "O sucesso é para aqueles que não desistem."
+  },
+  {
+    "categoria": "Sucesso",
+    "autor": "Messias",
+    "texto": "O sucesso é a realização de um sonho."
+  },
+  {
+    "categoria": "Sucesso",
+    "autor": "Messias",
+    "texto": "O sucesso é a recompensa do esforço."
+  },
+  {
+    "categoria": "Sucesso",
+    "autor": "Messias",
+    "texto": "O sucesso é a arte de transformar sonhos em realidade."
+  },
+  {
+    "categoria": "Sucesso",
+    "autor": "Messias",
+    "texto": "O sucesso é a prova de que você é capaz."
+  },
+  {
+    "categoria": "Vida",
+    "autor": "Messias",
+    "texto": "A vida é um presente, celebre cada momento."
+  },
+  {
+    "categoria": "Vida",
+    "autor": "Messias",
+    "texto": "Viva intensamente, ame profundamente e sonhe alto."
+  },
+  {
+    "categoria": "Vida",
+    "autor": "Messias",
+    "texto": "A vida é uma jornada, aproveite a paisagem."
+  },
+  {
+    "categoria": "Vida",
+    "autor": "Messias",
+    "texto": "Não espere pela vida, viva-a."
+  },
+  {
+    "categoria": "Vida",
+    "autor": "Messias",
+    "texto": "A vida é feita de escolhas, faça as suas com sabedoria."
+  },
+  {
+    "categoria": "Vida",
+    "autor": "Messias",
+    "texto": "A vida é um aprendizado constante."
+  },
+  {
+    "categoria": "Vida",
+    "autor": "Messias",
+    "texto": "A vida é uma aventura, ouse vivê-la."
+  },
+  {
+    "categoria": "Vida",
+    "autor": "Messias",
+    "texto": "A vida é um milagre, agradeça por ela."
+  },
+  {
+    "categoria": "Vida",
+    "autor": "Messias",
+    "texto": "A vida é uma canção, cante-a com alegria."
+  },
+  {
+    "categoria": "Vida",
+    "autor": "Messias",
+    "texto": "A vida é um presente, desembrulhe-o com carinho."
+  }
+]

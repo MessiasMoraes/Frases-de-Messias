@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frases de Messias</title>
+  <meta name="description" content="As melhores frases de motivação, amor, fé e reflexão selecionadas por Messias.">
+
+  <!-- Open Graph / Facebook / WhatsApp -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://messiasmoraes.github.io/Frases-de-Messias/">
+  <meta property="og:title" content="📖 Frases de Messias - Inspiração Diária">
+  <meta property="og:description" content="Encontre as melhores frases de motivação, amor, fé e reflexão para compartilhar e se inspirar todos os dias.">
+  <meta property="og:image" content="https://messiasmoraes.github.io/Frases-de-Messias/imagens/1785461694182.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://messiasmoraes.github.io/Frases-de-Messias/">
+  <meta property="twitter:title" content="📖 Frases de Messias - Inspiração Diária">
+  <meta property="twitter:description" content="Encontre as melhores frases de motivação, amor, fé e reflexão para compartilhar e se inspirar todos os dias.">
+  <meta property="twitter:image" content="https://messiasmoraes.github.io/Frases-de-Messias/imagens/1785461694182.png">
+
+  <!-- Configurações PWA (Aplicativo) -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4A90E2">
+
+  <!-- Vínculo do CSS com forçador de atualização de cache -->
+  <link rel="stylesheet" href="./style.css?v=2026">
+
+  <!-- Biblioteca html2canvas para permitir baixar os cards como imagem -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+  <div id="templateExportacao" style="display:none;">
+
+    <div id="cardExportacao">
+
+        <img id="imgExportacao">
+
+        <div class="fundoEscuro"></div>
+
+        <div class="conteudoExportacao">
+
+            <p id="textoExportacao"></p>
+
+            <div id="autorExportacao"></div>
+
+            <div class="logoExportacao">
+                📖 Frases de Messias
+            </div>
+
+        </div>
+
+    </div>
+
+  </div>
+<body>
+
+<header>
+  <div class="container">
+    <h1>📖 Frases de Messias</h1>
+
+    <nav>
+      <a href="index.html">🏠 Início</a>
+      <a href="favoritos.html">❤️ Favoritos</a>
+      <a href="sobre.html">ℹ️ Sobre</a>
+      <a href="contato.html">📞 Contato</a>
+    </nav>
+
+    <input
+      type="search"
+      id="pesquisa"
+      placeholder="Pesquisar frases..."
+    >
+  </div>
+</header>
+<!-- Gerador com Inteligência Artificial -->
+<section class="ia-gerador" style="padding: 20px; background: rgba(74, 144, 226, 0.1); border-radius: 12px; margin: 20px auto; max-width: 800px; text-align: center;">
+  <h2>✨ Gerar Frase Personalizada com IA</h2>
+  <p>Digite um tema ou sentimento para a IA criar uma frase exclusiva para você:</p>
+  
+  <div style="display: flex; gap: 10px; max-width: 500px; margin: 15px auto; flex-wrap: wrap;">
+    <input type="text" id="promptIA" placeholder="Ex: Motivação para estudar, gratidão, etc..." style="flex: 1; min-width: 200px; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem;">
+    <button id="gerarIaBtn" style="padding: 12px 20px; border-radius: 8px; background: #4A90E2; color: white; border: none; cursor: pointer; font-weight: bold; font-size: 1rem;">Gerar Frase</button>
+  </div>
+
+  <div id="resultadoIA" style="margin-top: 15px; font-style: italic; font-size: 1.1em; color: #333;"></div>
+</section>
+  
+<section class="hero">
+  <h2>Frase do Dia</h2>
+
+  <blockquote id="fraseDia">
+    "Nunca desista dos seus sonhos. A persistência abre caminhos."
+  </blockquote>
+
+  <button id="copiarBtn">Copiar Frase</button>
+</section>
+
+<section class="categoriasDestaque">
+    <h2>📂 Categorias em Destaque</h2>
+    <div id="listaCategorias" class="gridCategorias"></div>
+</section>
+
+<section class="categorias">
+  <h2>Todas as Categorias</h2>
+
+  <div class="grid">
+
+    <div class="card" data-categoria="amizade">
+      <img src="imagens/categorias/amizade.png" alt="Amizade" onerror="this.src='imagens/categorias/padrao.jpg'">
+      <span>🤝 Amizade</span>
+    </div>
+
+    <div class="card" data-categoria="amor">
+      <img src="imagens/categorias/amor.png" alt="Amor" onerror="this.src='imagens/categorias/padrao.jpg'">
+      <span>❤️ Amor</span>
+    </div>
+
+    <div class="card" data-categoria="boa-noite">
+      <img src="imagens/categorias/boa-noite.png" alt="Boa Noite" onerror="this.src='imagens/categorias/padrao.jpg'">
+      <span>🌙 Boa Noite</span>
+    </div>
+
+    <div class="card" data-categoria="bom-dia">
+      <img src="imagens/categorias/bom-dia.png" alt="Bom Dia" onerror="this.src='imagens/categorias/padrao.jpg'">
+      <span>🌞 Bom Dia</span>
+    </div>
+
+    <div class="card" data-categoria="esperanca">
+      <img src="imagens/categorias/esperanca.png" alt="Esperança" onerror="this.src='imagens/categorias/padrao.jpg'">
+      <span>🌱 Esperança</span>
+    </div>
+
+    <div class="card" data-categoria="familia">
+      <img src="imagens/categorias/familia.png" alt="Família" onerror="this.src='imagens/categorias/padrao.jpg'">
+      <span>🏡 Família</span>
+    </div>
+
+    <div class="card" data-categoria="fe">
+      <img src="imagens/categorias/fe.png" alt="Fé" onerror="this.src='imagens/categorias/padrao.jpg'">
+      <span>🙏 Fé</span>
+    </div>
+
+    <div class="card" data-categoria="gratidao">
+      <img src="imagens/categorias/gratidao.png" alt="Gratidão" onerror="this.src='imagens/categorias/padrao.jpg'">
+      <span>✨ Gratidão</span>
+    </div>
+
+    <div class="card" data-categoria="motivacao">
+      <img src="imagens/categorias/motivacao.png" alt="Motivação" onerror="this.src='imagens/categorias/padrao.jpg'">
+      <span>💪 Motivação</span>
+    </div>
+
+    <div class="card" data-categoria="reflexao">
+      <img src="imagens/categorias/reflexao.png" alt="Reflexão" onerror="this.src='imagens/categorias/padrao.jpg'">
+      <span>💡 Reflexão</span>
+    </div>
+
+    <div class="card" data-categoria="sucesso">
+      <img src="imagens/categorias/sucesso.png" alt="Sucesso" onerror="this.src='imagens/categorias/padrao.jpg'">
+      <span>🚀 Sucesso</span>
+    </div>
+
+    <div class="card" data-categoria="vida">
+      <img src="imagens/categorias/vida.png" alt="Vida" onerror="this.src='imagens/categorias/padrao.jpg'">
+      <span>🍃 Vida</span>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <h2>Todas as Frases</h2>
+  <!-- Container onde as frases e os botões de Baixar serão renderizados pelo JS -->
+  <div id="listaFrases"></div>
+</section>
+
+<footer>
+  <p>© 2026 Frases de Messias</p>
+</footer>
+
+<button id="temaBtn">🌙 Modo Escuro</button>
+
+<!-- Script do projeto carregado como módulo JavaScript -->
+<script type="module" src="script.js"></script>
+
+</body>
+</html>
+
