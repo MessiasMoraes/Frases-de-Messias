@@ -526,18 +526,40 @@ window.baixarImagem = async function(botao, formato = "story") {
         if (!blob) throw new Error("Erro ao gerar imagem.");
 
         const url = URL.createObjectURL(blob);
-        
-        // Em vez de forçar download, mostra a imagem para o usuário salvar manualmente
-        // Isso resolve bloqueios de download em celulares
+
+        // Mantém apenas uma prévia por vez. Isso evita modais sobrepostos, que podem
+        // bloquear o toque no botão Fechar em celulares.
+        document.querySelectorAll('[data-modal-download="imagem"]').forEach(modalAntigo => {
+            const urlAntiga = modalAntigo.dataset.objectUrl;
+            if (urlAntiga) URL.revokeObjectURL(urlAntiga);
+            modalAntigo.remove();
+        });
+
+        // Em vez de forçar download, mostra a imagem para o usuário salvar manualmente.
+        // O fechamento usa listener isolado, evitando depender de onclick inserido em HTML.
         const modalDownload = document.createElement("div");
-        modalDownload.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;color:white;text-align:center;";
+        modalDownload.dataset.modalDownload = "imagem";
+        modalDownload.dataset.objectUrl = url;
+        modalDownload.setAttribute("role", "dialog");
+        modalDownload.setAttribute("aria-modal", "true");
+        modalDownload.setAttribute("aria-label", "Prévia da imagem gerada");
+        modalDownload.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:2147483647;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;color:white;text-align:center;";
         modalDownload.innerHTML = `
             <p style="margin-bottom:15px; font-weight:bold;">✨ Imagem Gerada!</p>
-            <img src="${url}" style="max-width:100%; max-height:65vh; border-radius:10px; box-shadow:0 0 20px rgba(0,0,0,0.5); margin-bottom:14px;">
+            <img src="${url}" alt="Imagem da frase gerada" style="max-width:100%; max-height:65vh; border-radius:10px; box-shadow:0 0 20px rgba(0,0,0,0.5); margin-bottom:14px;">
             <a href="${url}" download="frase-${formato}-${Date.now()}.png" style="display:inline-block; padding:12px 22px; background:#2563eb; color:white; text-decoration:none; border-radius:8px; font-weight:bold; margin-bottom:14px;">⬇️ Baixar imagem</a>
             <p style="font-size:14px; margin:0 0 16px;">No celular, se a imagem abrir em vez de baixar, pressione-a e escolha <b>Salvar imagem</b>.</p>
-            <button onclick="URL.revokeObjectURL('${url}'); this.parentElement.remove()" style="padding:10px 25px; background:#ef4444; color:white; border:none; border-radius:5px; font-weight:bold; cursor:pointer;">Fechar</button>
+            <button type="button" data-fechar-preview style="padding:12px 30px; min-height:46px; background:#ef4444; color:white; border:none; border-radius:7px; font-weight:bold; cursor:pointer;">Fechar</button>
         `;
+
+        const fecharPreview = () => {
+            URL.revokeObjectURL(url);
+            modalDownload.remove();
+        };
+        modalDownload.querySelector("[data-fechar-preview]")?.addEventListener("click", fecharPreview);
+        modalDownload.addEventListener("click", evento => {
+            if (evento.target === modalDownload) fecharPreview();
+        });
         document.body.appendChild(modalDownload);
 
     } catch (e) {
