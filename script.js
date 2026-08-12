@@ -627,6 +627,13 @@ function abrirDownloadNoNavegadorExterno(url) {
     link.remove();
 }
 
+function nomeArquivoMp4Unico(filename, formato) {
+    const base = String(filename || `frases-de-messias-${formato || "video"}.mp4`)
+        .replace(/\.mp4$/i, "")
+        .replace(/-\d{13}$/, "");
+    return `${base}-${Date.now()}.mp4`;
+}
+
 function iniciarDownloadBlob(blob, filename) {
     const objetoUrl = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -798,7 +805,7 @@ window.gerarVideo = async function(botao, formato = "story") {
         mostrarMp4Gerado(
             data.url,
             data.downloadUrl || `${data.url}?download=1`,
-            data.filename || `frases-de-messias-${formato}.mp4`,
+            nomeArquivoMp4Unico(data.filename, formato),
             formato
         );
     } catch (error) {

@@ -172,7 +172,9 @@ module.exports = async function renderVideo(req, res) {
     ], "Renderização FFmpeg");
 
     const video = await sandbox.readFileToBuffer({ path: "/tmp/frases-de-messias.mp4" });
-    const blob = await put(`videos/${Date.now()}-${formato}.mp4`, video, {
+    const identificadorArquivo = Date.now();
+    const nomeArquivo = `frases-de-messias-${formato}-${identificadorArquivo}.mp4`;
+    const blob = await put(`videos/${identificadorArquivo}-${formato}.mp4`, video, {
       access: "public",
       addRandomSuffix: true,
       contentType: "video/mp4",
@@ -186,7 +188,7 @@ module.exports = async function renderVideo(req, res) {
       url: blob.url,
       downloadUrl: blob.downloadUrl || `${blob.url}?download=1`,
       formato,
-      filename: `frases-de-messias-${formato}.mp4`,
+      filename: nomeArquivo,
     });
   } catch (error) {
     console.error("[render-video]", error);
