@@ -382,48 +382,121 @@ window.baixarImagem = async function(botao, formato = "story") {
         const tamanhoFonteAutor = formato === "feed" ? "34px" : "42px";
         const tamanhoFonteMarca = formato === "feed" ? "26px" : "34px";
 
-        exportacao = document.createElement("div");
-        exportacao.style.cssText = `position:fixed;left:-9999px;top:0;width:${largura}px;height:${altura}px;overflow:hidden;background:#111;font-family:Arial,sans-serif;z-index:-9999;`;
-        exportacao.innerHTML = `
-            <div style="position:absolute;inset:0;background:linear-gradient(135deg, #1e1b4b 0%, #31103f 50%, #0f172a 100%);"></div>
-            <img src="${imgSrcExportacao}" crossorigin="anonymous" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
-            <div style="position:absolute;inset:0;background:rgba(0,0,0,0.55);"></div>
-            <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:70px;text-align:center;color:white;">
-                <div style="font-size:${tamanhoFonteTexto};font-weight:bold;line-height:1.4;text-shadow:0 2px 10px rgba(0,0,0,0.8);">${texto}</div>
-                <div style="margin-top:50px;font-size:${tamanhoFonteAutor};font-weight:600;text-shadow:0 2px 6px rgba(0,0,0,0.8);">${autor}</div>
-                <div style="position:absolute;bottom:50px;font-size:${tamanhoFonteMarca};opacity:0.9;font-weight:bold;">📖 Frases de Messias</div>
-            </div>
-        `;
-        document.body.appendChild(exportacao);
-        // Carregamento robusto com fallback caso o CORS bloqueie a imagem externa
-        const imagemExportacao = exportacao.querySelector("img");
-        if (imagemExportacao) {
-            imagemExportacao.crossOrigin = "anonymous";
+        // Renderização direta em Canvas nativo para evitar qualquer travamento do html2canvas
+        const canvas = document.createElement("canvas");
+        canvas.width = largura;
+        canvas.height = altura;
+        const ctx = canvas.getContext("2d");
+
+        // Fundo degradê base
+        const grad = ctx.createLinearGradient(0, 0, largura, altura);
+        grad.addColorStop(0, "#1e1b4b");
+        grad.addColorStop(0.5, "#31103f");
+        grad.addColorStop(1, "#0f172a");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, largura, altura);
+
+        // Carrega imagem via proxy com timeout e desenho de capa (cover)
+        if (imgSrcExportacao) {
             await new Promise((resolve) => {
-                let finalizado = false;
-                const concluir = () => {
-                    if (!finalizado) { finalizado = true; resolve(); }
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                let finished = false;
+                const done = () => {
+                    if (!finished) {
+                        finished = true;
+                        resolve();
+                    }
                 };
-                imagemExportacao.addEventListener("load", concluir, { once: true });
-                imagemExportacao.addEventListener("error", () => {
-                    console.warn("CORS bloqueou imagem direta, aplicando fundo degradê de fallback.");
-                    imagemExportacao.style.display = "none"; // Remove imagem quebrada e usa fundo estilizado
-                    concluir();
-                }, { once: true });
-                setTimeout(concluir, 4000); // Timeout de segurança para não travar o usuário
-                if (imagemExportacao.complete) {
-                    concluir();
-                }
+                img.onload = () => {
+                    try {
+                        const imgRatio = img.width / img.height;
+                        const canvasRatio = largura / altura;
+                        let rw = largura, rh = altura, rx = 0, ry = 0;
+                        if (imgRatio > canvasRatio) {
+                            rw = altura * imgRatio;
+                            rx = (largura - rw) / 2;
+                        } else {
+                            rh = largura / imgRatio;
+                            ry = (altura - rh) / 2;
+                        }
+                        ctx.drawImage(img, rx, ry, rw, rh);
+                    } catch (err) {
+                        console.warn("Erro ao desenhar imagem no canvas:", err);
+                    }
+                    done();
+                };
+                img.onerror = () => {
+                    console.warn("Falha ao carregar imagem no canvas, usando apenas degradê.");
+                    done();
+                };
+                setTimeout(done, 3500);
+                img.src = imgSrcExportacao;
             });
         }
 
-        if (typeof html2canvas === "undefined") {
-            throw new Error("Biblioteca html2canvas não carregada.");
+        // Camada escura de leitura (overlay)
+        ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+        ctx.fillRect(0, 0, largura, altura);
+
+        // Textos centralizados com quebra de linha (Word Wrap)
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = "#ffffff";
+
+        // Formatação do texto da frase
+        const fontSizeTextoNum = formato === "feed" ? 52 : 70;
+        ctx.font = `bold ${fontSizeTextoNum}px Arial, sans-serif`;
+        const maxWidth = largura - 140;
+        const words = texto.replace(/^"|"$/g, "").trim().split(/\s+/);
+        let lines = [];
+        let currentLine = words[0] || "";
+
+        for (let i = 1; i < words.length; i++) {
+            const word = words[i];
+            const testLine = currentLine + " " + word;
+            if (ctx.measureText(testLine).width < maxWidth) {
+                currentLine = testLine;
+            } else {
+                lines.push(currentLine);
+                currentLine = word;
+            }
+        }
+        lines.push(currentLine);
+
+        const lineHeight = fontSizeTextoNum * 1.4;
+        const totalTextHeight = lines.length * lineHeight;
+
+        // Autor e marca
+        const fontSizeAutorNum = formato === "feed" ? 34 : 42;
+        const fontSizeMarcaNum = formato === "feed" ? 26 : 34;
+        const autorSpacing = 60;
+        const totalBlockHeight = totalTextHeight + autorSpacing + fontSizeAutorNum;
+
+        let startY = (altura - totalBlockHeight) / 2 + totalTextHeight / 2;
+
+        // Desenhar linhas da frase
+        ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
+        ctx.shadowBlur = 12;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 3;
+
+        for (let i = 0; i < lines.length; i++) {
+            const lineY = startY - ((lines.length - i) * lineHeight) + (lineHeight / 2);
+            ctx.fillText('"' + lines[i] + '"', largura / 2, lineY);
         }
 
-        const canvas = await html2canvas(exportacao, {
-            useCORS: true, allowTaint: true, scale: 1, backgroundColor: "#1b1b2f", imageTimeout: 6000
-        });
+        // Desenhar autor
+        if (autor) {
+            ctx.font = `600 ${fontSizeAutorNum}px Arial, sans-serif`;
+            const autorY = startY + (autorSpacing / 2) + (fontSizeAutorNum / 2);
+            ctx.fillText(autor, largura / 2, autorY);
+        }
+
+        // Desenhar marca d'água no rodapé
+        ctx.font = `bold ${fontSizeMarcaNum}px Arial, sans-serif`;
+        ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+        ctx.fillText("📖 Frases de Messias", largura / 2, altura - 80);
 
         const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));
         if (!blob) throw new Error("Erro ao gerar imagem.");
