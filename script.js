@@ -45,6 +45,24 @@ function normalizarParaBusca(texto) {
     return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
+// Converte imagens antigas do GitHub Pages para o mesmo domínio atual.
+// Assim o html2canvas consegue ler a imagem sem bloqueio de CORS.
+function normalizarUrlImagem(url = "") {
+    const valor = String(url || "").trim();
+    if (!valor) return "";
+    try {
+        const origem = new URL(valor, window.location.href);
+        if (origem.hostname === "messiasmoraes.github.io" && origem.pathname.startsWith("/Frases-de-Messias/")) {
+            origem.pathname = origem.pathname.replace(/^\/Frases-de-Messias\//, "/");
+            origem.protocol = window.location.protocol;
+            origem.host = window.location.host;
+        }
+        return origem.href;
+    } catch (_) {
+        return valor;
+    }
+}
+
 // ======================
 // FRASE DO DIA
 // ======================
@@ -167,9 +185,9 @@ function criarCardFrase(f, lista) {
     const alturaImg = window.innerWidth < 600 ? 300 : 600;
     const semente = f.id || "frase-padrao";
     
-    const imagem = (f.imagem && f.imagem.trim() !== "")
+    const imagem = normalizarUrlImagem((f.imagem && f.imagem.trim() !== "")
         ? f.imagem
-        : (categorias[categoriaLimpa] || `https://picsum.photos/seed/${encodeURIComponent(semente)}/${larguraImg}/${alturaImg}`);
+        : (categorias[categoriaLimpa] || `https://picsum.photos/seed/${encodeURIComponent(semente)}/${larguraImg}/${alturaImg}`));
 
     const card = document.createElement("div");
     card.className = "cardFrase";
@@ -337,11 +355,8 @@ window.baixarImagem = async function(botao, formato = "story") {
 
     try {
         const imgElement = card.querySelector(".imagemFrase img");
-        let imgSrc = imgElement ? imgElement.src : "";
-        if (imgSrc && !imgSrc.startsWith("data:") && !imgSrc.includes("cdnjs") && !imgSrc.includes("unsplash")) {
-            // Garantir que a URL da imagem seja tratada com proxy CORS seguro se necessário
-            imgSrc = imgSrc;
-        }
+        let imgSrc = normalizarUrlImagem(imgElement ? (imgElement.currentSrc || imgElement.src) : "");
+        if (!imgSrc) throw new Error("A imagem da frase não foi encontrada.");
         const texto = card.querySelector(".textoFrase")?.innerText || "";
         const autor = card.querySelector(".autorFrase")?.innerText || "";
         const largura = 1080;
@@ -362,7 +377,19 @@ window.baixarImagem = async function(botao, formato = "story") {
             </div>
         `;
         document.body.appendChild(exportacao);
-        await new Promise(resolve => setTimeout(resolve, 300));
+        const imagemExportacao = exportacao.querySelector("img");
+        if (imagemExportacao) {
+            imagemExportacao.crossOrigin = "anonymous";
+            await new Promise((resolve, reject) => {
+                const concluir = () => resolve();
+                imagemExportacao.addEventListener("load", concluir, { once: true });
+                imagemExportacao.addEventListener("error", () => reject(new Error("Não foi possível carregar a imagem original.")), { once: true });
+                if (imagemExportacao.complete) {
+                    if (imagemExportacao.naturalWidth > 0) concluir();
+                    else reject(new Error("A imagem original está indisponível."));
+                }
+            });
+        }
 
         if (typeof html2canvas === "undefined") {
             throw new Error("Biblioteca html2canvas não carregada.");
@@ -383,9 +410,10 @@ window.baixarImagem = async function(botao, formato = "story") {
         modalDownload.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;color:white;text-align:center;";
         modalDownload.innerHTML = `
             <p style="margin-bottom:15px; font-weight:bold;">✨ Imagem Gerada!</p>
-            <img src="${url}" style="max-width:100%; max-height:70vh; border-radius:10px; box-shadow:0 0 20px rgba(0,0,0,0.5); margin-bottom:20px;">
-            <p style="font-size:14px; margin-bottom:20px;">📱 <b>Pressione e segure</b> na imagem acima e selecione <b>'Fazer download da imagem'</b> ou <b>'Salvar imagem'</b>.</p>
-            <button onclick="this.parentElement.remove()" style="padding:10px 25px; background:#ef4444; color:white; border:none; border-radius:5px; font-weight:bold; cursor:pointer;">Fechar</button>
+            <img src="${url}" style="max-width:100%; max-height:65vh; border-radius:10px; box-shadow:0 0 20px rgba(0,0,0,0.5); margin-bottom:14px;">
+            <a href="${url}" download="frase-${formato}-${Date.now()}.png" style="display:inline-block; padding:12px 22px; background:#2563eb; color:white; text-decoration:none; border-radius:8px; font-weight:bold; margin-bottom:14px;">⬇️ Baixar imagem</a>
+            <p style="font-size:14px; margin:0 0 16px;">No celular, se a imagem abrir em vez de baixar, pressione-a e escolha <b>Salvar imagem</b>.</p>
+            <button onclick="URL.revokeObjectURL('${url}'); this.parentElement.remove()" style="padding:10px 25px; background:#ef4444; color:white; border:none; border-radius:5px; font-weight:bold; cursor:pointer;">Fechar</button>
         `;
         document.body.appendChild(modalDownload);
 
