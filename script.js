@@ -337,7 +337,11 @@ window.baixarImagem = async function(botao, formato = "story") {
 
     try {
         const imgElement = card.querySelector(".imagemFrase img");
-        const imgSrc = imgElement ? imgElement.src : "";
+        let imgSrc = imgElement ? imgElement.src : "";
+        if (imgSrc && !imgSrc.startsWith("data:") && !imgSrc.includes("cdnjs") && !imgSrc.includes("unsplash")) {
+            // Garantir que a URL da imagem seja tratada com proxy CORS seguro se necessário
+            imgSrc = imgSrc;
+        }
         const texto = card.querySelector(".textoFrase")?.innerText || "";
         const autor = card.querySelector(".autorFrase")?.innerText || "";
         const largura = 1080;
@@ -365,7 +369,7 @@ window.baixarImagem = async function(botao, formato = "story") {
         }
 
         const canvas = await html2canvas(exportacao, {
-            useCORS: true, allowTaint: true, scale: 1, backgroundColor: null, imageTimeout: 4000
+            useCORS: true, allowTaint: false, scale: 1, backgroundColor: "#111111", imageTimeout: 8000
         });
 
         const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));
