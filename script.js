@@ -368,25 +368,34 @@ window.baixarImagem = async function(botao, formato = "story") {
         exportacao = document.createElement("div");
         exportacao.style.cssText = `position:fixed;left:-9999px;top:0;width:${largura}px;height:${altura}px;overflow:hidden;background:#111;font-family:Arial,sans-serif;z-index:-9999;`;
         exportacao.innerHTML = `
+            <div style="position:absolute;inset:0;background:linear-gradient(135deg, #1e1b4b 0%, #31103f 50%, #0f172a 100%);"></div>
             <img src="${imgSrc}" crossorigin="anonymous" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
-            <div style="position:absolute;inset:0;background:rgba(0,0,0,.45);"></div>
-            <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:60px;text-align:center;color:white;">
-                <div style="font-size:${tamanhoFonteTexto};font-weight:bold;line-height:1.4;">${texto}</div>
-                <div style="margin-top:50px;font-size:${tamanhoFonteAutor};">${autor}</div>
-                <div style="position:absolute;bottom:50px;font-size:${tamanhoFonteMarca};">📖 Frases de Messias</div>
+            <div style="position:absolute;inset:0;background:rgba(0,0,0,0.55);"></div>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:70px;text-align:center;color:white;">
+                <div style="font-size:${tamanhoFonteTexto};font-weight:bold;line-height:1.4;text-shadow:0 2px 10px rgba(0,0,0,0.8);">${texto}</div>
+                <div style="margin-top:50px;font-size:${tamanhoFonteAutor};font-weight:600;text-shadow:0 2px 6px rgba(0,0,0,0.8);">${autor}</div>
+                <div style="position:absolute;bottom:50px;font-size:${tamanhoFonteMarca};opacity:0.9;font-weight:bold;">📖 Frases de Messias</div>
             </div>
         `;
         document.body.appendChild(exportacao);
+        // Carregamento robusto com fallback caso o CORS bloqueie a imagem externa
         const imagemExportacao = exportacao.querySelector("img");
         if (imagemExportacao) {
             imagemExportacao.crossOrigin = "anonymous";
-            await new Promise((resolve, reject) => {
-                const concluir = () => resolve();
+            await new Promise((resolve) => {
+                let finalizado = false;
+                const concluir = () => {
+                    if (!finalizado) { finalizado = true; resolve(); }
+                };
                 imagemExportacao.addEventListener("load", concluir, { once: true });
-                imagemExportacao.addEventListener("error", () => reject(new Error("Não foi possível carregar a imagem original.")), { once: true });
+                imagemExportacao.addEventListener("error", () => {
+                    console.warn("CORS bloqueou imagem direta, aplicando fundo degradê de fallback.");
+                    imagemExportacao.style.display = "none"; // Remove imagem quebrada e usa fundo estilizado
+                    concluir();
+                }, { once: true });
+                setTimeout(concluir, 4000); // Timeout de segurança para não travar o usuário
                 if (imagemExportacao.complete) {
-                    if (imagemExportacao.naturalWidth > 0) concluir();
-                    else reject(new Error("A imagem original está indisponível."));
+                    concluir();
                 }
             });
         }
@@ -396,7 +405,7 @@ window.baixarImagem = async function(botao, formato = "story") {
         }
 
         const canvas = await html2canvas(exportacao, {
-            useCORS: true, allowTaint: false, scale: 1, backgroundColor: "#111111", imageTimeout: 8000
+            useCORS: true, allowTaint: true, scale: 1, backgroundColor: "#1b1b2f", imageTimeout: 6000
         });
 
         const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));
