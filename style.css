@@ -636,3 +636,33 @@ button[onclick*="gerarVideo"]:disabled {
     font-size: 15px;
   }
 }
+
+/* Em celulares compactos, o seletor de tema deixa de cobrir o conteúdo. */
+@media (max-width: 480px) {
+  #temaBtn {
+    top: 14px;
+    right: 12px;
+    bottom: auto;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    min-height: 44px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 0;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.22);
+    touch-action: manipulation;
+  }
+
+  #temaBtn::before {
+    content: "🌙";
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  .dark #temaBtn::before {
+    content: "☀️";
+  }
+}
