@@ -982,12 +982,26 @@ document.addEventListener("DOMContentLoaded", () => {
     carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa);
     configurarBotoesCategoriasFixos(pesquisa, lista);
 
-    // Modo Escuro
+    // Modo escuro compartilhado por todas as páginas públicas.
     const temaBtn = document.getElementById("temaBtn");
+    const aplicarTema = (escuro) => {
+        document.body.classList.toggle("dark", escuro);
+        // Remove a classe antiga para evitar que estilos diferentes disputem o tema.
+        document.body.classList.remove("dark-mode");
+        if (temaBtn) {
+            temaBtn.textContent = escuro ? "☀️ Modo Claro" : "🌙 Modo Escuro";
+            temaBtn.setAttribute("aria-pressed", String(escuro));
+            temaBtn.setAttribute("title", escuro ? "Ativar modo claro" : "Ativar modo escuro");
+        }
+    };
+
+    aplicarTema(localStorage.getItem("tema") === "dark");
+
     if (temaBtn) {
         temaBtn.addEventListener("click", () => {
-            document.body.classList.toggle("dark-mode");
-            temaBtn.innerText = document.body.classList.contains("dark-mode") ? "☀️ Modo Claro" : "🌙 Modo Escuro";
+            const escuro = !document.body.classList.contains("dark");
+            aplicarTema(escuro);
+            localStorage.setItem("tema", escuro ? "dark" : "light");
         });
     }
 });

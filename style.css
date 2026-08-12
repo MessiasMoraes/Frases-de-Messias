@@ -666,3 +666,79 @@ button[onclick*="gerarVideo"]:disabled {
     content: "☀️";
   }
 }
+
+/* ============================
+   TEMA ESCURO — PÁGINA INICIAL
+============================ */
+body.dark {
+  background: #121826;
+  color: #f8fafc;
+}
+
+.dark .ia-gerador {
+  background: #172033 !important;
+  color: #f8fafc;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.24);
+}
+
+.dark .ia-gerador h2,
+.dark .hero h2,
+.dark .categorias h2,
+.dark .categoriasDestaque h2 {
+  color: #93c5fd;
+}
+
+.dark .ia-gerador p,
+.dark .ia-gerador label,
+.dark .hero,
+.dark .categorias,
+.dark .categoriasDestaque,
+.dark #listaFrases,
+.dark .semResultado {
+  color: #f8fafc;
+}
+
+.dark #pesquisa,
+.dark .ia-gerador input,
+.dark .ia-gerador textarea {
+  background: #202b3c !important;
+  color: #f8fafc !important;
+  border: 1px solid #475569 !important;
+}
+
+.dark #pesquisa::placeholder,
+.dark .ia-gerador input::placeholder,
+.dark .ia-gerador textarea::placeholder {
+  color: #cbd5e1;
+  opacity: 1;
+}
+
+.dark #resultadoIA {
+  color: #e2e8f0 !important;
+}
+
+.dark .imagemFrase {
+  background: #263247;
+}
+
+.dark .opcoesDownload.aberta {
+  background: #242424;
+  border-top-color: #444;
+  color: #fff;
+}
+
+.dark .opcoesDownload.aberta button:not([onclick*="gerarVideo"]) {
+  background: #2563eb;
+  color: #fff;
+}
+
+.dark .estatisticas {
+  background: #1e1e1e;
+}
+
+.dark .btn-categoria:focus-visible,
+.dark #pesquisa:focus-visible,
+.dark .ia-gerador input:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 2px;
+}

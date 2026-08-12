@@ -13,7 +13,7 @@
     <meta property="og:description" content="Tem alguma sugestão ou dúvida? Fale diretamente com o autor das Frases de Messias.">
     <meta property="og:image" content="https://messiasmoraes.github.io/Frases-de-Messias/imagens/1785461694182.png">
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=20260812-dark-home">
     <style>
         .contato-form {
             text-align: left;
@@ -128,25 +128,8 @@
 
 <button id="temaBtn">🌙 Modo Escuro</button>
 
-<script>
-    // Lógica do Modo Escuro
-    const temaBtn = document.getElementById("temaBtn");
-    
-    if (localStorage.getItem("tema") === "dark") {
-        document.body.classList.add("dark");
-        temaBtn.textContent = "☀️ Modo Claro";
-    }
-
-    temaBtn.addEventListener("click", () => {
-        document.body.classList.toggle("dark");
-        const isDark = document.body.classList.contains("dark");
-        localStorage.setItem("tema", isDark ? "dark" : "light");
-        temaBtn.textContent = isDark ? "☀️ Modo Claro" : "🌙 Modo Escuro";
-    });
-</script>
-
-<!-- Script do projeto carregado como módulo JavaScript para o contador global -->
-<script type="module" src="script.js"></script>
+<!-- Controle global de tema, contador e demais funcionalidades públicas -->
+<script type="module" src="script.js?v=20260812-dark-home"></script>
 
 </body>
 </html>
