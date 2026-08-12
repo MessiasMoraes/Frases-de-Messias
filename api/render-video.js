@@ -36,7 +36,8 @@ function checkRateLimit(req) {
 
 function normalizeText(value, fallback) {
   return String(value ?? fallback)
-    .replace(/[^\x20-\x7E\xA0-\xFF\u0100-\u017F\u0180-\u024F\u1E00-\u1EFF]/g, "") // Remove caracteres não-latinos/emojis que causam 'tofu'
+    .replace(/[\r\v\f\x00-\x1F\x7F-\x9F\u00AD\u200B-\u200F\u202A-\u202E]/g, "") // Remove CR, controles e invisíveis
+    .replace(/[^\x20-\x7E\u00A0-\u00FF]/g, "") // Apenas ASCII e Latin-1
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -141,9 +142,12 @@ module.exports = async function renderVideo(req, res) {
       persistent: false,
       networkPolicy: "allow-all",
     });
+    // Garante que o arquivo use apenas LF (\n) e nenhum CR (\r) que causa as caixinhas no FFmpeg
+    const cleanQuote = quoteText.replace(/\r/g, "");
+    const cleanAuthor = authorText.replace(/\r/g, "");
     await sandbox.writeFiles([
-      { path: "/tmp/quote.txt", content: Buffer.from(quoteText, "utf8") },
-      { path: "/tmp/author.txt", content: Buffer.from(authorText, "utf8") },
+      { path: "/tmp/quote.txt", content: Buffer.from(cleanQuote, "utf8") },
+      { path: "/tmp/author.txt", content: Buffer.from(cleanAuthor, "utf8") },
     ]);
     await runCommand(sandbox, "curl", ["-L", "--fail", "--max-time", "30", "--connect-timeout", "10", "-o", "/tmp/input.jpg", imageUrl], "Download da imagem");
 
