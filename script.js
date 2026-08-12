@@ -67,6 +67,12 @@ function normalizarUrlImagem(url = "") {
 // ainda estiver servido pelo GitHub Pages, onde a rota /api/image não existe.
 const ORIGEM_PROXY_IMAGEM = "https://frasesdemessiascombr.vercel.app";
 
+function origemApiVideo() {
+    return window.location.hostname.endsWith(".vercel.app")
+        ? window.location.origin
+        : ORIGEM_PROXY_IMAGEM;
+}
+
 function urlParaProxyImagem(url = "") {
     const valor = String(url || "").trim();
     if (!valor) return "";
@@ -586,6 +592,48 @@ function mostrarErroVideo(mensagem) {
     alert(`⚠️ ${texto}`);
 }
 
+function ehDispositivoApple() {
+    const agente = navigator.userAgent || "";
+    return /iPad|iPhone|iPod/.test(agente)
+        || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+}
+
+function iniciarDownloadBlob(blob, filename) {
+    const objetoUrl = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = objetoUrl;
+    link.download = filename;
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(objetoUrl), 60000);
+}
+
+function iniciarDownloadDireto(url, filename) {
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+}
+
+async function prepararArquivoMp4(url, filename) {
+    const resposta = await fetch(url, { cache: "no-store", mode: "cors" });
+    const tipo = resposta.headers.get("content-type") || "";
+    if (!resposta.ok || !tipo.toLowerCase().startsWith("video/")) {
+        throw new Error("O vídeo não pôde ser preparado para salvar.");
+    }
+    const blob = await resposta.blob();
+    if (!blob.size) throw new Error("O vídeo gerado está vazio.");
+    return {
+        blob,
+        arquivo: new File([blob], filename, { type: blob.type || "video/mp4" })
+    };
+}
+
 function mostrarMp4Gerado(url, downloadUrl, filename, formato) {
     const modal = document.createElement("div");
     modal.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;color:#fff;text-align:center;overflow:auto;";
@@ -601,26 +649,79 @@ function mostrarMp4Gerado(url, downloadUrl, filename, formato) {
     video.preload = "metadata";
     video.style.cssText = `max-width:100%;max-height:62vh;object-fit:contain;border-radius:10px;${formato === "feed" ? "aspect-ratio:1/1;" : "aspect-ratio:9/16;"}`;
 
-    const baixar = document.createElement("a");
-    // A URL normal é usada pelo player. A URL com ?download=1 devolve
-    // Content-Disposition: attachment no Vercel Blob, disparando o download real.
-    baixar.href = downloadUrl || `${url}?download=1`;
-    baixar.download = filename;
-    baixar.textContent = "⬇️ Baixar MP4";
-    baixar.style.cssText = "display:inline-block;margin-top:18px;padding:12px 24px;background:#2563eb;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;";
+    const baixar = document.createElement("button");
+    baixar.type = "button";
+    baixar.disabled = true;
+    baixar.textContent = "⏳ Preparando MP4...";
+    baixar.style.cssText = "display:inline-block;margin-top:18px;min-height:44px;padding:12px 24px;background:#2563eb;color:#fff;border:0;border-radius:8px;font-weight:bold;touch-action:manipulation;";
+
+    const situacao = document.createElement("p");
+    situacao.setAttribute("aria-live", "polite");
+    situacao.textContent = "Preparando o arquivo para salvar no seu celular...";
+    situacao.style.cssText = "font-size:13px;line-height:1.4;max-width:360px;margin:12px 0 0;";
 
     const ajuda = document.createElement("p");
-    ajuda.textContent = "No iPhone, se a tela de salvamento não abrir, toque em Compartilhar e escolha Salvar Vídeo ou Salvar em Arquivos.";
-    ajuda.style.cssText = "font-size:13px;line-height:1.4;max-width:360px;margin:14px 0;";
+    ajuda.textContent = ehDispositivoApple()
+        ? "No iPhone/iPad, toque em Salvar MP4 e escolha Salvar Vídeo ou Salvar em Arquivos na tela que abrir."
+        : "Toque em Baixar MP4. O arquivo será salvo na pasta Downloads do navegador.";
+    ajuda.style.cssText = "font-size:13px;line-height:1.4;max-width:360px;margin:8px 0 14px;";
 
     const fechar = document.createElement("button");
     fechar.type = "button";
     fechar.textContent = "Fechar";
-    fechar.style.cssText = "padding:10px 24px;background:#ef4444;color:#fff;border:0;border-radius:6px;font-weight:bold;";
+    fechar.style.cssText = "min-height:44px;padding:10px 24px;background:#ef4444;color:#fff;border:0;border-radius:6px;font-weight:bold;touch-action:manipulation;";
     fechar.onclick = () => modal.remove();
 
-    modal.append(titulo, video, baixar, ajuda, fechar);
+    modal.append(titulo, video, baixar, situacao, ajuda, fechar);
     document.body.appendChild(modal);
+
+    let arquivoPreparado = null;
+    const urlDireta = downloadUrl || `${url}?download=1`;
+    prepararArquivoMp4(url, filename)
+        .then((resultado) => {
+            arquivoPreparado = resultado;
+            baixar.disabled = false;
+            baixar.textContent = ehDispositivoApple() ? "⬇️ Salvar MP4" : "⬇️ Baixar MP4";
+            situacao.textContent = "Arquivo pronto para salvar.";
+        })
+        .catch((erro) => {
+            console.warn("Preparação local do MP4 indisponível:", erro);
+            baixar.disabled = false;
+            baixar.textContent = "⬇️ Baixar MP4";
+            situacao.textContent = "Use o download direto do arquivo.";
+        });
+
+    baixar.onclick = () => {
+        if (!arquivoPreparado) {
+            iniciarDownloadDireto(urlDireta, filename);
+            situacao.textContent = "O download foi iniciado. Verifique a pasta Downloads ou a tela de compartilhamento.";
+            return;
+        }
+
+        if (ehDispositivoApple() && navigator.share) {
+            const dadosCompartilhamento = {
+                title: "Vídeo — Frases de Messias",
+                text: "Escolha Salvar Vídeo ou Salvar em Arquivos.",
+                files: [arquivoPreparado.arquivo]
+            };
+            if (!navigator.canShare || navigator.canShare(dadosCompartilhamento)) {
+                navigator.share(dadosCompartilhamento)
+                    .then(() => { situacao.textContent = "Concluído. Confira Fotos ou Arquivos para localizar o MP4."; })
+                    .catch((erro) => {
+                        if (erro?.name === "AbortError") {
+                            situacao.textContent = "Salvamento cancelado.";
+                            return;
+                        }
+                        iniciarDownloadDireto(urlDireta, filename);
+                        situacao.textContent = "Abrimos o download direto. Escolha Salvar Vídeo ou Salvar em Arquivos.";
+                    });
+                return;
+            }
+        }
+
+        iniciarDownloadBlob(arquivoPreparado.blob, filename);
+        situacao.textContent = "Download iniciado. Verifique a pasta Downloads do navegador.";
+    };
 }
 
 window.gerarVideo = async function(botao, formato = "story") {
@@ -641,7 +742,7 @@ window.gerarVideo = async function(botao, formato = "story") {
     botao.disabled = true;
     botao.innerHTML = "⏳ Gerando MP4...";
     try {
-        const response = await fetch("/api/video", {
+        const response = await fetch(`${origemApiVideo()}/api/video`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ imageUrl, texto, autor, formato })
