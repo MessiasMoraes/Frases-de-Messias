@@ -63,18 +63,62 @@ function normalizarUrlImagem(url = "") {
     }
 }
 
-// Usa a função da Vercel para transformar imagens externas em recursos do mesmo domínio.
-// Isso evita que o html2canvas encontre uma imagem sem cabeçalho CORS ao gerar o PNG.
+// Proxy público estável na Vercel. Ele é usado também quando o domínio principal
+// ainda estiver servido pelo GitHub Pages, onde a rota /api/image não existe.
+const ORIGEM_PROXY_IMAGEM = "https://frasesdemessiascombr.vercel.app";
+
 function urlParaProxyImagem(url = "") {
     const valor = String(url || "").trim();
     if (!valor) return "";
     try {
         const origem = new URL(valor, window.location.href);
         if (origem.origin === window.location.origin) return origem.href;
-        if (origem.protocol !== "https:") return origem.href;
-        return `${window.location.origin}/api/image?url=${encodeURIComponent(origem.href)}`;
+        if (origem.protocol !== "https:") return "";
+
+        const proxyBase = window.location.hostname.endsWith(".vercel.app")
+            ? window.location.origin
+            : ORIGEM_PROXY_IMAGEM;
+        return `${proxyBase}/api/image?url=${encodeURIComponent(origem.href)}`;
     } catch (_) {
-        return valor;
+        return "";
+    }
+}
+
+async function carregarImagemParaCanvas(url) {
+    const resposta = await fetch(url, { cache: "no-store", mode: "cors" });
+    const tipo = resposta.headers.get("content-type") || "";
+    if (!resposta.ok || !tipo.toLowerCase().startsWith("image/")) {
+        throw new Error("A foto original não pôde ser carregada para o download.");
+    }
+
+    const blob = await resposta.blob();
+    if (!blob.size) throw new Error("A foto original retornou vazia.");
+
+    const objectUrl = URL.createObjectURL(blob);
+    const imagem = new Image();
+    imagem.decoding = "async";
+
+    try {
+        await new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => reject(new Error("Tempo esgotado ao carregar a foto original.")), 10000);
+            imagem.onload = () => {
+                clearTimeout(timeout);
+                resolve();
+            };
+            imagem.onerror = () => {
+                clearTimeout(timeout);
+                reject(new Error("A foto original não pôde ser decodificada."));
+            };
+            imagem.src = objectUrl;
+        });
+
+        if (!imagem.naturalWidth || !imagem.naturalHeight) {
+            throw new Error("A foto original não possui dimensões válidas.");
+        }
+        return { imagem, liberar: () => URL.revokeObjectURL(objectUrl) };
+    } catch (erro) {
+        URL.revokeObjectURL(objectUrl);
+        throw erro;
     }
 }
 
@@ -371,9 +415,8 @@ window.baixarImagem = async function(botao, formato = "story") {
     try {
         const imgElement = card.querySelector(".imagemFrase img");
         const imgUrlOriginal = imgElement ? (imgElement.currentSrc || imgElement.src) : "";
-        let imgSrc = normalizarUrlImagem(imgUrlOriginal);
         const imgSrcExportacao = urlParaProxyImagem(imgUrlOriginal);
-        if (!imgSrc || !imgSrcExportacao) throw new Error("A imagem da frase não foi encontrada.");
+        if (!imgSrcExportacao) throw new Error("A imagem da frase não foi encontrada.");
         const texto = card.querySelector(".textoFrase")?.innerText || "";
         const autor = card.querySelector(".autorFrase")?.innerText || "";
         const largura = 1080;
@@ -396,43 +439,24 @@ window.baixarImagem = async function(botao, formato = "story") {
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, largura, altura);
 
-        // Carrega imagem via proxy com timeout e desenho de capa (cover)
-        if (imgSrcExportacao) {
-            await new Promise((resolve) => {
-                const img = new Image();
-                img.crossOrigin = "anonymous";
-                let finished = false;
-                const done = () => {
-                    if (!finished) {
-                        finished = true;
-                        resolve();
-                    }
-                };
-                img.onload = () => {
-                    try {
-                        const imgRatio = img.width / img.height;
-                        const canvasRatio = largura / altura;
-                        let rw = largura, rh = altura, rx = 0, ry = 0;
-                        if (imgRatio > canvasRatio) {
-                            rw = altura * imgRatio;
-                            rx = (largura - rw) / 2;
-                        } else {
-                            rh = largura / imgRatio;
-                            ry = (altura - rh) / 2;
-                        }
-                        ctx.drawImage(img, rx, ry, rw, rh);
-                    } catch (err) {
-                        console.warn("Erro ao desenhar imagem no canvas:", err);
-                    }
-                    done();
-                };
-                img.onerror = () => {
-                    console.warn("Falha ao carregar imagem no canvas, usando apenas degradê.");
-                    done();
-                };
-                setTimeout(done, 3500);
-                img.src = imgSrcExportacao;
-            });
+        // Busca a foto como Blob e a desenha no Canvas somente após decodificação.
+        // Não gera PNG apenas com degradê quando a foto original estiver indisponível.
+        const recursoImagem = await carregarImagemParaCanvas(imgSrcExportacao);
+        try {
+            const img = recursoImagem.imagem;
+            const imgRatio = img.naturalWidth / img.naturalHeight;
+            const canvasRatio = largura / altura;
+            let rw = largura, rh = altura, rx = 0, ry = 0;
+            if (imgRatio > canvasRatio) {
+                rw = altura * imgRatio;
+                rx = (largura - rw) / 2;
+            } else {
+                rh = largura / imgRatio;
+                ry = (altura - rh) / 2;
+            }
+            ctx.drawImage(img, rx, ry, rw, rh);
+        } finally {
+            recursoImagem.liberar();
         }
 
         // Camada escura de leitura (overlay)
@@ -521,7 +545,7 @@ window.baixarImagem = async function(botao, formato = "story") {
         const textoCard = card.querySelector(".textoFrase")?.innerText || "";
         if (textoCard) {
             await navigator.clipboard.writeText(textoCard);
-            alert("⚠️ Não foi possível gerar a imagem, mas o texto foi copiado!");
+            alert(`⚠️ ${e.message || "Não foi possível carregar a foto original para gerar a imagem."} Tente novamente em instantes.`);
         } else {
             alert("Erro ao gerar a imagem. Verifique se incluiu a biblioteca html2canvas.");
         }
