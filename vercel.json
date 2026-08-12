@@ -3,6 +3,9 @@
   "functions": {
     "api/video.js": {
       "maxDuration": 300
+    },
+    "api/image.js": {
+      "maxDuration": 15
     }
   },
   "rewrites": [
@@ -13,6 +16,10 @@
     {
       "source": "/api/video",
       "destination": "/api/video.js"
+    },
+    {
+      "source": "/api/image",
+      "destination": "/api/image.js"
     }
   ]
 }
