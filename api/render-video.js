@@ -36,7 +36,8 @@ function checkRateLimit(req) {
 
 function normalizeText(value, fallback) {
   return String(value ?? fallback)
-    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "")
+    .replace(/[^\x20-\x7E\xA0-\xFF\u0100-\u017F\u0180-\u024F\u1E00-\u1EFF]/g, "") // Remove caracteres não-latinos/emojis que causam 'tofu'
+    .replace(/\s+/g, " ")
     .trim();
 }
 
