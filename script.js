@@ -46,7 +46,7 @@ function normalizarParaBusca(texto) {
 }
 
 // Converte imagens antigas do GitHub Pages para o mesmo domínio atual.
-// Assim o html2canvas consegue ler a imagem sem bloqueio de CORS.
+// O carregamento normal dos cards continua direto; a exportação usa o proxy abaixo.
 function normalizarUrlImagem(url = "") {
     const valor = String(url || "").trim();
     if (!valor) return "";
@@ -58,6 +58,21 @@ function normalizarUrlImagem(url = "") {
             origem.host = window.location.host;
         }
         return origem.href;
+    } catch (_) {
+        return valor;
+    }
+}
+
+// Usa a função da Vercel para transformar imagens externas em recursos do mesmo domínio.
+// Isso evita que o html2canvas encontre uma imagem sem cabeçalho CORS ao gerar o PNG.
+function urlParaProxyImagem(url = "") {
+    const valor = String(url || "").trim();
+    if (!valor) return "";
+    try {
+        const origem = new URL(valor, window.location.href);
+        if (origem.origin === window.location.origin) return origem.href;
+        if (origem.protocol !== "https:") return origem.href;
+        return `${window.location.origin}/api/image?url=${encodeURIComponent(origem.href)}`;
     } catch (_) {
         return valor;
     }
@@ -355,8 +370,10 @@ window.baixarImagem = async function(botao, formato = "story") {
 
     try {
         const imgElement = card.querySelector(".imagemFrase img");
-        let imgSrc = normalizarUrlImagem(imgElement ? (imgElement.currentSrc || imgElement.src) : "");
-        if (!imgSrc) throw new Error("A imagem da frase não foi encontrada.");
+        const imgUrlOriginal = imgElement ? (imgElement.currentSrc || imgElement.src) : "";
+        let imgSrc = normalizarUrlImagem(imgUrlOriginal);
+        const imgSrcExportacao = urlParaProxyImagem(imgUrlOriginal);
+        if (!imgSrc || !imgSrcExportacao) throw new Error("A imagem da frase não foi encontrada.");
         const texto = card.querySelector(".textoFrase")?.innerText || "";
         const autor = card.querySelector(".autorFrase")?.innerText || "";
         const largura = 1080;
@@ -369,7 +386,7 @@ window.baixarImagem = async function(botao, formato = "story") {
         exportacao.style.cssText = `position:fixed;left:-9999px;top:0;width:${largura}px;height:${altura}px;overflow:hidden;background:#111;font-family:Arial,sans-serif;z-index:-9999;`;
         exportacao.innerHTML = `
             <div style="position:absolute;inset:0;background:linear-gradient(135deg, #1e1b4b 0%, #31103f 50%, #0f172a 100%);"></div>
-            <img src="${imgSrc}" crossorigin="anonymous" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+            <img src="${imgSrcExportacao}" crossorigin="anonymous" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
             <div style="position:absolute;inset:0;background:rgba(0,0,0,0.55);"></div>
             <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:70px;text-align:center;color:white;">
                 <div style="font-size:${tamanhoFonteTexto};font-weight:bold;line-height:1.4;text-shadow:0 2px 10px rgba(0,0,0,0.8);">${texto}</div>
