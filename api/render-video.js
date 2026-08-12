@@ -156,9 +156,9 @@ module.exports = async function renderVideo(req, res) {
       `crop=${Math.round(width * 1.08)}:${Math.round(height * 1.08)}`,
       `zoompan=z='min(zoom+0.00035,1.08)':d=${RENDER_SECONDS * FPS}:s=${width}x${height}:fps=${FPS}`,
       "drawbox=x=0:y=0:w=iw:h=ih:color=black@0.43:t=fill",
-      `drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:textfile=/tmp/quote.txt:fontcolor=white:fontsize=${quoteSize}:line_spacing=16:text_align=center:x=(w-text_w)/2:y=(h-text_h)/2-80:shadowcolor=black@0.65:shadowx=2:shadowy=2`,
-      `drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf:textfile=/tmp/author.txt:fontcolor=white:fontsize=${authorSize}:line_spacing=10:text_align=center:x=(w-text_w)/2:y=(h*0.68):shadowcolor=black@0.65:shadowx=2:shadowy=2`,
-      "drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf:text='Frases de Messias':fontcolor=white@0.9:fontsize=30:x=(w-text_w)/2:y=h-75:shadowcolor=black@0.6:shadowx=2:shadowy=2",
+      `drawtext=fontfile=/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf:textfile=/tmp/quote.txt:fontcolor=white:fontsize=${quoteSize}:line_spacing=16:text_align=center:x=(w-text_w)/2:y=(h-text_h)/2-80:shadowcolor=black@0.65:shadowx=2:shadowy=2`,
+      `drawtext=fontfile=/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf:textfile=/tmp/author.txt:fontcolor=white:fontsize=${authorSize}:line_spacing=10:text_align=center:x=(w-text_w)/2:y=(h*0.68):shadowcolor=black@0.65:shadowx=2:shadowy=2`,
+      "drawtext=fontfile=/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf:text='Frases de Messias':fontcolor=white@0.9:fontsize=30:x=(w-text_w)/2:y=h-75:shadowcolor=black@0.6:shadowx=2:shadowy=2",
       "fade=t=in:st=0:d=0.5",
       `fade=t=out:st=${RENDER_SECONDS - 1}:d=1`,
     ].join(",");
