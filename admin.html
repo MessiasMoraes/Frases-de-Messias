@@ -7,7 +7,7 @@
 
 <title>Painel Administrativo - Frases de Messias</title>
 
-<link rel="stylesheet" href="admin.css?v=20260812-admin-categoria-contraste">
+<link rel="stylesheet" href="admin.css?v=20260812-seletor-categoria-proprio">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 </head>
@@ -204,6 +204,25 @@ class="form-input">
 
 </div>
 
+<!-- SELETOR PRÓPRIO DE CATEGORIAS -->
+<div id="seletorCategoriaModal" class="seletor-categoria-modal" aria-hidden="true">
+
+<div class="seletor-categoria-caixa" role="dialog" aria-modal="true" aria-labelledby="seletorCategoriaTitulo">
+
+<div class="seletor-categoria-cabecalho">
+
+<h2 id="seletorCategoriaTitulo">Selecione uma categoria</h2>
+
+<button id="fecharSeletorCategoria" class="btn-fechar-seletor" type="button" aria-label="Fechar seletor de categorias">×</button>
+
+</div>
+
+<div id="opcoesSeletorCategoria" class="opcoes-seletor-categoria" role="listbox"></div>
+
+</div>
+
+</div>
+
 <!-- MODAL -->
 
 <div id="modalEditar" class="modal">
@@ -295,7 +314,7 @@ class="form-input">
 
 </div>
 
-<script type="module" src="admin.js"></script>
+<script type="module" src="admin.js?v=20260812-seletor-categoria-proprio"></script>
 
 </body>
 </html>

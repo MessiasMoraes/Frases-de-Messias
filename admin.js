@@ -88,6 +88,102 @@ const previewImg = document.getElementById("previewImg");
 const previewTexto = document.getElementById("previewTexto");
 const previewAutor = document.getElementById("previewAutor");
 
+// SELETOR DE CATEGORIAS PRÓPRIO
+const seletorCategoriaModal = document.getElementById("seletorCategoriaModal");
+const seletorCategoriaTitulo = document.getElementById("seletorCategoriaTitulo");
+const opcoesSeletorCategoria = document.getElementById("opcoesSeletorCategoria");
+const fecharSeletorCategoria = document.getElementById("fecharSeletorCategoria");
+const selectsCategoria = [categoria, editCategoria, iaCategoria, filtroCategoria];
+let selectCategoriaAtivo = null;
+
+function textoDoSelect(select) {
+    const opcaoSelecionada = select.options[select.selectedIndex];
+    return opcaoSelecionada?.textContent || "Selecione uma categoria";
+}
+
+function atualizarBotaoCategoria(select) {
+    const botao = document.getElementById(`botao-${select.id}`);
+    if (!botao) return;
+
+    botao.textContent = textoDoSelect(select);
+    botao.setAttribute("aria-label", `Categoria selecionada: ${textoDoSelect(select)}`);
+}
+
+function fecharListaCategoria() {
+    seletorCategoriaModal.classList.remove("ativo");
+    seletorCategoriaModal.setAttribute("aria-hidden", "true");
+
+    if (selectCategoriaAtivo) {
+        document.getElementById(`botao-${selectCategoriaAtivo.id}`)?.setAttribute("aria-expanded", "false");
+    }
+
+    selectCategoriaAtivo = null;
+}
+
+function abrirListaCategoria(select) {
+    selectCategoriaAtivo = select;
+    const eFiltro = select.id === "filtroCategoria";
+    seletorCategoriaTitulo.textContent = eFiltro ? "Filtrar por categoria" : "Selecione uma categoria";
+    opcoesSeletorCategoria.innerHTML = "";
+
+    Array.from(select.options).forEach((opcao) => {
+        const botaoOpcao = document.createElement("button");
+        botaoOpcao.type = "button";
+        botaoOpcao.className = "opcao-seletor-categoria";
+        botaoOpcao.textContent = opcao.textContent;
+        botaoOpcao.setAttribute("role", "option");
+        botaoOpcao.setAttribute("aria-selected", String(opcao.selected));
+
+        if (opcao.selected) botaoOpcao.classList.add("selecionada");
+
+        botaoOpcao.addEventListener("click", () => {
+            select.value = opcao.value;
+            select.dispatchEvent(new Event("change", { bubbles: true }));
+            atualizarBotaoCategoria(select);
+            fecharListaCategoria();
+        });
+
+        opcoesSeletorCategoria.appendChild(botaoOpcao);
+    });
+
+    seletorCategoriaModal.classList.add("ativo");
+    seletorCategoriaModal.setAttribute("aria-hidden", "false");
+    document.getElementById(`botao-${select.id}`)?.setAttribute("aria-expanded", "true");
+}
+
+function prepararSelecionadoresCategoria() {
+    selectsCategoria.forEach((select) => {
+        if (!select) return;
+
+        let botao = document.getElementById(`botao-${select.id}`);
+        if (!botao) {
+            botao = document.createElement("button");
+            botao.type = "button";
+            botao.id = `botao-${select.id}`;
+            botao.className = "botao-seletor-categoria";
+            botao.setAttribute("aria-haspopup", "listbox");
+            botao.setAttribute("aria-expanded", "false");
+            select.insertAdjacentElement("afterend", botao);
+            select.hidden = true;
+
+            botao.addEventListener("click", () => abrirListaCategoria(select));
+            select.addEventListener("change", () => atualizarBotaoCategoria(select));
+        }
+
+        atualizarBotaoCategoria(select);
+    });
+}
+
+fecharSeletorCategoria.addEventListener("click", fecharListaCategoria);
+seletorCategoriaModal.addEventListener("click", (event) => {
+    if (event.target === seletorCategoriaModal) fecharListaCategoria();
+});
+document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && seletorCategoriaModal.classList.contains("ativo")) {
+        fecharListaCategoria();
+    }
+});
+
 // ==========================
 // LOGIN
 // ==========================
@@ -205,6 +301,8 @@ async function carregarCategorias() {
             opt4.textContent = cat.nome;
             filtroCategoria.appendChild(opt4);
         });
+
+        prepararSelecionadoresCategoria();
 
     } catch (erro) {
 
@@ -383,6 +481,7 @@ btnGerarIA.addEventListener("click", async () => {
         btnUsarIA.onclick = () => {
             texto.value = frase;
             categoria.value = cat || "";
+            atualizarBotaoCategoria(categoria);
             modalIA.style.display = "none";
             iaResultado.style.display = "none";
             atualizarPreview();
@@ -446,6 +545,7 @@ btnSalvar.addEventListener("click", async () => {
 
         autor.value = "";
         categoria.selectedIndex = 0;
+        atualizarBotaoCategoria(categoria);
         texto.value = "";
         imagem.value = "";
 
@@ -556,6 +656,7 @@ function mostrarLista(lista) {
             editId.value = f.id;
             editAutor.value = f.autor || "";
             editCategoria.value = f.categoria || "";
+            atualizarBotaoCategoria(editCategoria);
             editTexto.value = f.texto;
 
             modalEditar.style.display = "flex";
