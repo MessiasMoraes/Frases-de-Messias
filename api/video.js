@@ -182,7 +182,9 @@ module.exports = async function renderVideo(req, res) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     sendJson(res, 200, {
       ok: true,
+      // A URL padrão permite a prévia no player; downloadUrl força attachment no Blob.
       url: blob.url,
+      downloadUrl: blob.downloadUrl || `${blob.url}?download=1`,
       formato,
       filename: `frases-de-messias-${formato}.mp4`,
     });

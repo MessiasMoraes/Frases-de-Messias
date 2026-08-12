@@ -586,7 +586,7 @@ function mostrarErroVideo(mensagem) {
     alert(`⚠️ ${texto}`);
 }
 
-function mostrarMp4Gerado(url, filename, formato) {
+function mostrarMp4Gerado(url, downloadUrl, filename, formato) {
     const modal = document.createElement("div");
     modal.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;color:#fff;text-align:center;overflow:auto;";
 
@@ -602,15 +602,15 @@ function mostrarMp4Gerado(url, filename, formato) {
     video.style.cssText = `max-width:100%;max-height:62vh;object-fit:contain;border-radius:10px;${formato === "feed" ? "aspect-ratio:1/1;" : "aspect-ratio:9/16;"}`;
 
     const baixar = document.createElement("a");
-    baixar.href = url;
+    // A URL normal é usada pelo player. A URL com ?download=1 devolve
+    // Content-Disposition: attachment no Vercel Blob, disparando o download real.
+    baixar.href = downloadUrl || `${url}?download=1`;
     baixar.download = filename;
-    baixar.target = "_blank";
-    baixar.rel = "noopener";
     baixar.textContent = "⬇️ Baixar MP4";
     baixar.style.cssText = "display:inline-block;margin-top:18px;padding:12px 24px;background:#2563eb;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;";
 
     const ajuda = document.createElement("p");
-    ajuda.textContent = "Se o iPhone abrir o vídeo em vez de salvar, toque em Compartilhar e escolha Salvar em Arquivos ou Salvar Vídeo.";
+    ajuda.textContent = "No iPhone, se a tela de salvamento não abrir, toque em Compartilhar e escolha Salvar Vídeo ou Salvar em Arquivos.";
     ajuda.style.cssText = "font-size:13px;line-height:1.4;max-width:360px;margin:14px 0;";
 
     const fechar = document.createElement("button");
@@ -650,7 +650,12 @@ window.gerarVideo = async function(botao, formato = "story") {
         if (!response.ok || !data.ok || !data.url) {
             throw new Error(data.error || `Falha HTTP ${response.status}.`);
         }
-        mostrarMp4Gerado(data.url, data.filename || `frases-de-messias-${formato}.mp4`, formato);
+        mostrarMp4Gerado(
+            data.url,
+            data.downloadUrl || `${data.url}?download=1`,
+            data.filename || `frases-de-messias-${formato}.mp4`,
+            formato
+        );
     } catch (error) {
         console.error("Erro ao gerar MP4:", error);
         mostrarErroVideo(error.message);
