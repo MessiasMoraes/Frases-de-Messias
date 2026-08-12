@@ -464,7 +464,7 @@ window.gerarVideo = async function(botao, formato = "story") {
     botao.disabled = true;
     botao.innerHTML = "⏳ Gerando MP4...";
     try {
-        const response = await fetch("/api/render-video", {
+        const response = await fetch("/api/video", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ imageUrl, texto, autor, formato })
