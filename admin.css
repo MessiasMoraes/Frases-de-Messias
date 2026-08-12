@@ -307,15 +307,17 @@ color:#fff;
 border:1px solid #555;
 }
 
-/* Garante que as opções do select sejam legíveis em qualquer tema */
-select option {
-background-color: #fff;
-color: #222;
+/* Em Android/Instagram, o menu de select é nativo e pode manter fundo claro
+   mesmo no tema escuro. Forçamos as opções com aparência clara e texto escuro
+   para que os nomes nunca fiquem invisíveis no painel. */
+select {
+color-scheme: light;
 }
 
+select option,
 .dark select option {
-background-color: #2b2b2b;
-color: #fff;
+background-color: #fff !important;
+color: #1f2937 !important;
 }
 
 .dark .preview-card {
