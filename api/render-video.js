@@ -91,9 +91,13 @@ module.exports = async function renderVideo(req, res) {
       .end();
     return;
   }
+  if (req.method === "GET") {
+    sendJson(res, 200, { ok: true, message: "Endpoint de renderização de vídeo online. Envie um POST com { imageUrl, texto, autor, formato }." });
+    return;
+  }
   if (req.method !== "POST") {
-    res.setHeader("Allow", "POST, OPTIONS");
-    sendJson(res, 405, { error: "Método não permitido." });
+    res.setHeader("Allow", "GET, POST, OPTIONS");
+    sendJson(res, 405, { error: "Método não permitido. Use POST para gerar o vídeo." });
     return;
   }
   if (!checkRateLimit(req)) {
