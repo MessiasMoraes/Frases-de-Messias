@@ -598,6 +598,35 @@ function ehDispositivoApple() {
         || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 }
 
+function ehNavegadorInstagram() {
+    return /Instagram/i.test(navigator.userAgent || "");
+}
+
+function abrirDownloadNoNavegadorExterno(url) {
+    let destino;
+    try {
+        destino = new URL(url, window.location.href).href;
+    } catch (_) {
+        destino = url;
+    }
+
+    // O navegador interno do Instagram pode bloquear downloads de Blob. No Android,
+    // a intenção VIEW solicita que o sistema abra o arquivo no navegador instalado.
+    if (/Android/i.test(navigator.userAgent || "")) {
+        const destinoSemProtocolo = destino.replace(/^https?:\/\//i, "");
+        window.location.href = `intent://${destinoSemProtocolo}#Intent;scheme=https;action=android.intent.action.VIEW;end`;
+        return;
+    }
+
+    const link = document.createElement("a");
+    link.href = destino;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+}
+
 function iniciarDownloadBlob(blob, filename) {
     const objetoUrl = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -660,10 +689,13 @@ function mostrarMp4Gerado(url, downloadUrl, filename, formato) {
     situacao.textContent = "Preparando o arquivo para salvar no seu celular...";
     situacao.style.cssText = "font-size:13px;line-height:1.4;max-width:360px;margin:12px 0 0;";
 
+    const noInstagram = ehNavegadorInstagram();
     const ajuda = document.createElement("p");
-    ajuda.textContent = ehDispositivoApple()
-        ? "No iPhone/iPad, toque em Salvar MP4 e escolha Salvar Vídeo ou Salvar em Arquivos na tela que abrir."
-        : "Toque em Baixar MP4. O arquivo será salvo na pasta Downloads do navegador.";
+    ajuda.textContent = noInstagram
+        ? "O navegador do Instagram não permite salvar este MP4 diretamente. Toque no botão para abrir no navegador do celular e concluir o download."
+        : ehDispositivoApple()
+            ? "No iPhone/iPad, toque em Salvar MP4 e escolha Salvar Vídeo ou Salvar em Arquivos na tela que abrir."
+            : "Toque em Baixar MP4. O arquivo será salvo na pasta Downloads do navegador.";
     ajuda.style.cssText = "font-size:13px;line-height:1.4;max-width:360px;margin:8px 0 14px;";
 
     const fechar = document.createElement("button");
@@ -681,17 +713,29 @@ function mostrarMp4Gerado(url, downloadUrl, filename, formato) {
         .then((resultado) => {
             arquivoPreparado = resultado;
             baixar.disabled = false;
-            baixar.textContent = ehDispositivoApple() ? "⬇️ Salvar MP4" : "⬇️ Baixar MP4";
-            situacao.textContent = "Arquivo pronto para salvar.";
+            baixar.textContent = noInstagram
+                ? "🌐 Abrir no navegador e baixar MP4"
+                : ehDispositivoApple() ? "⬇️ Salvar MP4" : "⬇️ Baixar MP4";
+            situacao.textContent = noInstagram
+                ? "Arquivo pronto. Abra no navegador do celular para fazer o download."
+                : "Arquivo pronto para salvar.";
         })
         .catch((erro) => {
             console.warn("Preparação local do MP4 indisponível:", erro);
             baixar.disabled = false;
-            baixar.textContent = "⬇️ Baixar MP4";
-            situacao.textContent = "Use o download direto do arquivo.";
+            baixar.textContent = noInstagram ? "🌐 Abrir no navegador e baixar MP4" : "⬇️ Baixar MP4";
+            situacao.textContent = noInstagram
+                ? "Abra no navegador do celular para fazer o download."
+                : "Use o download direto do arquivo.";
         });
 
     baixar.onclick = () => {
+        if (noInstagram) {
+            abrirDownloadNoNavegadorExterno(urlDireta);
+            situacao.textContent = "Abrindo no navegador do celular. Confirme o download na próxima tela.";
+            return;
+        }
+
         if (!arquivoPreparado) {
             iniciarDownloadDireto(urlDireta, filename);
             situacao.textContent = "O download foi iniciado. Verifique a pasta Downloads ou a tela de compartilhamento.";
