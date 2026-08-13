@@ -13,8 +13,13 @@ import android.webkit.WebView;
 
 import com.getcapacitor.BridgeActivity;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 public class MainActivity extends BridgeActivity {
     private static final int PEDIDO_PERMISSAO_ARMAZENAMENTO = 4102;
+    private static final String URL_PORTAL_ATUAL = "https://frasesdemessias.com.br/index.html";
+    private static final int TEMPO_CONEXAO_MS = 4500;
     private String urlPendente;
     private String nomeArquivoPendente;
 
@@ -24,6 +29,50 @@ public class MainActivity extends BridgeActivity {
 
         WebView webView = getBridge().getWebView();
         webView.addJavascriptInterface(new AndroidDownloader(this), "AndroidDownloader");
+
+        // O Capacitor abre primeiro a versão incorporada ao APK. Em segundo plano,
+        // procuramos a página pública atual e só a carregamos se ela estiver acessível.
+        // Assim, o aplicativo permanece utilizável mesmo sem conexão com a internet.
+        carregarPortalAtualizadoSeDisponivel();
+    }
+
+    private void carregarPortalAtualizadoSeDisponivel() {
+        new Thread(() -> {
+            HttpURLConnection conexao = null;
+            try {
+                String urlComAtualizacao = URL_PORTAL_ATUAL
+                        + "?origem=apk&atualizado=" + System.currentTimeMillis();
+                conexao = (HttpURLConnection) new URL(urlComAtualizacao).openConnection();
+                conexao.setRequestMethod("HEAD");
+                conexao.setConnectTimeout(TEMPO_CONEXAO_MS);
+                conexao.setReadTimeout(TEMPO_CONEXAO_MS);
+                conexao.setUseCaches(false);
+                conexao.setRequestProperty("Cache-Control", "no-cache");
+                conexao.setRequestProperty("User-Agent", "FrasesDeMessiasAndroid");
+
+                int codigoResposta = conexao.getResponseCode();
+                if (codigoResposta >= HttpURLConnection.HTTP_OK && codigoResposta < HttpURLConnection.HTTP_BAD_REQUEST) {
+                    final String paginaAtualizada = urlComAtualizacao;
+                    runOnUiThread(() -> carregarPaginaRemotaSeAindaNoInicio(paginaAtualizada));
+                }
+            } catch (Exception ignored) {
+                // Falha de rede: mantém a página local já aberta pelo Capacitor.
+            } finally {
+                if (conexao != null) conexao.disconnect();
+            }
+        }, "verificar-atualizacao-portal").start();
+    }
+
+    private void carregarPaginaRemotaSeAindaNoInicio(String paginaAtualizada) {
+        WebView webView = getBridge().getWebView();
+        String paginaExibida = webView.getUrl();
+
+        // Não interrompe o usuário se ele já tiver navegado para outra tela do aplicativo.
+        if (paginaExibida == null
+                || paginaExibida.contains("localhost")
+                || paginaExibida.startsWith("file:///android_asset")) {
+            webView.loadUrl(paginaAtualizada);
+        }
     }
 
     /**
