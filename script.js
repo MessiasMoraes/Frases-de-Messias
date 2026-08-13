@@ -978,19 +978,20 @@ function configurarAvisoApk() {
     const fecharAviso = () => {
         aviso.hidden = true;
         document.body.classList.remove("aviso-apk-ativo");
-        sessionStorage.setItem("avisoApkDispensado", "1");
+        localStorage.setItem("avisoApkDispensado", "1");
     };
 
-    // O aviso aparece ao acessar uma nova sessão, mas não bloqueia a navegação após o visitante escolher continuar.
-    if (sessionStorage.getItem("avisoApkDispensado") !== "1") {
+    // Exibe o aviso apenas na primeira visita deste navegador. Depois da escolha,
+    // a preferência permanece salva sem impedir a navegação no portal.
+    if (localStorage.getItem("avisoApkDispensado") !== "1") {
         aviso.hidden = false;
         document.body.classList.add("aviso-apk-ativo");
     }
 
     continuar.addEventListener("click", fecharAviso);
     baixar.addEventListener("click", () => {
-        // Registra a escolha para não reabrir o aviso se a pessoa retornar ao site na mesma sessão.
-        sessionStorage.setItem("avisoApkDispensado", "1");
+        // Registra a escolha para não reabrir o aviso nas próximas visitas deste navegador.
+        localStorage.setItem("avisoApkDispensado", "1");
     });
 }
 
