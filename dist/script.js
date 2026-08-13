@@ -670,7 +670,7 @@ async function prepararArquivoMp4(url, filename) {
     };
 }
 
-function mostrarMp4Gerado(url, downloadUrl, filename, formato) {
+function mostrarMp4Gerado(url, downloadUrl, filename, formato, dadosCapa = {}) {
     const modal = document.createElement("div");
     modal.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;color:#fff;text-align:center;overflow:auto;";
 
@@ -678,12 +678,46 @@ function mostrarMp4Gerado(url, downloadUrl, filename, formato) {
     titulo.textContent = `✅ Vídeo MP4 ${formato === "feed" ? "Feed" : "Story"} pronto!`;
     titulo.style.cssText = "font-weight:bold;font-size:18px;margin:0 0 14px;";
 
+    const areaVideo = document.createElement("div");
+    areaVideo.style.cssText = `position:relative;width:min(100%,360px);max-height:62vh;overflow:hidden;border-radius:10px;background:#111;${formato === "feed" ? "aspect-ratio:1/1;" : "aspect-ratio:9/16;"}`;
+
     const video = document.createElement("video");
     video.src = url;
     video.controls = true;
     video.playsInline = true;
     video.preload = "metadata";
-    video.style.cssText = `max-width:100%;max-height:62vh;object-fit:contain;border-radius:10px;${formato === "feed" ? "aspect-ratio:1/1;" : "aspect-ratio:9/16;"}`;
+    video.poster = dadosCapa.imagem || "";
+    video.style.cssText = "width:100%;height:100%;object-fit:contain;display:block;background:#111;";
+
+    // A capa evita que navegadores Android exibam o ícone genérico enquanto o MP4 carrega.
+    const capa = document.createElement("button");
+    capa.type = "button";
+    capa.setAttribute("aria-label", "Reproduzir prévia do vídeo");
+    capa.style.cssText = "position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:10px;padding:24px 18px;border:0;color:#fff;text-align:center;cursor:pointer;background:linear-gradient(180deg,rgba(0,0,0,.08) 0%,rgba(0,0,0,.32) 38%,rgba(0,0,0,.92) 100%);font-family:inherit;transition:opacity .2s ease;";
+
+    const textoCapa = document.createElement("span");
+    textoCapa.textContent = dadosCapa.texto || "Sua frase em vídeo está pronta";
+    textoCapa.style.cssText = "display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden;max-width:100%;font-size:clamp(17px,4.8vw,23px);line-height:1.28;font-weight:700;text-shadow:0 2px 6px rgba(0,0,0,.85);";
+
+    const autorCapa = document.createElement("span");
+    autorCapa.textContent = dadosCapa.autor || "Frases de Messias";
+    autorCapa.style.cssText = "font-size:13px;font-weight:600;opacity:.94;text-shadow:0 1px 4px rgba(0,0,0,.85);";
+
+    const reproduzirCapa = document.createElement("span");
+    reproduzirCapa.textContent = "▶ Toque para assistir";
+    reproduzirCapa.style.cssText = "margin-top:3px;padding:10px 16px;border-radius:999px;background:rgba(37,99,235,.94);font-size:14px;font-weight:700;box-shadow:0 3px 12px rgba(0,0,0,.35);";
+
+    capa.append(textoCapa, autorCapa, reproduzirCapa);
+    capa.onclick = () => {
+        video.play().catch(() => { /* O controle nativo continua disponível se a reprodução for bloqueada. */ });
+    };
+    video.addEventListener("playing", () => {
+        capa.style.opacity = "0";
+        capa.style.pointerEvents = "none";
+        window.setTimeout(() => capa.remove(), 220);
+    }, { once: true });
+
+    areaVideo.append(video, capa);
 
     const baixar = document.createElement("button");
     baixar.type = "button";
@@ -711,7 +745,7 @@ function mostrarMp4Gerado(url, downloadUrl, filename, formato) {
     fechar.style.cssText = "min-height:44px;padding:10px 24px;background:#ef4444;color:#fff;border:0;border-radius:6px;font-weight:bold;touch-action:manipulation;";
     fechar.onclick = () => modal.remove();
 
-    modal.append(titulo, video, baixar, situacao, ajuda, fechar);
+    modal.append(titulo, areaVideo, baixar, situacao, ajuda, fechar);
     document.body.appendChild(modal);
 
     let arquivoPreparado = null;
@@ -806,7 +840,8 @@ window.gerarVideo = async function(botao, formato = "story") {
             data.url,
             data.downloadUrl || `${data.url}?download=1`,
             nomeArquivoMp4Unico(data.filename, formato),
-            formato
+            formato,
+            { imagem: imageUrl, texto, autor }
         );
     } catch (error) {
         console.error("Erro ao gerar MP4:", error);
