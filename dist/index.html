@@ -25,7 +25,7 @@
   <meta name="theme-color" content="#4A90E2">
 
   <!-- Vínculo do CSS com forçador de atualização de cache -->
-  <link rel="stylesheet" href="./style.css?v=20260812-aviso-apk">
+  <link rel="stylesheet" href="./style.css?v=20260813-busca-autor-v1">
 
   <!-- Biblioteca html2canvas para permitir baixar os cards como imagem -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -70,7 +70,7 @@
       <p class="aviso-apk-selo">APP ANDROID DISPONÍVEL</p>
       <h2 id="avisoApkTitulo">Leve as Frases de Messias com você</h2>
       <p>Baixe o aplicativo gratuito para acessar frases inspiradoras de forma rápida no seu celular.</p>
-      <a id="baixarApkBtn" class="btn-baixar-apk" href="Frases_de_Messias.apk?v=1.6" download="Frases-de-Messias-v1.6.apk" type="application/vnd.android.package-archive">
+      <a id="baixarApkBtn" class="btn-baixar-apk" href="Frases_de_Messias.apk?v=1.7" download="Frases-de-Messias-v1.7.apk" type="application/vnd.android.package-archive">
         📥 Baixar aplicativo APK
       </a>
       <p class="aviso-apk-detalhe">Para celulares Android · Arquivo de aproximadamente 22 MB</p>
@@ -89,11 +89,21 @@
       <a href="contato.html">📞 Contato</a>
     </nav>
 
-    <input
-      type="search"
-      id="pesquisa"
-      placeholder="Pesquisar frases..."
-    >
+    <div class="filtros-pesquisa" role="search" aria-label="Pesquisar frases">
+      <label class="sr-only" for="pesquisa">Pesquisar frases</label>
+      <input
+        type="search"
+        id="pesquisa"
+        placeholder="🔎 Pesquisar frases, temas ou categorias..."
+      >
+      <label class="sr-only" for="pesquisaAutor">Pesquisar por autor</label>
+      <input
+        type="search"
+        id="pesquisaAutor"
+        placeholder="✍️ Buscar por autor..."
+        autocomplete="off"
+      >
+    </div>
   </div>
 </header>
 <!-- Gerador com Inteligência Artificial -->
@@ -175,7 +185,7 @@
   </div>
 
   <!-- Script do projeto carregado como módulo JavaScript -->
-  <script type="module" src="script.js?v=20260813-filtro-categorias-v1.6"></script>
+  <script type="module" src="script.js?v=20260813-busca-autor-v1"></script>
   
   </body>
 </html>

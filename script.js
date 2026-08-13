@@ -11,6 +11,7 @@ import {
 let frases = [];
 let categorias = {};
 let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+let categoriaSelecionada = "";
 
 // ======================
 // FUNÇÕES AUXILIARES
@@ -222,20 +223,43 @@ async function carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa
 // ======================
 // MOSTRAR FRASES
 // ======================
+function filtrosAtuais() {
+    return {
+        texto: document.getElementById("pesquisa")?.value || "",
+        autor: document.getElementById("pesquisaAutor")?.value || "",
+        categoria: categoriaSelecionada
+    };
+}
+
+function atualizarListaComFiltros() {
+    mostrarFrases(document.getElementById("listaFrases"), filtrosAtuais());
+}
+
 function mostrarFrases(lista, filtro = "") {
     if (!lista) return;
     lista.innerHTML = "";
-    
-    const filtroLimpo = normalizarCategoria(filtro);
+
+    // Mantém compatibilidade com chamadas antigas que enviavam apenas um texto.
+    const filtros = typeof filtro === "string"
+        ? { texto: filtro, autor: "", categoria: "" }
+        : (filtro || {});
+    const textoLimpo = normalizarParaBusca(String(filtros.texto || "").trim());
+    const autorLimpo = normalizarParaBusca(String(filtros.autor || "").trim());
+    const categoriaLimpa = normalizarCategoria(filtros.categoria || "");
 
     const resultado = frases.filter(f => {
-        if (filtroLimpo === "") return true;
-        
         const textoFrase = normalizarParaBusca(f.texto || "");
-        const autorFrase = normalizarParaBusca(f.autor || "");
+        const autorFrase = normalizarParaBusca(f.autor || "Messias");
         const categoriaFrase = normalizarCategoria(f.categoria || "");
 
-        return textoFrase.includes(filtroLimpo) || autorFrase.includes(filtroLimpo) || categoriaFrase.includes(filtroLimpo);
+        const correspondeTexto = !textoLimpo
+            || textoFrase.includes(textoLimpo)
+            || categoriaFrase.includes(textoLimpo)
+            || autorFrase.includes(textoLimpo);
+        const correspondeAutor = !autorLimpo || autorFrase.includes(autorLimpo);
+        const correspondeCategoria = !categoriaLimpa || categoriaFrase === categoriaLimpa;
+
+        return correspondeTexto && correspondeAutor && correspondeCategoria;
     });
 
     if (resultado.length === 0) {
@@ -311,8 +335,9 @@ function mostrarCategorias(listaCategorias, pesquisa, lista) {
         btn.textContent = nome;
         btn.onclick = () => {
             const categoriaLimpa = sanitizarTexto(nome);
+            categoriaSelecionada = categoriaLimpa;
             if (pesquisa) pesquisa.value = categoriaLimpa;
-            mostrarFrases(lista, categoriaLimpa);
+            atualizarListaComFiltros();
             const offset = lista.getBoundingClientRect().top + window.pageYOffset - 100;
             window.scrollTo({ top: offset, behavior: "smooth" });
         };
@@ -327,8 +352,9 @@ function configurarBotoesCategoriasFixos(pesquisa, lista) {
             // O texto visível preserva o nome usado no Firestore; o atributo
             // data-categoria possui versões técnicas como “bom-dia”.
             const cat = sanitizarTexto(btn.textContent || btn.getAttribute("data-categoria") || "");
+            categoriaSelecionada = cat;
             if (pesquisa) pesquisa.value = cat;
-            mostrarFrases(lista, cat);
+            atualizarListaComFiltros();
             const offset = lista.getBoundingClientRect().top + window.pageYOffset - 100;
             window.scrollTo({ top: offset, behavior: "smooth" });
         };
@@ -351,7 +377,7 @@ window.curtir = async function(id) {
         if (frase) {
             frase.curtidas = Number(frase.curtidas || 0) + 1;
         }
-        mostrarFrases(document.getElementById("listaFrases"), document.getElementById("pesquisa")?.value || "");
+        atualizarListaComFiltros();
         alert("❤️ Curtida registrada com sucesso!");
     } catch (e) {
         console.error("Erro ao curtir:", e);
@@ -371,7 +397,7 @@ window.compartilhar = async function(id, texto) {
             await navigator.clipboard.writeText(texto);
             alert("📋 Frase copiada para compartilhar.");
         }
-        mostrarFrases(document.getElementById("listaFrases"), document.getElementById("pesquisa")?.value || "");
+        atualizarListaComFiltros();
     } catch (e) {
         console.error(e);
     }
@@ -1134,6 +1160,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const lista = document.getElementById("listaFrases");
     const listaCategorias = document.getElementById("listaCategorias");
     const pesquisa = document.getElementById("pesquisa");
+    const pesquisaAutor = document.getElementById("pesquisaAutor");
     const fraseDiaElemento = document.getElementById("fraseDia");
     const copiarBtn = document.getElementById("copiarBtn");
 
@@ -1165,7 +1192,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (pesquisa) {
-        pesquisa.addEventListener("input", (e) => mostrarFrases(lista, e.target.value));
+        pesquisa.addEventListener("input", () => {
+            categoriaSelecionada = "";
+            atualizarListaComFiltros();
+        });
+    }
+
+    if (pesquisaAutor) {
+        pesquisaAutor.addEventListener("input", atualizarListaComFiltros);
     }
 
     carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa);
