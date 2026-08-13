@@ -966,6 +966,35 @@ async function inicializarIA() {
 }
 
 // ======================
+// AVISO DE INSTALAÇÃO APK
+// ======================
+function configurarAvisoApk() {
+    const aviso = document.getElementById("avisoApk");
+    const continuar = document.getElementById("continuarNoSiteBtn");
+    const baixar = document.getElementById("baixarApkBtn");
+
+    if (!aviso || !continuar || !baixar) return;
+
+    const fecharAviso = () => {
+        aviso.hidden = true;
+        document.body.classList.remove("aviso-apk-ativo");
+        sessionStorage.setItem("avisoApkDispensado", "1");
+    };
+
+    // O aviso aparece ao acessar uma nova sessão, mas não bloqueia a navegação após o visitante escolher continuar.
+    if (sessionStorage.getItem("avisoApkDispensado") !== "1") {
+        aviso.hidden = false;
+        document.body.classList.add("aviso-apk-ativo");
+    }
+
+    continuar.addEventListener("click", fecharAviso);
+    baixar.addEventListener("click", () => {
+        // Registra a escolha para não reabrir o aviso se a pessoa retornar ao site na mesma sessão.
+        sessionStorage.setItem("avisoApkDispensado", "1");
+    });
+}
+
+// ======================
 // INICIALIZAÇÃO
 // ======================
 document.addEventListener("DOMContentLoaded", () => {
@@ -996,6 +1025,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     aplicarTema(localStorage.getItem("tema") === "dark");
+    configurarAvisoApk();
 
     if (temaBtn) {
         temaBtn.addEventListener("click", () => {

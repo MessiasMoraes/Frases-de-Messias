@@ -25,7 +25,7 @@
   <meta name="theme-color" content="#4A90E2">
 
   <!-- Vínculo do CSS com forçador de atualização de cache -->
-  <link rel="stylesheet" href="./style.css?v=20260812-dark-home">
+  <link rel="stylesheet" href="./style.css?v=20260812-aviso-apk">
 
   <!-- Biblioteca html2canvas para permitir baixar os cards como imagem -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -63,6 +63,20 @@
 
   </div>
 <body>
+
+  <section id="avisoApk" class="aviso-apk" role="dialog" aria-modal="true" aria-labelledby="avisoApkTitulo" hidden>
+    <div class="aviso-apk-caixa">
+      <div class="aviso-apk-icone" aria-hidden="true">📱</div>
+      <p class="aviso-apk-selo">APP ANDROID DISPONÍVEL</p>
+      <h2 id="avisoApkTitulo">Leve as Frases de Messias com você</h2>
+      <p>Baixe o aplicativo gratuito para acessar frases inspiradoras de forma rápida no seu celular.</p>
+      <a id="baixarApkBtn" class="btn-baixar-apk" href="Frases_de_Messias.apk" download="Frases-de-Messias.apk" type="application/vnd.android.package-archive">
+        📥 Baixar aplicativo APK
+      </a>
+      <p class="aviso-apk-detalhe">Para celulares Android · Arquivo de aproximadamente 22 MB</p>
+      <button id="continuarNoSiteBtn" class="btn-continuar-site" type="button">Continuar no site</button>
+    </div>
+  </section>
 
 <header>
   <div class="container">
@@ -161,7 +175,7 @@
   </div>
 
   <!-- Script do projeto carregado como módulo JavaScript -->
-  <script type="module" src="script.js?v=20260812-dark-home"></script>
+  <script type="module" src="script.js?v=20260812-aviso-apk"></script>
   
   </body>
 </html>
