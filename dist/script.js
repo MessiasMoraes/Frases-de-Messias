@@ -366,13 +366,46 @@ window.compartilhar = async function(id, texto) {
     }
 };
 
+async function copiarTextoCompativel(texto) {
+    const valor = String(texto || "").trim();
+    if (!valor) throw new Error("Não há texto para copiar.");
+
+    // A API moderna funciona nos navegadores seguros; o fallback atende WebViews
+    // Android e navegadores que não expõem navigator.clipboard ao aplicativo.
+    if (navigator.clipboard?.writeText && window.isSecureContext) {
+        try {
+            await navigator.clipboard.writeText(valor);
+            return;
+        } catch (erroClipboard) {
+            console.warn("Clipboard moderno indisponível; usando fallback:", erroClipboard);
+        }
+    }
+
+    const campo = document.createElement("textarea");
+    campo.value = valor;
+    campo.setAttribute("readonly", "");
+    campo.style.cssText = "position:fixed;left:-9999px;top:0;opacity:0;pointer-events:none;";
+    document.body.appendChild(campo);
+    campo.focus();
+    campo.select();
+    campo.setSelectionRange(0, campo.value.length);
+
+    try {
+        if (!document.execCommand("copy")) {
+            throw new Error("O navegador não confirmou a cópia.");
+        }
+    } finally {
+        campo.remove();
+    }
+}
+
 window.copiar = async function(texto) {
     try {
-        await navigator.clipboard.writeText(texto);
+        await copiarTextoCompativel(texto);
         alert("📋 Frase copiada com sucesso!");
     } catch (e) {
-        console.error(e);
-        alert("Não foi possível copiar a frase.");
+        console.error("Erro ao copiar frase:", e);
+        alert("Não foi possível copiar a frase. Tente novamente.");
     }
 };
 
@@ -1050,6 +1083,34 @@ document.addEventListener("DOMContentLoaded", () => {
     const listaCategorias = document.getElementById("listaCategorias");
     const pesquisa = document.getElementById("pesquisa");
     const fraseDiaElemento = document.getElementById("fraseDia");
+    const copiarBtn = document.getElementById("copiarBtn");
+
+    if (copiarBtn && fraseDiaElemento) {
+        copiarBtn.addEventListener("click", async () => {
+            const texto = fraseDiaElemento.innerText.trim();
+            const rotuloOriginal = copiarBtn.textContent;
+            if (!texto) return;
+
+            copiarBtn.disabled = true;
+            copiarBtn.textContent = "Copiando...";
+            try {
+                await copiarTextoCompativel(texto);
+                copiarBtn.textContent = "✓ Frase copiada!";
+                window.setTimeout(() => {
+                    copiarBtn.textContent = rotuloOriginal;
+                }, 1800);
+            } catch (erro) {
+                console.error("Erro ao copiar a Frase do Dia:", erro);
+                copiarBtn.textContent = "Tentar novamente";
+                alert("Não foi possível copiar a frase. Tente novamente.");
+                window.setTimeout(() => {
+                    copiarBtn.textContent = rotuloOriginal;
+                }, 1800);
+            } finally {
+                copiarBtn.disabled = false;
+            }
+        });
+    }
 
     if (pesquisa) {
         pesquisa.addEventListener("input", (e) => mostrarFrases(lista, e.target.value));
