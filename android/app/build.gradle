@@ -16,6 +16,19 @@ android {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    flavorDimensions "distribuicao"
+    productFlavors {
+        direto {
+            dimension "distribuicao"
+        }
+        play {
+            dimension "distribuicao"
+            applicationId "com.frasesdemessias"
+            versionCode 4
+            versionName "1.2.1"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
