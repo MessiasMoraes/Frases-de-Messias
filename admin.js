@@ -262,10 +262,19 @@ async function carregarCategorias() {
         categorias = [];
 
         consulta.forEach((docItem) => {
-            categorias.push({
-                id: docItem.id,
-                nome: docItem.data().nome
-            });
+            const dadosCategoria = docItem.data();
+            // Parte das categorias antigas foi salva com um espaço no nome do campo ("nome ").
+            // Aceitamos os dois formatos e removemos espaços no início/fim do valor.
+            const nomeCategoria = String(
+                dadosCategoria.nome ?? dadosCategoria["nome "] ?? dadosCategoria.Nome ?? ""
+            ).trim();
+
+            if (nomeCategoria) {
+                categorias.push({
+                    id: docItem.id,
+                    nome: nomeCategoria
+                });
+            }
         });
 
         // Fallback: Se não houver categorias no banco, usar as padrão
