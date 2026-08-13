@@ -30,3 +30,8 @@ video-output/
 
 # Registros locais de validação
 validation_findings.md
+
+# Chaves e credenciais privadas de assinatura Android
+android/keystore.properties
+android/keystore/
+play-release/
