@@ -635,6 +635,25 @@ function ehNavegadorInstagram() {
     return /Instagram/i.test(navigator.userAgent || "");
 }
 
+function ehAplicativoAndroid() {
+    return /Android/i.test(navigator.userAgent || "")
+        && Boolean(window.Capacitor?.isNativePlatform?.())
+        && window.Capacitor?.getPlatform?.() === "android";
+}
+
+function baixarVideoNoAppAndroid(url, filename) {
+    const downloader = window.AndroidDownloader;
+    if (!downloader || typeof downloader.baixarVideo !== "function") return false;
+
+    try {
+        downloader.baixarVideo(url, filename);
+        return true;
+    } catch (erro) {
+        console.warn("Não foi possível acionar o download nativo Android:", erro);
+        return false;
+    }
+}
+
 function abrirDownloadNoNavegadorExterno(url) {
     let destino;
     try {
@@ -764,12 +783,15 @@ function mostrarMp4Gerado(url, downloadUrl, filename, formato, dadosCapa = {}) {
     situacao.style.cssText = "font-size:13px;line-height:1.4;max-width:360px;margin:12px 0 0;";
 
     const noInstagram = ehNavegadorInstagram();
+    const aplicativoAndroid = ehAplicativoAndroid();
     const ajuda = document.createElement("p");
     ajuda.textContent = noInstagram
         ? "O navegador do Instagram não permite salvar este MP4 diretamente. Toque no botão para abrir no navegador do celular e concluir o download."
-        : ehDispositivoApple()
-            ? "No iPhone/iPad, toque em Salvar MP4 e escolha Salvar Vídeo ou Salvar em Arquivos na tela que abrir."
-            : "Toque em Baixar MP4. O arquivo será salvo na pasta Downloads do navegador.";
+        : aplicativoAndroid
+            ? "Toque em Baixar MP4. O aplicativo salvará o arquivo na pasta Downloads do seu celular."
+            : ehDispositivoApple()
+                ? "No iPhone/iPad, toque em Salvar MP4 e escolha Salvar Vídeo ou Salvar em Arquivos na tela que abrir."
+                : "Toque em Baixar MP4. O arquivo será salvo na pasta Downloads do navegador.";
     ajuda.style.cssText = "font-size:13px;line-height:1.4;max-width:360px;margin:8px 0 14px;";
 
     const fechar = document.createElement("button");
@@ -783,30 +805,49 @@ function mostrarMp4Gerado(url, downloadUrl, filename, formato, dadosCapa = {}) {
 
     let arquivoPreparado = null;
     const urlDireta = downloadUrl || `${url}?download=1`;
-    prepararArquivoMp4(url, filename)
-        .then((resultado) => {
-            arquivoPreparado = resultado;
-            baixar.disabled = false;
-            baixar.textContent = noInstagram
-                ? "🌐 Abrir no navegador e baixar MP4"
-                : ehDispositivoApple() ? "⬇️ Salvar MP4" : "⬇️ Baixar MP4";
-            situacao.textContent = noInstagram
-                ? "Arquivo pronto. Abra no navegador do celular para fazer o download."
-                : "Arquivo pronto para salvar.";
-        })
-        .catch((erro) => {
-            console.warn("Preparação local do MP4 indisponível:", erro);
-            baixar.disabled = false;
-            baixar.textContent = noInstagram ? "🌐 Abrir no navegador e baixar MP4" : "⬇️ Baixar MP4";
-            situacao.textContent = noInstagram
-                ? "Abra no navegador do celular para fazer o download."
-                : "Use o download direto do arquivo.";
-        });
+
+    // O WebView do Capacitor não salva com segurança links gerados por Blob.
+    // No APK Android, delegamos o arquivo remoto ao DownloadManager nativo.
+    if (aplicativoAndroid) {
+        baixar.disabled = false;
+        baixar.textContent = "⬇️ Baixar MP4";
+        situacao.textContent = "Arquivo pronto. Toque para salvá-lo na pasta Downloads do celular.";
+    } else {
+        prepararArquivoMp4(url, filename)
+            .then((resultado) => {
+                arquivoPreparado = resultado;
+                baixar.disabled = false;
+                baixar.textContent = noInstagram
+                    ? "🌐 Abrir no navegador e baixar MP4"
+                    : ehDispositivoApple() ? "⬇️ Salvar MP4" : "⬇️ Baixar MP4";
+                situacao.textContent = noInstagram
+                    ? "Arquivo pronto. Abra no navegador do celular para fazer o download."
+                    : "Arquivo pronto para salvar.";
+            })
+            .catch((erro) => {
+                console.warn("Preparação local do MP4 indisponível:", erro);
+                baixar.disabled = false;
+                baixar.textContent = noInstagram ? "🌐 Abrir no navegador e baixar MP4" : "⬇️ Baixar MP4";
+                situacao.textContent = noInstagram
+                    ? "Abra no navegador do celular para fazer o download."
+                    : "Use o download direto do arquivo.";
+            });
+    }
 
     baixar.onclick = () => {
         if (noInstagram) {
             abrirDownloadNoNavegadorExterno(urlDireta);
             situacao.textContent = "Abrindo no navegador do celular. Confirme o download na próxima tela.";
+            return;
+        }
+
+        if (aplicativoAndroid) {
+            if (baixarVideoNoAppAndroid(urlDireta, filename)) {
+                situacao.textContent = "Download iniciado. Confira a pasta Downloads e a notificação do Android.";
+            } else {
+                iniciarDownloadDireto(urlDireta, filename);
+                situacao.textContent = "Abrimos o download. Confirme o salvamento na tela do Android.";
+            }
             return;
         }
 
