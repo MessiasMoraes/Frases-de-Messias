@@ -94,6 +94,10 @@ const seletorCategoriaTitulo = document.getElementById("seletorCategoriaTitulo")
 const opcoesSeletorCategoria = document.getElementById("opcoesSeletorCategoria");
 const fecharSeletorCategoria = document.getElementById("fecharSeletorCategoria");
 const selectsCategoria = [categoria, editCategoria, iaCategoria, filtroCategoria];
+const CATEGORIAS_PADRAO = [
+    "Motivação", "Fé", "Amor", "Reflexão", "Amizade", "Bom Dia", "Boa Noite",
+    "Esperança", "Gratidão", "Família", "Sucesso", "Vida", "Sabedoria", "Deus"
+];
 let selectCategoriaAtivo = null;
 
 function textoDoSelect(select) {
@@ -254,71 +258,60 @@ onAuthStateChanged(auth, (user) => {
 // CARREGAR CATEGORIAS
 // ==========================
 
+function preencherCamposDeCategoria() {
+    categoria.innerHTML = '<option value="">Selecione uma categoria</option>';
+    editCategoria.innerHTML = '<option value="">Selecione uma categoria</option>';
+    iaCategoria.innerHTML = '<option value="">Selecione uma categoria</option>';
+    filtroCategoria.innerHTML = '<option value="">📂 Todas as categorias</option>';
+
+    categorias.forEach((cat) => {
+        [categoria, editCategoria, iaCategoria, filtroCategoria].forEach((select) => {
+            const opcao = document.createElement("option");
+            opcao.value = cat.nome;
+            opcao.textContent = cat.nome;
+            select.appendChild(opcao);
+        });
+    });
+
+    prepararSelecionadoresCategoria();
+}
+
+function mesclarCategorias(nomesDoBanco) {
+    const mapa = new Map();
+    [...CATEGORIAS_PADRAO, ...nomesDoBanco].forEach((nome) => {
+        const nomeLimpo = String(nome || "").trim();
+        if (!nomeLimpo) return;
+        mapa.set(nomeLimpo.toLocaleLowerCase("pt-BR"), nomeLimpo);
+    });
+
+    categorias = Array.from(mapa.values()).map((nome) => ({ id: nome, nome }));
+}
+
 async function carregarCategorias() {
+    // As categorias essenciais entram de imediato, sem depender do tempo de resposta do banco.
+    mesclarCategorias([]);
+    preencherCamposDeCategoria();
 
     try {
-
         const consulta = await getDocs(collection(db, "categorias"));
-        categorias = [];
+        const nomesDoBanco = [];
 
         consulta.forEach((docItem) => {
             const dadosCategoria = docItem.data();
-            // Parte das categorias antigas foi salva com um espaço no nome do campo ("nome ").
-            // Aceitamos os dois formatos e removemos espaços no início/fim do valor.
             const nomeCategoria = String(
                 dadosCategoria.nome ?? dadosCategoria["nome "] ?? dadosCategoria.Nome ?? ""
             ).trim();
 
-            if (nomeCategoria) {
-                categorias.push({
-                    id: docItem.id,
-                    nome: nomeCategoria
-                });
-            }
+            if (nomeCategoria) nomesDoBanco.push(nomeCategoria);
         });
 
-        // Fallback: Se não houver categorias no banco, usar as padrão
-        if (categorias.length === 0) {
-            const padrao = ["Motivação", "Fé", "Amor", "Reflexão", "Amizade", "Bom Dia", "Boa Noite", "Esperança", "Gratidão", "Família", "Sucesso", "Vida"];
-            categorias = padrao.map(nome => ({ id: nome, nome: nome }));
-        }
-
-        // Atualizar selects
-        categoria.innerHTML = '<option value="">Selecione uma categoria</option>';
-        editCategoria.innerHTML = '<option value="">Selecione uma categoria</option>';
-        iaCategoria.innerHTML = '<option value="">Selecione uma categoria</option>';
-        filtroCategoria.innerHTML = '<option value="">📂 Todas as categorias</option>';
-
-        categorias.forEach(cat => {
-            const opt1 = document.createElement("option");
-            opt1.value = cat.nome;
-            opt1.textContent = cat.nome;
-            categoria.appendChild(opt1);
-
-            const opt2 = document.createElement("option");
-            opt2.value = cat.nome;
-            opt2.textContent = cat.nome;
-            editCategoria.appendChild(opt2);
-
-            const opt3 = document.createElement("option");
-            opt3.value = cat.nome;
-            opt3.textContent = cat.nome;
-            iaCategoria.appendChild(opt3);
-
-            const opt4 = document.createElement("option");
-            opt4.value = cat.nome;
-            opt4.textContent = cat.nome;
-            filtroCategoria.appendChild(opt4);
-        });
-
-        prepararSelecionadoresCategoria();
-
+        // Mantém a lista inicial e acrescenta categorias novas cadastradas no banco.
+        mesclarCategorias(nomesDoBanco);
+        preencherCamposDeCategoria();
     } catch (erro) {
-
-        console.error("Erro ao carregar categorias:", erro);
-
+        // A lista local já está disponível, portanto uma falha de rede não deixa o seletor vazio.
+        console.error("Erro ao atualizar categorias do banco; usando a lista local:", erro);
     }
-
 }
 
 // ==========================
