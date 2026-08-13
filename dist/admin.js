@@ -7,7 +7,9 @@ import {
   getDocs,
   updateDoc,
   deleteDoc,
-  doc
+  doc,
+  getDoc,
+  setDoc
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 import {
@@ -30,6 +32,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 let frases = [];
+let categorias = [];
 
 const loginContainer = document.getElementById("loginContainer");
 const painel = document.getElementById("painel");
@@ -47,7 +50,6 @@ const imagem = document.getElementById("imagem");
 const preview = document.getElementById("preview");
 
 const btnSalvar = document.getElementById("salvarFrase");
-console.log(btnSalvar);
 const listaFrases = document.getElementById("listaFrases");
 const pesquisa = document.getElementById("pesquisa");
 const filtroCategoria = document.getElementById("filtroCategoria");
@@ -55,6 +57,7 @@ const filtroCategoria = document.getElementById("filtroCategoria");
 const totalFrases = document.getElementById("totalFrases");
 const totalCategorias = document.getElementById("totalCategorias");
 const totalAutores = document.getElementById("totalAutores");
+const totalVisitas = document.getElementById("totalVisitas");
 
 const modalEditar = document.getElementById("modalEditar");
 const editId = document.getElementById("editId");
@@ -66,6 +69,125 @@ const btnAtualizar = document.getElementById("btnAtualizar");
 const btnCancelar = document.getElementById("btnCancelar");
 
 const temaBtn = document.getElementById("temaBtn");
+
+// IA ELEMENTS
+const gerarIaBtn = document.getElementById("gerarIaBtn");
+const modalIA = document.getElementById("modalIA");
+const iaPrompt = document.getElementById("iaPrompt");
+const iaCategoria = document.getElementById("iaCategoria");
+const btnGerarIA = document.getElementById("btnGerarIA");
+const btnCancelarIA = document.getElementById("btnCancelarIA");
+const iaResultado = document.getElementById("iaResultado");
+const iaTexto = document.getElementById("iaTexto");
+const btnUsarIA = document.getElementById("btnUsarIA");
+
+// PREVIEW ELEMENTS
+const previewCard = document.getElementById("previewCard");
+const cardPreview = document.getElementById("cardPreview");
+const previewImg = document.getElementById("previewImg");
+const previewTexto = document.getElementById("previewTexto");
+const previewAutor = document.getElementById("previewAutor");
+
+// SELETOR DE CATEGORIAS PRÓPRIO
+const seletorCategoriaModal = document.getElementById("seletorCategoriaModal");
+const seletorCategoriaTitulo = document.getElementById("seletorCategoriaTitulo");
+const opcoesSeletorCategoria = document.getElementById("opcoesSeletorCategoria");
+const fecharSeletorCategoria = document.getElementById("fecharSeletorCategoria");
+const selectsCategoria = [categoria, editCategoria, iaCategoria, filtroCategoria];
+const CATEGORIAS_PADRAO = [
+    "Motivação", "Fé", "Amor", "Reflexão", "Amizade", "Bom Dia", "Boa Noite",
+    "Esperança", "Gratidão", "Família", "Sucesso", "Vida", "Sabedoria", "Deus"
+];
+let selectCategoriaAtivo = null;
+
+function textoDoSelect(select) {
+    const opcaoSelecionada = select.options[select.selectedIndex];
+    return opcaoSelecionada?.textContent || "Selecione uma categoria";
+}
+
+function atualizarBotaoCategoria(select) {
+    const botao = document.getElementById(`botao-${select.id}`);
+    if (!botao) return;
+
+    botao.textContent = textoDoSelect(select);
+    botao.setAttribute("aria-label", `Categoria selecionada: ${textoDoSelect(select)}`);
+}
+
+function fecharListaCategoria() {
+    seletorCategoriaModal.classList.remove("ativo");
+    seletorCategoriaModal.setAttribute("aria-hidden", "true");
+
+    if (selectCategoriaAtivo) {
+        document.getElementById(`botao-${selectCategoriaAtivo.id}`)?.setAttribute("aria-expanded", "false");
+    }
+
+    selectCategoriaAtivo = null;
+}
+
+function abrirListaCategoria(select) {
+    selectCategoriaAtivo = select;
+    const eFiltro = select.id === "filtroCategoria";
+    seletorCategoriaTitulo.textContent = eFiltro ? "Filtrar por categoria" : "Selecione uma categoria";
+    opcoesSeletorCategoria.innerHTML = "";
+
+    Array.from(select.options).forEach((opcao) => {
+        const botaoOpcao = document.createElement("button");
+        botaoOpcao.type = "button";
+        botaoOpcao.className = "opcao-seletor-categoria";
+        botaoOpcao.textContent = opcao.textContent;
+        botaoOpcao.setAttribute("role", "option");
+        botaoOpcao.setAttribute("aria-selected", String(opcao.selected));
+
+        if (opcao.selected) botaoOpcao.classList.add("selecionada");
+
+        botaoOpcao.addEventListener("click", () => {
+            select.value = opcao.value;
+            select.dispatchEvent(new Event("change", { bubbles: true }));
+            atualizarBotaoCategoria(select);
+            fecharListaCategoria();
+        });
+
+        opcoesSeletorCategoria.appendChild(botaoOpcao);
+    });
+
+    seletorCategoriaModal.classList.add("ativo");
+    seletorCategoriaModal.setAttribute("aria-hidden", "false");
+    document.getElementById(`botao-${select.id}`)?.setAttribute("aria-expanded", "true");
+}
+
+function prepararSelecionadoresCategoria() {
+    selectsCategoria.forEach((select) => {
+        if (!select) return;
+
+        let botao = document.getElementById(`botao-${select.id}`);
+        if (!botao) {
+            botao = document.createElement("button");
+            botao.type = "button";
+            botao.id = `botao-${select.id}`;
+            botao.className = "botao-seletor-categoria";
+            botao.setAttribute("aria-haspopup", "listbox");
+            botao.setAttribute("aria-expanded", "false");
+            select.insertAdjacentElement("afterend", botao);
+            select.hidden = true;
+
+            botao.addEventListener("click", () => abrirListaCategoria(select));
+            select.addEventListener("change", () => atualizarBotaoCategoria(select));
+        }
+
+        atualizarBotaoCategoria(select);
+    });
+}
+
+fecharSeletorCategoria.addEventListener("click", fecharListaCategoria);
+seletorCategoriaModal.addEventListener("click", (event) => {
+    if (event.target === seletorCategoriaModal) fecharListaCategoria();
+});
+document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && seletorCategoriaModal.classList.contains("ativo")) {
+        fecharListaCategoria();
+    }
+});
+
 // ==========================
 // LOGIN
 // ==========================
@@ -119,7 +241,9 @@ onAuthStateChanged(auth, (user) => {
         loginContainer.style.display = "none";
         painel.style.display = "block";
 
+        carregarCategorias();
         carregarFrases();
+        carregarVisitas();
 
     } else {
 
@@ -129,6 +253,91 @@ onAuthStateChanged(auth, (user) => {
     }
 
 });
+
+// ==========================
+// CARREGAR CATEGORIAS
+// ==========================
+
+function preencherCamposDeCategoria() {
+    categoria.innerHTML = '<option value="">Selecione uma categoria</option>';
+    editCategoria.innerHTML = '<option value="">Selecione uma categoria</option>';
+    iaCategoria.innerHTML = '<option value="">Selecione uma categoria</option>';
+    filtroCategoria.innerHTML = '<option value="">📂 Todas as categorias</option>';
+
+    categorias.forEach((cat) => {
+        [categoria, editCategoria, iaCategoria, filtroCategoria].forEach((select) => {
+            const opcao = document.createElement("option");
+            opcao.value = cat.nome;
+            opcao.textContent = cat.nome;
+            select.appendChild(opcao);
+        });
+    });
+
+    prepararSelecionadoresCategoria();
+}
+
+function mesclarCategorias(nomesDoBanco) {
+    const mapa = new Map();
+    [...CATEGORIAS_PADRAO, ...nomesDoBanco].forEach((nome) => {
+        const nomeLimpo = String(nome || "").trim();
+        if (!nomeLimpo) return;
+        mapa.set(nomeLimpo.toLocaleLowerCase("pt-BR"), nomeLimpo);
+    });
+
+    categorias = Array.from(mapa.values()).map((nome) => ({ id: nome, nome }));
+}
+
+async function carregarCategorias() {
+    // As categorias essenciais entram de imediato, sem depender do tempo de resposta do banco.
+    mesclarCategorias([]);
+    preencherCamposDeCategoria();
+
+    try {
+        const consulta = await getDocs(collection(db, "categorias"));
+        const nomesDoBanco = [];
+
+        consulta.forEach((docItem) => {
+            const dadosCategoria = docItem.data();
+            const nomeCategoria = String(
+                dadosCategoria.nome ?? dadosCategoria["nome "] ?? dadosCategoria.Nome ?? ""
+            ).trim();
+
+            if (nomeCategoria) nomesDoBanco.push(nomeCategoria);
+        });
+
+        // Mantém a lista inicial e acrescenta categorias novas cadastradas no banco.
+        mesclarCategorias(nomesDoBanco);
+        preencherCamposDeCategoria();
+    } catch (erro) {
+        // A lista local já está disponível, portanto uma falha de rede não deixa o seletor vazio.
+        console.error("Erro ao atualizar categorias do banco; usando a lista local:", erro);
+    }
+}
+
+// ==========================
+// CARREGAR VISITAS
+// ==========================
+
+async function carregarVisitas() {
+
+    try {
+
+        const consulta = await getDocs(collection(db, "estatisticas"));
+
+        consulta.forEach(docItem => {
+            if (docItem.id === "global") {
+                totalVisitas.textContent = Number(docItem.data().visitas || 0).toLocaleString("pt-BR");
+            }
+        });
+
+    } catch (erro) {
+
+        console.error("Erro ao carregar visitas:", erro);
+
+    }
+
+}
+
 // ==========================
 // PRÉ-VISUALIZAÇÃO DA IMAGEM
 // ==========================
@@ -140,13 +349,41 @@ imagem.addEventListener("change", () => {
     if (!arquivo) {
         preview.style.display = "none";
         preview.src = "";
+        previewImg.style.display = "none";
         return;
     }
 
     preview.src = URL.createObjectURL(arquivo);
     preview.style.display = "block";
 
+    previewImg.src = preview.src;
+    previewImg.style.display = "block";
+
+    atualizarPreview();
+
 });
+
+// ==========================
+// ATUALIZAR PREVIEW DO CARD
+// ==========================
+
+function atualizarPreview() {
+
+    const textoValue = texto.value.trim();
+    const autorValue = autor.value.trim() || "Messias";
+
+    if (textoValue) {
+        previewTexto.textContent = `"${textoValue}"`;
+        previewAutor.textContent = `— ${autorValue}`;
+        previewCard.style.display = "block";
+    } else {
+        previewCard.style.display = "none";
+    }
+
+}
+
+texto.addEventListener("input", atualizarPreview);
+autor.addEventListener("input", atualizarPreview);
 
 // ==========================
 // UPLOAD PARA IMGBB
@@ -177,20 +414,117 @@ async function enviarImagem(arquivo) {
 
     return dados.data.url;
 }
+
+// ==========================
+// GERAR COM IA
+// ==========================
+
+gerarIaBtn.addEventListener("click", () => {
+    modalIA.style.display = "flex";
+});
+
+btnCancelarIA.addEventListener("click", () => {
+    modalIA.style.display = "none";
+    iaResultado.style.display = "none";
+});
+
+btnGerarIA.addEventListener("click", async () => {
+
+    const prompt = iaPrompt.value.trim();
+    const cat = iaCategoria.value;
+
+    if (!prompt) {
+        alert("Descreva o tipo de frase que deseja gerar.");
+        return;
+    }
+
+    btnGerarIA.disabled = true;
+    btnGerarIA.textContent = "⏳ Gerando...";
+
+    try {
+
+        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${window.OPENAI_API_KEY || ""}`
+            },
+            body: JSON.stringify({
+                model: "gpt-3.5-turbo",
+                messages: [
+                    {
+                        role: "system",
+                        content: "Você é um gerador de frases inspiradoras e motivacionais. Gere uma frase curta, impactante e positiva. Responda APENAS com a frase, sem aspas ou explicações."
+                    },
+                    {
+                        role: "user",
+                        content: `Gere uma frase inspiradora sobre: ${prompt}`
+                    }
+                ],
+                max_tokens: 100
+            })
+        });
+
+        if (!response.ok) {
+            const erroDados = await response.json();
+            console.error("Erro OpenAI:", erroDados);
+            if (response.status === 401) {
+                throw new Error("Chave de API inválida ou não configurada.");
+            }
+            throw new Error(erroDados.error?.message || "Erro ao conectar com a IA.");
+        }
+
+        const dados = await response.json();
+        const frase = dados.choices[0].message.content.trim();
+
+        iaTexto.textContent = `"${frase}"`;
+        iaResultado.style.display = "block";
+
+        btnUsarIA.onclick = () => {
+            texto.value = frase;
+            categoria.value = cat || "";
+            atualizarBotaoCategoria(categoria);
+            modalIA.style.display = "none";
+            iaResultado.style.display = "none";
+            atualizarPreview();
+        };
+
+    } catch (erro) {
+
+        console.error(erro);
+        alert("Erro ao gerar frase: " + erro.message);
+
+    } finally {
+
+        btnGerarIA.disabled = false;
+        btnGerarIA.textContent = "🚀 Gerar Frase";
+
+    }
+
+});
+
 // ==========================
 // SALVAR FRASE
 // ==========================
 
 btnSalvar.addEventListener("click", async () => {
 
-    const novoAutor = autor.value.trim();
+    const novoAutor = autor.value.trim() || "Messias";
     const novaCategoria = categoria.value;
     const novoTexto = texto.value.trim();
+
+    if (!novaCategoria) {
+        alert("Selecione uma categoria.");
+        return;
+    }
 
     if (novoTexto === "") {
         alert("Digite uma frase.");
         return;
     }
+
+    btnSalvar.disabled = true;
+    btnSalvar.textContent = "⏳ Salvando...";
 
     try {
 
@@ -213,11 +547,14 @@ btnSalvar.addEventListener("click", async () => {
 
         autor.value = "";
         categoria.selectedIndex = 0;
+        atualizarBotaoCategoria(categoria);
         texto.value = "";
         imagem.value = "";
 
         preview.src = "";
         preview.style.display = "none";
+        previewImg.style.display = "none";
+        previewCard.style.display = "none";
 
         alert("✅ Frase salva com sucesso!");
 
@@ -228,9 +565,15 @@ btnSalvar.addEventListener("click", async () => {
         console.error(erro);
         alert("Erro ao salvar: " + erro.message);
 
+    } finally {
+
+        btnSalvar.disabled = false;
+        btnSalvar.textContent = "💾 Salvar Frase";
+
     }
 
 });
+
 // ==========================
 // CARREGAR FRASES
 // ==========================
@@ -256,58 +599,15 @@ async function carregarFrases() {
 
         totalFrases.textContent = frases.length;
 
-        const categorias = [...new Set(frases.map(f => f.categoria || "Sem categoria"))];
-        const autores = [...new Set(frases.map(f => f.autor || "Sem autor"))];
+        const categoriasUniques = [...new Set(frases.map(f => f.categoria || "Sem categoria"))];
+        const autoresUniques = [...new Set(frases.map(f => f.autor || "Sem autor"))];
 
-        totalCategorias.textContent = categorias.length;
-        totalAutores.textContent = autores.length;
+        totalCategorias.textContent = categoriasUniques.length;
+        totalAutores.textContent = autoresUniques.length;
 
         listaFrases.innerHTML = "";
 
-        frases.forEach((f) => {
-
-            const card = document.createElement("div");
-
-            card.className = "frase";
-
-            card.innerHTML = `
-    ${f.imagem ? `<img src="${f.imagem}" class="imagemFrase">` : ""}
-
-    <h3>${f.categoria}</h3>
-
-    <p>${f.texto}</p>
-
-    <small>${f.autor || "Sem autor"}</small>
-
-    <br><br>
-
-    <button class="btnEditar">✏️ Editar</button>
-
-    <button class="btnExcluir">🗑️ Excluir</button>
-`;
-card.querySelector(".btnEditar").addEventListener("click", () => {
-
-    editId.value = f.id;
-    editAutor.value = f.autor || "";
-    editCategoria.value = f.categoria || "";
-    editTexto.value = f.texto;
-
-    modalEditar.style.display = "flex";
-
-});
-
-card.querySelector(".btnExcluir").addEventListener("click", async () => {
-
-    if (!confirm("Deseja excluir esta frase?")) return;
-
-    await deleteDoc(doc(db, "frases", f.id));
-
-    carregarFrases();
-
-});
-            listaFrases.appendChild(card);
-
-        });
+        mostrarLista(frases);
 
     } catch (erro) {
 
@@ -318,7 +618,69 @@ card.querySelector(".btnExcluir").addEventListener("click", async () => {
 
     }
 
+}
+
+// ==========================
+// MOSTRAR LISTA
+// ==========================
+
+function mostrarLista(lista) {
+
+    listaFrases.innerHTML = "";
+
+    if (lista.length === 0) {
+        listaFrases.innerHTML = "<p>Nenhuma frase encontrada.</p>";
+        return;
     }
+
+    lista.forEach((f) => {
+
+        const card = document.createElement("div");
+        card.className = "frase";
+
+        card.innerHTML = `
+            ${f.imagem ? `<img src="${f.imagem}" class="imagemFrase" alt="Imagem da frase">` : ""}
+
+            <h3>${f.categoria}</h3>
+
+            <p>${f.texto}</p>
+
+            <small>${f.autor || "Sem autor"}</small>
+
+            <br><br>
+
+            <button class="btnEditar">✏️ Editar</button>
+            <button class="btnExcluir">🗑️ Excluir</button>
+        `;
+
+        card.querySelector(".btnEditar").addEventListener("click", () => {
+
+            editId.value = f.id;
+            editAutor.value = f.autor || "";
+            editCategoria.value = f.categoria || "";
+            atualizarBotaoCategoria(editCategoria);
+            editTexto.value = f.texto;
+
+            modalEditar.style.display = "flex";
+
+        });
+
+        card.querySelector(".btnExcluir").addEventListener("click", async () => {
+
+            if (!confirm("Deseja excluir esta frase?")) return;
+
+            await deleteDoc(doc(db, "frases", f.id));
+
+            carregarFrases();
+
+        });
+
+        listaFrases.appendChild(card);
+
+    });
+
+}
+
 // ==========================
 // PESQUISA
 // ==========================
@@ -360,8 +722,13 @@ filtroCategoria.addEventListener("change", () => {
 
 btnAtualizar.addEventListener("click", async () => {
 
+    if (!editCategoria.value) {
+        alert("Selecione uma categoria.");
+        return;
+    }
+
     await updateDoc(doc(db, "frases", editId.value), {
-        autor: editAutor.value,
+        autor: editAutor.value || "Messias",
         categoria: editCategoria.value,
         texto: editTexto.value
     });
@@ -404,53 +771,42 @@ if (temaBtn) {
     });
 
 }
-function mostrarLista(lista) {
 
-    listaFrases.innerHTML = "";
+// ==========================
+// CONFIGURAÇÃO DE API KEY
+// ==========================
 
-    lista.forEach((f) => {
+const btnConfig = document.getElementById("btnConfig");
 
-        const card = document.createElement("div");
-        card.className = "frase";
+// Carregar chave salva (localStorage + Firestore)
+window.OPENAI_API_KEY = localStorage.getItem("openai_api_key") || "";
 
-        card.innerHTML = `
-            ${f.imagem ? `<img src="${f.imagem}" class="imagemFrase">` : ""}
+async function carregarChaveRemota() {
+    try {
+        const docSnap = await getDoc(doc(db, "config", "settings"));
+        if (docSnap.exists() && docSnap.data().openai_api_key) {
+            window.OPENAI_API_KEY = docSnap.data().openai_api_key;
+            localStorage.setItem("openai_api_key", window.OPENAI_API_KEY);
+        }
+    } catch (e) {
+        console.error("Erro ao carregar chave remota:", e);
+    }
+}
+carregarChaveRemota();
 
-            <h3>${f.categoria}</h3>
-
-            <p>${f.texto}</p>
-
-            <small>${f.autor || "Sem autor"}</small>
-
-            <br><br>
-
-            <button class="btnEditar">✏️ Editar</button>
-            <button class="btnExcluir">🗑️ Excluir</button>
-        `;
-
-        card.querySelector(".btnEditar").addEventListener("click", () => {
-
-            editId.value = f.id;
-            editAutor.value = f.autor || "";
-            editCategoria.value = f.categoria || "";
-            editTexto.value = f.texto;
-
-            modalEditar.style.display = "flex";
-
-        });
-
-        card.querySelector(".btnExcluir").addEventListener("click", async () => {
-
-            if (!confirm("Deseja excluir esta frase?")) return;
-
-            await deleteDoc(doc(db, "frases", f.id));
-
-            carregarFrases();
-
-        });
-
-        listaFrases.appendChild(card);
-
+if (btnConfig) {
+    btnConfig.addEventListener("click", async () => {
+        const novaChave = prompt("Insira sua API Key da OpenAI:", window.OPENAI_API_KEY);
+        if (novaChave !== null) {
+            window.OPENAI_API_KEY = novaChave.trim();
+            localStorage.setItem("openai_api_key", window.OPENAI_API_KEY);
+            try {
+                await setDoc(doc(db, "config", "settings"), { openai_api_key: window.OPENAI_API_KEY }, { merge: true });
+                alert("✅ Chave de API salva com sucesso no painel e na nuvem!");
+            } catch (e) {
+                console.error("Erro ao salvar no Firestore:", e);
+                alert("✅ Chave salva localmente (erro ao salvar na nuvem).");
+            }
+        }
     });
-
 }

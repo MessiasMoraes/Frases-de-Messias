@@ -1,4 +1,4 @@
-const CACHE_NAME = 'frases-messias-v1';
+const CACHE_NAME = 'frases-messias-v2';
 const ASSETS = [
   './',
   './index.html',

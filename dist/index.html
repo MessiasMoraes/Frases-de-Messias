@@ -25,10 +25,19 @@
   <meta name="theme-color" content="#4A90E2">
 
   <!-- Vínculo do CSS com forçador de atualização de cache -->
-  <link rel="stylesheet" href="./style.css?v=2026">
+  <link rel="stylesheet" href="./style.css?v=20260812-aviso-apk">
 
   <!-- Biblioteca html2canvas para permitir baixar os cards como imagem -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <!-- Google Analytics (Substitua G-3TZ1W3722P pelo seu ID quando tiver) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3TZ1W3722P"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-3TZ1W3722P');
+  </script>
 </head>
   <div id="templateExportacao" style="display:none;">
 
@@ -55,6 +64,20 @@
   </div>
 <body>
 
+  <section id="avisoApk" class="aviso-apk" role="dialog" aria-modal="true" aria-labelledby="avisoApkTitulo" hidden>
+    <div class="aviso-apk-caixa">
+      <div class="aviso-apk-icone" aria-hidden="true">📱</div>
+      <p class="aviso-apk-selo">APP ANDROID DISPONÍVEL</p>
+      <h2 id="avisoApkTitulo">Leve as Frases de Messias com você</h2>
+      <p>Baixe o aplicativo gratuito para acessar frases inspiradoras de forma rápida no seu celular.</p>
+      <a id="baixarApkBtn" class="btn-baixar-apk" href="Frases_de_Messias.apk?v=1.1" download="Frases-de-Messias-v1.1.apk" type="application/vnd.android.package-archive">
+        📥 Baixar aplicativo APK
+      </a>
+      <p class="aviso-apk-detalhe">Para celulares Android · Arquivo de aproximadamente 22 MB</p>
+      <button id="continuarNoSiteBtn" class="btn-continuar-site" type="button">Continuar no site</button>
+    </div>
+  </section>
+
 <header>
   <div class="container">
     <h1>📖 Frases de Messias</h1>
@@ -75,13 +98,13 @@
 </header>
 <!-- Gerador com Inteligência Artificial -->
 <section class="ia-gerador" style="padding: 20px; background: rgba(74, 144, 226, 0.1); border-radius: 12px; margin: 20px auto; max-width: 800px; text-align: center;">
-  <h2>✨ Gerar Frase Personalizada com IA</h2>
-  <p>Digite um tema ou sentimento para a IA criar uma frase exclusiva para você:</p>
-  
-  <div style="display: flex; gap: 10px; max-width: 500px; margin: 15px auto; flex-wrap: wrap;">
-    <input type="text" id="promptIA" placeholder="Ex: Motivação para estudar, gratidão, etc..." style="flex: 1; min-width: 200px; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem;">
-    <button id="gerarIaBtn" style="padding: 12px 20px; border-radius: 8px; background: #4A90E2; color: white; border: none; cursor: pointer; font-weight: bold; font-size: 1rem;">Gerar Frase</button>
-  </div>
+    <h2>✨ Messias IA - Sabedoria em Tempo Real</h2>
+    <p>Faça uma pergunta ou peça uma frase inspiradora sobre qualquer assunto:</p>
+    
+    <div style="display: flex; gap: 10px; max-width: 600px; margin: 15px auto; flex-wrap: wrap;">
+      <input type="text" id="promptIA" placeholder="Ex: Como lidar com a ansiedade? ou Crie uma frase de fé." style="flex: 1; min-width: 250px; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem;">
+      <button id="gerarIaBtn" style="padding: 12px 20px; border-radius: 8px; background: #2563eb; color: white; border: none; cursor: pointer; font-weight: bold; font-size: 1rem;">Perguntar à IA</button>
+    </div>
 
   <div id="resultadoIA" style="margin-top: 15px; font-style: italic; font-size: 1.1em; color: #333;"></div>
 </section>
@@ -103,69 +126,19 @@
 
 <section class="categorias">
   <h2>Todas as Categorias</h2>
-
-  <div class="grid">
-
-    <div class="card" data-categoria="amizade">
-      <img src="imagens/categorias/amizade.png" alt="Amizade" onerror="this.src='imagens/categorias/padrao.jpg'">
-      <span>🤝 Amizade</span>
-    </div>
-
-    <div class="card" data-categoria="amor">
-      <img src="imagens/categorias/amor.png" alt="Amor" onerror="this.src='imagens/categorias/padrao.jpg'">
-      <span>❤️ Amor</span>
-    </div>
-
-    <div class="card" data-categoria="boa-noite">
-      <img src="imagens/categorias/boa-noite.png" alt="Boa Noite" onerror="this.src='imagens/categorias/padrao.jpg'">
-      <span>🌙 Boa Noite</span>
-    </div>
-
-    <div class="card" data-categoria="bom-dia">
-      <img src="imagens/categorias/bom-dia.png" alt="Bom Dia" onerror="this.src='imagens/categorias/padrao.jpg'">
-      <span>🌞 Bom Dia</span>
-    </div>
-
-    <div class="card" data-categoria="esperanca">
-      <img src="imagens/categorias/esperanca.png" alt="Esperança" onerror="this.src='imagens/categorias/padrao.jpg'">
-      <span>🌱 Esperança</span>
-    </div>
-
-    <div class="card" data-categoria="familia">
-      <img src="imagens/categorias/familia.png" alt="Família" onerror="this.src='imagens/categorias/padrao.jpg'">
-      <span>🏡 Família</span>
-    </div>
-
-    <div class="card" data-categoria="fe">
-      <img src="imagens/categorias/fe.png" alt="Fé" onerror="this.src='imagens/categorias/padrao.jpg'">
-      <span>🙏 Fé</span>
-    </div>
-
-    <div class="card" data-categoria="gratidao">
-      <img src="imagens/categorias/gratidao.png" alt="Gratidão" onerror="this.src='imagens/categorias/padrao.jpg'">
-      <span>✨ Gratidão</span>
-    </div>
-
-    <div class="card" data-categoria="motivacao">
-      <img src="imagens/categorias/motivacao.png" alt="Motivação" onerror="this.src='imagens/categorias/padrao.jpg'">
-      <span>💪 Motivação</span>
-    </div>
-
-    <div class="card" data-categoria="reflexao">
-      <img src="imagens/categorias/reflexao.png" alt="Reflexão" onerror="this.src='imagens/categorias/padrao.jpg'">
-      <span>💡 Reflexão</span>
-    </div>
-
-    <div class="card" data-categoria="sucesso">
-      <img src="imagens/categorias/sucesso.png" alt="Sucesso" onerror="this.src='imagens/categorias/padrao.jpg'">
-      <span>🚀 Sucesso</span>
-    </div>
-
-    <div class="card" data-categoria="vida">
-      <img src="imagens/categorias/vida.png" alt="Vida" onerror="this.src='imagens/categorias/padrao.jpg'">
-      <span>🍃 Vida</span>
-    </div>
-
+  <div class="grid-botoes">
+    <button class="btn-categoria" data-categoria="amizade">🤝 Amizade</button>
+    <button class="btn-categoria" data-categoria="amor">❤️ Amor</button>
+    <button class="btn-categoria" data-categoria="boa-noite">🌙 Boa Noite</button>
+    <button class="btn-categoria" data-categoria="bom-dia">🌞 Bom Dia</button>
+    <button class="btn-categoria" data-categoria="esperanca">🌱 Esperança</button>
+    <button class="btn-categoria" data-categoria="familia">🏡 Família</button>
+    <button class="btn-categoria" data-categoria="fe">🙏 Fé</button>
+    <button class="btn-categoria" data-categoria="gratidao">✨ Gratidão</button>
+    <button class="btn-categoria" data-categoria="motivacao">💪 Motivação</button>
+    <button class="btn-categoria" data-categoria="reflexao">💡 Reflexão</button>
+    <button class="btn-categoria" data-categoria="sucesso">🚀 Sucesso</button>
+    <button class="btn-categoria" data-categoria="vida">🍃 Vida</button>
   </div>
 </section>
 
@@ -177,13 +150,33 @@
 
 <footer>
   <p>© 2026 Frases de Messias</p>
+  <div style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">
+    🚀 <span id="contadorGlobal">...</span> visitas ao portal
+  </div>
 </footer>
 
 <button id="temaBtn">🌙 Modo Escuro</button>
 
-<!-- Script do projeto carregado como módulo JavaScript -->
-<script type="module" src="script.js"></script>
+  <!-- Modo Cinema Animado Overlay -->
+  <div id="modoCinema" class="modo-cinema-overlay" style="display:none;">
+    <div class="cinema-content">
+      <div id="cinemaBackground" class="cinema-bg"></div>
+      <div class="cinema-overlay-dark"></div>
+      <div class="cinema-text-container">
+        <p id="cinemaTexto" class="cinema-frase"></p>
+        <div id="cinemaAutor" class="cinema-autor"></div>
+        <div class="cinema-marca">📖 Frases de Messias</div>
+      </div>
+    </div>
+    <div class="cinema-controls">
+      <button onclick="fecharModoCinema()" class="btn-fechar-cinema">✖ Fechar</button>
+      <p class="instrucao-gravacao">Dica: Use o "Gravador de Tela" do seu celular para capturar esta animação! 📱</p>
+    </div>
+  </div>
 
-</body>
+  <!-- Script do projeto carregado como módulo JavaScript -->
+  <script type="module" src="script.js?v=20260813-apk-atualizado-v1.1"></script>
+  
+  </body>
 </html>
 

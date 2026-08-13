@@ -975,6 +975,17 @@ function configurarAvisoApk() {
 
     if (!aviso || !continuar || !baixar) return;
 
+    // No aplicativo Android, o portal já está instalado. Portanto, o aviso de APK
+    // não deve ser exibido nem levar a pessoa a tentar baixar o próprio app novamente.
+    const emAplicativoNativo = window.Capacitor?.isNativePlatform?.()
+        || window.location.protocol === "capacitor:"
+        || window.location.hostname === "localhost";
+    if (emAplicativoNativo) {
+        aviso.hidden = true;
+        document.body.classList.remove("aviso-apk-ativo");
+        return;
+    }
+
     const fecharAviso = () => {
         aviso.hidden = true;
         document.body.classList.remove("aviso-apk-ativo");

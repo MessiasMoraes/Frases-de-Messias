@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Painel Administrativo - Frases de Messias</title>
+
+<link rel="stylesheet" href="admin.css?v=20260812-seletor-categoria-proprio">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<div id="loginContainer" class="login-container">
+
+<h1>📖 Frases de Messias</h1>
+
+<h2>Login do Administrador</h2>
+
+<input
+type="email"
+id="email"
+placeholder="E-mail">
+
+<input
+type="password"
+id="senha"
+placeholder="Senha">
+
+<button id="btnLogin">
+Entrar
+</button>
+
+</div>
+
+<!-- PAINEL -->
+
+<div id="painel" class="painel" style="display:none;">
+
+<header>
+
+<h1>Painel Administrativo</h1>
+
+<div>
+
+<button id="temaBtn">
+🌙 Modo Escuro
+</button>
+
+<button id="btnSair">
+Sair
+</button>
+
+<button id="btnConfig" title="Configurar API">
+⚙️
+</button>
+
+</div>
+
+</header>
+
+<!-- ESTATÍSTICAS -->
+
+<section class="estatisticas">
+
+<div class="card">
+
+<h2 id="totalFrases">0</h2>
+
+<p>Frases</p>
+
+</div>
+
+<div class="card">
+
+<h2 id="totalCategorias">0</h2>
+
+<p>Categorias</p>
+
+</div>
+
+<div class="card">
+
+<h2 id="totalAutores">0</h2>
+
+<p>Autores</p>
+
+</div>
+
+<div class="card">
+
+<h2 id="totalVisitas">0</h2>
+
+<p>Visitas</p>
+
+</div>
+
+</section>
+
+<!-- CADASTRO -->
+
+<section class="cadastro">
+
+<h2>➕ Nova Frase</h2>
+
+<div class="form-row">
+
+<input
+type="text"
+id="autor"
+placeholder="Autor"
+class="form-input">
+
+<select id="categoria" class="form-input">
+
+<option value="">Selecione uma categoria</option>
+
+</select>
+
+</div>
+
+<textarea
+id="texto"
+rows="4"
+placeholder="Digite a frase"
+class="form-input">
+</textarea>
+
+<div class="form-row">
+
+<input
+type="file"
+id="imagem"
+accept="image/*"
+class="form-input">
+
+<button id="gerarIaBtn" class="btn-ia">
+✨ Gerar com IA
+</button>
+
+</div>
+
+<img
+id="preview"
+style="display:none;max-width:250px;border-radius:12px;margin:10px 0;">
+
+<!-- PREVIEW DO CARD -->
+
+<div id="previewCard" class="preview-card" style="display:none;">
+
+<h3>Pré-visualização do Card</h3>
+
+<div id="cardPreview" class="card-preview">
+
+<img id="previewImg" src="" style="display:none;width:100%;height:200px;object-fit:cover;border-radius:8px;">
+
+<div class="preview-content">
+
+<p id="previewTexto"></p>
+
+<small id="previewAutor"></small>
+
+<div class="preview-logo">📖 Frases de Messias</div>
+
+</div>
+
+</div>
+
+</div>
+
+<button id="salvarFrase" class="btn-salvar">
+💾 Salvar Frase
+</button>
+
+</section>
+
+<!-- PESQUISA -->
+
+<section class="pesquisa">
+
+<select id="filtroCategoria" class="form-input">
+
+<option value="">
+📂 Todas as categorias
+</option>
+
+</select>
+
+<input
+id="pesquisa"
+placeholder="Pesquisar frase..."
+class="form-input">
+
+</section>
+
+<!-- LISTA -->
+
+<div id="listaFrases"></div>
+
+</div>
+
+<!-- SELETOR PRÓPRIO DE CATEGORIAS -->
+<div id="seletorCategoriaModal" class="seletor-categoria-modal" aria-hidden="true">
+
+<div class="seletor-categoria-caixa" role="dialog" aria-modal="true" aria-labelledby="seletorCategoriaTitulo">
+
+<div class="seletor-categoria-cabecalho">
+
+<h2 id="seletorCategoriaTitulo">Selecione uma categoria</h2>
+
+<button id="fecharSeletorCategoria" class="btn-fechar-seletor" type="button" aria-label="Fechar seletor de categorias">×</button>
+
+</div>
+
+<div id="opcoesSeletorCategoria" class="opcoes-seletor-categoria" role="listbox"></div>
+
+</div>
+
+</div>
+
+<!-- MODAL -->
+
+<div id="modalEditar" class="modal">
+
+<div class="modal-conteudo">
+
+<h2>Editar Frase</h2>
+
+<input
+type="hidden"
+id="editId">
+
+<input
+id="editAutor"
+placeholder="Autor"
+class="form-input">
+
+<select id="editCategoria" class="form-input">
+
+<option value="">Selecione uma categoria</option>
+
+</select>
+
+<textarea
+id="editTexto"
+rows="6"
+class="form-input">
+</textarea>
+
+<div class="modal-buttons">
+
+<button id="btnAtualizar" class="btn-salvar">
+✅ Salvar Alterações
+</button>
+
+<button id="btnCancelar" class="btn-cancelar">
+❌ Cancelar
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- MODAL IA -->
+
+<div id="modalIA" class="modal">
+
+<div class="modal-conteudo">
+
+<h2>✨ Gerar Frase com IA</h2>
+
+<input
+type="text"
+id="iaPrompt"
+placeholder="Ex: Frase sobre sucesso, motivação para acordar cedo, etc."
+class="form-input">
+
+<select id="iaCategoria" class="form-input">
+
+<option value="">Selecione uma categoria</option>
+
+</select>
+
+<div class="modal-buttons">
+
+<button id="btnGerarIA" class="btn-salvar">
+🚀 Gerar Frase
+</button>
+
+<button id="btnCancelarIA" class="btn-cancelar">
+❌ Cancelar
+</button>
+
+</div>
+
+<div id="iaResultado" style="margin-top:15px;display:none;">
+
+<p id="iaTexto" style="font-style:italic;font-size:1.1em;margin-bottom:10px;"></p>
+
+<button id="btnUsarIA" class="btn-salvar">
+✅ Usar Esta Frase
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script type="module" src="admin.js?v=20260812-categorias-local-imediatas"></script>
+
+</body>
+</html>
