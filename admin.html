@@ -7,8 +7,9 @@
 
 <title>Painel Administrativo - Frases de Messias</title>
 
-<link rel="stylesheet" href="admin.css?v=20260812-seletor-categoria-proprio">
+<link rel="stylesheet" href="admin.css?v=20260813-importacao-lote-v1">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 </head>
 
@@ -179,6 +180,50 @@ style="display:none;max-width:250px;border-radius:12px;margin:10px 0;">
 
 </section>
 
+<!-- IMPORTAÇÃO EM LOTE -->
+<section class="importacao-lote" aria-labelledby="tituloImportacaoLote">
+
+<h2 id="tituloImportacaoLote">📥 Importar frases em lote</h2>
+
+<p class="importacao-descricao">Envie um arquivo CSV, Excel ou JSON. O painel fará uma prévia, validará as categorias e impedirá a inclusão de frases repetidas antes de publicar.</p>
+
+<a class="link-modelo-lote" href="modelo-frases-lote.csv" download>⬇️ Baixar modelo CSV</a>
+
+<div class="form-row importacao-controles">
+
+<input type="file" id="arquivoLote" accept=".csv,.xlsx,.xls,.json,text/csv,application/json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" class="form-input">
+
+<button id="analisarLote" type="button" disabled>🔎 Analisar arquivo</button>
+
+</div>
+
+<p id="statusLote" class="status-lote" role="status">Selecione um arquivo para começar.</p>
+
+<div id="resultadoLote" class="resultado-lote" hidden>
+
+<div id="resumoLote" class="resumo-lote"></div>
+
+<div id="errosLote" class="erros-lote" hidden></div>
+
+<div class="tabela-lote-wrapper">
+<table class="tabela-lote">
+<thead>
+<tr>
+<th>Categoria</th>
+<th>Frase</th>
+<th>Autor</th>
+</tr>
+</thead>
+<tbody id="previewLote"></tbody>
+</table>
+</div>
+
+<button id="importarLote" type="button" class="btn-salvar" disabled>✅ Importar frases aprovadas</button>
+
+</div>
+
+</section>
+
 <!-- PESQUISA -->
 
 <section class="pesquisa">
@@ -314,7 +359,7 @@ class="form-input">
 
 </div>
 
-<script type="module" src="admin.js?v=20260812-categorias-local-imediatas"></script>
+<script type="module" src="admin.js?v=20260813-importacao-lote-v1"></script>
 
 </body>
 </html>

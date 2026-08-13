@@ -9,7 +9,8 @@ import {
   deleteDoc,
   doc,
   getDoc,
-  setDoc
+  setDoc,
+  writeBatch
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 import {
@@ -58,6 +59,18 @@ const totalFrases = document.getElementById("totalFrases");
 const totalCategorias = document.getElementById("totalCategorias");
 const totalAutores = document.getElementById("totalAutores");
 const totalVisitas = document.getElementById("totalVisitas");
+
+// IMPORTAÇÃO EM LOTE
+const arquivoLote = document.getElementById("arquivoLote");
+const analisarLote = document.getElementById("analisarLote");
+const importarLote = document.getElementById("importarLote");
+const statusLote = document.getElementById("statusLote");
+const resultadoLote = document.getElementById("resultadoLote");
+const resumoLote = document.getElementById("resumoLote");
+const errosLote = document.getElementById("errosLote");
+const previewLote = document.getElementById("previewLote");
+let loteAprovado = [];
+let dadosDoPainelCarregados = false;
 
 const modalEditar = document.getElementById("modalEditar");
 const editId = document.getElementById("editId");
@@ -575,6 +588,258 @@ btnSalvar.addEventListener("click", async () => {
 });
 
 // ==========================
+// IMPORTAÇÃO EM LOTE
+// ==========================
+
+const LIMITE_LOTE = 500;
+const LIMITE_PREVIA = 25;
+
+function normalizarLote(texto = "") {
+    return String(texto)
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLocaleLowerCase("pt-BR");
+}
+
+function textoSeguroDaCelula(valor) {
+    if (valor === null || valor === undefined) return "";
+    return String(valor).replace(/\uFEFF/g, "").trim();
+}
+
+function valorDaLinha(linha, campo) {
+    const chave = Object.keys(linha || {}).find((nome) => normalizarLote(nome) === campo);
+    return chave ? textoSeguroDaCelula(linha[chave]) : "";
+}
+
+function definirStatusLote(mensagem, tipo = "") {
+    statusLote.textContent = mensagem;
+    statusLote.className = `status-lote ${tipo}`.trim();
+}
+
+function limparResultadoLote() {
+    loteAprovado = [];
+    resultadoLote.hidden = true;
+    importarLote.disabled = true;
+    resumoLote.replaceChildren();
+    previewLote.replaceChildren();
+    errosLote.replaceChildren();
+    errosLote.hidden = true;
+}
+
+function lerArquivoLote(arquivo) {
+    return new Promise((resolve, reject) => {
+        const leitor = new FileReader();
+        leitor.onerror = () => reject(new Error("Não foi possível ler o arquivo selecionado."));
+        leitor.onload = () => {
+            try {
+                const nome = arquivo.name.toLocaleLowerCase("pt-BR");
+                if (nome.endsWith(".json")) {
+                    const dados = JSON.parse(String(leitor.result));
+                    resolve(Array.isArray(dados) ? dados : (Array.isArray(dados.frases) ? dados.frases : []));
+                    return;
+                }
+                if (!window.XLSX) throw new Error("O leitor de planilhas não foi carregado. Atualize a página e tente novamente.");
+                const planilha = window.XLSX.read(leitor.result, { type: "array" });
+                const primeiraAba = planilha.SheetNames[0];
+                if (!primeiraAba) throw new Error("A planilha não possui uma aba com dados.");
+                resolve(window.XLSX.utils.sheet_to_json(planilha.Sheets[primeiraAba], { defval: "" }));
+            } catch (erro) {
+                reject(new Error(erro.message || "O arquivo não está em um formato válido."));
+            }
+        };
+        if (arquivo.name.toLocaleLowerCase("pt-BR").endsWith(".json")) leitor.readAsText(arquivo, "UTF-8");
+        else leitor.readAsArrayBuffer(arquivo);
+    });
+}
+
+function exibirResultadoLote(resultado) {
+    resultadoLote.hidden = false;
+    resumoLote.replaceChildren();
+    previewLote.replaceChildren();
+    errosLote.replaceChildren();
+
+    const resumo = document.createElement("p");
+    resumo.innerHTML = `<strong>${resultado.aprovadas.length}</strong> frase(s) aprovada(s) para importar de ${resultado.total} linha(s) lida(s).`;
+    resumoLote.appendChild(resumo);
+
+    const porCategoria = new Map();
+    resultado.aprovadas.forEach((frase) => porCategoria.set(frase.categoria, (porCategoria.get(frase.categoria) || 0) + 1));
+    if (porCategoria.size) {
+        const lista = document.createElement("p");
+        lista.className = "contagem-categorias-lote";
+        lista.textContent = Array.from(porCategoria, ([categoriaLote, total]) => `${categoriaLote}: ${total}`).join(" · ");
+        resumoLote.appendChild(lista);
+    }
+
+    resultado.aprovadas.slice(0, LIMITE_PREVIA).forEach((frase) => {
+        const linha = document.createElement("tr");
+        [frase.categoria, frase.texto, frase.autor].forEach((conteudo) => {
+            const celula = document.createElement("td");
+            celula.textContent = conteudo;
+            linha.appendChild(celula);
+        });
+        previewLote.appendChild(linha);
+    });
+
+    if (resultado.aprovadas.length > LIMITE_PREVIA) {
+        const aviso = document.createElement("p");
+        aviso.className = "aviso-previa-lote";
+        aviso.textContent = `A prévia mostra as primeiras ${LIMITE_PREVIA} frases aprovadas.`;
+        resumoLote.appendChild(aviso);
+    }
+
+    if (resultado.erros.length) {
+        errosLote.hidden = false;
+        const titulo = document.createElement("strong");
+        titulo.textContent = `${resultado.erros.length} linha(s) não serão importadas:`;
+        const lista = document.createElement("ul");
+        resultado.erros.slice(0, 12).forEach((erro) => {
+            const item = document.createElement("li");
+            item.textContent = erro;
+            lista.appendChild(item);
+        });
+        if (resultado.erros.length > 12) {
+            const item = document.createElement("li");
+            item.textContent = `… e mais ${resultado.erros.length - 12} ocorrência(s).`;
+            lista.appendChild(item);
+        }
+        errosLote.append(titulo, lista);
+    }
+}
+
+function validarLote(linhas) {
+    const nomesCategorias = new Map(categorias.map((item) => [normalizarLote(item.nome), item.nome]));
+    const textosExistentes = new Set(frases.map((frase) => normalizarLote(frase.texto)).filter(Boolean));
+    const textosDoLote = new Set();
+    const aprovadas = [];
+    const erros = [];
+
+    if (!Array.isArray(linhas) || !linhas.length) {
+        return { total: 0, aprovadas, erros: ["O arquivo não contém linhas para importar."] };
+    }
+    if (linhas.length > LIMITE_LOTE) {
+        return { total: linhas.length, aprovadas, erros: [`O lote possui ${linhas.length} linhas. O limite por importação é ${LIMITE_LOTE}.`] };
+    }
+
+    linhas.forEach((linha, indice) => {
+        const numeroLinha = indice + 2;
+        const nomeCategoria = valorDaLinha(linha, "categoria");
+        const textoFrase = valorDaLinha(linha, "texto");
+        const autorFrase = valorDaLinha(linha, "autor") || "Messias";
+        const imagemFrase = valorDaLinha(linha, "imagem");
+        const categoriaCanonica = nomesCategorias.get(normalizarLote(nomeCategoria));
+        const textoNormalizado = normalizarLote(textoFrase);
+
+        if (!categoriaCanonica) {
+            erros.push(`Linha ${numeroLinha}: categoria inválida ou ausente (${nomeCategoria || "sem categoria"}).`);
+            return;
+        }
+        if (!textoNormalizado) {
+            erros.push(`Linha ${numeroLinha}: a frase está vazia.`);
+            return;
+        }
+        if (textosExistentes.has(textoNormalizado)) {
+            erros.push(`Linha ${numeroLinha}: a frase já existe no site.`);
+            return;
+        }
+        if (textosDoLote.has(textoNormalizado)) {
+            erros.push(`Linha ${numeroLinha}: frase repetida dentro do próprio arquivo.`);
+            return;
+        }
+
+        textosDoLote.add(textoNormalizado);
+        aprovadas.push({ categoria: categoriaCanonica, texto: textoFrase, autor: autorFrase, imagem: imagemFrase });
+    });
+
+    return { total: linhas.length, aprovadas, erros };
+}
+
+arquivoLote.addEventListener("change", () => {
+    limparResultadoLote();
+    analisarLote.disabled = !arquivoLote.files?.length;
+    definirStatusLote(arquivoLote.files?.[0] ? `Arquivo selecionado: ${arquivoLote.files[0].name}` : "Selecione um arquivo para começar.");
+});
+
+analisarLote.addEventListener("click", async () => {
+    const arquivo = arquivoLote.files?.[0];
+    if (!arquivo) return;
+    if (!dadosDoPainelCarregados) {
+        definirStatusLote("Aguarde o painel terminar de carregar as frases existentes.", "erro");
+        return;
+    }
+
+    analisarLote.disabled = true;
+    limparResultadoLote();
+    definirStatusLote("Analisando arquivo e comparando com as frases cadastradas…");
+    try {
+        const linhas = await lerArquivoLote(arquivo);
+        const resultado = validarLote(linhas);
+        loteAprovado = resultado.aprovadas;
+        exibirResultadoLote(resultado);
+        importarLote.disabled = !loteAprovado.length;
+        definirStatusLote(loteAprovado.length ? "Prévia pronta. Revise as frases aprovadas antes de importar." : "Nenhuma frase foi aprovada para importação.", loteAprovado.length ? "sucesso" : "erro");
+    } catch (erro) {
+        console.error("Erro ao analisar lote:", erro);
+        definirStatusLote(`Erro ao analisar arquivo: ${erro.message}`, "erro");
+    } finally {
+        analisarLote.disabled = false;
+    }
+});
+
+importarLote.addEventListener("click", async () => {
+    if (!loteAprovado.length) return;
+    const total = loteAprovado.length;
+    if (!confirm(`Importar ${total} frase(s) aprovada(s)? Esta ação adicionará somente as frases mostradas na prévia.`)) return;
+
+    importarLote.disabled = true;
+    analisarLote.disabled = true;
+    let importadas = 0;
+    try {
+        for (let inicio = 0; inicio < loteAprovado.length; inicio += 400) {
+            const grupo = loteAprovado.slice(inicio, inicio + 400);
+            const loteFirestore = writeBatch(db);
+            grupo.forEach((frase) => {
+                const referencia = doc(collection(db, "frases"));
+                loteFirestore.set(referencia, {
+                    autor: frase.autor,
+                    categoria: frase.categoria,
+                    texto: frase.texto,
+                    imagem: frase.imagem,
+                    curtidas: 0,
+                    visualizacoes: 0,
+                    compartilhamentos: 0,
+                    data: new Date()
+                });
+            });
+            await loteFirestore.commit();
+            importadas += grupo.length;
+            definirStatusLote(`Importadas ${importadas} de ${total} frase(s)…`);
+        }
+
+        definirStatusLote(`✅ ${importadas} frase(s) importada(s) com sucesso.`, "sucesso");
+        alert(`✅ ${importadas} frase(s) importada(s) com sucesso!`);
+        arquivoLote.value = "";
+        limparResultadoLote();
+        analisarLote.disabled = true;
+        dadosDoPainelCarregados = false;
+        await carregarFrases();
+    } catch (erro) {
+        console.error("Erro ao importar lote:", erro);
+        loteAprovado = [];
+        importarLote.disabled = true;
+        definirStatusLote(`Importação interrompida após ${importadas} de ${total} frase(s): ${erro.message}. Analise o arquivo novamente antes de tentar importar.`, "erro");
+        alert("A importação não foi concluída. O painel atualizará as frases cadastradas para impedir duplicidades em uma nova tentativa.");
+        dadosDoPainelCarregados = false;
+        await carregarFrases();
+    } finally {
+        importarLote.disabled = !loteAprovado.length;
+        analisarLote.disabled = !arquivoLote.files?.length;
+    }
+});
+
+// ==========================
 // CARREGAR FRASES
 // ==========================
 
@@ -608,6 +873,7 @@ async function carregarFrases() {
         listaFrases.innerHTML = "";
 
         mostrarLista(frases);
+        dadosDoPainelCarregados = true;
 
     } catch (erro) {
 
