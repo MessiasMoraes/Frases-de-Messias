@@ -672,19 +672,31 @@ function ehNavegadorInstagram() {
     return /Instagram/i.test(navigator.userAgent || "");
 }
 
+function temDownloaderAndroidNativo() {
+    return Boolean(window.AndroidDownloader)
+        && typeof window.AndroidDownloader.baixarVideo === "function";
+}
+
 function ehAplicativoAndroid() {
-    return /Android/i.test(navigator.userAgent || "")
-        && Boolean(window.Capacitor?.isNativePlatform?.())
-        && window.Capacitor?.getPlatform?.() === "android";
+    if (!/Android/i.test(navigator.userAgent || "")) return false;
+
+    // Ao carregar uma página remota, o objeto Capacitor pode não ser exposto
+    // novamente no JavaScript. A ponte AndroidDownloader continua disponível
+    // no WebView e é a confirmação mais confiável de que o app é nativo.
+    return temDownloaderAndroidNativo()
+        || (Boolean(window.Capacitor?.isNativePlatform?.())
+            && window.Capacitor?.getPlatform?.() === "android");
 }
 
 function baixarVideoNoAppAndroid(url, filename) {
     const downloader = window.AndroidDownloader;
-    if (!downloader || typeof downloader.baixarVideo !== "function") return false;
+    if (!temDownloaderAndroidNativo()) return false;
 
     try {
-        downloader.baixarVideo(url, filename);
-        return true;
+        const resultado = downloader.baixarVideo(url, filename);
+        // APKs anteriores não retornavam valor; undefined significa que a ponte
+        // recebeu a solicitação. A versão atual retorna false apenas ao rejeitar a URL.
+        return resultado !== false;
     } catch (erro) {
         console.warn("Não foi possível acionar o download nativo Android:", erro);
         return false;

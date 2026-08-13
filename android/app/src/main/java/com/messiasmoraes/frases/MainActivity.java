@@ -147,8 +147,10 @@ public class MainActivity extends BridgeActivity {
         }
 
         @JavascriptInterface
-        public void baixarVideo(String url, String nomeArquivo) {
+        public boolean baixarVideo(String url, String nomeArquivo) {
+            if (url == null || url.trim().isEmpty()) return false;
             activity.runOnUiThread(() -> activity.baixarVideoNativamente(url, nomeArquivo));
+            return true;
         }
     }
 }
