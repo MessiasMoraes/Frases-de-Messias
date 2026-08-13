@@ -45,6 +45,15 @@ function normalizarParaBusca(texto) {
     return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
+// Padroniza nomes de categorias exibidos no botão e no Firestore.
+// Assim, por exemplo, “boa-noite”, “Boa Noite” e “🌙 Boa Noite” apontam
+// para a mesma categoria, inclusive no WebView Android.
+function normalizarCategoria(texto = "") {
+    return normalizarParaBusca(
+        sanitizarTexto(String(texto).replace(/[-_]+/g, " "))
+    ).replace(/\s+/g, " ").trim();
+}
+
 // Converte imagens antigas do GitHub Pages para o mesmo domínio atual.
 // O carregamento normal dos cards continua direto; a exportação usa o proxy abaixo.
 function normalizarUrlImagem(url = "") {
@@ -217,14 +226,14 @@ function mostrarFrases(lista, filtro = "") {
     if (!lista) return;
     lista.innerHTML = "";
     
-    const filtroLimpo = normalizarParaBusca(sanitizarTexto(filtro));
+    const filtroLimpo = normalizarCategoria(filtro);
 
     const resultado = frases.filter(f => {
         if (filtroLimpo === "") return true;
         
         const textoFrase = normalizarParaBusca(f.texto || "");
         const autorFrase = normalizarParaBusca(f.autor || "");
-        const categoriaFrase = normalizarParaBusca(sanitizarTexto(f.categoria || ""));
+        const categoriaFrase = normalizarCategoria(f.categoria || "");
 
         return textoFrase.includes(filtroLimpo) || autorFrase.includes(filtroLimpo) || categoriaFrase.includes(filtroLimpo);
     });
@@ -315,8 +324,10 @@ function configurarBotoesCategoriasFixos(pesquisa, lista) {
     const botoes = document.querySelectorAll(".grid-botoes .btn-categoria");
     botoes.forEach(btn => {
         btn.onclick = () => {
-            const cat = btn.getAttribute("data-categoria") || btn.innerText;
-            if (pesquisa) pesquisa.value = sanitizarTexto(cat);
+            // O texto visível preserva o nome usado no Firestore; o atributo
+            // data-categoria possui versões técnicas como “bom-dia”.
+            const cat = sanitizarTexto(btn.textContent || btn.getAttribute("data-categoria") || "");
+            if (pesquisa) pesquisa.value = cat;
             mostrarFrases(lista, cat);
             const offset = lista.getBoundingClientRect().top + window.pageYOffset - 100;
             window.scrollTo({ top: offset, behavior: "smooth" });
