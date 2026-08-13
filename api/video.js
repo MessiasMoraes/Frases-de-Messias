@@ -161,13 +161,14 @@ module.exports = async function renderVideo(req, res) {
       `drawtext=fontfile=${fontDir}/LiberationSans-Bold.ttf:textfile=/tmp/quote.txt:fontcolor=white:fontsize=${quoteSize}:line_spacing=16:text_align=center:x=(w-text_w)/2:y=(h-text_h)/2-80:shadowcolor=black@0.65:shadowx=2:shadowy=2`,
       `drawtext=fontfile=${fontDir}/LiberationSans-Regular.ttf:textfile=/tmp/author.txt:fontcolor=white:fontsize=${authorSize}:line_spacing=10:text_align=center:x=(w-text_w)/2:y=(h*0.68):shadowcolor=black@0.65:shadowx=2:shadowy=2`,
       `drawtext=fontfile=${fontDir}/LiberationSans-Regular.ttf:text='Frases de Messias':fontcolor=white@0.9:fontsize=30:x=(w-text_w)/2:y=h-75:shadowcolor=black@0.6:shadowx=2:shadowy=2`,
-      "fade=t=in:st=0:d=0.5",
+      // O primeiro quadro é usado como miniatura por muitos players Android; ele precisa manter a capa visível.
       `fade=t=out:st=${RENDER_SECONDS - 1}:d=1`,
     ].join(",");
     await runCommand(sandbox, ffmpegPath, [
       "-y", "-loop", "1", "-i", "/tmp/input.jpg", "-vf", vf,
       "-frames:v", String(RENDER_SECONDS * FPS), "-an", "-c:v", "libx264",
       "-preset", "veryfast", "-crf", "23", "-pix_fmt", "yuv420p",
+      "-g", String(FPS), "-keyint_min", String(FPS), "-sc_threshold", "0",
       "-movflags", "+faststart", "/tmp/frases-de-messias.mp4",
     ], "Renderização FFmpeg");
 
