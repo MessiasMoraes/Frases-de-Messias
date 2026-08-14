@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moderação da Comunidade | Frases de Messias</title>
+  <link rel="stylesheet" href="style.css?v=20260814-comunidade-v2">
+  <link rel="stylesheet" href="comunidade.css?v=20260814-comunidade-v2">
+  <link rel="stylesheet" href="moderacao.css?v=20260814-comunidade-v2">
+</head>
+<body class="pagina-comunidade pagina-moderacao">
+  <header class="cabecalho-comunidade">
+    <div class="container cabecalho-comunidade-conteudo">
+      <a class="marca-comunidade" href="admin.html">⚙️ <span>Painel Frases de Messias</span></a>
+      <nav class="nav-comunidade" aria-label="Navegação de moderação">
+        <a href="admin.html">Painel</a>
+        <a href="comunidade.html">Comunidade</a>
+        <a class="ativo" href="moderacao.html" aria-current="page">Moderação</a>
+      </nav>
+      <button id="sairModeracao" class="botao-texto" type="button" hidden>Sair</button>
+    </div>
+  </header>
+  <main class="container moderacao-principal">
+    <section id="loginModeracao" class="cartao-comunidade login-moderacao" aria-labelledby="tituloLoginModeracao">
+      <p class="rotulo">ÁREA RESTRITA</p>
+      <h1 id="tituloLoginModeracao">Moderação da comunidade</h1>
+      <p>Entre com a conta de administrador para aprovar ou recusar frases e comentários enviados pelos membros.</p>
+      <form id="formularioLoginModeracao" novalidate>
+        <label for="emailModeracao">E-mail do administrador</label>
+        <input id="emailModeracao" type="email" autocomplete="email" required>
+        <label for="senhaModeracao">Senha</label>
+        <input id="senhaModeracao" type="password" autocomplete="current-password" required>
+        <button class="botao-primario botao-largo" type="submit">Entrar na moderação</button>
+        <p id="mensagemLoginModeracao" class="mensagem-formulario" role="status"></p>
+      </form>
+    </section>
+
+    <section id="painelModeracao" hidden aria-labelledby="tituloModeracao">
+      <div class="hero-moderacao">
+        <div>
+          <p class="selo-comunidade">FILA DE APROVAÇÃO</p>
+          <h1 id="tituloModeracao">Conteúdos da comunidade</h1>
+          <p>Revise cada frase e comentário antes de permitir sua exibição pública.</p>
+        </div>
+        <div class="contador-pendencias"><strong id="totalPendencias">0</strong><span>pendentes</span></div>
+      </div>
+      <div id="listaPendencias" class="lista-pendencias" aria-live="polite">
+        <div class="estado-feed">⏳ Carregando conteúdos pendentes...</div>
+      </div>
+    </section>
+  </main>
+  <template id="templatePendencia">
+    <article class="cartao-comunidade cartao-pendencia">
+      <header class="publicacao-cabecalho">
+        <div class="avatar-publicacao" aria-hidden="true"></div>
+        <div>
+          <h2 class="nome-pendencia"></h2>
+          <p class="meta-pendencia"></p>
+        </div>
+        <span class="selo-categoria"></span>
+      </header>
+      <p class="rotulo tipo-pendencia"></p>
+      <blockquote class="texto-pendencia"></blockquote>
+      <div class="acoes-moderacao">
+        <button class="botao-recusar" type="button">Recusar</button>
+        <button class="botao-primario botao-aprovar" type="button">✓ Aprovar publicação</button>
+      </div>
+      <p class="mensagem-moderacao" role="status"></p>
+    </article>
+  </template>
+  <script type="module" src="moderacao.js?v=20260814-comunidade-v2"></script>
+</body>
+</html>

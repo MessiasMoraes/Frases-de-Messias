@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Comunidade Frases de Messias — compartilhe inspiração, fé e esperança.">
+  <title>Comunidade | Frases de Messias</title>
+  <link rel="stylesheet" href="style.css?v=20260814-comunidade-v2">
+  <link rel="stylesheet" href="comunidade.css?v=20260814-comunidade-v2">
+</head>
+<body class="pagina-comunidade">
+  <header class="cabecalho-comunidade">
+    <div class="container cabecalho-comunidade-conteudo">
+      <a class="marca-comunidade" href="index.html" aria-label="Voltar ao início">📖 <span>Frases de Messias</span></a>
+      <nav class="nav-comunidade" aria-label="Navegação principal">
+        <a href="index.html">🏠 Início</a>
+        <a class="ativo" href="comunidade.html" aria-current="page">💬 Comunidade</a>
+        <a href="favoritos.html">❤️ Favoritos</a>
+        <a href="contato.html">📞 Contato</a>
+      </nav>
+      <button id="alternarTemaComunidade" class="botao-icone" type="button" aria-label="Alternar tema">🌙</button>
+    </div>
+  </header>
+
+  <main class="container comunidade-principal">
+    <section class="hero-comunidade" aria-labelledby="tituloComunidade">
+      <p class="selo-comunidade">COMUNIDADE DE INSPIRAÇÃO</p>
+      <h1 id="tituloComunidade">Palavras que aproximam pessoas</h1>
+      <p>Compartilhe frases de fé, esperança e motivação. Toda publicação da comunidade passa pela aprovação antes de aparecer no feed público.</p>
+      <div class="hero-comunidade-acoes">
+        <a href="#feedComunidade" class="botao-secundario">Ver publicações</a>
+        <button id="abrirAutenticacaoHero" class="botao-primario" type="button">Participar da comunidade</button>
+      </div>
+    </section>
+
+    <section id="painelVisitante" class="cartao-comunidade cartao-boas-vindas" aria-labelledby="tituloVisitante">
+      <div class="avatar-grande" aria-hidden="true">✨</div>
+      <div>
+        <h2 id="tituloVisitante">Sua voz também inspira</h2>
+        <p>Crie uma conta gratuita para publicar frases, curtir conteúdos e comentar com respeito.</p>
+      </div>
+      <button id="abrirAutenticacao" class="botao-primario" type="button">Entrar ou criar conta</button>
+    </section>
+
+    <section id="painelMembro" class="painel-membro" hidden aria-labelledby="tituloMembro">
+      <div class="cartao-comunidade perfil-resumo">
+        <div id="avatarMembro" class="avatar-membro" aria-hidden="true">M</div>
+        <div class="perfil-resumo-texto">
+          <p class="rotulo">SEU PERFIL</p>
+          <h2 id="tituloMembro">Olá!</h2>
+          <p id="subtituloMembro">Compartilhe uma frase que faça bem a alguém hoje.</p>
+        </div>
+        <button id="sairComunidade" class="botao-texto" type="button">Sair</button>
+      </div>
+
+      <section class="cartao-comunidade compositor" aria-labelledby="tituloCompositor">
+        <div class="compositor-titulo">
+          <span class="avatar-pequeno" aria-hidden="true">✍️</span>
+          <div>
+            <h2 id="tituloCompositor">Compartilhe inspiração</h2>
+            <p>Sua publicação será revisada antes de aparecer no feed.</p>
+          </div>
+        </div>
+        <form id="formularioPublicacao" novalidate>
+          <label for="textoPublicacao">Sua frase ou reflexão</label>
+          <textarea id="textoPublicacao" maxlength="360" rows="4" placeholder="Escreva uma frase que possa inspirar alguém..." required></textarea>
+          <div class="linha-compositor">
+            <div class="campo-compositor">
+              <label for="categoriaPublicacao">Categoria</label>
+              <select id="categoriaPublicacao" required>
+                <option value="">Selecione uma categoria</option>
+              </select>
+            </div>
+            <div class="contador-caracteres" id="contadorCaracteres" aria-live="polite">0 / 360</div>
+          </div>
+          <div class="acoes-compositor">
+            <p class="aviso-comunidade">Ao publicar, você confirma que o texto é seu ou de uso permitido e concorda com uma comunidade respeitosa.</p>
+            <button id="enviarPublicacao" class="botao-primario" type="submit">📤 Enviar para aprovação</button>
+          </div>
+          <p id="mensagemPublicacao" class="mensagem-formulario" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </section>
+
+    <section class="feed-cabecalho" aria-labelledby="tituloFeed">
+      <div>
+        <p class="rotulo">FEED DA COMUNIDADE</p>
+        <h2 id="tituloFeed">Inspirações compartilhadas</h2>
+      </div>
+      <label class="filtro-feed" for="filtroCategoriaFeed">Categoria
+        <select id="filtroCategoriaFeed">
+          <option value="">Todas as categorias</option>
+        </select>
+      </label>
+    </section>
+
+    <section id="feedComunidade" class="feed-comunidade" aria-live="polite" aria-label="Publicações da comunidade">
+      <div class="estado-feed carregando-feed">⏳ Carregando inspirações da comunidade...</div>
+    </section>
+  </main>
+
+  <dialog id="modalAutenticacao" class="modal-autenticacao" aria-labelledby="tituloAutenticacao">
+    <div class="modal-conteudo">
+      <button id="fecharAutenticacao" class="fechar-modal" type="button" aria-label="Fechar">×</button>
+      <p class="rotulo">COMUNIDADE FRASES DE MESSIAS</p>
+      <h2 id="tituloAutenticacao">Entre para compartilhar</h2>
+      <p class="texto-modal">Use seu e-mail para criar uma conta gratuita ou entrar em uma conta existente.</p>
+      <div class="abas-autenticacao" role="tablist" aria-label="Acesso à comunidade">
+        <button class="aba-autenticacao ativa" id="abaEntrar" type="button" role="tab" aria-selected="true">Entrar</button>
+        <button class="aba-autenticacao" id="abaCriar" type="button" role="tab" aria-selected="false">Criar conta</button>
+      </div>
+      <form id="formularioAutenticacao" novalidate>
+        <div id="campoNome" class="campo-auth" hidden>
+          <label for="nomeCadastro">Como você quer ser chamado?</label>
+          <input id="nomeCadastro" type="text" maxlength="48" autocomplete="name" placeholder="Seu nome público">
+        </div>
+        <div class="campo-auth">
+          <label for="emailAutenticacao">E-mail</label>
+          <input id="emailAutenticacao" type="email" autocomplete="email" placeholder="voce@exemplo.com" required>
+        </div>
+        <div class="campo-auth">
+          <label for="senhaAutenticacao">Senha</label>
+          <input id="senhaAutenticacao" type="password" minlength="6" autocomplete="current-password" placeholder="Mínimo de 6 caracteres" required>
+        </div>
+        <button id="confirmarAutenticacao" class="botao-primario botao-largo" type="submit">Entrar na comunidade</button>
+        <p id="mensagemAutenticacao" class="mensagem-formulario" role="status" aria-live="polite"></p>
+      </form>
+      <p class="rodape-modal">Usamos seu e-mail somente para acesso à sua conta. Seu e-mail não aparece nas publicações.</p>
+    </div>
+  </dialog>
+
+  <template id="templatePublicacao">
+    <article class="cartao-publicacao">
+      <header class="publicacao-cabecalho">
+        <div class="avatar-publicacao" aria-hidden="true"></div>
+        <div>
+          <h3 class="nome-publicacao"></h3>
+          <p class="meta-publicacao"></p>
+        </div>
+        <span class="selo-categoria"></span>
+      </header>
+      <blockquote class="texto-publicacao"></blockquote>
+      <footer class="acoes-publicacao">
+        <button class="acao-publicacao botao-curtir-publicacao" type="button">🤍 <span>Curtir</span></button>
+        <button class="acao-publicacao botao-comentarios" type="button">💬 <span>Comentários</span></button>
+        <button class="acao-publicacao botao-compartilhar-publicacao" type="button">↗️ <span>Compartilhar</span></button>
+      </footer>
+      <section class="area-comentarios" hidden>
+        <div class="lista-comentarios"></div>
+        <form class="formulario-comentario" novalidate>
+          <label class="sr-only">Adicionar comentário</label>
+          <input class="texto-comentario" type="text" maxlength="240" placeholder="Escreva um comentário respeitoso...">
+          <button class="botao-enviar-comentario" type="submit">Enviar</button>
+        </form>
+        <p class="mensagem-comentario" role="status"></p>
+      </section>
+    </article>
+  </template>
+
+  <script type="module" src="comunidade.js?v=20260814-comunidade-v2"></script>
+</body>
+</html>

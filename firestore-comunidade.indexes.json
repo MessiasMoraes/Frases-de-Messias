@@ -1,0 +1,21 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "comunidadePublicacoes",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "publicadoEm", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "comunidadePublicacoes",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "criadoEm", "order": "ASCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

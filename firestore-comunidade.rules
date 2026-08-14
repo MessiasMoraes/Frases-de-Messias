@@ -1,0 +1,131 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function conectado() {
+      return request.auth != null;
+    }
+
+    function administrador() {
+      return conectado() && request.auth.token.email == 'moraesoficialll@gmail.com';
+    }
+
+    function donoDoRecurso() {
+      return conectado() && resource.data.autorId == request.auth.uid;
+    }
+
+    function donoDoNovoRecurso() {
+      return conectado() && request.resource.data.autorId == request.auth.uid;
+    }
+
+    function publicacaoPublica(publicacaoId) {
+      return get(/databases/$(database)/documents/comunidadePublicacoes/$(publicacaoId)).data.status == 'publicado';
+    }
+
+    // Portal existente: leitura pública; gravação administrativa.
+    match /frases/{fraseId} {
+      allow read: if true;
+      allow create, delete: if administrador();
+      allow update: if administrador() || (
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'curtidas', 'visualizacoes', 'compartilhamentos'
+        ]) && (
+          (
+            request.resource.data.curtidas == resource.data.curtidas + 1 &&
+            request.resource.data.visualizacoes == resource.data.visualizacoes &&
+            request.resource.data.compartilhamentos == resource.data.compartilhamentos
+          ) || (
+            request.resource.data.curtidas == resource.data.curtidas &&
+            request.resource.data.visualizacoes == resource.data.visualizacoes + 1 &&
+            request.resource.data.compartilhamentos == resource.data.compartilhamentos
+          ) || (
+            request.resource.data.curtidas == resource.data.curtidas &&
+            request.resource.data.visualizacoes == resource.data.visualizacoes &&
+            request.resource.data.compartilhamentos == resource.data.compartilhamentos + 1
+          )
+        )
+      );
+    }
+
+    match /categorias/{categoriaId} {
+      allow read: if true;
+      allow write: if administrador();
+    }
+
+    match /estatisticas/{estatisticaId} {
+      allow read: if true;
+      allow create, delete: if administrador();
+      allow update: if administrador() || (
+        estatisticaId == 'global' &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['visitas']) &&
+        request.resource.data.visitas == resource.data.visitas + 1
+      );
+    }
+
+    // Mantém a leitura pública já utilizada pela IA do portal; a escrita fica restrita ao administrador.
+    match /config/{configId} {
+      allow read: if true;
+      allow write: if administrador();
+    }
+
+    // Comunidade: perfis individuais.
+    match /comunidadeUsuarios/{usuarioId} {
+      allow create: if conectado() && request.auth.uid == usuarioId;
+      allow read, update: if conectado() && (request.auth.uid == usuarioId || administrador());
+      allow delete: if administrador();
+    }
+
+    // Comunidade: publicações entram pendentes e só o administrador publica.
+    match /comunidadePublicacoes/{publicacaoId} {
+      allow get, list: if resource.data.status == 'publicado' || donoDoRecurso() || administrador();
+      allow create: if conectado()
+        && donoDoNovoRecurso()
+        && request.resource.data.status == 'pendente'
+        && request.resource.data.texto is string
+        && request.resource.data.texto.size() >= 8
+        && request.resource.data.texto.size() <= 360
+        && request.resource.data.categoria is string
+        && request.resource.data.categoria.size() >= 2
+        && request.resource.data.autorNome is string
+        && request.resource.data.autorNome.size() >= 2;
+      // O autor pode corrigir ou retirar somente a própria publicação enquanto ela
+      // ainda estiver pendente. Ele nunca pode mudar o status nem a autoria.
+      allow update: if administrador() || (
+        donoDoRecurso()
+        && resource.data.status == 'pendente'
+        && request.resource.data.status == 'pendente'
+        && request.resource.data.autorId == resource.data.autorId
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'texto', 'categoria', 'autorNome'
+        ])
+      );
+      allow delete: if administrador() || (donoDoRecurso() && resource.data.status == 'pendente');
+
+      match /curtidas/{usuarioId} {
+        allow get, list: if publicacaoPublica(publicacaoId) || administrador();
+        allow create, delete: if conectado() && request.auth.uid == usuarioId && publicacaoPublica(publicacaoId);
+        allow update: if false;
+      }
+
+      match /comentarios/{comentarioId} {
+        allow get, list: if resource.data.status == 'publicado' || administrador() || (
+          conectado() && resource.data.autorId == request.auth.uid
+        );
+        allow create: if conectado()
+          && publicacaoPublica(publicacaoId)
+          && request.resource.data.autorId == request.auth.uid
+          && request.resource.data.status == 'pendente'
+          && request.resource.data.texto is string
+          && request.resource.data.texto.size() >= 2
+          && request.resource.data.texto.size() <= 240
+          && request.resource.data.autorNome is string;
+        allow update: if administrador();
+        allow delete: if administrador() || (
+          conectado()
+          && resource.data.autorId == request.auth.uid
+          && resource.data.status == 'pendente'
+        );
+      }
+    }
+  }
+}
