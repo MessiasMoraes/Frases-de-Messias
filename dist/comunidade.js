@@ -27,6 +27,10 @@ const auth = getAuth(app);
 const NOME_PADRAO = "Membro da comunidade";
 const LIMITE_PUBLICACOES = 50;
 const LIMITE_COMENTARIOS = 50;
+const CATEGORIAS_PADRAO = [
+  "Amizade", "Amor", "Boa Noite", "Bom Dia", "Esperança", "Família",
+  "Fé", "Gratidão", "Motivação", "Reflexão", "Sucesso", "Vida"
+];
 
 const elemento = (id) => document.getElementById(id);
 const refs = {
@@ -122,12 +126,15 @@ async function carregarCategorias() {
     const resposta = await getDocs(collection(db, "categorias"));
     categorias = resposta.docs
       .map((item) => textoLimpo(item.data().nome || item.data().categoria || ""))
-      .filter(Boolean)
-      .sort((a, b) => a.localeCompare(b, "pt-BR"));
+      .filter(Boolean);
   } catch (erro) {
     console.warn("Não foi possível carregar categorias da comunidade.", erro);
-    categorias = ["Amizade", "Amor", "Boa Noite", "Bom Dia", "Esperança", "Família", "Fé", "Gratidão", "Motivação", "Reflexão", "Sucesso", "Vida"];
   }
+
+  // O banco pode ainda não ter documentos em "categorias". Nesse caso, a Comunidade
+  // continua utilizável com as mesmas categorias públicas do portal.
+  categorias = [...new Set(categorias.length ? categorias : CATEGORIAS_PADRAO)]
+    .sort((a, b) => a.localeCompare(b, "pt-BR"));
 
   [refs.categoriaPublicacao, refs.filtroCategoria].forEach((seletor, indice) => {
     const valorAnterior = seletor.value;
