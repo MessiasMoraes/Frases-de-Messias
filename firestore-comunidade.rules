@@ -68,11 +68,23 @@ service cloud.firestore {
       allow write: if administrador();
     }
 
-    // Comunidade: perfis individuais.
+    // Comunidade: perfis individuais e coleções privadas do membro.
     match /comunidadeUsuarios/{usuarioId} {
       allow create: if conectado() && request.auth.uid == usuarioId;
       allow read, update: if conectado() && (request.auth.uid == usuarioId || administrador());
       allow delete: if administrador();
+
+      // Atalhos particulares para a página Meu Perfil. Nenhum outro membro
+      // pode consultar as frases que este usuário curtiu ou salvou.
+      match /curtidas/{publicacaoId} {
+        allow read, create, delete: if conectado() && request.auth.uid == usuarioId;
+        allow update: if false;
+      }
+
+      match /salvos/{publicacaoId} {
+        allow read, create, delete: if conectado() && request.auth.uid == usuarioId;
+        allow update: if false;
+      }
     }
 
     // Comunidade: publicações entram pendentes e só o administrador publica.
@@ -102,7 +114,10 @@ service cloud.firestore {
       allow delete: if administrador() || (donoDoRecurso() && resource.data.status == 'pendente');
 
       match /curtidas/{usuarioId} {
-        allow get, list: if publicacaoPublica(publicacaoId) || administrador();
+        // Cada curtida é privada: o usuário consulta somente o próprio registro;
+        // o administrador continua podendo auditar a coleção quando necessário.
+        allow get: if administrador() || (conectado() && request.auth.uid == usuarioId);
+        allow list: if administrador();
         allow create, delete: if conectado() && request.auth.uid == usuarioId && publicacaoPublica(publicacaoId);
         allow update: if false;
       }
