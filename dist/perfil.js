@@ -216,6 +216,19 @@ function renderizarFrases(resultado) {
     return;
   }
 
+  // Autores que já publicaram antes desta atualização passam a ter um perfil
+  // público utilizável na primeira visita. O nome vem apenas do campo público
+  // da publicação; a pessoa poderá completar bio e foto em Meu Perfil.
+  if (dadosPerfil?.perfilProvisorio && frases[0]?.autorNome) {
+    dadosPerfil = {
+      ...dadosPerfil,
+      nome: textoLimpo(frases[0].autorNome) || NOME_PADRAO,
+      perfilProvisorio: false
+    };
+    renderizarPerfil();
+    atualizarEstadoDeSeguimento();
+  }
+
   refs.listaFrases.innerHTML = "";
   frases.forEach((frase) => {
     const fragmento = refs.template.content.cloneNode(true);
@@ -308,7 +321,20 @@ function iniciarPerfil() {
   if (cancelarPerfil) cancelarPerfil();
   cancelarPerfil = onSnapshot(referencia, (resultado) => {
     if (!resultado.exists()) {
-      mostrarEstado("Este perfil ainda não está disponível. Ele será ativado quando a pessoa voltar à Comunidade.");
+      // Perfis de publicações anteriores são apresentados de forma segura com
+      // as frases já moderadas. Ao entrar, o próprio membro ganha o documento
+      // público editável sem precisar perder seu histórico.
+      dadosPerfil = {
+        nome: NOME_PADRAO,
+        bio: "Este membro ainda não adicionou uma biografia.",
+        fotoUrl: "",
+        perfilProvisorio: true
+      };
+      refs.estado.hidden = true;
+      refs.conteudo.hidden = false;
+      renderizarPerfil();
+      atualizarEstadoDeSeguimento();
+      if (!cancelarFrases) escutarFrases();
       return;
     }
     dadosPerfil = resultado.data();

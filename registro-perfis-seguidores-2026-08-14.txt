@@ -16,3 +16,5 @@ Atualização 09:29: após recarregamento, o editor CodeMirror das regras foi ca
 Atualização 09:30: o editor aceitou integralmente a política (7.344 caracteres, 191 linhas) e exibiu o estado "alterações não publicadas" com o botão Publicar. A ação Publicar foi acionada. A resposta imediata removeu esse botão e deixou apenas Descartar, sem alerta de sintaxe visível; a confirmação final de propagação ainda será verificada.
 
 Publicação confirmada às 09:30: o Console do Firebase registrou uma nova versão com o horário "Hoje • 9:30 AM" e não exibe mais ações Publicar ou Descartar. Nenhum alerta de erro de validação permaneceu visível. As regras de perfis públicos, seguidores e seguindo privado estão ativas no Firestore.
+
+Implantação confirmada às 09:37: a execução do GitHub Pages 31788633409 foi concluída com sucesso para o commit 4c1e619. A URL https://frasesdemessias.com.br/perfil.html?v=1.13 responde com a página "Perfil | Frases de Messias" e apresenta a navegação e o estado correto para ausência de uid. A página foi publicada no domínio principal.
