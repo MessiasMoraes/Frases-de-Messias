@@ -18,7 +18,6 @@ import {
   onSnapshot,
   query,
   where,
-  orderBy,
   limit,
   serverTimestamp,
   Timestamp
@@ -199,9 +198,17 @@ function criarCartaoPublicacao(post) {
 
 function escutarFeed() {
   if (cancelarFeed) cancelarFeed();
-  const consulta = query(collection(db, "comunidadePublicacoes"), where("status", "==", "publicado"), orderBy("publicadoEm", "desc"), limit(LIMITE_PUBLICACOES));
+  // A condição de status é indispensável às regras: ela impede que rascunhos pendentes sejam lidos publicamente.
+  // A ordenação ocorre no cliente para manter o feed disponível inclusive durante a criação de índices compostos.
+  const consulta = query(collection(db, "comunidadePublicacoes"), where("status", "==", "publicado"), limit(LIMITE_PUBLICACOES));
   cancelarFeed = onSnapshot(consulta, (resultado) => {
-    publicacoes = resultado.docs.map((item) => ({ id: item.id, ...item.data() }));
+    publicacoes = resultado.docs
+      .map((item) => ({ id: item.id, ...item.data() }))
+      .sort((primeiro, segundo) => {
+        const dataPrimeiro = primeiro.publicadoEm?.toMillis?.() || 0;
+        const dataSegundo = segundo.publicadoEm?.toMillis?.() || 0;
+        return dataSegundo - dataPrimeiro;
+      });
     renderizarFeed();
   }, (erro) => {
     console.error("Erro ao carregar o feed.", erro);
