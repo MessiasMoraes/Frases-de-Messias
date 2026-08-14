@@ -121,21 +121,7 @@ function fecharModal() {
   if (refs.modalAutenticacao.open) refs.modalAutenticacao.close();
 }
 
-async function carregarCategorias() {
-  try {
-    const resposta = await getDocs(collection(db, "categorias"));
-    categorias = resposta.docs
-      .map((item) => textoLimpo(item.data().nome || item.data().categoria || ""))
-      .filter(Boolean);
-  } catch (erro) {
-    console.warn("Não foi possível carregar categorias da comunidade.", erro);
-  }
-
-  // O banco pode ainda não ter documentos em "categorias". Nesse caso, a Comunidade
-  // continua utilizável com as mesmas categorias públicas do portal.
-  categorias = [...new Set(categorias.length ? categorias : CATEGORIAS_PADRAO)]
-    .sort((a, b) => a.localeCompare(b, "pt-BR"));
-
+function preencherSeletoresDeCategoria() {
   [refs.categoriaPublicacao, refs.filtroCategoria].forEach((seletor, indice) => {
     const valorAnterior = seletor.value;
     seletor.innerHTML = indice === 0
@@ -149,6 +135,28 @@ async function carregarCategorias() {
     });
     seletor.value = categorias.includes(valorAnterior) ? valorAnterior : "";
   });
+}
+
+async function carregarCategorias() {
+  // As categorias do portal aparecem imediatamente, inclusive quando a rede ou o
+  // Firestore demorarem a responder. Isso evita bloquear a criação de uma frase.
+  categorias = [...CATEGORIAS_PADRAO].sort((a, b) => a.localeCompare(b, "pt-BR"));
+  preencherSeletoresDeCategoria();
+
+  try {
+    const resposta = await getDocs(collection(db, "categorias"));
+    const categoriasRemotas = resposta.docs
+      .map((item) => textoLimpo(item.data().nome || item.data().categoria || ""))
+      .filter(Boolean);
+
+    if (categoriasRemotas.length) {
+      categorias = [...new Set([...CATEGORIAS_PADRAO, ...categoriasRemotas])]
+        .sort((a, b) => a.localeCompare(b, "pt-BR"));
+      preencherSeletoresDeCategoria();
+    }
+  } catch (erro) {
+    console.warn("Não foi possível atualizar categorias da comunidade.", erro);
+  }
 }
 
 function dataFormatada(valor) {
