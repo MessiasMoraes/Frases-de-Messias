@@ -18,7 +18,8 @@ import java.net.URL;
 
 public class MainActivity extends BridgeActivity {
     private static final int PEDIDO_PERMISSAO_ARMAZENAMENTO = 4102;
-    private static final String URL_PORTAL_ATUAL = "https://frasesdemessias.com.br/index.html";
+    // A versão publicada do portal é a fonte principal do conteúdo do aplicativo.
+    private static final String URL_PORTAL_ATUAL = "https://frasesdemessias.com.br/";
     private static final int TEMPO_CONEXAO_MS = 4500;
     private String urlPendente;
     private String nomeArquivoPendente;
@@ -43,12 +44,17 @@ public class MainActivity extends BridgeActivity {
                 String urlComAtualizacao = URL_PORTAL_ATUAL
                         + "?origem=apk&atualizado=" + System.currentTimeMillis();
                 conexao = (HttpURLConnection) new URL(urlComAtualizacao).openConnection();
-                conexao.setRequestMethod("HEAD");
+
+                // Alguns provedores e redirecionamentos não respondem corretamente a HEAD.
+                // A verificação por GET assegura que o mesmo endereço que será aberto pelo
+                // WebView está de fato acessível antes de substituir a página local.
+                conexao.setRequestMethod("GET");
+                conexao.setInstanceFollowRedirects(true);
                 conexao.setConnectTimeout(TEMPO_CONEXAO_MS);
                 conexao.setReadTimeout(TEMPO_CONEXAO_MS);
                 conexao.setUseCaches(false);
                 conexao.setRequestProperty("Cache-Control", "no-cache");
-                conexao.setRequestProperty("User-Agent", "FrasesDeMessiasAndroid");
+                conexao.setRequestProperty("User-Agent", "FrasesDeMessiasAndroid/1.10");
 
                 int codigoResposta = conexao.getResponseCode();
                 if (codigoResposta >= HttpURLConnection.HTTP_OK && codigoResposta < HttpURLConnection.HTTP_BAD_REQUEST) {
