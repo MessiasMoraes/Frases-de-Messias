@@ -1,0 +1,18 @@
+Implementação de perfis e seguidores — 14/08/2026
+
+Arquivos criados: perfil.html, perfil.js, perfil.css, meu-perfil.html e meu-perfil.js.
+A Comunidade foi atualizada para vincular o autor de cada publicação ao perfil público, exibir a navegação Meu Perfil e sincronizar curtidas e salvos pessoais no feed.
+
+Modelo de segurança adotado: a coleção comunidadeUsuarios continua privada e armazena o e-mail. A nova coleção comunidadePerfis contém somente nome, biografia e URL de foto públicos. Os seguidores ficam em comunidadePerfis/{uid}/seguidores/{seguidorId}; o atalho privado seguindo fica em comunidadePerfis/{uid}/seguindo/{seguidoId}. Os contadores da interface são calculados dos próprios registros de seguidores para evitar alteração manual de contadores.
+
+Validação local concluída: node --check confirmou a sintaxe de perfil.js, meu-perfil.js e comunidade.js; o arquivo firestore-comunidade.indexes.json também foi validado como JSON.
+
+Console do Firebase: foi aberto no projeto frases-de-messias-ca952, autenticado como moraesoficialll@gmail.com, na página de regras. Às 09:29, a página permaneceu em carregamento e ainda não exibiu o editor nem controles de publicação. A política atualizada está pronta em firestore-comunidade.rules, mas ainda não foi publicada nesta etapa.
+
+Índice local incluído: comunidadePublicacoes com autorId ASC, status ASC e publicadoEm DESC, previsto para consultas de frases por perfil.
+
+Atualização 09:29: após recarregamento, o editor CodeMirror das regras foi carregado no Console do Firebase. Ele ainda exibe a regra publicada às 04:03 e apresenta o campo de edição, porém os controles Publicar/Descartar não estavam visíveis no trecho superior atual. A substituição integral do conteúdo será feita diretamente pela instância CodeMirror, método já validado no processo anterior.
+
+Atualização 09:30: o editor aceitou integralmente a política (7.344 caracteres, 191 linhas) e exibiu o estado "alterações não publicadas" com o botão Publicar. A ação Publicar foi acionada. A resposta imediata removeu esse botão e deixou apenas Descartar, sem alerta de sintaxe visível; a confirmação final de propagação ainda será verificada.
+
+Publicação confirmada às 09:30: o Console do Firebase registrou uma nova versão com o horário "Hoje • 9:30 AM" e não exibe mais ações Publicar ou Descartar. Nenhum alerta de erro de validação permaneceu visível. As regras de perfis públicos, seguidores e seguindo privado estão ativas no Firestore.

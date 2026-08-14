@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Perfil público da Comunidade Frases de Messias.">
+  <title>Perfil | Frases de Messias</title>
+  <link rel="stylesheet" href="style.css?v=20260814-perfis-v1">
+  <link rel="stylesheet" href="comunidade.css?v=20260814-perfis-v1">
+  <link rel="stylesheet" href="perfil.css?v=20260814-perfis-v1">
+</head>
+<body class="pagina-comunidade pagina-perfil">
+  <header class="cabecalho-comunidade">
+    <div class="container cabecalho-comunidade-conteudo">
+      <a class="marca-comunidade" href="index.html" aria-label="Voltar ao início">📖 <span>Frases de Messias</span></a>
+      <nav class="nav-comunidade" aria-label="Navegação principal">
+        <a href="index.html">🏠 Início</a>
+        <a href="comunidade.html">💬 Comunidade</a>
+        <a id="linkMeuPerfil" href="meu-perfil.html">👤 Meu Perfil</a>
+        <a href="favoritos.html">❤️ Favoritos</a>
+      </nav>
+      <button id="alternarTemaPerfil" class="botao-icone" type="button" aria-label="Alternar tema">🌙</button>
+    </div>
+  </header>
+
+  <main class="container comunidade-principal perfil-principal">
+    <section id="estadoPerfil" class="estado-feed carregando-feed" aria-live="polite">⏳ Carregando perfil...</section>
+
+    <section id="conteudoPerfil" hidden>
+      <article class="cartao-comunidade cabecalho-perfil">
+        <div id="avatarPerfil" class="avatar-perfil avatar-perfil-grande" aria-hidden="true"><span id="iniciaisPerfil">FM</span><img id="fotoPerfil" alt=""></div>
+        <div class="informacoes-perfil">
+          <p class="rotulo">MEMBRO DA COMUNIDADE</p>
+          <h1 id="nomePerfil">Membro da comunidade</h1>
+          <p id="bioPerfil" class="bio-perfil">Este membro ainda não adicionou uma biografia.</p>
+          <div class="metricas-perfil" aria-label="Informações do perfil">
+            <span><strong id="contadorSeguidores">0</strong> seguidores</span>
+            <span><strong id="contadorSeguindo">0</strong> seguindo</span>
+          </div>
+        </div>
+        <div class="acoes-perfil">
+          <button id="botaoSeguir" class="botao-primario" type="button">Seguir</button>
+          <a id="botaoEditarPerfil" class="botao-secundario botao-editar-perfil" href="meu-perfil.html" hidden>Editar meu perfil</a>
+        </div>
+        <p id="mensagemPerfil" class="mensagem-formulario" role="status" aria-live="polite"></p>
+      </article>
+
+      <section class="seletor-abas-perfil" aria-label="Conteúdo do perfil" role="tablist">
+        <button id="abaPublicadas" class="aba-perfil ativa" type="button" role="tab" aria-selected="true">Frases publicadas</button>
+        <button id="abaPendentes" class="aba-perfil" type="button" role="tab" aria-selected="false" hidden>Minhas frases em análise</button>
+      </section>
+
+      <section id="listaFrasesPerfil" class="feed-comunidade lista-frases-perfil" aria-live="polite" aria-label="Frases do perfil"></section>
+    </section>
+  </main>
+
+  <template id="templateFrasePerfil">
+    <article class="cartao-publicacao cartao-frase-perfil">
+      <header class="publicacao-cabecalho">
+        <span class="selo-categoria selo-perfil"></span>
+        <p class="meta-publicacao meta-frase-perfil"></p>
+      </header>
+      <blockquote class="texto-publicacao"></blockquote>
+      <p class="status-frase-perfil" hidden></p>
+    </article>
+  </template>
+
+  <script type="module" src="perfil.js?v=20260814-perfis-v1"></script>
+</body>
+</html>

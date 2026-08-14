@@ -15,6 +15,7 @@
       <nav class="nav-comunidade" aria-label="Navegação principal">
         <a href="index.html">🏠 Início</a>
         <a class="ativo" href="comunidade.html" aria-current="page">💬 Comunidade</a>
+        <a id="linkMeuPerfil" href="meu-perfil.html">👤 Meu Perfil</a>
         <a href="favoritos.html">❤️ Favoritos</a>
         <a href="contato.html">📞 Contato</a>
       </nav>
@@ -132,9 +133,9 @@
   <template id="templatePublicacao">
     <article class="cartao-publicacao">
       <header class="publicacao-cabecalho">
-        <div class="avatar-publicacao" aria-hidden="true"></div>
+        <a class="link-avatar-publicacao" href="perfil.html" aria-label="Ver perfil do autor"><span class="avatar-publicacao" aria-hidden="true"></span></a>
         <div>
-          <h3 class="nome-publicacao"></h3>
+          <a class="nome-publicacao link-nome-publicacao" href="perfil.html"></a>
           <p class="meta-publicacao"></p>
         </div>
         <span class="selo-categoria"></span>
@@ -142,6 +143,7 @@
       <blockquote class="texto-publicacao"></blockquote>
       <footer class="acoes-publicacao">
         <button class="acao-publicacao botao-curtir-publicacao" type="button">🤍 <span>Curtir</span></button>
+        <button class="acao-publicacao botao-salvar-publicacao" type="button">🔖 <span>Salvar</span></button>
         <button class="acao-publicacao botao-comentarios" type="button">💬 <span>Comentários</span></button>
         <button class="acao-publicacao botao-compartilhar-publicacao" type="button">↗️ <span>Compartilhar</span></button>
       </footer>
@@ -157,6 +159,6 @@
     </article>
   </template>
 
-  <script type="module" src="comunidade.js?v=20260814-comunidade-v6"></script>
+  <script type="module" src="comunidade.js?v=20260814-perfis-v1"></script>
 </body>
 </html>

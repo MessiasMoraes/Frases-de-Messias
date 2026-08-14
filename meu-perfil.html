@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Edite seu perfil na Comunidade Frases de Messias.">
+  <title>Meu Perfil | Frases de Messias</title>
+  <link rel="stylesheet" href="style.css?v=20260814-perfis-v1">
+  <link rel="stylesheet" href="comunidade.css?v=20260814-perfis-v1">
+  <link rel="stylesheet" href="perfil.css?v=20260814-perfis-v1">
+</head>
+<body class="pagina-comunidade pagina-perfil">
+  <header class="cabecalho-comunidade">
+    <div class="container cabecalho-comunidade-conteudo">
+      <a class="marca-comunidade" href="index.html" aria-label="Voltar ao início">📖 <span>Frases de Messias</span></a>
+      <nav class="nav-comunidade" aria-label="Navegação principal">
+        <a href="index.html">🏠 Início</a>
+        <a href="comunidade.html">💬 Comunidade</a>
+        <a class="ativo" href="meu-perfil.html" aria-current="page">👤 Meu Perfil</a>
+        <a href="favoritos.html">❤️ Favoritos</a>
+      </nav>
+      <button id="alternarTemaMeuPerfil" class="botao-icone" type="button" aria-label="Alternar tema">🌙</button>
+    </div>
+  </header>
+
+  <main class="container comunidade-principal perfil-principal">
+    <section id="estadoMeuPerfil" class="estado-feed carregando-feed" aria-live="polite">⏳ Verificando sua conta...</section>
+
+    <section id="conteudoMeuPerfil" hidden>
+      <article class="cartao-comunidade editor-perfil">
+        <div class="editor-perfil-cabecalho">
+          <div id="avatarEdicao" class="avatar-perfil avatar-edicao" aria-hidden="true"><span id="iniciaisEdicao">FM</span><img id="fotoEdicao" alt=""></div>
+          <div>
+            <p class="rotulo">SEU PERFIL PÚBLICO</p>
+            <h1>Conte um pouco sobre você</h1>
+            <p>Seu nome, foto e biografia ficarão visíveis na Comunidade. O e-mail da sua conta continua privado.</p>
+          </div>
+        </div>
+
+        <form id="formularioMeuPerfil" class="formulario-perfil" novalidate>
+          <div class="campo-perfil">
+            <label for="nomePerfilInput">Nome público</label>
+            <input id="nomePerfilInput" type="text" maxlength="48" autocomplete="name" placeholder="Como você quer ser chamado?" required>
+            <small>Use entre 2 e 48 caracteres.</small>
+          </div>
+          <div class="campo-perfil">
+            <label for="bioPerfilInput">Biografia</label>
+            <textarea id="bioPerfilInput" maxlength="180" rows="4" placeholder="Ex.: Compartilho mensagens de fé, esperança e gratidão."></textarea>
+            <small><span id="contadorBio">0</span> / 180 caracteres</small>
+          </div>
+          <div class="campo-perfil">
+            <label for="fotoUrlInput">Endereço da foto de perfil</label>
+            <input id="fotoUrlInput" type="url" maxlength="500" inputmode="url" placeholder="https://exemplo.com/minha-foto.jpg">
+            <small>Opcional. Cole apenas um link de imagem que você tenha direito de usar. Caso deixe em branco, serão exibidas suas iniciais.</small>
+          </div>
+          <div class="acoes-editor-perfil">
+            <button id="salvarMeuPerfil" class="botao-primario" type="submit">Salvar alterações</button>
+            <a id="verMeuPerfil" class="botao-secundario botao-secundario-azul" href="perfil.html">Ver meu perfil público</a>
+          </div>
+          <p id="mensagemMeuPerfil" class="mensagem-formulario" role="status" aria-live="polite"></p>
+        </form>
+      </article>
+    </section>
+  </main>
+
+  <script type="module" src="meu-perfil.js?v=20260814-perfis-v1"></script>
+</body>
+</html>

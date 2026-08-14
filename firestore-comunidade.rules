@@ -22,6 +22,23 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/comunidadePublicacoes/$(publicacaoId)).data.status == 'publicado';
     }
 
+    function dadosPublicosDePerfilValidos() {
+      return request.resource.data.keys().hasOnly([
+        'nome', 'bio', 'fotoUrl', 'criadoEm', 'atualizadoEm'
+      ])
+        && request.resource.data.nome is string
+        && request.resource.data.nome.size() >= 2
+        && request.resource.data.nome.size() <= 48
+        && (!('bio' in request.resource.data) || (
+          request.resource.data.bio is string
+          && request.resource.data.bio.size() <= 180
+        ))
+        && (!('fotoUrl' in request.resource.data) || (
+          request.resource.data.fotoUrl is string
+          && request.resource.data.fotoUrl.size() <= 500
+        ));
+    }
+
     // Portal existente: leitura pública; gravação administrativa.
     match /frases/{fraseId} {
       allow read: if true;
@@ -68,14 +85,13 @@ service cloud.firestore {
       allow write: if administrador();
     }
 
-    // Comunidade: perfis individuais e coleções privadas do membro.
+    // Dados privados de acesso e atalhos pessoais. O e-mail permanece somente
+    // nesta coleção e nunca é copiado para o perfil público.
     match /comunidadeUsuarios/{usuarioId} {
       allow create: if conectado() && request.auth.uid == usuarioId;
       allow read, update: if conectado() && (request.auth.uid == usuarioId || administrador());
       allow delete: if administrador();
 
-      // Atalhos particulares para a página Meu Perfil. Nenhum outro membro
-      // pode consultar as frases que este usuário curtiu ou salvou.
       match /curtidas/{publicacaoId} {
         allow read, create, delete: if conectado() && request.auth.uid == usuarioId;
         allow update: if false;
@@ -83,6 +99,50 @@ service cloud.firestore {
 
       match /salvos/{publicacaoId} {
         allow read, create, delete: if conectado() && request.auth.uid == usuarioId;
+        allow update: if false;
+      }
+    }
+
+    // Perfil visível na Comunidade. Esta coleção guarda apenas nome, biografia e
+    // foto pública — nunca e-mail, senha ou dados privados de acesso.
+    match /comunidadePerfis/{usuarioId} {
+      allow read: if true;
+      allow create: if administrador() || (
+        conectado()
+        && request.auth.uid == usuarioId
+        && dadosPublicosDePerfilValidos()
+      );
+      allow update: if administrador() || (
+        conectado()
+        && request.auth.uid == usuarioId
+        && dadosPublicosDePerfilValidos()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'nome', 'bio', 'fotoUrl', 'atualizadoEm'
+        ])
+      );
+      allow delete: if administrador();
+
+      // A lista de seguidores é pública para viabilizar contadores sociais.
+      // Cada pessoa cria ou remove apenas o registro que tem o próprio UID.
+      match /seguidores/{seguidorId} {
+        allow read: if true;
+        allow create: if conectado()
+          && request.auth.uid == seguidorId
+          && request.resource.data.keys().hasOnly(['usuarioId', 'criadoEm'])
+          && request.resource.data.usuarioId == request.auth.uid;
+        allow delete: if conectado() && request.auth.uid == seguidorId;
+        allow update: if false;
+      }
+
+      // A relação de perfis que o membro segue é privada e pode ser manipulada
+      // exclusivamente pelo próprio dono, sem expor suas conexões a terceiros.
+      match /seguindo/{seguidoId} {
+        allow get, list: if conectado() && request.auth.uid == usuarioId;
+        allow create: if conectado()
+          && request.auth.uid == usuarioId
+          && request.resource.data.keys().hasOnly(['usuarioId', 'criadoEm'])
+          && request.resource.data.usuarioId == seguidoId;
+        allow delete: if conectado() && request.auth.uid == usuarioId;
         allow update: if false;
       }
     }

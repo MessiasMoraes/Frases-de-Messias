@@ -1,0 +1,80 @@
+body.pagina-perfil {
+  background: radial-gradient(circle at 12% 8%, rgba(244, 200, 98, .18), transparent 25rem), radial-gradient(circle at 90% 24%, rgba(23, 105, 224, .10), transparent 30rem), var(--comunidade-fundo);
+}
+
+.perfil-principal { max-width: 910px; }
+.perfil-principal > .estado-feed { margin-top: 38px; }
+
+.cabecalho-perfil { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 24px; align-items: center; padding: clamp(22px, 4vw, 34px); }
+.avatar-perfil { position: relative; display: grid; flex: 0 0 auto; place-items: center; overflow: hidden; background: linear-gradient(145deg, #1769e0, #77a9f4); color: #fff; font-weight: 900; box-shadow: inset 0 0 0 4px rgba(255, 255, 255, .7), 0 11px 24px rgba(23, 105, 224, .2); }
+.avatar-perfil img { position: absolute; z-index: 1; inset: 0; display: none; width: 100%; height: 100%; object-fit: cover; background: #e8f0ff; }
+.avatar-perfil.tem-foto img { display: block; }
+.avatar-perfil-grande { width: clamp(88px, 14vw, 120px); height: clamp(88px, 14vw, 120px); border-radius: 50%; font-size: clamp(1.55rem, 4vw, 2.35rem); }
+.avatar-edicao { width: 76px; height: 76px; border-radius: 25px; font-size: 1.5rem; }
+
+.informacoes-perfil { min-width: 0; }
+.informacoes-perfil .rotulo { margin-bottom: 5px; }
+.informacoes-perfil h1, .editor-perfil h1 { margin: 0; color: var(--comunidade-texto); font-size: clamp(1.6rem, 4vw, 2.25rem); line-height: 1.12; overflow-wrap: anywhere; }
+.bio-perfil { max-width: 570px; margin: 10px 0 0; color: var(--comunidade-suave); font-size: 1rem; line-height: 1.55; overflow-wrap: anywhere; }
+.metricas-perfil { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 17px; color: var(--comunidade-suave); font-size: .9rem; }
+.metricas-perfil strong { display: inline-block; margin-right: 3px; color: var(--comunidade-texto); font-size: 1.06rem; }
+.acoes-perfil { display: grid; min-width: 142px; gap: 9px; }
+.acoes-perfil .botao-primario, .acoes-perfil .botao-secundario { width: 100%; }
+.botao-seguindo { background: #e8f0ff; box-shadow: none; color: var(--comunidade-azul); }
+.botao-editar-perfil { border-color: #c8d8f4; background: #f4f8ff; color: var(--comunidade-azul); }
+.cabecalho-perfil .mensagem-formulario { position: absolute; right: 34px; bottom: 7px; margin: 0; text-align: right; }
+
+.seletor-abas-perfil { display: flex; gap: 8px; margin: 28px 0 15px; border-bottom: 1px solid var(--comunidade-borda); }
+.aba-perfil { border: 0; border-bottom: 3px solid transparent; padding: 10px 14px; background: transparent; color: var(--comunidade-suave); font: inherit; font-size: .9rem; font-weight: 800; cursor: pointer; }
+.aba-perfil.ativa { border-bottom-color: var(--comunidade-azul); color: var(--comunidade-azul); }
+.lista-frases-perfil { min-height: 145px; }
+.cartao-frase-perfil .publicacao-cabecalho { justify-content: space-between; }
+.cartao-frase-perfil .selo-perfil { margin-left: 0; }
+.meta-frase-perfil { margin: 0; text-align: right; }
+.status-frase-perfil { margin: 0; color: #a46a00; font-size: .82rem; font-weight: 800; }
+.status-frase-perfil.visivel { display: block; }
+
+.editor-perfil { padding: clamp(22px, 4vw, 36px); }
+.editor-perfil-cabecalho { display: flex; align-items: center; gap: 18px; padding-bottom: 22px; border-bottom: 1px solid var(--comunidade-borda); }
+.editor-perfil-cabecalho .rotulo { margin-bottom: 6px; }
+.editor-perfil-cabecalho p:not(.rotulo) { max-width: 600px; margin: 8px 0 0; color: var(--comunidade-suave); line-height: 1.5; }
+.formulario-perfil { display: grid; gap: 18px; padding-top: 24px; }
+.campo-perfil { display: grid; gap: 7px; }
+.campo-perfil label { color: var(--comunidade-texto); font-size: .9rem; font-weight: 800; }
+.campo-perfil input, .campo-perfil textarea { width: 100%; box-sizing: border-box; border: 1px solid #cdd8ea; border-radius: 11px; background: #fff; color: var(--comunidade-texto); font: inherit; outline: none; }
+.campo-perfil input { min-height: 45px; padding: 10px 12px; }
+.campo-perfil textarea { min-height: 108px; padding: 12px; resize: vertical; line-height: 1.5; }
+.campo-perfil input:focus, .campo-perfil textarea:focus { border-color: var(--comunidade-azul); box-shadow: 0 0 0 3px rgba(23, 105, 224, .13); }
+.campo-perfil small { color: var(--comunidade-suave); font-size: .78rem; line-height: 1.45; }
+.acoes-editor-perfil { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.botao-secundario-azul { border-color: #c8d8f4; background: #f4f8ff; color: var(--comunidade-azul); }
+
+body.pagina-perfil.tema-escuro .informacoes-perfil h1,
+body.pagina-perfil.tema-escuro .editor-perfil h1,
+body.pagina-perfil.tema-escuro .metricas-perfil strong,
+body.pagina-perfil.tema-escuro .campo-perfil label { color: var(--comunidade-texto); }
+body.pagina-perfil.tema-escuro .botao-seguindo,
+body.pagina-perfil.tema-escuro .botao-editar-perfil,
+body.pagina-perfil.tema-escuro .botao-secundario-azul { border-color: #3a5581; background: #21375f; color: #b8d3ff; }
+body.pagina-perfil.tema-escuro .campo-perfil input,
+body.pagina-perfil.tema-escuro .campo-perfil textarea { border-color: #3a4b69; background: #101a2b; color: #f2f6ff; }
+
+@media (max-width: 700px) {
+  .perfil-principal > .estado-feed { margin-top: 22px; }
+  .cabecalho-perfil { grid-template-columns: 1fr; gap: 16px; text-align: center; }
+  .avatar-perfil-grande { margin: 0 auto; }
+  .bio-perfil { margin-right: auto; margin-left: auto; }
+  .metricas-perfil { justify-content: center; }
+  .acoes-perfil { grid-template-columns: 1fr 1fr; width: 100%; }
+  .acoes-perfil .botao-primario, .acoes-perfil .botao-secundario { min-width: 0; }
+  .cabecalho-perfil .mensagem-formulario { position: static; grid-column: 1; margin: -6px 0 0; text-align: center; }
+  .seletor-abas-perfil { overflow-x: auto; }
+  .aba-perfil { white-space: nowrap; }
+  .editor-perfil-cabecalho { align-items: flex-start; flex-direction: column; }
+  .acoes-editor-perfil { display: grid; grid-template-columns: 1fr; }
+  .meta-frase-perfil { font-size: .74rem; }
+}
+
+@media (max-width: 390px) {
+  .acoes-perfil { grid-template-columns: 1fr; }
+}

@@ -15,6 +15,15 @@
         { "fieldPath": "status", "order": "ASCENDING" },
         { "fieldPath": "criadoEm", "order": "ASCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "comunidadePublicacoes",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "autorId", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "publicadoEm", "order": "DESCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

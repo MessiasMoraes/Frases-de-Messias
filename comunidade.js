@@ -61,7 +61,8 @@ const refs = {
   filtroCategoria: elemento("filtroCategoriaFeed"),
   feed: elemento("feedComunidade"),
   template: elemento("templatePublicacao"),
-  alternarTema: elemento("alternarTemaComunidade")
+  alternarTema: elemento("alternarTemaComunidade"),
+  linkMeuPerfil: elemento("linkMeuPerfil")
 };
 
 let usuarioAtual = null;
@@ -188,13 +189,18 @@ function criarCartaoPublicacao(post) {
   const cartao = fragmento.querySelector(".cartao-publicacao");
   const nome = textoLimpo(post.autorNome || NOME_PADRAO);
   const avatar = fragmento.querySelector(".avatar-publicacao");
+  const linkPerfil = `perfil.html?uid=${encodeURIComponent(post.autorId || "")}`;
   avatar.textContent = iniciais(nome);
-  fragmento.querySelector(".nome-publicacao").textContent = nome;
+  fragmento.querySelector(".link-avatar-publicacao").href = linkPerfil;
+  const nomeAutor = fragmento.querySelector(".nome-publicacao");
+  nomeAutor.href = linkPerfil;
+  nomeAutor.textContent = nome;
   fragmento.querySelector(".meta-publicacao").textContent = `Publicado em ${dataFormatada(post.publicadoEm)}`;
   fragmento.querySelector(".selo-categoria").textContent = post.categoria || "Inspiração";
   fragmento.querySelector(".texto-publicacao").textContent = `“${textoLimpo(post.texto)}”`;
 
   const botaoCurtir = fragmento.querySelector(".botao-curtir-publicacao");
+  const botaoSalvar = fragmento.querySelector(".botao-salvar-publicacao");
   const botaoComentarios = fragmento.querySelector(".botao-comentarios");
   const botaoCompartilhar = fragmento.querySelector(".botao-compartilhar-publicacao");
   const areaComentarios = fragmento.querySelector(".area-comentarios");
@@ -204,7 +210,9 @@ function criarCartaoPublicacao(post) {
   const mensagemComentario = fragmento.querySelector(".mensagem-comentario");
 
   botaoCurtir.addEventListener("click", () => curtirPublicacao(post.id, botaoCurtir));
+  botaoSalvar.addEventListener("click", () => salvarPublicacao(post.id, botaoSalvar));
   botaoComentarios.addEventListener("click", () => alternarComentarios(post.id, areaComentarios, listaComentarios, botaoComentarios));
+  sincronizarEstadoDeInteracoes(post.id, botaoCurtir, botaoSalvar);
   botaoCompartilhar.addEventListener("click", () => compartilharPublicacao(post));
   formularioComentario.addEventListener("submit", (evento) => enviarComentario(evento, post.id, inputComentario, mensagemComentario));
   cartao.dataset.publicacaoId = post.id;
@@ -231,6 +239,34 @@ function escutarFeed() {
   });
 }
 
+function atualizarBotaoCurtir(botao, ativo) {
+  botao.classList.toggle("ativo", ativo);
+  botao.innerHTML = ativo ? "❤️ <span>Curtido</span>" : "🤍 <span>Curtir</span>";
+}
+
+function atualizarBotaoSalvar(botao, ativo) {
+  botao.classList.toggle("ativo", ativo);
+  botao.innerHTML = ativo ? "🔖 <span>Salvo</span>" : "🔖 <span>Salvar</span>";
+}
+
+async function sincronizarEstadoDeInteracoes(publicacaoId, botaoCurtir, botaoSalvar) {
+  if (!usuarioAtual) {
+    atualizarBotaoCurtir(botaoCurtir, false);
+    atualizarBotaoSalvar(botaoSalvar, false);
+    return;
+  }
+  try {
+    const [curtida, salvo] = await Promise.all([
+      getDoc(doc(db, "comunidadePublicacoes", publicacaoId, "curtidas", usuarioAtual.uid)),
+      getDoc(doc(db, "comunidadeUsuarios", usuarioAtual.uid, "salvos", publicacaoId))
+    ]);
+    atualizarBotaoCurtir(botaoCurtir, curtida.exists());
+    atualizarBotaoSalvar(botaoSalvar, salvo.exists());
+  } catch (erro) {
+    console.warn("Não foi possível sincronizar as interações da publicação.", erro);
+  }
+}
+
 async function curtirPublicacao(publicacaoId, botao) {
   if (!usuarioAtual) { abrirModal(); return; }
   const referencia = doc(db, "comunidadePublicacoes", publicacaoId, "curtidas", usuarioAtual.uid);
@@ -238,16 +274,32 @@ async function curtirPublicacao(publicacaoId, botao) {
     const existente = await getDoc(referencia);
     if (existente.exists()) {
       await deleteDoc(referencia);
-      botao.classList.remove("ativo");
-      botao.innerHTML = "🤍 <span>Curtir</span>";
+      atualizarBotaoCurtir(botao, false);
     } else {
       await setDoc(referencia, { usuarioId: usuarioAtual.uid, criadoEm: serverTimestamp() });
-      botao.classList.add("ativo");
-      botao.innerHTML = "❤️ <span>Curtido</span>";
+      atualizarBotaoCurtir(botao, true);
     }
   } catch (erro) {
     console.error("Erro ao curtir publicação.", erro);
     alert("Não foi possível registrar sua curtida agora. Tente novamente.");
+  }
+}
+
+async function salvarPublicacao(publicacaoId, botao) {
+  if (!usuarioAtual) { abrirModal(); return; }
+  const referencia = doc(db, "comunidadeUsuarios", usuarioAtual.uid, "salvos", publicacaoId);
+  try {
+    const existente = await getDoc(referencia);
+    if (existente.exists()) {
+      await deleteDoc(referencia);
+      atualizarBotaoSalvar(botao, false);
+    } else {
+      await setDoc(referencia, { publicacaoId, criadoEm: serverTimestamp() });
+      atualizarBotaoSalvar(botao, true);
+    }
+  } catch (erro) {
+    console.error("Erro ao salvar publicação.", erro);
+    alert("Não foi possível salvar esta publicação agora. Tente novamente.");
   }
 }
 
@@ -375,6 +427,22 @@ async function salvarPerfil(usuario) {
   };
   if (!existente.exists()) perfil.criadoEm = serverTimestamp();
   await setDoc(referencia, perfil, { merge: true });
+
+  // O perfil público não contém e-mail: informações de acesso continuam na
+  // coleção privada comunidadeUsuarios e nunca são expostas à Comunidade.
+  // Só criamos a versão pública quando ela ainda não existe, para preservar
+  // mudanças de nome feitas pelo próprio membro no editor de perfil.
+  const perfilPublico = doc(db, "comunidadePerfis", usuario.uid);
+  const perfilPublicoExistente = await getDoc(perfilPublico);
+  if (!perfilPublicoExistente.exists()) {
+    await setDoc(perfilPublico, {
+      nome: nomeExibicao(usuario),
+      bio: "",
+      fotoUrl: "",
+      criadoEm: serverTimestamp(),
+      atualizadoEm: serverTimestamp()
+    });
+  }
 }
 
 function atualizarInterfaceDoUsuario(usuario) {
@@ -382,7 +450,11 @@ function atualizarInterfaceDoUsuario(usuario) {
   const autenticado = Boolean(usuarioAtual);
   refs.painelVisitante.hidden = autenticado;
   refs.painelMembro.hidden = !autenticado;
-  if (!autenticado) return;
+  if (!autenticado) {
+    refs.linkMeuPerfil.href = "meu-perfil.html";
+    return;
+  }
+  refs.linkMeuPerfil.href = `perfil.html?uid=${encodeURIComponent(usuarioAtual.uid)}`;
   const nome = nomeExibicao(usuarioAtual);
   refs.avatarMembro.textContent = iniciais(nome);
   refs.tituloMembro.textContent = `Olá, ${nome.split(" ")[0]}!`;
@@ -439,6 +511,8 @@ refs.formularioAutenticacao.addEventListener("submit", async (evento) => {
     }
     fecharModal();
     refs.formularioAutenticacao.reset();
+    const retorno = new URLSearchParams(window.location.search).get("retorno");
+    if (retorno && retorno.startsWith("perfil.html?")) window.location.assign(retorno);
   } catch (erro) {
     console.error("Erro de autenticação.", erro);
     mostrarMensagem(refs.mensagemAutenticacao, mensagemDeErroAuth(erro), true);
