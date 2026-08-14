@@ -1,0 +1,13 @@
+# Frases de Messias — orientações públicas para rastreadores
+# As páginas institucionais e a Comunidade podem ser rastreadas.
+User-agent: *
+Allow: /
+
+# Áreas funcionais, pessoais ou administrativas não devem ser rastreadas.
+Disallow: /admin.html
+Disallow: /importar.html
+Disallow: /moderacao.html
+Disallow: /favoritos.html
+Disallow: /meu-perfil.html
+
+Sitemap: https://frasesdemessias.com.br/sitemap.xml
