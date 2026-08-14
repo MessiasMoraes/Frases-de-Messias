@@ -414,6 +414,8 @@ refs.alternarTema.addEventListener("click", () => {
 refs.textoPublicacao.addEventListener("input", () => {
   refs.contadorCaracteres.textContent = `${refs.textoPublicacao.value.length} / 360`;
 });
+// O envio deve passar pelo manipulador que grava a frase como pendente no Firestore.
+refs.formularioPublicacao.addEventListener("submit", enviarPublicacao);
 refs.filtroCategoria.addEventListener("change", renderizarFeed);
 
 refs.formularioAutenticacao.addEventListener("submit", async (evento) => {
