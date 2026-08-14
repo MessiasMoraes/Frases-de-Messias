@@ -61,10 +61,25 @@
         <p class="meta-publicacao meta-frase-perfil"></p>
       </header>
       <blockquote class="texto-publicacao"></blockquote>
+      <footer class="acoes-publicacao acoes-publicacao-perfil">
+        <button class="acao-publicacao botao-curtir-publicacao" type="button">🤍 <span>Curtir</span></button>
+        <button class="acao-publicacao botao-salvar-publicacao" type="button">🔖 <span>Salvar</span></button>
+        <button class="acao-publicacao botao-comentarios" type="button">💬 <span>Comentários</span></button>
+        <button class="acao-publicacao botao-compartilhar-publicacao" type="button">↗️ <span>Compartilhar</span></button>
+      </footer>
+      <section class="area-comentarios" hidden>
+        <div class="lista-comentarios"></div>
+        <form class="formulario-comentario" novalidate>
+          <label class="sr-only">Adicionar comentário</label>
+          <input class="texto-comentario" type="text" maxlength="240" placeholder="Escreva um comentário respeitoso...">
+          <button class="botao-enviar-comentario" type="submit">Enviar</button>
+        </form>
+        <p class="mensagem-comentario" role="status"></p>
+      </section>
       <p class="status-frase-perfil" hidden></p>
     </article>
   </template>
 
-  <script type="module" src="perfil.js?v=20260814-perfis-v2"></script>
+  <script type="module" src="perfil.js?v=20260814-interacoes-v1"></script>
 </body>
 </html>

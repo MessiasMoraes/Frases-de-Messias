@@ -211,7 +211,7 @@ function criarCartaoPublicacao(post) {
 
   botaoCurtir.addEventListener("click", () => curtirPublicacao(post.id, botaoCurtir));
   botaoSalvar.addEventListener("click", () => salvarPublicacao(post.id, botaoSalvar));
-  botaoComentarios.addEventListener("click", () => alternarComentarios(post.id, areaComentarios, listaComentarios, botaoComentarios));
+  botaoComentarios.addEventListener("click", () => alternarComentarios(post.id, areaComentarios, listaComentarios, botaoComentarios, inputComentario));
   sincronizarEstadoDeInteracoes(post.id, botaoCurtir, botaoSalvar);
   botaoCompartilhar.addEventListener("click", () => compartilharPublicacao(post));
   formularioComentario.addEventListener("submit", (evento) => enviarComentario(evento, post.id, inputComentario, mensagemComentario));
@@ -303,7 +303,97 @@ async function salvarPublicacao(publicacaoId, botao) {
   }
 }
 
-function alternarComentarios(publicacaoId, area, lista, botao) {
+function atualizarBotaoCurtirComentario(botao, ativo) {
+  botao.classList.toggle("ativo", ativo);
+  botao.textContent = ativo ? "❤️ Curtido" : "🤍 Curtir";
+}
+
+async function sincronizarCurtidaComentario(publicacaoId, comentarioId, botao) {
+  if (!usuarioAtual) { atualizarBotaoCurtirComentario(botao, false); return; }
+  try {
+    const registro = await getDoc(doc(db, "comunidadePublicacoes", publicacaoId, "comentarios", comentarioId, "curtidas", usuarioAtual.uid));
+    atualizarBotaoCurtirComentario(botao, registro.exists());
+  } catch (erro) {
+    console.warn("Não foi possível sincronizar a curtida do comentário.", erro);
+  }
+}
+
+async function curtirComentario(publicacaoId, comentarioId, botao) {
+  if (!usuarioAtual) { abrirModal(); return; }
+  const referencia = doc(db, "comunidadePublicacoes", publicacaoId, "comentarios", comentarioId, "curtidas", usuarioAtual.uid);
+  try {
+    const existente = await getDoc(referencia);
+    if (existente.exists()) {
+      await deleteDoc(referencia);
+      atualizarBotaoCurtirComentario(botao, false);
+    } else {
+      await setDoc(referencia, { usuarioId: usuarioAtual.uid, criadoEm: serverTimestamp() });
+      atualizarBotaoCurtirComentario(botao, true);
+    }
+  } catch (erro) {
+    console.error("Erro ao curtir comentário.", erro);
+    alert("Não foi possível curtir este comentário agora. Tente novamente.");
+  }
+}
+
+async function compartilharComentario(dados) {
+  const texto = `“${textoLimpo(dados.texto)}” — ${textoLimpo(dados.autorNome || NOME_PADRAO)}\n\nCompartilhado pela Comunidade Frases de Messias`;
+  const compartilhamento = { title: "Comentário | Frases de Messias", text: texto, url: window.location.href };
+  try {
+    if (navigator.share) await navigator.share(compartilhamento);
+    else if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(`${texto}\n${compartilhamento.url}`);
+      alert("Comentário copiado para compartilhar!");
+    } else {
+      alert("Compartilhamento não disponível neste dispositivo.");
+    }
+  } catch (erro) {
+    if (erro?.name !== "AbortError") console.warn("Compartilhamento do comentário indisponível.", erro);
+  }
+}
+
+function criarComentario(publicacaoId, comentarioId, dados, input) {
+  const comentario = document.createElement("article");
+  comentario.className = "comentario";
+  const cabecalho = document.createElement("div");
+  cabecalho.className = "cabecalho-comentario";
+  const autor = document.createElement("a");
+  autor.className = "link-autor-comentario";
+  autor.href = `perfil.html?uid=${encodeURIComponent(dados.autorId || "")}`;
+  autor.textContent = textoLimpo(dados.autorNome || NOME_PADRAO);
+  const texto = document.createElement("p");
+  texto.className = "texto-comentario-publicado";
+  texto.textContent = textoLimpo(dados.texto);
+  const acoes = document.createElement("footer");
+  acoes.className = "acoes-comentario";
+  const curtir = document.createElement("button");
+  curtir.type = "button";
+  curtir.className = "acao-comentario botao-curtir-comentario";
+  atualizarBotaoCurtirComentario(curtir, false);
+  curtir.addEventListener("click", () => curtirComentario(publicacaoId, comentarioId, curtir));
+  sincronizarCurtidaComentario(publicacaoId, comentarioId, curtir);
+  const responder = document.createElement("button");
+  responder.type = "button";
+  responder.className = "acao-comentario";
+  responder.textContent = "↩ Responder";
+  responder.addEventListener("click", () => {
+    if (!usuarioAtual) { abrirModal(); return; }
+    const mencao = `@${textoLimpo(dados.autorNome || NOME_PADRAO)} `;
+    if (!input.value.startsWith(mencao)) input.value = `${mencao}${input.value}`.slice(0, 240);
+    input.focus();
+  });
+  const compartilhar = document.createElement("button");
+  compartilhar.type = "button";
+  compartilhar.className = "acao-comentario";
+  compartilhar.textContent = "↗ Compartilhar";
+  compartilhar.addEventListener("click", () => compartilharComentario(dados));
+  cabecalho.appendChild(autor);
+  acoes.append(curtir, responder, compartilhar);
+  comentario.append(cabecalho, texto, acoes);
+  return comentario;
+}
+
+function alternarComentarios(publicacaoId, area, lista, botao, input) {
   const abrir = area.hidden;
   area.hidden = !abrir;
   botao.classList.toggle("ativo", abrir);
@@ -330,13 +420,7 @@ function alternarComentarios(publicacaoId, area, lista, botao) {
       return dataPrimeiro - dataSegundo;
     });
     comentariosOrdenados.forEach((item) => {
-      const dados = item.data();
-      const comentario = document.createElement("div");
-      comentario.className = "comentario";
-      const autor = document.createElement("strong");
-      autor.textContent = `${textoLimpo(dados.autorNome || NOME_PADRAO)}: `;
-      comentario.append(autor, textoLimpo(dados.texto));
-      lista.appendChild(comentario);
+      lista.appendChild(criarComentario(publicacaoId, item.id, item.data(), input));
     });
   }, () => {
     lista.innerHTML = '<p class="comentario">Os comentários não puderam ser carregados agora.</p>';

@@ -22,6 +22,10 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/comunidadePublicacoes/$(publicacaoId)).data.status == 'publicado';
     }
 
+    function comentarioPublicado(publicacaoId, comentarioId) {
+      return get(/databases/$(database)/documents/comunidadePublicacoes/$(publicacaoId)/comentarios/$(comentarioId)).data.status == 'publicado';
+    }
+
     function dadosPublicosDePerfilValidos() {
       return request.resource.data.keys().hasOnly([
         'nome', 'bio', 'fotoUrl', 'criadoEm', 'atualizadoEm'
@@ -200,6 +204,20 @@ service cloud.firestore {
           && resource.data.autorId == request.auth.uid
           && resource.data.status == 'pendente'
         );
+
+        // Curtidas de comentários são privadas: cada pessoa consulta e altera
+        // somente o próprio registro, e apenas em comentários moderados.
+        match /curtidas/{usuarioId} {
+          allow get: if administrador() || (conectado() && request.auth.uid == usuarioId);
+          allow list: if administrador();
+          allow create: if conectado()
+            && request.auth.uid == usuarioId
+            && comentarioPublicado(publicacaoId, comentarioId)
+            && request.resource.data.keys().hasOnly(['usuarioId', 'criadoEm'])
+            && request.resource.data.usuarioId == request.auth.uid;
+          allow delete: if conectado() && request.auth.uid == usuarioId && comentarioPublicado(publicacaoId, comentarioId);
+          allow update: if false;
+        }
       }
     }
   }
