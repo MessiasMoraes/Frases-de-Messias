@@ -346,7 +346,9 @@ function mostrarCategorias(listaCategorias, pesquisa, lista) {
 }
 
 function configurarBotoesCategoriasFixos(pesquisa, lista) {
-    const botoes = document.querySelectorAll(".grid-botoes .btn-categoria");
+    // Os atalhos da página inicial agora são links para páginas públicas de categoria.
+    // Mantemos o filtro local apenas para botões reais que venham a existir futuramente.
+    const botoes = document.querySelectorAll(".grid-botoes button.btn-categoria");
     botoes.forEach(btn => {
         btn.onclick = () => {
             // O texto visível preserva o nome usado no Firestore; o atributo
