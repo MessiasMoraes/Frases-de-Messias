@@ -12,6 +12,8 @@ let frases = [];
 let categorias = {};
 let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
 let categoriaSelecionada = "";
+let frasesCarregadas = false;
+let temporizadorBusca;
 
 // ======================
 // FUNÇÕES AUXILIARES
@@ -181,6 +183,7 @@ async function carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa
     mostrarCarregando(lista);
     frases = [];
     categorias = {};
+    frasesCarregadas = false;
 
     try {
         contarVisitaGlobal();
@@ -215,9 +218,11 @@ async function carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa
         return;
     }
 
+    frasesCarregadas = true;
     fraseDoDia(fraseDiaElemento);
     mostrarCategorias(listaCategorias, pesquisa, lista);
-    mostrarFrases(lista, "");
+    // Preserva uma busca já digitada enquanto as frases estavam sendo carregadas.
+    mostrarFrases(lista, filtrosAtuais());
 }
 
 // ======================
@@ -231,8 +236,57 @@ function filtrosAtuais() {
     };
 }
 
+function rolarParaResultados() {
+    document.getElementById("todas-as-frases")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function atualizarStatusPesquisa(quantidade, filtros) {
+    const status = document.getElementById("statusPesquisa");
+    if (!status) return;
+
+    const texto = String(filtros.texto || "").trim();
+    const autor = String(filtros.autor || "").trim();
+    const categoria = String(filtros.categoria || "").trim();
+    const buscaAtiva = Boolean(texto || autor || categoria);
+
+    if (!buscaAtiva) {
+        status.hidden = true;
+        status.replaceChildren();
+        return;
+    }
+
+    status.hidden = false;
+    status.replaceChildren();
+
+    const mensagem = document.createElement("span");
+    const descricao = autor ? ` por autor “${autor}”` : (texto ? ` para “${texto}”` : ` em “${categoria}”`);
+    mensagem.textContent = quantidade === 1
+        ? `1 frase encontrada${descricao}.`
+        : `${quantidade} frases encontradas${descricao}.`;
+
+    const verResultados = document.createElement("button");
+    verResultados.type = "button";
+    verResultados.className = "btn-ver-resultados";
+    verResultados.textContent = "Ver resultados ↓";
+    verResultados.addEventListener("click", rolarParaResultados);
+
+    status.append(mensagem, verResultados);
+}
+
+function mostrarStatusCarregandoBusca() {
+    const status = document.getElementById("statusPesquisa");
+    if (!status) return;
+    status.hidden = false;
+    status.textContent = "Carregando frases… sua busca será aplicada automaticamente.";
+}
+
 function atualizarListaComFiltros() {
-    mostrarFrases(document.getElementById("listaFrases"), filtrosAtuais());
+    const filtros = filtrosAtuais();
+    if (!frasesCarregadas) {
+        mostrarStatusCarregandoBusca();
+        return;
+    }
+    mostrarFrases(document.getElementById("listaFrases"), filtros);
 }
 
 function mostrarFrases(lista, filtro = "") {
@@ -261,6 +315,8 @@ function mostrarFrases(lista, filtro = "") {
 
         return correspondeTexto && correspondeAutor && correspondeCategoria;
     });
+
+    atualizarStatusPesquisa(resultado.length, filtros);
 
     if (resultado.length === 0) {
         lista.innerHTML = `
@@ -1205,15 +1261,30 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    const atualizarBuscaComEspera = (limparCategoria = false) => {
+        if (limparCategoria) categoriaSelecionada = "";
+        window.clearTimeout(temporizadorBusca);
+        temporizadorBusca = window.setTimeout(atualizarListaComFiltros, 180);
+    };
+
+    const tratarEnterDaBusca = (evento) => {
+        if (evento.key !== "Enter") return;
+        evento.preventDefault();
+        window.clearTimeout(temporizadorBusca);
+        atualizarListaComFiltros();
+        rolarParaResultados();
+    };
+
     if (pesquisa) {
-        pesquisa.addEventListener("input", () => {
-            categoriaSelecionada = "";
-            atualizarListaComFiltros();
-        });
+        pesquisa.addEventListener("input", () => atualizarBuscaComEspera(true));
+        pesquisa.addEventListener("keydown", tratarEnterDaBusca);
+        pesquisa.addEventListener("search", () => atualizarBuscaComEspera(true));
     }
 
     if (pesquisaAutor) {
-        pesquisaAutor.addEventListener("input", atualizarListaComFiltros);
+        pesquisaAutor.addEventListener("input", () => atualizarBuscaComEspera());
+        pesquisaAutor.addEventListener("keydown", tratarEnterDaBusca);
+        pesquisaAutor.addEventListener("search", () => atualizarBuscaComEspera());
     }
 
     carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa);

@@ -1293,3 +1293,61 @@ body.dark {
 @media (prefers-reduced-motion: reduce) {
   .acoes-frase-individual button { transition: none; }
 }
+
+/* Pesquisa da página inicial: retorno imediato e acesso aos resultados */
+.status-pesquisa {
+  max-width: 1120px;
+  margin: 10px auto 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 12px;
+  background: rgba(8, 29, 68, 0.28);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.4;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.status-pesquisa:not([hidden]) {
+  display: flex;
+}
+
+.status-pesquisa[hidden] {
+  display: none;
+}
+
+.btn-ver-resultados {
+  flex: 0 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 999px;
+  padding: 7px 11px;
+  background: #ffffff;
+  color: #174ea6;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.btn-ver-resultados:hover,
+.btn-ver-resultados:focus-visible {
+  background: #e8f0fe;
+  outline: 3px solid rgba(255, 255, 255, 0.55);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .status-pesquisa:not([hidden]) {
+    align-items: stretch;
+    flex-direction: column;
+    margin-top: 8px;
+    text-align: center;
+  }
+
+  .btn-ver-resultados {
+    width: 100%;
+  }
+}
