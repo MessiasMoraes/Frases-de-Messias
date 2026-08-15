@@ -38,6 +38,7 @@ function navegacao() {
       <nav aria-label="Navegação principal">
         <a href="index.html">🏠 Início</a>
         <a href="categorias.html">📂 Categorias</a>
+        <a href="frases-importantes.html">⭐ Frases em destaque</a>
         <a href="comunidade.html">💬 Comunidade</a>
         <a href="favoritos.html">❤️ Favoritos</a>
         <a href="sobre.html">ℹ️ Sobre</a>
@@ -87,7 +88,7 @@ function paginaCategoria(categoria) {
   <meta name="twitter:image" content="${dominio}/imagens/1785461694182.png">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#4A90E2">
-  <link rel="stylesheet" href="style.css?v=20260815-categorias-v1">
+  <link rel="stylesheet" href="style.css?v=20260815-frases-v2">
   <script type="application/ld+json">${JSON.stringify(schema)}</script>${analytics}
 </head>
 <body data-categoria="${escaparAtributo(categoria.nome)}">
@@ -107,6 +108,7 @@ function paginaCategoria(categoria) {
     <section class="categorias categoria-links" aria-labelledby="outrasCategoriasTitulo">
       <h2 id="outrasCategoriasTitulo">Explore outras categorias</h2>
       <div class="grid-botoes">
+        <a class="btn-categoria" href="frases-importantes.html">⭐ Frases em destaque</a>
         <a class="btn-categoria" href="categorias.html">Ver todas as categorias</a>
         <a class="btn-categoria" href="index.html">Ver todas as frases</a>
       </div>
@@ -165,7 +167,7 @@ function paginaCentral() {
   <meta name="twitter:card" content="summary_large_image">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#4A90E2">
-  <link rel="stylesheet" href="style.css?v=20260815-categorias-v1">
+  <link rel="stylesheet" href="style.css?v=20260815-frases-v2">
   <script type="application/ld+json">${JSON.stringify(schema)}</script>${analytics}
 </head>
 <body>
