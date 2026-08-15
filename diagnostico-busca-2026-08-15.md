@@ -30,3 +30,9 @@ Os cartões exibidos abaixo do cabeçalho foram filtrados de acordo com a consul
 ## Falha reproduzida — consulta por categoria em linguagem natural
 
 Na página publicada, a consulta `frases de amor` exibiu `0 frases encontradas`, embora o acervo local possua 50 frases com a categoria `Amor`. A causa é que o filtro atual procura a expressão completa no texto, autor ou categoria; a categoria contém apenas `amor`, não `frases de amor`. A correção deve interpretar termos contextuais como `frases de`, `frase de`, `mensagens de` e `mensagem de`, preservando a palavra de tema relevante para a busca.
+
+## Validação da publicação da correção
+
+A versão publicada com o identificador `18b3bc4` respondeu com HTTP 200 e carregou o acervo completo de frases antes do teste da consulta em linguagem natural.
+
+A consulta publicada `frases de amor` retornou 64 frases da categoria Amor. Com o autor `Messias` preenchido em conjunto, a busca continuou retornando 64 frases, confirmando a preservação do filtro por autor.
