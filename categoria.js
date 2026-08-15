@@ -13,6 +13,13 @@ const lista = document.getElementById("listaFrasesCategoria");
 const contador = document.getElementById("contadorFrases");
 const busca = document.getElementById("buscaCategoria");
 const ORIGEM_PROXY_IMAGEM = "https://frasesdemessiascombr.vercel.app";
+
+function origemApiVideo() {
+  return window.location.hostname.endsWith(".vercel.app")
+    ? window.location.origin
+    : ORIGEM_PROXY_IMAGEM;
+}
+
 let frasesDaCategoria = [];
 let imagensCategorias = {};
 
@@ -154,10 +161,12 @@ function renderizar(frases) {
           <button type="button" data-acao="compartilhar" data-id="${id}">Compartilhar</button>
           <button type="button" class="btn-baixar" data-acao="baixar" data-id="${id}" aria-expanded="false">📥 Baixar</button>
         </div>
-        <div class="opcoesDownload" hidden aria-label="Escolha o formato da imagem">
+        <div class="opcoesDownload" hidden aria-label="Escolha o formato para baixar">
           <p>Escolha o formato:</p>
-          <button type="button" data-acao="baixar-imagem" data-formato="story" data-id="${id}">📱 Story (9:16)</button>
-          <button type="button" data-acao="baixar-imagem" data-formato="feed" data-id="${id}">📸 Feed (1:1)</button>
+          <button type="button" data-acao="baixar-imagem" data-formato="story" data-id="${id}">📱 Imagem Story (9:16)</button>
+          <button type="button" data-acao="baixar-imagem" data-formato="feed" data-id="${id}">📸 Imagem Feed (1:1)</button>
+          <button type="button" class="btn-video" data-acao="baixar-video" data-formato="story" data-id="${id}">🎬 Vídeo Story</button>
+          <button type="button" class="btn-video" data-acao="baixar-video" data-formato="feed" data-id="${id}">🎬 Vídeo Feed</button>
         </div>
         <div class="estatisticas">
           <span>❤️ ${curtidas}</span>
@@ -390,6 +399,232 @@ async function baixarImagem(botao, formato) {
   }
 }
 
+function mostrarErroVideo(mensagem) {
+  alert(`⚠️ ${mensagem || "Não foi possível gerar o vídeo agora."}`);
+}
+
+function ehDispositivoApple() {
+  const agente = navigator.userAgent || "";
+  return /iPad|iPhone|iPod/.test(agente)
+    || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+}
+
+function ehNavegadorInstagram() {
+  return /Instagram/i.test(navigator.userAgent || "");
+}
+
+function temDownloaderAndroidNativo() {
+  return Boolean(window.AndroidDownloader)
+    && typeof window.AndroidDownloader.baixarVideo === "function";
+}
+
+function ehAplicativoAndroid() {
+  if (!/Android/i.test(navigator.userAgent || "")) return false;
+  return temDownloaderAndroidNativo()
+    || (Boolean(window.Capacitor?.isNativePlatform?.())
+      && window.Capacitor?.getPlatform?.() === "android");
+}
+
+function baixarVideoNoAppAndroid(url, filename) {
+  if (!temDownloaderAndroidNativo()) return false;
+  try {
+    return window.AndroidDownloader.baixarVideo(url, filename) !== false;
+  } catch (erro) {
+    console.warn("Não foi possível acionar o download nativo Android:", erro);
+    return false;
+  }
+}
+
+function iniciarDownloadDireto(url, filename) {
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.style.display = "none";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+}
+
+function iniciarDownloadBlob(blob, filename) {
+  const objetoUrl = URL.createObjectURL(blob);
+  iniciarDownloadDireto(objetoUrl, filename);
+  window.setTimeout(() => URL.revokeObjectURL(objetoUrl), 60000);
+}
+
+async function prepararArquivoMp4(url, filename) {
+  const resposta = await fetch(url, { cache: "no-store", mode: "cors" });
+  const tipo = resposta.headers.get("content-type") || "";
+  if (!resposta.ok || !tipo.toLowerCase().startsWith("video/")) {
+    throw new Error("O vídeo não pôde ser preparado para salvar.");
+  }
+  const blob = await resposta.blob();
+  if (!blob.size) throw new Error("O vídeo gerado está vazio.");
+  return { blob, arquivo: new File([blob], filename, { type: blob.type || "video/mp4" }) };
+}
+
+function nomeArquivoMp4Unico(filename, formato) {
+  const base = String(filename || `frases-de-messias-${formato || "video"}.mp4`)
+    .replace(/\.mp4$/i, "")
+    .replace(/-\d{13}$/, "");
+  return `${base}-${Date.now()}.mp4`;
+}
+
+function mostrarMp4Gerado(url, downloadUrl, filename, formato, dadosCapa = {}) {
+  document.querySelectorAll('[data-modal-download="video"]').forEach((modalAntigo) => modalAntigo.remove());
+
+  const modal = document.createElement("div");
+  modal.dataset.modalDownload = "video";
+  modal.setAttribute("role", "dialog");
+  modal.setAttribute("aria-modal", "true");
+  modal.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:2147483647;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;color:#fff;text-align:center;overflow:auto;";
+
+  const titulo = document.createElement("p");
+  titulo.textContent = `✅ Vídeo MP4 ${formato === "feed" ? "Feed" : "Story"} pronto!`;
+  titulo.style.cssText = "font-weight:bold;font-size:18px;margin:0 0 14px;";
+
+  const areaVideo = document.createElement("div");
+  areaVideo.style.cssText = `position:relative;width:min(100%,360px);max-height:62vh;overflow:hidden;border-radius:10px;background:#111;${formato === "feed" ? "aspect-ratio:1/1;" : "aspect-ratio:9/16;"}`;
+  const video = document.createElement("video");
+  video.src = url;
+  video.controls = true;
+  video.playsInline = true;
+  video.preload = "metadata";
+  video.poster = dadosCapa.imagem || "";
+  video.style.cssText = "width:100%;height:100%;object-fit:contain;display:block;background:#111;";
+  areaVideo.appendChild(video);
+
+  const baixar = document.createElement("button");
+  baixar.type = "button";
+  baixar.disabled = true;
+  baixar.textContent = "⏳ Preparando MP4...";
+  baixar.style.cssText = "display:inline-block;margin-top:18px;min-height:44px;padding:12px 24px;background:#2563eb;color:#fff;border:0;border-radius:8px;font-weight:bold;touch-action:manipulation;";
+
+  const situacao = document.createElement("p");
+  situacao.setAttribute("aria-live", "polite");
+  situacao.textContent = "Preparando o arquivo para salvar no seu celular...";
+  situacao.style.cssText = "font-size:13px;line-height:1.4;max-width:360px;margin:12px 0 0;";
+
+  const aplicativoAndroid = ehAplicativoAndroid();
+  const noInstagram = ehNavegadorInstagram();
+  const ajuda = document.createElement("p");
+  ajuda.textContent = noInstagram
+    ? "No navegador do Instagram, abra o arquivo no navegador do celular para concluir o download."
+    : aplicativoAndroid
+      ? "Toque em Baixar MP4. O aplicativo salvará o arquivo na pasta Downloads do celular."
+      : ehDispositivoApple()
+        ? "No iPhone/iPad, toque em Salvar MP4 e escolha Salvar Vídeo ou Salvar em Arquivos."
+        : "Toque em Baixar MP4. O arquivo será salvo na pasta Downloads do navegador.";
+  ajuda.style.cssText = "font-size:13px;line-height:1.4;max-width:360px;margin:8px 0 14px;";
+
+  const fechar = document.createElement("button");
+  fechar.type = "button";
+  fechar.textContent = "Fechar";
+  fechar.style.cssText = "min-height:44px;padding:10px 24px;background:#ef4444;color:#fff;border:0;border-radius:6px;font-weight:bold;touch-action:manipulation;";
+  fechar.onclick = () => modal.remove();
+
+  modal.append(titulo, areaVideo, baixar, situacao, ajuda, fechar);
+  document.body.appendChild(modal);
+
+  let arquivoPreparado = null;
+  const urlDireta = downloadUrl || `${url}?download=1`;
+  if (aplicativoAndroid) {
+    baixar.disabled = false;
+    baixar.textContent = "⬇️ Baixar MP4";
+    situacao.textContent = "Arquivo pronto. Toque para salvá-lo na pasta Downloads do celular.";
+  } else {
+    prepararArquivoMp4(url, filename)
+      .then((resultado) => {
+        arquivoPreparado = resultado;
+        baixar.disabled = false;
+        baixar.textContent = ehDispositivoApple() ? "⬇️ Salvar MP4" : "⬇️ Baixar MP4";
+        situacao.textContent = "Arquivo pronto para salvar.";
+      })
+      .catch((erro) => {
+        console.warn("Preparação local do MP4 indisponível:", erro);
+        baixar.disabled = false;
+        baixar.textContent = noInstagram ? "🌐 Abrir e baixar MP4" : "⬇️ Baixar MP4";
+        situacao.textContent = "Use o download direto do arquivo.";
+      });
+  }
+
+  baixar.onclick = () => {
+    if (noInstagram) {
+      window.open(urlDireta, "_blank", "noopener,noreferrer");
+      situacao.textContent = "Abra o download no navegador do celular.";
+      return;
+    }
+    if (aplicativoAndroid) {
+      if (baixarVideoNoAppAndroid(urlDireta, filename)) {
+        situacao.textContent = "Download iniciado. Confira a pasta Downloads e a notificação do Android.";
+      } else {
+        iniciarDownloadDireto(urlDireta, filename);
+        situacao.textContent = "Abrimos o download. Confirme o salvamento na tela do Android.";
+      }
+      return;
+    }
+    if (!arquivoPreparado) {
+      iniciarDownloadDireto(urlDireta, filename);
+      situacao.textContent = "O download foi iniciado. Verifique a pasta Downloads.";
+      return;
+    }
+    if (ehDispositivoApple() && navigator.share) {
+      const dadosCompartilhamento = { title: "Vídeo — Frases de Messias", files: [arquivoPreparado.arquivo] };
+      if (!navigator.canShare || navigator.canShare(dadosCompartilhamento)) {
+        navigator.share(dadosCompartilhamento)
+          .then(() => { situacao.textContent = "Concluído. Confira Fotos ou Arquivos para localizar o MP4."; })
+          .catch((erro) => {
+            if (erro?.name !== "AbortError") iniciarDownloadDireto(urlDireta, filename);
+          });
+        return;
+      }
+    }
+    iniciarDownloadBlob(arquivoPreparado.blob, filename);
+    situacao.textContent = "Download iniciado. Verifique a pasta Downloads do navegador.";
+  };
+}
+
+async function gerarVideo(botao, formato = "story") {
+  const card = botao.closest(".cardFrase");
+  if (!card) return;
+
+  const imagemElemento = card.querySelector(".imagemFrase img");
+  const imageUrl = imagemElemento?.currentSrc || imagemElemento?.src || "";
+  const texto = card.querySelector(".textoFrase")?.innerText?.trim() || "";
+  const autor = card.querySelector(".autorFrase")?.innerText?.trim() || "— Messias";
+  const textoOriginal = botao.textContent;
+  if (!imageUrl || !texto) {
+    mostrarErroVideo("A frase ou a imagem não foi encontrada neste cartão.");
+    return;
+  }
+
+  botao.disabled = true;
+  botao.textContent = "⏳ Gerando MP4...";
+  try {
+    const response = await fetch(`${origemApiVideo()}/api/video`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ imageUrl, texto, autor, formato })
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || !data.ok || !data.url) {
+      throw new Error(data.error || `Falha HTTP ${response.status}.`);
+    }
+    mostrarMp4Gerado(
+      data.url,
+      data.downloadUrl || `${data.url}?download=1`,
+      nomeArquivoMp4Unico(data.filename, formato),
+      formato,
+      { imagem: imageUrl, texto, autor }
+    );
+  } catch (erro) {
+    console.error("Erro ao gerar MP4 na categoria:", erro);
+    mostrarErroVideo(erro.message);
+  } finally {
+    botao.disabled = false;
+    botao.textContent = textoOriginal;
+  }
+}
+
 function configurarAcoes() {
   lista.addEventListener("click", async (evento) => {
     const botao = evento.target.closest("button[data-acao]");
@@ -422,6 +657,11 @@ function configurarAcoes() {
 
     if (botao.dataset.acao === "baixar-imagem") {
       await baixarImagem(botao, botao.dataset.formato || "story");
+      return;
+    }
+
+    if (botao.dataset.acao === "baixar-video") {
+      await gerarVideo(botao, botao.dataset.formato || "story");
       return;
     }
 
