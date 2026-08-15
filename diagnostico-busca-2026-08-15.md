@@ -26,3 +26,7 @@ A versão pública identificada pelo parâmetro `versao=d0a73dd` respondeu com H
 | Autor | `Messias` (com o tema ativo) | `64 frases encontradas por autor “Messias”.` e botão “Ver resultados ↓”. |
 
 Os cartões exibidos abaixo do cabeçalho foram filtrados de acordo com a consulta. A nova mensagem resolve a falta de confirmação que fazia parecer que o campo não estava buscando.
+
+## Falha reproduzida — consulta por categoria em linguagem natural
+
+Na página publicada, a consulta `frases de amor` exibiu `0 frases encontradas`, embora o acervo local possua 50 frases com a categoria `Amor`. A causa é que o filtro atual procura a expressão completa no texto, autor ou categoria; a categoria contém apenas `amor`, não `frases de amor`. A correção deve interpretar termos contextuais como `frases de`, `frase de`, `mensagens de` e `mensagem de`, preservando a palavra de tema relevante para a busca.

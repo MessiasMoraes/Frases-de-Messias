@@ -57,6 +57,20 @@ function normalizarCategoria(texto = "") {
     ).replace(/\s+/g, " ").trim();
 }
 
+// Permite consultas naturais, como “frases de amor” ou “mensagens de fé”.
+// Palavras de contexto são ignoradas e o tema restante é comparado com
+// o texto, o autor e a categoria de cada frase.
+function termosRelevantesDaBusca(texto = "") {
+    const palavrasIgnoradas = new Set([
+        "a", "as", "o", "os", "de", "da", "das", "do", "dos", "e", "em", "para", "por", "com", "sobre",
+        "frase", "frases", "mensagem", "mensagens", "pensamento", "pensamentos"
+    ]);
+
+    return normalizarParaBusca(String(texto))
+        .split(/[^a-z0-9]+/)
+        .filter(palavra => palavra && !palavrasIgnoradas.has(palavra));
+}
+
 // Converte imagens antigas do GitHub Pages para o mesmo domínio atual.
 // O carregamento normal dos cards continua direto; a exportação usa o proxy abaixo.
 function normalizarUrlImagem(url = "") {
@@ -298,6 +312,7 @@ function mostrarFrases(lista, filtro = "") {
         ? { texto: filtro, autor: "", categoria: "" }
         : (filtro || {});
     const textoLimpo = normalizarParaBusca(String(filtros.texto || "").trim());
+    const termosBusca = termosRelevantesDaBusca(filtros.texto || "");
     const autorLimpo = normalizarParaBusca(String(filtros.autor || "").trim());
     const categoriaLimpa = normalizarCategoria(filtros.categoria || "");
 
@@ -305,11 +320,15 @@ function mostrarFrases(lista, filtro = "") {
         const textoFrase = normalizarParaBusca(f.texto || "");
         const autorFrase = normalizarParaBusca(f.autor || "Messias");
         const categoriaFrase = normalizarCategoria(f.categoria || "");
+        const conteudoPesquisavel = `${textoFrase} ${categoriaFrase} ${autorFrase}`;
 
+        // Primeiro preserva a busca exata. Se o visitante escrever uma frase
+        // natural, cada termo relevante também é considerado; assim “frases de
+        // amor” encontra a categoria Amor, e “mensagens de fé” encontra Fé.
         const correspondeTexto = !textoLimpo
-            || textoFrase.includes(textoLimpo)
-            || categoriaFrase.includes(textoLimpo)
-            || autorFrase.includes(textoLimpo);
+            || conteudoPesquisavel.includes(textoLimpo)
+            || termosBusca.length === 0
+            || termosBusca.every(termo => conteudoPesquisavel.includes(termo));
         const correspondeAutor = !autorLimpo || autorFrase.includes(autorLimpo);
         const correspondeCategoria = !categoriaLimpa || categoriaFrase === categoriaLimpa;
 
