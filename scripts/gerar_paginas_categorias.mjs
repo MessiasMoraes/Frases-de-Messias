@@ -126,7 +126,7 @@ function paginaCategoria(categoria) {
     <p><a href="categorias.html">Todas as categorias</a> · <a href="contato.html">Contato</a></p>
   </footer>
   <button id="temaBtn" type="button" aria-pressed="false">🌙 Modo Escuro</button>
-  <script type="module" src="categoria.js?v=20260815-categorias-download-video-v3"></script>
+  <script type="module" src="categoria.js?v=20260815-categorias-consumo-v4"></script>
 </body>
 </html>
 `;

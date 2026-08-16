@@ -4,7 +4,9 @@ import {
   getDocs,
   doc,
   updateDoc,
-  increment
+  increment,
+  query,
+  where
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 const categoria = String(document.body.dataset.categoria || "").trim();
@@ -694,7 +696,8 @@ async function carregarCategoria() {
   try {
     const [resultadoCategorias, resultadoFrases] = await Promise.all([
       getDocs(collection(db, "categorias")),
-      getDocs(collection(db, "frases"))
+      // Cada página consulta apenas sua própria categoria, em vez de todo o acervo.
+      getDocs(query(collection(db, "frases"), where("categoria", "==", categoria)))
     ]);
 
     resultadoCategorias.forEach((documento) => {
@@ -704,8 +707,7 @@ async function carregarCategoria() {
     });
 
     frasesDaCategoria = resultadoFrases.docs
-      .map((documento) => ({ id: documento.id, ...documento.data() }))
-      .filter((frase) => normalizar(frase.categoria || "") === categoriaNormalizada);
+      .map((documento) => ({ id: documento.id, ...documento.data() }));
 
     renderizar(frasesDaCategoria);
   } catch (erro) {

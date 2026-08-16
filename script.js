@@ -6,7 +6,12 @@ import {
     doc,
     updateDoc,
     increment,
-    runTransaction
+    runTransaction,
+    query,
+    orderBy,
+    limit,
+    startAfter,
+    documentId
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 let frases = [];
@@ -15,6 +20,10 @@ let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
 let categoriaSelecionada = "";
 let frasesCarregadas = false;
 let temporizadorBusca;
+const TAMANHO_LOTE_FRASES = 24;
+let ultimoDocumentoFrases = null;
+let haMaisFrases = true;
+let carregandoMaisFrases = false;
 
 // ======================
 // FUNÇÕES AUXILIARES
@@ -207,34 +216,50 @@ async function contarVisitaGlobal() {
 // ======================
 // CARREGAR DADOS
 // ======================
+async function carregarProximoLoteDeFrases() {
+    if (!haMaisFrases || carregandoMaisFrases) return 0;
+
+    carregandoMaisFrases = true;
+    try {
+        const restricoes = [orderBy(documentId()), limit(TAMANHO_LOTE_FRASES)];
+        if (ultimoDocumentoFrases) restricoes.push(startAfter(ultimoDocumentoFrases));
+
+        const consultaFrases = await getDocs(query(collection(db, "frases"), ...restricoes));
+        consultaFrases.forEach(docSnap => {
+            frases.push({ id: docSnap.id, ...docSnap.data() });
+        });
+
+        if (consultaFrases.docs.length) {
+            ultimoDocumentoFrases = consultaFrases.docs[consultaFrases.docs.length - 1];
+        }
+        haMaisFrases = consultaFrases.size === TAMANHO_LOTE_FRASES;
+        return consultaFrases.size;
+    } finally {
+        carregandoMaisFrases = false;
+    }
+}
+
 async function carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa) {
     mostrarCarregando(lista);
     frases = [];
     categorias = {};
     frasesCarregadas = false;
+    ultimoDocumentoFrases = null;
+    haMaisFrases = true;
 
     try {
         contarVisitaGlobal();
 
-        // Buscar Categorias
+        // As categorias são poucas e são carregadas uma única vez.
         const consultaCategorias = await getDocs(collection(db, "categorias"));
         consultaCategorias.forEach(docSnap => {
             const dados = docSnap.data();
             const nomeLimpo = sanitizarTexto(dados.nome || "");
-            if (nomeLimpo) {
-                categorias[nomeLimpo] = dados.imagem;
-            }
+            if (nomeLimpo) categorias[nomeLimpo] = dados.imagem;
         });
 
-        // Buscar Frases
-        const consultaFrases = await getDocs(collection(db, "frases"));
-        consultaFrases.forEach(docSnap => {
-            frases.push({
-                id: docSnap.id,
-                ...docSnap.data()
-            });
-        });
-
+        // Carrega somente o primeiro lote. Os demais são buscados por ação do visitante.
+        await carregarProximoLoteDeFrases();
     } catch (e) {
         console.error("Erro no Firebase:", e);
         mostrarErro(lista, "Erro ao conectar ao banco de dados. Verifique a conexão.");
@@ -288,9 +313,10 @@ function atualizarStatusPesquisa(quantidade, filtros) {
 
     const mensagem = document.createElement("span");
     const descricao = autor ? ` por autor “${autor}”` : (texto ? ` para “${texto}”` : ` em “${categoria}”`);
+    const sufixoCarregamento = haMaisFrases ? ` entre as ${frases.length} carregadas até agora` : "";
     mensagem.textContent = quantidade === 1
-        ? `1 frase encontrada${descricao}.`
-        : `${quantidade} frases encontradas${descricao}.`;
+        ? `1 frase encontrada${descricao}${sufixoCarregamento}.`
+        : `${quantidade} frases encontradas${descricao}${sufixoCarregamento}.`;
 
     const verResultados = document.createElement("button");
     verResultados.type = "button";
@@ -315,6 +341,34 @@ function atualizarListaComFiltros() {
         return;
     }
     mostrarFrases(document.getElementById("listaFrases"), filtros);
+}
+
+function adicionarBotaoCarregarMais(lista) {
+    if (!lista || !haMaisFrases) return;
+
+    const areaMais = document.createElement("div");
+    areaMais.style.cssText = "text-align:center; padding:18px 0 8px;";
+    const botaoMais = document.createElement("button");
+    botaoMais.type = "button";
+    botaoMais.className = "btn-ver-resultados";
+    botaoMais.textContent = "Carregar mais frases";
+    botaoMais.addEventListener("click", async () => {
+        const textoOriginal = botaoMais.textContent;
+        botaoMais.disabled = true;
+        botaoMais.textContent = "Carregando...";
+        try {
+            const quantidade = await carregarProximoLoteDeFrases();
+            if (!quantidade) haMaisFrases = false;
+            mostrarFrases(lista, filtrosAtuais());
+        } catch (erro) {
+            console.error("Erro ao carregar mais frases:", erro);
+            botaoMais.disabled = false;
+            botaoMais.textContent = textoOriginal;
+            alert("Não foi possível carregar mais frases agora. Tente novamente.");
+        }
+    });
+    areaMais.appendChild(botaoMais);
+    lista.appendChild(areaMais);
 }
 
 function mostrarFrases(lista, filtro = "") {
@@ -354,13 +408,16 @@ function mostrarFrases(lista, filtro = "") {
     if (resultado.length === 0) {
         lista.innerHTML = `
             <div class="semResultado" style="text-align:center; padding: 20px;">
-                😔 Nenhuma frase encontrada para a busca realizada.
+                😔 Nenhuma frase encontrada entre as frases carregadas. Você pode buscar mais no acervo.
             </div>
         `;
+        adicionarBotaoCarregarMais(lista);
         return;
     }
 
     resultado.forEach(f => criarCardFrase(f, lista));
+
+    adicionarBotaoCarregarMais(lista);
 }
 
 // ======================
@@ -408,7 +465,6 @@ function criarCardFrase(f, lista) {
     `;
 
     lista.appendChild(card);
-    visualizar(f.id);
 }
 
 // ======================
