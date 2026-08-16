@@ -5,7 +5,8 @@ import {
     getDoc,
     doc,
     updateDoc,
-    increment
+    increment,
+    runTransaction
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 let frases = [];
@@ -170,21 +171,34 @@ function fraseDoDia(fraseDiaElemento) {
 async function contarVisitaGlobal() {
     const chaveVisita = "visita_global_registrada";
     const contadorElemento = document.getElementById("contadorGlobal");
-    
+
     try {
         const docRef = doc(db, "estatisticas", "global");
-        
-        if (!sessionStorage.getItem(chaveVisita)) {
-            await updateDoc(docRef, { visitas: increment(1) });
+        const jaRegistrouNestaSessao = sessionStorage.getItem(chaveVisita) === "true";
+
+        // A transação lê o valor atual e grava somente o próximo número inteiro.
+        // Assim, ela respeita a regra pública do Firestore, que permite alterar
+        // exclusivamente o campo "visitas" em +1, e evita perder contagens
+        // quando duas pessoas entram no site ao mesmo tempo.
+        const totalAtualizado = await runTransaction(db, async (transacao) => {
+            const estatistica = await transacao.get(docRef);
+            const visitasAtuais = Number(estatistica.data()?.visitas || 0);
+
+            if (!jaRegistrouNestaSessao) {
+                transacao.update(docRef, { visitas: visitasAtuais + 1 });
+                return visitasAtuais + 1;
+            }
+
+            return visitasAtuais;
+        });
+
+        if (!jaRegistrouNestaSessao) {
             sessionStorage.setItem(chaveVisita, "true");
         }
-        
-        const consulta = await getDocs(collection(db, "estatisticas"));
-        consulta.forEach(d => {
-            if (d.id === "global" && contadorElemento) {
-                contadorElemento.textContent = Number(d.data().visitas || 0).toLocaleString("pt-BR");
-            }
-        });
+
+        if (contadorElemento) {
+            contadorElemento.textContent = Number(totalAtualizado).toLocaleString("pt-BR");
+        }
     } catch (e) {
         console.error("Erro ao contar visita global:", e);
     }
