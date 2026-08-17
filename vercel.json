@@ -3,7 +3,7 @@
   "functions": {
     "api/video.js": {
       "maxDuration": 300,
-      "includeFiles": ["public/trilhas/**", "dados/perfis-trilha.json"]
+      "includeFiles": "public/trilhas/**"
     },
     "api/image.js": {
       "maxDuration": 15
@@ -14,7 +14,7 @@
     },
     "api/telegram-media.js": {
       "maxDuration": 300,
-      "includeFiles": ["public/trilhas/**", "dados/perfis-trilha.json"]
+      "includeFiles": "public/trilhas/**"
     }
   },
   "rewrites": [
