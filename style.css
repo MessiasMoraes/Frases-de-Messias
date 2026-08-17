@@ -1028,9 +1028,13 @@ body.dark {
   .card-categoria-pagina { transition: none; }
 }
 
-/* Canal oficial do WhatsApp */
+/* Canais oficiais de distribuição */
 .link-canal-whatsapp {
   color: #dcfce7;
+}
+
+.link-canal-telegram {
+  color: #dbeafe;
 }
 
 .canal-whatsapp {
@@ -1130,6 +1134,106 @@ body.dark {
 @media (max-width: 430px) {
   .canal-whatsapp { width: min(100% - 22px, 960px); padding: 18px; }
   .canal-whatsapp-icone { width: 48px; height: 48px; font-size: 1.45rem; border-radius: 14px; }
+}
+
+/* Canal oficial do Telegram */
+.canal-telegram {
+  width: min(100% - 32px, 960px);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 20px;
+  margin: 20px auto 26px;
+  padding: 24px;
+  border: 1px solid rgba(14, 116, 144, .34);
+  border-radius: 18px;
+  background: linear-gradient(125deg, #eff8ff 0%, #f0f9ff 54%, #e0f2fe 100%);
+  box-shadow: 0 8px 24px rgba(3, 105, 161, .10);
+}
+
+.canal-telegram-icone {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 17px;
+  background: #229ed9;
+  color: #fff;
+  font-size: 1.75rem;
+  box-shadow: 0 7px 15px rgba(34, 158, 217, .28);
+}
+
+.canal-telegram-selo {
+  margin: 0 0 4px;
+  color: #0369a1;
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+}
+
+.canal-telegram h2 {
+  margin: 0 0 5px;
+  color: #0c4a6e;
+  font-size: clamp(1.15rem, 3.2vw, 1.45rem);
+  line-height: 1.25;
+}
+
+.canal-telegram-conteudo > p:last-child {
+  margin: 0;
+  color: #3a596c;
+  line-height: 1.5;
+}
+
+.btn-canal-telegram {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 12px 17px;
+  border-radius: 12px;
+  color: #fff;
+  background: #0788c9;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 7px 14px rgba(3, 105, 161, .21);
+  transition: transform 160ms cubic-bezier(.23, 1, .32, 1), background 160ms cubic-bezier(.23, 1, .32, 1);
+}
+
+.btn-canal-telegram:hover,
+.btn-canal-telegram:focus-visible {
+  color: #fff;
+  background: #0369a1;
+}
+
+.btn-canal-telegram:active { transform: scale(.97); }
+.btn-canal-telegram:focus-visible { outline: 3px solid #0c4a6e; outline-offset: 3px; }
+.rodape-canal-telegram { margin: 12px 0 0; font-size: .92rem; }
+
+.dark .canal-telegram {
+  background: linear-gradient(125deg, #0b2430 0%, #0e2d3b 54%, #123847 100%);
+  border-color: #167cae;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
+}
+
+.dark .canal-telegram h2 { color: #bae6fd; }
+.dark .canal-telegram-selo { color: #7dd3fc; }
+.dark .canal-telegram-conteudo > p:last-child { color: #d9f3ff; }
+
+@media (max-width: 700px) {
+  .canal-telegram {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 14px;
+    padding: 20px;
+  }
+
+  .btn-canal-telegram { grid-column: 1 / -1; width: 100%; }
+}
+
+@media (max-width: 430px) {
+  .canal-telegram { width: min(100% - 22px, 960px); padding: 18px; }
+  .canal-telegram-icone { width: 48px; height: 48px; font-size: 1.45rem; border-radius: 14px; }
 }
 
 /* Páginas individuais de frases e seleção editorial */

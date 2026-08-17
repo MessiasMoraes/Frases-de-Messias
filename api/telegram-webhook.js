@@ -5,6 +5,7 @@ const { waitUntil } = require('@vercel/functions');
 
 const SITE_URL = 'https://frasesdemessias.com.br';
 const WHATSAPP_CHANNEL_URL = 'https://whatsapp.com/channel/0029Va94RaR3bbV779wzFL1J';
+const TELEGRAM_CHANNEL_URL = 'https://t.me/frasesdemessias';
 const TELEGRAM_WEBHOOK_URL = 'https://frasesdemessiascombr.vercel.app/api/telegram-webhook';
 const TELEGRAM_MEDIA_URL = 'https://frasesdemessiascombr.vercel.app/api/telegram-media';
 const CATALOGO_PATH = path.join(process.cwd(), 'dados', 'frases-bot.json');
@@ -21,6 +22,7 @@ const COMANDOS_BOT = [
   { command: 'boanoite', description: 'Receber uma frase de boa noite' },
   { command: 'categorias', description: 'Escolher um tema' },
   { command: 'whatsapp', description: 'Abrir o canal no WhatsApp' },
+  { command: 'canal', description: 'Entrar no canal do Telegram' },
   { command: 'sobre', description: 'Conhecer o Frases de Messias' },
   { command: 'site', description: 'Abrir o site' },
   { command: 'ajuda', description: 'Ver todos os comandos' }
@@ -118,6 +120,7 @@ function tecladoInicial() {
         { text: '🎬 Criar vídeo', callback_data: 'midia:video:aleatoria' }
       ],
       [{ text: '📚 Escolher categoria', callback_data: 'menu:categorias' }],
+      [{ text: '📣 Entrar no canal do Telegram', url: TELEGRAM_CHANNEL_URL }],
       [{ text: '📢 Canal no WhatsApp', url: WHATSAPP_CHANNEL_URL }],
       [{ text: '🌐 Acessar o site', url: SITE_URL }]
     ]
@@ -134,6 +137,7 @@ function tecladoCategorias() {
     })));
   }
   linhas.push([{ text: '🎲 Frase aleatória', callback_data: 'frase:aleatoria' }]);
+  linhas.push([{ text: '📣 Canal do Telegram', url: TELEGRAM_CHANNEL_URL }]);
   linhas.push([{ text: '🌐 Abrir Frases de Messias', url: SITE_URL }]);
   return { inline_keyboard: linhas };
 }
@@ -147,6 +151,7 @@ function tecladoDaFrase(frase) {
     { text: '🎬 Criar vídeo', callback_data: `midia:video:${id}` }
   ]);
   if (categoria !== 'aleatoria') botoes.push([{ text: '📚 Outras categorias', callback_data: 'menu:categorias' }]);
+  botoes.push([{ text: '📣 Entrar no canal do Telegram', url: TELEGRAM_CHANNEL_URL }]);
   botoes.push([{ text: '🌐 Ver no site', url: SITE_URL }]);
   return { inline_keyboard: botoes };
 }
@@ -266,7 +271,7 @@ async function enviarFraseDoDia(chatId) {
 async function enviarAjuda(chatId) {
   await telegram('sendMessage', {
     chat_id: chatId,
-    text: '<b>Comandos do Frases de Messias</b>\n\n🎲 <b>/frase</b> — frase aleatória\n☀️ <b>/hoje</b> — frase do dia\n🖼️ <b>/imagem</b> — criar arte de uma frase\n🎬 <b>/video</b> — criar MP4 vertical de uma frase\n❤️ <b>/amor</b> — frases de amor\n🙏 <b>/fe</b> — frases de fé\n💪 <b>/motivacao</b> — motivação\n🌞 <b>/bomdia</b> — bom dia\n🌙 <b>/boanoite</b> — boa noite\n📚 <b>/categorias</b> — escolher outro tema\n📢 <b>/whatsapp</b> — canal no WhatsApp\nℹ️ <b>/sobre</b> — conhecer o projeto\n🌐 <b>/site</b> — abrir o portal\n\nUse, por exemplo, <b>/imagem fé</b> ou <b>/video motivação</b>. Você também pode escrever uma mensagem, como “preciso de força” ou “quero uma frase de fé”.',
+    text: '<b>Comandos do Frases de Messias</b>\n\n🎲 <b>/frase</b> — frase aleatória\n☀️ <b>/hoje</b> — frase do dia\n🖼️ <b>/imagem</b> — criar arte de uma frase\n🎬 <b>/video</b> — criar MP4 vertical de uma frase\n❤️ <b>/amor</b> — frases de amor\n🙏 <b>/fe</b> — frases de fé\n💪 <b>/motivacao</b> — motivação\n🌞 <b>/bomdia</b> — bom dia\n🌙 <b>/boanoite</b> — boa noite\n📚 <b>/categorias</b> — escolher outro tema\n📣 <b>/canal</b> — entrar no canal do Telegram\n📢 <b>/whatsapp</b> — canal no WhatsApp\nℹ️ <b>/sobre</b> — conhecer o projeto\n🌐 <b>/site</b> — abrir o portal\n\nUse, por exemplo, <b>/imagem fé</b> ou <b>/video motivação</b>. Você também pode escrever uma mensagem, como “preciso de força” ou “quero uma frase de fé”.',
     parse_mode: 'HTML',
     reply_markup: tecladoInicial(),
     disable_web_page_preview: true
@@ -360,12 +365,26 @@ async function tratarMensagem(mensagem) {
     return;
   }
 
+  if (comando === '/canal') {
+    await telegram('sendMessage', {
+      chat_id: chatId,
+      text: '<b>Canal Frases de Messias no Telegram</b>\n\nEntre para receber frases, imagens e vídeos de inspiração diretamente no Telegram.',
+      parse_mode: 'HTML',
+      reply_markup: { inline_keyboard: [[{ text: '📣 Entrar no canal', url: TELEGRAM_CHANNEL_URL }]] },
+      disable_web_page_preview: true
+    });
+    return;
+  }
+
   if (comando === '/sobre') {
     await telegram('sendMessage', {
       chat_id: chatId,
       text: '<b>Frases de Messias</b>\n\nUm portal de mensagens de fé, amor, motivação, gratidão e reflexão para inspirar o seu dia.',
       parse_mode: 'HTML',
-      reply_markup: { inline_keyboard: [[{ text: '🌐 Conhecer o site', url: SITE_URL }]] },
+      reply_markup: { inline_keyboard: [[
+        { text: '🌐 Conhecer o site', url: SITE_URL },
+        { text: '📣 Canal no Telegram', url: TELEGRAM_CHANNEL_URL }
+      ]] },
       disable_web_page_preview: true
     });
     return;

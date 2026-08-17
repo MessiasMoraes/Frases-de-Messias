@@ -51,6 +51,7 @@ async function executar() {
     assert.ok(resposta.body.comandos.includes('/hoje'));
     assert.ok(resposta.body.comandos.includes('/imagem'));
     assert.ok(resposta.body.comandos.includes('/video'));
+    assert.ok(resposta.body.comandos.includes('/canal'));
     assert.ok(resposta.body.comandos.includes('/whatsapp'));
 
     resposta = respostaFalsa();
@@ -76,6 +77,7 @@ async function executar() {
     assert.match(ajuda.text, /\/hoje/);
     assert.match(ajuda.text, /\/imagem/);
     assert.match(ajuda.text, /\/video/);
+    assert.match(ajuda.text, /\/canal/);
     assert.match(ajuda.text, /\/whatsapp/);
 
     const amor = await testarComando('/amor');
@@ -91,6 +93,10 @@ async function executar() {
       whatsapp.reply_markup.inline_keyboard[0][0].url,
       'https://whatsapp.com/channel/0029Va94RaR3bbV779wzFL1J'
     );
+
+    const canal = await testarComando('/canal');
+    assert.equal(canal.reply_markup.inline_keyboard[0][0].url, 'https://t.me/frasesdemessias');
+    assert.match(canal.text, /Canal Frases de Messias no Telegram/);
 
     const motivacaoLivre = await testarComando('Hoje estou muito cansado e preciso de força.');
     assert.match(motivacaoLivre.text, /<i>Motivação<\/i>/);
@@ -142,8 +148,9 @@ async function executar() {
     assert.ok(chamadasTelegram[0].dados.commands.some((item) => item.command === 'ajuda'));
     assert.ok(chamadasTelegram[0].dados.commands.some((item) => item.command === 'imagem'));
     assert.ok(chamadasTelegram[0].dados.commands.some((item) => item.command === 'video'));
+    assert.ok(chamadasTelegram[0].dados.commands.some((item) => item.command === 'canal'));
 
-    console.log('Webhook, proteção, comandos, mídia e respostas automáticas validados.');
+    console.log('Webhook, proteção, comandos, mídia, canal e respostas automáticas validados.');
   } finally {
     global.fetch = fetchOriginal;
   }
