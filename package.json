@@ -19,6 +19,7 @@
     "@capacitor/core": "^6.0.0",
     "@capacitor/ios": "^6.0.0",
     "@vercel/blob": "^2.7.0",
+    "@vercel/functions": "^3.9.3",
     "@vercel/sandbox": "^3.0.0"
   },
   "devDependencies": {

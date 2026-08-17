@@ -1,5 +1,6 @@
 const assert = require('node:assert');
 const handler = require('../api/telegram-webhook.js');
+const processadorMidia = require('../api/telegram-media.js');
 
 function respostaFalsa() {
   return {
@@ -8,7 +9,8 @@ function respostaFalsa() {
     headers: {},
     status(codigo) { this.statusCode = codigo; return this; },
     json(valor) { this.body = valor; return this; },
-    setHeader(chave, valor) { this.headers[chave] = valor; }
+    setHeader(chave, valor) { this.headers[chave] = valor; },
+    end(valor) { this.body = JSON.parse(valor); }
   };
 }
 
@@ -47,6 +49,8 @@ async function executar() {
     assert.equal(resposta.statusCode, 200);
     assert.equal(resposta.body.webhook, 'configurado');
     assert.ok(resposta.body.comandos.includes('/hoje'));
+    assert.ok(resposta.body.comandos.includes('/imagem'));
+    assert.ok(resposta.body.comandos.includes('/video'));
     assert.ok(resposta.body.comandos.includes('/whatsapp'));
 
     resposta = respostaFalsa();
@@ -70,6 +74,8 @@ async function executar() {
 
     const ajuda = await testarComando('/ajuda');
     assert.match(ajuda.text, /\/hoje/);
+    assert.match(ajuda.text, /\/imagem/);
+    assert.match(ajuda.text, /\/video/);
     assert.match(ajuda.text, /\/whatsapp/);
 
     const amor = await testarComando('/amor');
@@ -97,6 +103,32 @@ async function executar() {
     assert.match(mensagemGenerica.text, /Que bom receber sua mensagem/);
     assert.match(mensagemGenerica.text, /preciso de fé/);
 
+    async function testarMidia(texto, tipo) {
+      chamadasTelegram.length = 0;
+      const respostaDaMidia = respostaFalsa();
+      await handler({
+        method: 'POST',
+        headers: cabecalhoAssinado,
+        body: { message: { chat: { id: 12345 }, text: texto } }
+      }, respostaDaMidia);
+      assert.equal(respostaDaMidia.statusCode, 200);
+      assert.equal(respostaDaMidia.body.ok, true);
+      assert.equal(chamadasTelegram[0].metodo, 'sendMessage');
+      assert.match(chamadasTelegram[0].dados.text, tipo === 'video' ? /vídeo está sendo criado/ : /imagem está sendo criada/);
+      const chamadaProcessador = chamadasTelegram.find((chamada) => chamada.metodo === 'telegram-media');
+      assert.ok(chamadaProcessador, 'O processador de mídia deve ser acionado.');
+      assert.equal(chamadaProcessador.dados.tipo, tipo);
+      assert.equal(chamadaProcessador.dados.chatId, 12345);
+      assert.ok(chamadaProcessador.dados.frase.texto);
+    }
+
+    await testarMidia('/imagem fé', 'imagem');
+    await testarMidia('/video motivação', 'video');
+
+    resposta = respostaFalsa();
+    await processadorMidia({ method: 'POST', headers: {}, body: {} }, resposta);
+    assert.equal(resposta.statusCode, 401);
+
     chamadasTelegram.length = 0;
     resposta = respostaFalsa();
     await handler({
@@ -108,8 +140,10 @@ async function executar() {
     assert.equal(resposta.body.webhook, 'registrado no Telegram');
     assert.deepEqual(chamadasTelegram.map((chamada) => chamada.metodo), ['setMyCommands', 'setWebhook']);
     assert.ok(chamadasTelegram[0].dados.commands.some((item) => item.command === 'ajuda'));
+    assert.ok(chamadasTelegram[0].dados.commands.some((item) => item.command === 'imagem'));
+    assert.ok(chamadasTelegram[0].dados.commands.some((item) => item.command === 'video'));
 
-    console.log('Webhook, proteção, comandos e respostas automáticas validados.');
+    console.log('Webhook, proteção, comandos, mídia e respostas automáticas validados.');
   } finally {
     global.fetch = fetchOriginal;
   }

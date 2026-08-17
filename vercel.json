@@ -8,8 +8,11 @@
       "maxDuration": 15
     },
     "api/telegram-webhook.js": {
-      "maxDuration": 15,
+      "maxDuration": 300,
       "includeFiles": "dados/frases-bot.json"
+    },
+    "api/telegram-media.js": {
+      "maxDuration": 300
     }
   },
   "rewrites": [
