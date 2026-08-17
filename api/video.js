@@ -125,7 +125,8 @@ module.exports = async function renderVideo(req, res) {
       return;
     }
 
-    const { Sandbox } = require("@vercel/sandbox");
+    // O SDK atual do Sandbox possui dependências ESM; o carregamento dinâmico evita incompatibilidade com esta função CommonJS.
+    const { Sandbox } = await import("@vercel/sandbox");
     const { put } = require("@vercel/blob");
     const { selecionarTrilha, caminhoDaTrilha } = require("./trilhas.js");
     const width = 1080;
