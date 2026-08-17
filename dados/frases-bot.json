@@ -1,0 +1,4394 @@
+{
+  "versao": "2026-08-17",
+  "total": 729,
+  "categorias": [
+    "Amizade",
+    "Amor",
+    "Boa Noite",
+    "Bom Dia",
+    "Esperança",
+    "Família",
+    "Fé",
+    "Gratidão",
+    "Motivação",
+    "Reflexão",
+    "Sucesso",
+    "Vida"
+  ],
+  "frases": [
+    {
+      "id": "bot-0001",
+      "texto": "Acredite no seu potencial e vá além dos seus limites.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0002",
+      "texto": "Cada novo dia é uma chance de recomeçar e fazer diferente.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0003",
+      "texto": "Não espere por oportunidades, crie-as.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0004",
+      "texto": "Seja a mudança que você deseja ver no mundo.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0005",
+      "texto": "O sucesso é a soma de pequenos esforços repetidos diariamente.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0006",
+      "texto": "Nunca desista dos seus sonhos, eles são o combustível da sua alma.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0007",
+      "texto": "A persistência realiza o impossível.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0008",
+      "texto": "Transforme seus medos em força e seus desafios em oportunidades.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0009",
+      "texto": "Sua única limitação é aquela que você impõe a si mesmo.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0010",
+      "texto": "O futuro pertence àqueles que acreditam na beleza de seus sonhos.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0011",
+      "texto": "A esperança é a luz que guia nos momentos de escuridão.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0012",
+      "texto": "Enquanto há vida, há esperança.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0013",
+      "texto": "Plante a semente da esperança e colha a felicidade.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0014",
+      "texto": "Que a esperança seja seu guia em cada novo amanhecer.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0015",
+      "texto": "Acredite que dias melhores virão.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0016",
+      "texto": "A fé em Deus renova a esperança em nossos corações.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0017",
+      "texto": "Não perca a esperança, ela é a última que morre.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0018",
+      "texto": "A esperança é a âncora da alma.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0019",
+      "texto": "Com esperança, tudo é possível.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0020",
+      "texto": "Amanhã será um novo dia, cheio de novas esperanças.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0021",
+      "texto": "A vida é um eco. O que você envia, volta. O que você planta, colhe.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0022",
+      "texto": "Refletir é a arte de se encontrar em meio ao caos.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0023",
+      "texto": "A maior sabedoria é saber que nada se sabe.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0024",
+      "texto": "Pense antes de agir, pois as palavras têm poder.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0025",
+      "texto": "A felicidade não é um destino, é uma jornada.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0026",
+      "texto": "O silêncio é a resposta mais sábia para a ignorância.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0027",
+      "texto": "A verdadeira riqueza está na simplicidade da vida.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0028",
+      "texto": "Cada erro é uma lição disfarçada.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0029",
+      "texto": "Não se preocupe com o que os outros pensam, viva a sua verdade.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0030",
+      "texto": "A gratidão transforma o que temos em suficiente.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0031",
+      "texto": "A fé move montanhas e ilumina os caminhos.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0032",
+      "texto": "Confie em Deus e Ele fará o impossível.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0033",
+      "texto": "A fé é a certeza das coisas que se esperam, a convicção de fatos que se não veem.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0034",
+      "texto": "Que a sua fé seja maior que os seus medos.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0035",
+      "texto": "Deus está no controle de todas as coisas.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0036",
+      "texto": "A fé é o alicerce da vida.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0037",
+      "texto": "Com fé, tudo é possível.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0038",
+      "texto": "A fé nos dá força para seguir em frente.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0039",
+      "texto": "Deus é fiel e justo.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0040",
+      "texto": "A fé é um dom precioso.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0041",
+      "texto": "O amor é a força mais poderosa do universo.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0042",
+      "texto": "Amar é cuidar, respeitar e proteger.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0043",
+      "texto": "O verdadeiro amor nunca se acaba, apenas se transforma.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0044",
+      "texto": "Plante amor e colha felicidade.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0045",
+      "texto": "O amor é a essência da vida.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0046",
+      "texto": "Amar é encontrar a sua própria felicidade na felicidade do outro.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0047",
+      "texto": "O amor é paciente, o amor é bondoso.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0048",
+      "texto": "Ame como se não houvesse amanhã.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0049",
+      "texto": "O amor é a resposta para todas as perguntas.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0050",
+      "texto": "O amor é a maior aventura da vida.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0051",
+      "texto": "A verdadeira amizade é um tesouro que dura para sempre.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0052",
+      "texto": "Amigos são a família que a vida nos permite escolher.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0053",
+      "texto": "Um amigo fiel é um porto seguro na tempestade.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0054",
+      "texto": "A amizade é o tempero da vida.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0055",
+      "texto": "Compartilhe risadas e momentos com seus amigos.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0056",
+      "texto": "A amizade verdadeira não tem preço.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0057",
+      "texto": "Amigos são anjos que nos levantam quando nossas asas esquecem como voar.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0058",
+      "texto": "A amizade é um abraço para a alma.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0059",
+      "texto": "Cultive suas amizades, elas são um jardim de alegrias.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0060",
+      "texto": "A amizade é um presente de Deus.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0061",
+      "texto": "Que seu dia seja repleto de luz, paz e muitas alegrias.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0062",
+      "texto": "Bom dia! Que a felicidade te encontre em cada amanhecer.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0063",
+      "texto": "Comece o dia com um sorriso e a alma leve.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0064",
+      "texto": "Que a paz de Deus esteja com você neste novo dia.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0065",
+      "texto": "Aproveite cada momento deste lindo dia.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0066",
+      "texto": "Bom dia! Que a esperança renove suas forças.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0067",
+      "texto": "Que a gratidão seja seu primeiro pensamento ao acordar.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0068",
+      "texto": "Tenha um dia abençoado e cheio de realizações.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0069",
+      "texto": "Bom dia! Que a alegria transborde em seu coração.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0070",
+      "texto": "Que a luz divina ilumine seus passos neste dia.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0071",
+      "texto": "Descanse em paz e sonhe com as estrelas.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0072",
+      "texto": "Que a noite traga serenidade e um sono tranquilo.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0073",
+      "texto": "Boa noite! Que a paz de Deus acalme sua alma.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0074",
+      "texto": "Agradeça pelo dia que se foi e prepare-se para o amanhã.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0075",
+      "texto": "Que os anjos da guarda protejam seu sono.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0076",
+      "texto": "Boa noite! Que a esperança renove suas energias.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0077",
+      "texto": "Durma bem e acorde com a alma renovada.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0078",
+      "texto": "Que a noite seja de descanso e sonhos lindos.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0079",
+      "texto": "Boa noite! Que a paz invada seu coração.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0080",
+      "texto": "Que a luz da lua guie seus sonhos.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0081",
+      "texto": "A família é o alicerce da vida, o porto seguro do coração.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0082",
+      "texto": "O amor em família é o maior presente.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0083",
+      "texto": "Cultive o amor e a união em sua família.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0084",
+      "texto": "A família é onde a vida começa e o amor nunca termina.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0085",
+      "texto": "Valorize cada momento com sua família.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0086",
+      "texto": "A família é o nosso bem mais precioso.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0087",
+      "texto": "O amor familiar é incondicional.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0088",
+      "texto": "A família é o nosso refúgio.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0089",
+      "texto": "A família é a base de tudo.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0090",
+      "texto": "A família é um presente de Deus.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0091",
+      "texto": "Seja grato por cada amanhecer e por cada benção.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0092",
+      "texto": "A gratidão é a memória do coração.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0093",
+      "texto": "Agradeça mais, reclame menos.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0094",
+      "texto": "A gratidão abre as portas para a felicidade.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0095",
+      "texto": "Seja grato por tudo que você tem.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0096",
+      "texto": "A gratidão é a chave para a abundância.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0097",
+      "texto": "Agradeça a Deus por mais um dia.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0098",
+      "texto": "A gratidão é um sentimento nobre.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0099",
+      "texto": "A gratidão é a melhor oração.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0100",
+      "texto": "O sucesso é a consequência de um trabalho árduo e dedicação.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0101",
+      "texto": "Busque o sucesso com paixão e determinação.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0102",
+      "texto": "O caminho para o sucesso é construído com persistência.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0103",
+      "texto": "Celebre cada pequena vitória no seu caminho para o sucesso.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0104",
+      "texto": "O sucesso não é o final, é a jornada.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0105",
+      "texto": "O sucesso é para aqueles que não desistem.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0106",
+      "texto": "O sucesso é a realização de um sonho.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0107",
+      "texto": "O sucesso é a recompensa do esforço.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0108",
+      "texto": "O sucesso é a arte de transformar sonhos em realidade.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0109",
+      "texto": "O sucesso é a prova de que você é capaz.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0110",
+      "texto": "A vida é um presente, celebre cada momento.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0111",
+      "texto": "Viva intensamente, ame profundamente e sonhe alto.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0112",
+      "texto": "A vida é uma jornada, aproveite a paisagem.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0113",
+      "texto": "Não espere pela vida, viva-a.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0114",
+      "texto": "A vida é feita de escolhas, faça as suas com sabedoria.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0115",
+      "texto": "A vida é um aprendizado constante.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0116",
+      "texto": "A vida é uma aventura, ouse vivê-la.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0117",
+      "texto": "A vida é um milagre, agradeça por ela.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0118",
+      "texto": "A vida é uma canção, cante-a com alegria.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0119",
+      "texto": "A vida é um presente, desembrulhe-o com carinho.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0120",
+      "texto": "Cada esforço silencioso que você faz pode levar você mais longe do que imagina.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0121",
+      "texto": "Cada esforço silencioso que você faz constrói resultados que o tempo revela.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0122",
+      "texto": "Cada esforço silencioso que você faz fortalece a pessoa que você está se tornando.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0123",
+      "texto": "Cada esforço silencioso que você faz abre espaço para uma nova vitória.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0124",
+      "texto": "O passo firme dado hoje pode levar você mais longe do que imagina.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0125",
+      "texto": "O passo firme dado hoje constrói resultados que o tempo revela.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0126",
+      "texto": "O passo firme dado hoje fortalece a pessoa que você está se tornando.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0127",
+      "texto": "O passo firme dado hoje abre espaço para uma nova vitória.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0128",
+      "texto": "A coragem de tentar mais uma vez pode levar você mais longe do que imagina.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0129",
+      "texto": "A coragem de tentar mais uma vez constrói resultados que o tempo revela.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0130",
+      "texto": "A coragem de tentar mais uma vez fortalece a pessoa que você está se tornando.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0131",
+      "texto": "A coragem de tentar mais uma vez abre espaço para uma nova vitória.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0132",
+      "texto": "A disciplina praticada em dias comuns pode levar você mais longe do que imagina.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0133",
+      "texto": "A disciplina praticada em dias comuns constrói resultados que o tempo revela.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0134",
+      "texto": "A disciplina praticada em dias comuns fortalece a pessoa que você está se tornando.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0135",
+      "texto": "A disciplina praticada em dias comuns abre espaço para uma nova vitória.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0136",
+      "texto": "A decisão de não desistir pode levar você mais longe do que imagina.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0137",
+      "texto": "A decisão de não desistir constrói resultados que o tempo revela.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0138",
+      "texto": "A decisão de não desistir fortalece a pessoa que você está se tornando.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0139",
+      "texto": "A decisão de não desistir abre espaço para uma nova vitória.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0140",
+      "texto": "A confiança no seu próprio caminho pode levar você mais longe do que imagina.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0141",
+      "texto": "A confiança no seu próprio caminho constrói resultados que o tempo revela.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0142",
+      "texto": "A confiança no seu próprio caminho fortalece a pessoa que você está se tornando.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0143",
+      "texto": "A confiança no seu próprio caminho abre espaço para uma nova vitória.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0144",
+      "texto": "A paciência com o processo pode levar você mais longe do que imagina.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0145",
+      "texto": "A paciência com o processo constrói resultados que o tempo revela.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0146",
+      "texto": "A paciência com o processo fortalece a pessoa que você está se tornando.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0147",
+      "texto": "A paciência com o processo abre espaço para uma nova vitória.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0148",
+      "texto": "A vontade de aprender com os erros pode levar você mais longe do que imagina.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0149",
+      "texto": "A vontade de aprender com os erros constrói resultados que o tempo revela.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0150",
+      "texto": "A vontade de aprender com os erros fortalece a pessoa que você está se tornando.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0151",
+      "texto": "A vontade de aprender com os erros abre espaço para uma nova vitória.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0152",
+      "texto": "A energia colocada em seus objetivos pode levar você mais longe do que imagina.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0153",
+      "texto": "A energia colocada em seus objetivos constrói resultados que o tempo revela.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0154",
+      "texto": "A energia colocada em seus objetivos fortalece a pessoa que você está se tornando.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0155",
+      "texto": "A energia colocada em seus objetivos abre espaço para uma nova vitória.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0156",
+      "texto": "O compromisso com seus sonhos pode levar você mais longe do que imagina.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0157",
+      "texto": "O compromisso com seus sonhos constrói resultados que o tempo revela.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0158",
+      "texto": "O compromisso com seus sonhos fortalece a pessoa que você está se tornando.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0159",
+      "texto": "O compromisso com seus sonhos abre espaço para uma nova vitória.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0160",
+      "texto": "Uma oração feita com sinceridade traz serenidade para o caminho.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0161",
+      "texto": "Uma oração feita com sinceridade renova forças quando tudo parece pesado.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0162",
+      "texto": "Uma oração feita com sinceridade lembra que você não caminha sozinho.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0163",
+      "texto": "Uma oração feita com sinceridade ilumina decisões com esperança.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0164",
+      "texto": "A fé mantida nos dias difíceis traz serenidade para o caminho.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0165",
+      "texto": "A fé mantida nos dias difíceis renova forças quando tudo parece pesado.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0166",
+      "texto": "A fé mantida nos dias difíceis lembra que você não caminha sozinho.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0167",
+      "texto": "A fé mantida nos dias difíceis ilumina decisões com esperança.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0168",
+      "texto": "A confiança no cuidado de Deus traz serenidade para o caminho.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0169",
+      "texto": "A confiança no cuidado de Deus renova forças quando tudo parece pesado.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0170",
+      "texto": "A confiança no cuidado de Deus lembra que você não caminha sozinho.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0171",
+      "texto": "A confiança no cuidado de Deus ilumina decisões com esperança.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0172",
+      "texto": "O coração que escolhe crer traz serenidade para o caminho.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0173",
+      "texto": "O coração que escolhe crer renova forças quando tudo parece pesado.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0174",
+      "texto": "O coração que escolhe crer lembra que você não caminha sozinho.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0175",
+      "texto": "O coração que escolhe crer ilumina decisões com esperança.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0176",
+      "texto": "A esperança entregue nas mãos de Deus traz serenidade para o caminho.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0177",
+      "texto": "A esperança entregue nas mãos de Deus renova forças quando tudo parece pesado.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0178",
+      "texto": "A esperança entregue nas mãos de Deus lembra que você não caminha sozinho.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0179",
+      "texto": "A esperança entregue nas mãos de Deus ilumina decisões com esperança.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0180",
+      "texto": "A certeza de que Deus acompanha seus passos traz serenidade para o caminho.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0181",
+      "texto": "A certeza de que Deus acompanha seus passos renova forças quando tudo parece pesado.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0182",
+      "texto": "A certeza de que Deus acompanha seus passos lembra que você não caminha sozinho.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0183",
+      "texto": "A certeza de que Deus acompanha seus passos ilumina decisões com esperança.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0184",
+      "texto": "A paz que nasce da fé traz serenidade para o caminho.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0185",
+      "texto": "A paz que nasce da fé renova forças quando tudo parece pesado.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0186",
+      "texto": "A paz que nasce da fé lembra que você não caminha sozinho.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0187",
+      "texto": "A paz que nasce da fé ilumina decisões com esperança.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0188",
+      "texto": "A coragem sustentada por Deus traz serenidade para o caminho.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0189",
+      "texto": "A coragem sustentada por Deus renova forças quando tudo parece pesado.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0190",
+      "texto": "A coragem sustentada por Deus lembra que você não caminha sozinho.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0191",
+      "texto": "A coragem sustentada por Deus ilumina decisões com esperança.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0192",
+      "texto": "A entrega de cada preocupação ao Senhor traz serenidade para o caminho.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0193",
+      "texto": "A entrega de cada preocupação ao Senhor renova forças quando tudo parece pesado.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0194",
+      "texto": "A entrega de cada preocupação ao Senhor lembra que você não caminha sozinho.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0195",
+      "texto": "A entrega de cada preocupação ao Senhor ilumina decisões com esperança.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0196",
+      "texto": "O olhar que reconhece a presença de Deus traz serenidade para o caminho.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0197",
+      "texto": "O olhar que reconhece a presença de Deus renova forças quando tudo parece pesado.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0198",
+      "texto": "O olhar que reconhece a presença de Deus lembra que você não caminha sozinho.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0199",
+      "texto": "O olhar que reconhece a presença de Deus ilumina decisões com esperança.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0200",
+      "texto": "Um gesto de carinho verdadeiro faz o coração se sentir em casa.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0201",
+      "texto": "Um gesto de carinho verdadeiro transforma momentos simples em lembranças especiais.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0202",
+      "texto": "Um gesto de carinho verdadeiro fortalece vínculos que merecem ser cuidados.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0203",
+      "texto": "Um gesto de carinho verdadeiro mostra que amar também é escolher todos os dias.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0204",
+      "texto": "O respeito presente nas pequenas escolhas faz o coração se sentir em casa.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0205",
+      "texto": "O respeito presente nas pequenas escolhas transforma momentos simples em lembranças especiais.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0206",
+      "texto": "O respeito presente nas pequenas escolhas fortalece vínculos que merecem ser cuidados.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0207",
+      "texto": "O respeito presente nas pequenas escolhas mostra que amar também é escolher todos os dias.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0208",
+      "texto": "A paciência usada para escutar faz o coração se sentir em casa.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0209",
+      "texto": "A paciência usada para escutar transforma momentos simples em lembranças especiais.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0210",
+      "texto": "A paciência usada para escutar fortalece vínculos que merecem ser cuidados.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0211",
+      "texto": "A paciência usada para escutar mostra que amar também é escolher todos os dias.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0212",
+      "texto": "O cuidado demonstrado no dia a dia faz o coração se sentir em casa.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0213",
+      "texto": "O cuidado demonstrado no dia a dia transforma momentos simples em lembranças especiais.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0214",
+      "texto": "O cuidado demonstrado no dia a dia fortalece vínculos que merecem ser cuidados.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0215",
+      "texto": "O cuidado demonstrado no dia a dia mostra que amar também é escolher todos os dias.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0216",
+      "texto": "Uma palavra afetuosa no momento certo faz o coração se sentir em casa.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0217",
+      "texto": "Uma palavra afetuosa no momento certo transforma momentos simples em lembranças especiais.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0218",
+      "texto": "Uma palavra afetuosa no momento certo fortalece vínculos que merecem ser cuidados.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0219",
+      "texto": "Uma palavra afetuosa no momento certo mostra que amar também é escolher todos os dias.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0220",
+      "texto": "A presença que acolhe sem cobrar faz o coração se sentir em casa.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0221",
+      "texto": "A presença que acolhe sem cobrar transforma momentos simples em lembranças especiais.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0222",
+      "texto": "A presença que acolhe sem cobrar fortalece vínculos que merecem ser cuidados.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0223",
+      "texto": "A presença que acolhe sem cobrar mostra que amar também é escolher todos os dias.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0224",
+      "texto": "A gentileza que se oferece de coração faz o coração se sentir em casa.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0225",
+      "texto": "A gentileza que se oferece de coração transforma momentos simples em lembranças especiais.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0226",
+      "texto": "A gentileza que se oferece de coração fortalece vínculos que merecem ser cuidados.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0227",
+      "texto": "A gentileza que se oferece de coração mostra que amar também é escolher todos os dias.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0228",
+      "texto": "O perdão que liberta o relacionamento faz o coração se sentir em casa.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0229",
+      "texto": "O perdão que liberta o relacionamento transforma momentos simples em lembranças especiais.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0230",
+      "texto": "O perdão que liberta o relacionamento fortalece vínculos que merecem ser cuidados.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0231",
+      "texto": "O perdão que liberta o relacionamento mostra que amar também é escolher todos os dias.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0232",
+      "texto": "A lealdade que se mantém nas dificuldades faz o coração se sentir em casa.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0233",
+      "texto": "A lealdade que se mantém nas dificuldades transforma momentos simples em lembranças especiais.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0234",
+      "texto": "A lealdade que se mantém nas dificuldades fortalece vínculos que merecem ser cuidados.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0235",
+      "texto": "A lealdade que se mantém nas dificuldades mostra que amar também é escolher todos os dias.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0236",
+      "texto": "O abraço que transmite segurança faz o coração se sentir em casa.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0237",
+      "texto": "O abraço que transmite segurança transforma momentos simples em lembranças especiais.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0238",
+      "texto": "O abraço que transmite segurança fortalece vínculos que merecem ser cuidados.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0239",
+      "texto": "O abraço que transmite segurança mostra que amar também é escolher todos os dias.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0240",
+      "texto": "O silêncio que você reserva para si revela respostas que a pressa não mostra.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0241",
+      "texto": "O silêncio que você reserva para si torna o coração mais atento ao presente.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0242",
+      "texto": "O silêncio que você reserva para si ajuda a transformar erros em sabedoria.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0243",
+      "texto": "O silêncio que você reserva para si convida você a viver com mais propósito.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0244",
+      "texto": "A escolha de olhar a vida com calma revela respostas que a pressa não mostra.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0245",
+      "texto": "A escolha de olhar a vida com calma torna o coração mais atento ao presente.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0246",
+      "texto": "A escolha de olhar a vida com calma ajuda a transformar erros em sabedoria.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0247",
+      "texto": "A escolha de olhar a vida com calma convida você a viver com mais propósito.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0248",
+      "texto": "A lição escondida em cada desafio revela respostas que a pressa não mostra.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0249",
+      "texto": "A lição escondida em cada desafio torna o coração mais atento ao presente.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0250",
+      "texto": "A lição escondida em cada desafio ajuda a transformar erros em sabedoria.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0251",
+      "texto": "A lição escondida em cada desafio convida você a viver com mais propósito.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0252",
+      "texto": "O tempo dedicado ao que realmente importa revela respostas que a pressa não mostra.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0253",
+      "texto": "O tempo dedicado ao que realmente importa torna o coração mais atento ao presente.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0254",
+      "texto": "O tempo dedicado ao que realmente importa ajuda a transformar erros em sabedoria.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0255",
+      "texto": "O tempo dedicado ao que realmente importa convida você a viver com mais propósito.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0256",
+      "texto": "A coragem de rever os próprios caminhos revela respostas que a pressa não mostra.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0257",
+      "texto": "A coragem de rever os próprios caminhos torna o coração mais atento ao presente.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0258",
+      "texto": "A coragem de rever os próprios caminhos ajuda a transformar erros em sabedoria.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0259",
+      "texto": "A coragem de rever os próprios caminhos convida você a viver com mais propósito.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0260",
+      "texto": "O hábito de ouvir antes de responder revela respostas que a pressa não mostra.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0261",
+      "texto": "O hábito de ouvir antes de responder torna o coração mais atento ao presente.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0262",
+      "texto": "O hábito de ouvir antes de responder ajuda a transformar erros em sabedoria.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0263",
+      "texto": "O hábito de ouvir antes de responder convida você a viver com mais propósito.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0264",
+      "texto": "A simplicidade presente nas coisas comuns revela respostas que a pressa não mostra.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0265",
+      "texto": "A simplicidade presente nas coisas comuns torna o coração mais atento ao presente.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0266",
+      "texto": "A simplicidade presente nas coisas comuns ajuda a transformar erros em sabedoria.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0267",
+      "texto": "A simplicidade presente nas coisas comuns convida você a viver com mais propósito.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0268",
+      "texto": "A verdade reconhecida dentro de você revela respostas que a pressa não mostra.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0269",
+      "texto": "A verdade reconhecida dentro de você torna o coração mais atento ao presente.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0270",
+      "texto": "A verdade reconhecida dentro de você ajuda a transformar erros em sabedoria.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0271",
+      "texto": "A verdade reconhecida dentro de você convida você a viver com mais propósito.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0272",
+      "texto": "A pausa feita antes de tomar uma decisão revela respostas que a pressa não mostra.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0273",
+      "texto": "A pausa feita antes de tomar uma decisão torna o coração mais atento ao presente.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0274",
+      "texto": "A pausa feita antes de tomar uma decisão ajuda a transformar erros em sabedoria.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0275",
+      "texto": "A pausa feita antes de tomar uma decisão convida você a viver com mais propósito.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0276",
+      "texto": "O aprendizado recebido em cada experiência revela respostas que a pressa não mostra.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0277",
+      "texto": "O aprendizado recebido em cada experiência torna o coração mais atento ao presente.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0278",
+      "texto": "O aprendizado recebido em cada experiência ajuda a transformar erros em sabedoria.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0279",
+      "texto": "O aprendizado recebido em cada experiência convida você a viver com mais propósito.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0280",
+      "texto": "Uma amizade que celebra suas vitórias torna a caminhada mais leve.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0281",
+      "texto": "Uma amizade que celebra suas vitórias faz a vida ganhar mais cor.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0282",
+      "texto": "Uma amizade que celebra suas vitórias cria memórias que o tempo valoriza.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0283",
+      "texto": "Uma amizade que celebra suas vitórias lembra que ninguém precisa enfrentar tudo sozinho.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0284",
+      "texto": "Um amigo que escuta sem julgamentos torna a caminhada mais leve.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0285",
+      "texto": "Um amigo que escuta sem julgamentos faz a vida ganhar mais cor.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0286",
+      "texto": "Um amigo que escuta sem julgamentos cria memórias que o tempo valoriza.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0287",
+      "texto": "Um amigo que escuta sem julgamentos lembra que ninguém precisa enfrentar tudo sozinho.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0288",
+      "texto": "A presença de quem permanece nos dias difíceis torna a caminhada mais leve.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0289",
+      "texto": "A presença de quem permanece nos dias difíceis faz a vida ganhar mais cor.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0290",
+      "texto": "A presença de quem permanece nos dias difíceis cria memórias que o tempo valoriza.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0291",
+      "texto": "A presença de quem permanece nos dias difíceis lembra que ninguém precisa enfrentar tudo sozinho.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0292",
+      "texto": "Uma conversa sincera entre amigos torna a caminhada mais leve.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0293",
+      "texto": "Uma conversa sincera entre amigos faz a vida ganhar mais cor.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0294",
+      "texto": "Uma conversa sincera entre amigos cria memórias que o tempo valoriza.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0295",
+      "texto": "Uma conversa sincera entre amigos lembra que ninguém precisa enfrentar tudo sozinho.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0296",
+      "texto": "O cuidado de lembrar de quem você ama torna a caminhada mais leve.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0297",
+      "texto": "O cuidado de lembrar de quem você ama faz a vida ganhar mais cor.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0298",
+      "texto": "O cuidado de lembrar de quem você ama cria memórias que o tempo valoriza.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0299",
+      "texto": "O cuidado de lembrar de quem você ama lembra que ninguém precisa enfrentar tudo sozinho.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0300",
+      "texto": "A confiança construída com respeito torna a caminhada mais leve.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0301",
+      "texto": "A confiança construída com respeito faz a vida ganhar mais cor.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0302",
+      "texto": "A confiança construída com respeito cria memórias que o tempo valoriza.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0303",
+      "texto": "A confiança construída com respeito lembra que ninguém precisa enfrentar tudo sozinho.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0304",
+      "texto": "Um conselho oferecido com carinho torna a caminhada mais leve.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0305",
+      "texto": "Um conselho oferecido com carinho faz a vida ganhar mais cor.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0306",
+      "texto": "Um conselho oferecido com carinho cria memórias que o tempo valoriza.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0307",
+      "texto": "Um conselho oferecido com carinho lembra que ninguém precisa enfrentar tudo sozinho.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0308",
+      "texto": "O riso compartilhado em momentos simples torna a caminhada mais leve.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0309",
+      "texto": "O riso compartilhado em momentos simples faz a vida ganhar mais cor.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0310",
+      "texto": "O riso compartilhado em momentos simples cria memórias que o tempo valoriza.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0311",
+      "texto": "O riso compartilhado em momentos simples lembra que ninguém precisa enfrentar tudo sozinho.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0312",
+      "texto": "A lealdade que une bons amigos torna a caminhada mais leve.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0313",
+      "texto": "A lealdade que une bons amigos faz a vida ganhar mais cor.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0314",
+      "texto": "A lealdade que une bons amigos cria memórias que o tempo valoriza.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0315",
+      "texto": "A lealdade que une bons amigos lembra que ninguém precisa enfrentar tudo sozinho.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0316",
+      "texto": "Uma mensagem enviada na hora certa torna a caminhada mais leve.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0317",
+      "texto": "Uma mensagem enviada na hora certa faz a vida ganhar mais cor.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0318",
+      "texto": "Uma mensagem enviada na hora certa cria memórias que o tempo valoriza.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0319",
+      "texto": "Uma mensagem enviada na hora certa lembra que ninguém precisa enfrentar tudo sozinho.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0320",
+      "texto": "Um novo amanhecer pode transformar o ritmo de todo o dia.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0321",
+      "texto": "Um novo amanhecer abre espaço para encontros e conquistas.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0322",
+      "texto": "Um novo amanhecer leva mais leveza para suas escolhas.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0323",
+      "texto": "Um novo amanhecer lembra que recomeçar é sempre possível.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0324",
+      "texto": "Um pensamento positivo ao despertar pode transformar o ritmo de todo o dia.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0325",
+      "texto": "Um pensamento positivo ao despertar abre espaço para encontros e conquistas.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0326",
+      "texto": "Um pensamento positivo ao despertar leva mais leveza para suas escolhas.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0327",
+      "texto": "Um pensamento positivo ao despertar lembra que recomeçar é sempre possível.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0328",
+      "texto": "A gratidão pelas pequenas bênçãos pode transformar o ritmo de todo o dia.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0329",
+      "texto": "A gratidão pelas pequenas bênçãos abre espaço para encontros e conquistas.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0330",
+      "texto": "A gratidão pelas pequenas bênçãos leva mais leveza para suas escolhas.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0331",
+      "texto": "A gratidão pelas pequenas bênçãos lembra que recomeçar é sempre possível.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0332",
+      "texto": "Um sorriso oferecido logo cedo pode transformar o ritmo de todo o dia.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0333",
+      "texto": "Um sorriso oferecido logo cedo abre espaço para encontros e conquistas.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0334",
+      "texto": "Um sorriso oferecido logo cedo leva mais leveza para suas escolhas.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0335",
+      "texto": "Um sorriso oferecido logo cedo lembra que recomeçar é sempre possível.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0336",
+      "texto": "A esperança renovada nesta manhã pode transformar o ritmo de todo o dia.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0337",
+      "texto": "A esperança renovada nesta manhã abre espaço para encontros e conquistas.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0338",
+      "texto": "A esperança renovada nesta manhã leva mais leveza para suas escolhas.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0339",
+      "texto": "A esperança renovada nesta manhã lembra que recomeçar é sempre possível.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0340",
+      "texto": "A decisão de começar com leveza pode transformar o ritmo de todo o dia.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0341",
+      "texto": "A decisão de começar com leveza abre espaço para encontros e conquistas.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0342",
+      "texto": "A decisão de começar com leveza leva mais leveza para suas escolhas.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0343",
+      "texto": "A decisão de começar com leveza lembra que recomeçar é sempre possível.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0344",
+      "texto": "Uma palavra gentil antes de sair de casa pode transformar o ritmo de todo o dia.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0345",
+      "texto": "Uma palavra gentil antes de sair de casa abre espaço para encontros e conquistas.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0346",
+      "texto": "Uma palavra gentil antes de sair de casa leva mais leveza para suas escolhas.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0347",
+      "texto": "Uma palavra gentil antes de sair de casa lembra que recomeçar é sempre possível.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0348",
+      "texto": "O café acompanhado de bons pensamentos pode transformar o ritmo de todo o dia.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0349",
+      "texto": "O café acompanhado de bons pensamentos abre espaço para encontros e conquistas.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0350",
+      "texto": "O café acompanhado de bons pensamentos leva mais leveza para suas escolhas.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0351",
+      "texto": "O café acompanhado de bons pensamentos lembra que recomeçar é sempre possível.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0352",
+      "texto": "A luz de uma nova oportunidade pode transformar o ritmo de todo o dia.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0353",
+      "texto": "A luz de uma nova oportunidade abre espaço para encontros e conquistas.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0354",
+      "texto": "A luz de uma nova oportunidade leva mais leveza para suas escolhas.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0355",
+      "texto": "A luz de uma nova oportunidade lembra que recomeçar é sempre possível.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0356",
+      "texto": "A confiança de que hoje pode ser especial pode transformar o ritmo de todo o dia.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0357",
+      "texto": "A confiança de que hoje pode ser especial abre espaço para encontros e conquistas.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0358",
+      "texto": "A confiança de que hoje pode ser especial leva mais leveza para suas escolhas.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0359",
+      "texto": "A confiança de que hoje pode ser especial lembra que recomeçar é sempre possível.",
+      "autor": "Messias",
+      "categoria": "Bom Dia"
+    },
+    {
+      "id": "bot-0360",
+      "texto": "Uma noite tranquila traz serenidade para seus sonhos.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0361",
+      "texto": "Uma noite tranquila renova suas forças para o novo dia.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0362",
+      "texto": "Uma noite tranquila envolve sua mente com paz.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0363",
+      "texto": "Uma noite tranquila lembra que todo ciclo pode recomeçar.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0364",
+      "texto": "O descanso depois de um dia vivido traz serenidade para seus sonhos.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0365",
+      "texto": "O descanso depois de um dia vivido renova suas forças para o novo dia.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0366",
+      "texto": "O descanso depois de um dia vivido envolve sua mente com paz.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0367",
+      "texto": "O descanso depois de um dia vivido lembra que todo ciclo pode recomeçar.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0368",
+      "texto": "A gratidão pelo que foi possível realizar traz serenidade para seus sonhos.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0369",
+      "texto": "A gratidão pelo que foi possível realizar renova suas forças para o novo dia.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0370",
+      "texto": "A gratidão pelo que foi possível realizar envolve sua mente com paz.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0371",
+      "texto": "A gratidão pelo que foi possível realizar lembra que todo ciclo pode recomeçar.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0372",
+      "texto": "O silêncio que prepara o coração para dormir traz serenidade para seus sonhos.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0373",
+      "texto": "O silêncio que prepara o coração para dormir renova suas forças para o novo dia.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0374",
+      "texto": "O silêncio que prepara o coração para dormir envolve sua mente com paz.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0375",
+      "texto": "O silêncio que prepara o coração para dormir lembra que todo ciclo pode recomeçar.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0376",
+      "texto": "A certeza de que amanhã trará novas chances traz serenidade para seus sonhos.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0377",
+      "texto": "A certeza de que amanhã trará novas chances renova suas forças para o novo dia.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0378",
+      "texto": "A certeza de que amanhã trará novas chances envolve sua mente com paz.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0379",
+      "texto": "A certeza de que amanhã trará novas chances lembra que todo ciclo pode recomeçar.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0380",
+      "texto": "Uma prece feita antes de fechar os olhos traz serenidade para seus sonhos.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0381",
+      "texto": "Uma prece feita antes de fechar os olhos renova suas forças para o novo dia.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0382",
+      "texto": "Uma prece feita antes de fechar os olhos envolve sua mente com paz.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0383",
+      "texto": "Uma prece feita antes de fechar os olhos lembra que todo ciclo pode recomeçar.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0384",
+      "texto": "O carinho de quem deseja paz traz serenidade para seus sonhos.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0385",
+      "texto": "O carinho de quem deseja paz renova suas forças para o novo dia.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0386",
+      "texto": "O carinho de quem deseja paz envolve sua mente com paz.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0387",
+      "texto": "O carinho de quem deseja paz lembra que todo ciclo pode recomeçar.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0388",
+      "texto": "A calma que chega quando você desacelera traz serenidade para seus sonhos.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0389",
+      "texto": "A calma que chega quando você desacelera renova suas forças para o novo dia.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0390",
+      "texto": "A calma que chega quando você desacelera envolve sua mente com paz.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0391",
+      "texto": "A calma que chega quando você desacelera lembra que todo ciclo pode recomeçar.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0392",
+      "texto": "Uma lembrança boa guardada no coração traz serenidade para seus sonhos.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0393",
+      "texto": "Uma lembrança boa guardada no coração renova suas forças para o novo dia.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0394",
+      "texto": "Uma lembrança boa guardada no coração envolve sua mente com paz.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0395",
+      "texto": "Uma lembrança boa guardada no coração lembra que todo ciclo pode recomeçar.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0396",
+      "texto": "O perdão oferecido antes de adormecer traz serenidade para seus sonhos.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0397",
+      "texto": "O perdão oferecido antes de adormecer renova suas forças para o novo dia.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0398",
+      "texto": "O perdão oferecido antes de adormecer envolve sua mente com paz.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0399",
+      "texto": "O perdão oferecido antes de adormecer lembra que todo ciclo pode recomeçar.",
+      "autor": "Messias",
+      "categoria": "Boa Noite"
+    },
+    {
+      "id": "bot-0400",
+      "texto": "Uma pequena luz em meio às dificuldades mantém o futuro aberto a boas surpresas.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0401",
+      "texto": "Uma pequena luz em meio às dificuldades oferece força para seguir adiante.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0402",
+      "texto": "Uma pequena luz em meio às dificuldades mostra que a mudança pode começar agora.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0403",
+      "texto": "Uma pequena luz em meio às dificuldades faz crescer a coragem dentro de você.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0404",
+      "texto": "A confiança de que dias melhores chegam mantém o futuro aberto a boas surpresas.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0405",
+      "texto": "A confiança de que dias melhores chegam oferece força para seguir adiante.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0406",
+      "texto": "A confiança de que dias melhores chegam mostra que a mudança pode começar agora.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0407",
+      "texto": "A confiança de que dias melhores chegam faz crescer a coragem dentro de você.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0408",
+      "texto": "O desejo de continuar mesmo sem respostas mantém o futuro aberto a boas surpresas.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0409",
+      "texto": "O desejo de continuar mesmo sem respostas oferece força para seguir adiante.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0410",
+      "texto": "O desejo de continuar mesmo sem respostas mostra que a mudança pode começar agora.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0411",
+      "texto": "O desejo de continuar mesmo sem respostas faz crescer a coragem dentro de você.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0412",
+      "texto": "A coragem de olhar para frente mantém o futuro aberto a boas surpresas.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0413",
+      "texto": "A coragem de olhar para frente oferece força para seguir adiante.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0414",
+      "texto": "A coragem de olhar para frente mostra que a mudança pode começar agora.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0415",
+      "texto": "A coragem de olhar para frente faz crescer a coragem dentro de você.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0416",
+      "texto": "A certeza de que toda fase passa mantém o futuro aberto a boas surpresas.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0417",
+      "texto": "A certeza de que toda fase passa oferece força para seguir adiante.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0418",
+      "texto": "A certeza de que toda fase passa mostra que a mudança pode começar agora.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0419",
+      "texto": "A certeza de que toda fase passa faz crescer a coragem dentro de você.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0420",
+      "texto": "Um recomeço escolhido com paciência mantém o futuro aberto a boas surpresas.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0421",
+      "texto": "Um recomeço escolhido com paciência oferece força para seguir adiante.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0422",
+      "texto": "Um recomeço escolhido com paciência mostra que a mudança pode começar agora.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0423",
+      "texto": "Um recomeço escolhido com paciência faz crescer a coragem dentro de você.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0424",
+      "texto": "A fé em possibilidades que ainda não aparecem mantém o futuro aberto a boas surpresas.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0425",
+      "texto": "A fé em possibilidades que ainda não aparecem oferece força para seguir adiante.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0426",
+      "texto": "A fé em possibilidades que ainda não aparecem mostra que a mudança pode começar agora.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0427",
+      "texto": "A fé em possibilidades que ainda não aparecem faz crescer a coragem dentro de você.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0428",
+      "texto": "O coração que não abandona seus sonhos mantém o futuro aberto a boas surpresas.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0429",
+      "texto": "O coração que não abandona seus sonhos oferece força para seguir adiante.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0430",
+      "texto": "O coração que não abandona seus sonhos mostra que a mudança pode começar agora.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0431",
+      "texto": "O coração que não abandona seus sonhos faz crescer a coragem dentro de você.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0432",
+      "texto": "A força de acreditar em novos caminhos mantém o futuro aberto a boas surpresas.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0433",
+      "texto": "A força de acreditar em novos caminhos oferece força para seguir adiante.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0434",
+      "texto": "A força de acreditar em novos caminhos mostra que a mudança pode começar agora.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0435",
+      "texto": "A força de acreditar em novos caminhos faz crescer a coragem dentro de você.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0436",
+      "texto": "Uma atitude positiva diante do amanhã mantém o futuro aberto a boas surpresas.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0437",
+      "texto": "Uma atitude positiva diante do amanhã oferece força para seguir adiante.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0438",
+      "texto": "Uma atitude positiva diante do amanhã mostra que a mudança pode começar agora.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0439",
+      "texto": "Uma atitude positiva diante do amanhã faz crescer a coragem dentro de você.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0440",
+      "texto": "Um momento de atenção em família fortalece raízes que sustentam a vida.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0441",
+      "texto": "Um momento de atenção em família transforma a casa em lugar de acolhimento.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0442",
+      "texto": "Um momento de atenção em família cria segurança para enfrentar o mundo.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0443",
+      "texto": "Um momento de atenção em família faz os laços crescerem com mais amor.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0444",
+      "texto": "O respeito nas conversas de casa fortalece raízes que sustentam a vida.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0445",
+      "texto": "O respeito nas conversas de casa transforma a casa em lugar de acolhimento.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0446",
+      "texto": "O respeito nas conversas de casa cria segurança para enfrentar o mundo.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0447",
+      "texto": "O respeito nas conversas de casa faz os laços crescerem com mais amor.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0448",
+      "texto": "O cuidado demonstrado entre gerações fortalece raízes que sustentam a vida.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0449",
+      "texto": "O cuidado demonstrado entre gerações transforma a casa em lugar de acolhimento.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0450",
+      "texto": "O cuidado demonstrado entre gerações cria segurança para enfrentar o mundo.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0451",
+      "texto": "O cuidado demonstrado entre gerações faz os laços crescerem com mais amor.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0452",
+      "texto": "Uma refeição compartilhada com carinho fortalece raízes que sustentam a vida.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0453",
+      "texto": "Uma refeição compartilhada com carinho transforma a casa em lugar de acolhimento.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0454",
+      "texto": "Uma refeição compartilhada com carinho cria segurança para enfrentar o mundo.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0455",
+      "texto": "Uma refeição compartilhada com carinho faz os laços crescerem com mais amor.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0456",
+      "texto": "O abraço de quem conhece sua história fortalece raízes que sustentam a vida.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0457",
+      "texto": "O abraço de quem conhece sua história transforma a casa em lugar de acolhimento.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0458",
+      "texto": "O abraço de quem conhece sua história cria segurança para enfrentar o mundo.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0459",
+      "texto": "O abraço de quem conhece sua história faz os laços crescerem com mais amor.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0460",
+      "texto": "A paciência praticada nos dias corridos fortalece raízes que sustentam a vida.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0461",
+      "texto": "A paciência praticada nos dias corridos transforma a casa em lugar de acolhimento.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0462",
+      "texto": "A paciência praticada nos dias corridos cria segurança para enfrentar o mundo.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0463",
+      "texto": "A paciência praticada nos dias corridos faz os laços crescerem com mais amor.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0464",
+      "texto": "O apoio oferecido sem condições fortalece raízes que sustentam a vida.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0465",
+      "texto": "O apoio oferecido sem condições transforma a casa em lugar de acolhimento.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0466",
+      "texto": "O apoio oferecido sem condições cria segurança para enfrentar o mundo.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0467",
+      "texto": "O apoio oferecido sem condições faz os laços crescerem com mais amor.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0468",
+      "texto": "A união nas horas de alegria e desafio fortalece raízes que sustentam a vida.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0469",
+      "texto": "A união nas horas de alegria e desafio transforma a casa em lugar de acolhimento.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0470",
+      "texto": "A união nas horas de alegria e desafio cria segurança para enfrentar o mundo.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0471",
+      "texto": "A união nas horas de alegria e desafio faz os laços crescerem com mais amor.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0472",
+      "texto": "Uma palavra de incentivo dentro de casa fortalece raízes que sustentam a vida.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0473",
+      "texto": "Uma palavra de incentivo dentro de casa transforma a casa em lugar de acolhimento.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0474",
+      "texto": "Uma palavra de incentivo dentro de casa cria segurança para enfrentar o mundo.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0475",
+      "texto": "Uma palavra de incentivo dentro de casa faz os laços crescerem com mais amor.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0476",
+      "texto": "A gratidão por quem caminha ao seu lado fortalece raízes que sustentam a vida.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0477",
+      "texto": "A gratidão por quem caminha ao seu lado transforma a casa em lugar de acolhimento.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0478",
+      "texto": "A gratidão por quem caminha ao seu lado cria segurança para enfrentar o mundo.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0479",
+      "texto": "A gratidão por quem caminha ao seu lado faz os laços crescerem com mais amor.",
+      "autor": "Messias",
+      "categoria": "Família"
+    },
+    {
+      "id": "bot-0480",
+      "texto": "Reconhecer uma pequena conquista faz o presente parecer mais precioso.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0481",
+      "texto": "Reconhecer uma pequena conquista abre o coração para novas alegrias.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0482",
+      "texto": "Reconhecer uma pequena conquista traz leveza para os pensamentos.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0483",
+      "texto": "Reconhecer uma pequena conquista lembra que sempre existe algo bom para celebrar.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0484",
+      "texto": "Agradecer por quem esteve ao seu lado faz o presente parecer mais precioso.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0485",
+      "texto": "Agradecer por quem esteve ao seu lado abre o coração para novas alegrias.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0486",
+      "texto": "Agradecer por quem esteve ao seu lado traz leveza para os pensamentos.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0487",
+      "texto": "Agradecer por quem esteve ao seu lado lembra que sempre existe algo bom para celebrar.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0488",
+      "texto": "Valorizar o que já existe em sua vida faz o presente parecer mais precioso.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0489",
+      "texto": "Valorizar o que já existe em sua vida abre o coração para novas alegrias.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0490",
+      "texto": "Valorizar o que já existe em sua vida traz leveza para os pensamentos.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0491",
+      "texto": "Valorizar o que já existe em sua vida lembra que sempre existe algo bom para celebrar.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0492",
+      "texto": "Perceber a beleza de um dia comum faz o presente parecer mais precioso.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0493",
+      "texto": "Perceber a beleza de um dia comum abre o coração para novas alegrias.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0494",
+      "texto": "Perceber a beleza de um dia comum traz leveza para os pensamentos.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0495",
+      "texto": "Perceber a beleza de um dia comum lembra que sempre existe algo bom para celebrar.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0496",
+      "texto": "Celebrar o aprendizado recebido faz o presente parecer mais precioso.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0497",
+      "texto": "Celebrar o aprendizado recebido abre o coração para novas alegrias.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0498",
+      "texto": "Celebrar o aprendizado recebido traz leveza para os pensamentos.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0499",
+      "texto": "Celebrar o aprendizado recebido lembra que sempre existe algo bom para celebrar.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0500",
+      "texto": "Guardar boas lembranças no coração faz o presente parecer mais precioso.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0501",
+      "texto": "Guardar boas lembranças no coração abre o coração para novas alegrias.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0502",
+      "texto": "Guardar boas lembranças no coração traz leveza para os pensamentos.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0503",
+      "texto": "Guardar boas lembranças no coração lembra que sempre existe algo bom para celebrar.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0504",
+      "texto": "Notar o cuidado presente nos detalhes faz o presente parecer mais precioso.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0505",
+      "texto": "Notar o cuidado presente nos detalhes abre o coração para novas alegrias.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0506",
+      "texto": "Notar o cuidado presente nos detalhes traz leveza para os pensamentos.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0507",
+      "texto": "Notar o cuidado presente nos detalhes lembra que sempre existe algo bom para celebrar.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0508",
+      "texto": "Agradecer antes de pedir algo novo faz o presente parecer mais precioso.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0509",
+      "texto": "Agradecer antes de pedir algo novo abre o coração para novas alegrias.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0510",
+      "texto": "Agradecer antes de pedir algo novo traz leveza para os pensamentos.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0511",
+      "texto": "Agradecer antes de pedir algo novo lembra que sempre existe algo bom para celebrar.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0512",
+      "texto": "Transformar dificuldades em lições faz o presente parecer mais precioso.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0513",
+      "texto": "Transformar dificuldades em lições abre o coração para novas alegrias.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0514",
+      "texto": "Transformar dificuldades em lições traz leveza para os pensamentos.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0515",
+      "texto": "Transformar dificuldades em lições lembra que sempre existe algo bom para celebrar.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0516",
+      "texto": "Compartilhar a alegria de uma bênção faz o presente parecer mais precioso.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0517",
+      "texto": "Compartilhar a alegria de uma bênção abre o coração para novas alegrias.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0518",
+      "texto": "Compartilhar a alegria de uma bênção traz leveza para os pensamentos.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0519",
+      "texto": "Compartilhar a alegria de uma bênção lembra que sempre existe algo bom para celebrar.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0520",
+      "texto": "Um objetivo dividido em passos possíveis aproxima você de resultados consistentes.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0521",
+      "texto": "Um objetivo dividido em passos possíveis transforma intenção em realização.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0522",
+      "texto": "Um objetivo dividido em passos possíveis constrói confiança para desafios maiores.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0523",
+      "texto": "Um objetivo dividido em passos possíveis mostra que grandes conquistas começam no cotidiano.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0524",
+      "texto": "A constância aplicada todos os dias aproxima você de resultados consistentes.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0525",
+      "texto": "A constância aplicada todos os dias transforma intenção em realização.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0526",
+      "texto": "A constância aplicada todos os dias constrói confiança para desafios maiores.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0527",
+      "texto": "A constância aplicada todos os dias mostra que grandes conquistas começam no cotidiano.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0528",
+      "texto": "A disposição de aprender com quem sabe mais aproxima você de resultados consistentes.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0529",
+      "texto": "A disposição de aprender com quem sabe mais transforma intenção em realização.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0530",
+      "texto": "A disposição de aprender com quem sabe mais constrói confiança para desafios maiores.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0531",
+      "texto": "A disposição de aprender com quem sabe mais mostra que grandes conquistas começam no cotidiano.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0532",
+      "texto": "O planejamento feito com clareza aproxima você de resultados consistentes.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0533",
+      "texto": "O planejamento feito com clareza transforma intenção em realização.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0534",
+      "texto": "O planejamento feito com clareza constrói confiança para desafios maiores.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0535",
+      "texto": "O planejamento feito com clareza mostra que grandes conquistas começam no cotidiano.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0536",
+      "texto": "A coragem de começar antes de se sentir pronto aproxima você de resultados consistentes.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0537",
+      "texto": "A coragem de começar antes de se sentir pronto transforma intenção em realização.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0538",
+      "texto": "A coragem de começar antes de se sentir pronto constrói confiança para desafios maiores.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0539",
+      "texto": "A coragem de começar antes de se sentir pronto mostra que grandes conquistas começam no cotidiano.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0540",
+      "texto": "A disciplina de cumprir o que foi combinado aproxima você de resultados consistentes.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0541",
+      "texto": "A disciplina de cumprir o que foi combinado transforma intenção em realização.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0542",
+      "texto": "A disciplina de cumprir o que foi combinado constrói confiança para desafios maiores.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0543",
+      "texto": "A disciplina de cumprir o que foi combinado mostra que grandes conquistas começam no cotidiano.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0544",
+      "texto": "O foco mantido mesmo diante das distrações aproxima você de resultados consistentes.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0545",
+      "texto": "O foco mantido mesmo diante das distrações transforma intenção em realização.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0546",
+      "texto": "O foco mantido mesmo diante das distrações constrói confiança para desafios maiores.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0547",
+      "texto": "O foco mantido mesmo diante das distrações mostra que grandes conquistas começam no cotidiano.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0548",
+      "texto": "A humildade de corrigir a rota aproxima você de resultados consistentes.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0549",
+      "texto": "A humildade de corrigir a rota transforma intenção em realização.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0550",
+      "texto": "A humildade de corrigir a rota constrói confiança para desafios maiores.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0551",
+      "texto": "A humildade de corrigir a rota mostra que grandes conquistas começam no cotidiano.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0552",
+      "texto": "A preparação feita antes da oportunidade aproxima você de resultados consistentes.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0553",
+      "texto": "A preparação feita antes da oportunidade transforma intenção em realização.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0554",
+      "texto": "A preparação feita antes da oportunidade constrói confiança para desafios maiores.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0555",
+      "texto": "A preparação feita antes da oportunidade mostra que grandes conquistas começam no cotidiano.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0556",
+      "texto": "A responsabilidade por suas escolhas aproxima você de resultados consistentes.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0557",
+      "texto": "A responsabilidade por suas escolhas transforma intenção em realização.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0558",
+      "texto": "A responsabilidade por suas escolhas constrói confiança para desafios maiores.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0559",
+      "texto": "A responsabilidade por suas escolhas mostra que grandes conquistas começam no cotidiano.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0560",
+      "texto": "Uma escolha feita com consciência torna a jornada mais significativa.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0561",
+      "texto": "Uma escolha feita com consciência abre espaço para experiências que valem a pena.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0562",
+      "texto": "Uma escolha feita com consciência lembra que viver bem também é desacelerar.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0563",
+      "texto": "Uma escolha feita com consciência convida o coração a apreciar o agora.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0564",
+      "texto": "O tempo dedicado a quem você ama torna a jornada mais significativa.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0565",
+      "texto": "O tempo dedicado a quem você ama abre espaço para experiências que valem a pena.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0566",
+      "texto": "O tempo dedicado a quem você ama lembra que viver bem também é desacelerar.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0567",
+      "texto": "O tempo dedicado a quem você ama convida o coração a apreciar o agora.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0568",
+      "texto": "A coragem de viver sua verdade torna a jornada mais significativa.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0569",
+      "texto": "A coragem de viver sua verdade abre espaço para experiências que valem a pena.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0570",
+      "texto": "A coragem de viver sua verdade lembra que viver bem também é desacelerar.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0571",
+      "texto": "A coragem de viver sua verdade convida o coração a apreciar o agora.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0572",
+      "texto": "Um dia aproveitado com presença torna a jornada mais significativa.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0573",
+      "texto": "Um dia aproveitado com presença abre espaço para experiências que valem a pena.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0574",
+      "texto": "Um dia aproveitado com presença lembra que viver bem também é desacelerar.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0575",
+      "texto": "Um dia aproveitado com presença convida o coração a apreciar o agora.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0576",
+      "texto": "A leveza encontrada nas coisas simples torna a jornada mais significativa.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0577",
+      "texto": "A leveza encontrada nas coisas simples abre espaço para experiências que valem a pena.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0578",
+      "texto": "A leveza encontrada nas coisas simples lembra que viver bem também é desacelerar.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0579",
+      "texto": "A leveza encontrada nas coisas simples convida o coração a apreciar o agora.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0580",
+      "texto": "O cuidado com seus próprios limites torna a jornada mais significativa.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0581",
+      "texto": "O cuidado com seus próprios limites abre espaço para experiências que valem a pena.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0582",
+      "texto": "O cuidado com seus próprios limites lembra que viver bem também é desacelerar.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0583",
+      "texto": "O cuidado com seus próprios limites convida o coração a apreciar o agora.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0584",
+      "texto": "A disposição de aprender continuamente torna a jornada mais significativa.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0585",
+      "texto": "A disposição de aprender continuamente abre espaço para experiências que valem a pena.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0586",
+      "texto": "A disposição de aprender continuamente lembra que viver bem também é desacelerar.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0587",
+      "texto": "A disposição de aprender continuamente convida o coração a apreciar o agora.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0588",
+      "texto": "Uma mudança aceita com maturidade torna a jornada mais significativa.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0589",
+      "texto": "Uma mudança aceita com maturidade abre espaço para experiências que valem a pena.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0590",
+      "texto": "Uma mudança aceita com maturidade lembra que viver bem também é desacelerar.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0591",
+      "texto": "Uma mudança aceita com maturidade convida o coração a apreciar o agora.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0592",
+      "texto": "O valor dado a cada encontro torna a jornada mais significativa.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0593",
+      "texto": "O valor dado a cada encontro abre espaço para experiências que valem a pena.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0594",
+      "texto": "O valor dado a cada encontro lembra que viver bem também é desacelerar.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0595",
+      "texto": "O valor dado a cada encontro convida o coração a apreciar o agora.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0596",
+      "texto": "A paz de seguir no seu próprio ritmo torna a jornada mais significativa.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0597",
+      "texto": "A paz de seguir no seu próprio ritmo abre espaço para experiências que valem a pena.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0598",
+      "texto": "A paz de seguir no seu próprio ritmo lembra que viver bem também é desacelerar.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0599",
+      "texto": "A paz de seguir no seu próprio ritmo convida o coração a apreciar o agora.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0600",
+      "texto": "O sucesso é a soma de pequenos esforços repetidos dia após dia.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0601",
+      "texto": "A coragem não é a ausência do medo, mas o triunfo sobre ele.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0602",
+      "texto": "Grandes batalhas só são dadas a grandes guerreiros.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0603",
+      "texto": "A persistência é o caminho do êxito.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0604",
+      "texto": "Transforme seus obstáculos em degraus para o topo.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0605",
+      "texto": "O único lugar onde o sucesso vem antes do trabalho é no dicionário.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0606",
+      "texto": "Acredite que você pode e você já está no meio do caminho.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0607",
+      "texto": "O que não te mata, te fortalece.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0608",
+      "texto": "A força de vontade é o motor da conquista.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0609",
+      "texto": "Desistir nunca é uma opção para quem tem sonhos.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0610",
+      "texto": "Amar é encontrar na felicidade do outro a própria felicidade.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0611",
+      "texto": "O amor é a única coisa que cresce à medida que se reparte.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0612",
+      "texto": "Onde há amor, há vida.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0613",
+      "texto": "O amor não se vê com os olhos, mas com o coração.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0614",
+      "texto": "A medida do amor é amar sem medida.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0615",
+      "texto": "Cultive conexões que alimentam sua alma.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0616",
+      "texto": "Pequenos gestos valem mais que grandes promessas.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0617",
+      "texto": "O amor é o tempero da existência.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0618",
+      "texto": "Amar é cuidar em cada detalhe.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0619",
+      "texto": "A base de qualquer relação é o respeito mútuo.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0620",
+      "texto": "Encontre alguém que te incentive a ser sua melhor versão.",
+      "autor": "Messias",
+      "categoria": "Amor"
+    },
+    {
+      "id": "bot-0621",
+      "texto": "O saber a gente aprende com os mestres, a sabedoria com a vida.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0622",
+      "texto": "Silenciar é, por vezes, a melhor resposta.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0623",
+      "texto": "A mente que se abre a uma nova ideia jamais retorna ao seu tamanho original.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0624",
+      "texto": "O plantio é opcional, mas a colheita é obrigatória.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0625",
+      "texto": "Conhece-te a ti mesmo e conhecerás o universo.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0626",
+      "texto": "A pressa é a inimiga da perfeição e da clareza.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0627",
+      "texto": "Viver é desenhar sem borracha.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0628",
+      "texto": "A simplicidade é o último grau da sofisticação.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0629",
+      "texto": "O tempo é o melhor professor de todos.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0630",
+      "texto": "A verdade liberta, mas primeiro ela magoa.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0631",
+      "texto": "Refletir é o primeiro passo para a evolução.",
+      "autor": "Messias",
+      "categoria": "Reflexão"
+    },
+    {
+      "id": "bot-0632",
+      "texto": "Ser feliz é uma escolha diária.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0633",
+      "texto": "Coração grato é imã de coisas boas.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0634",
+      "texto": "A felicidade reside nas coisas mais simples da vida.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0635",
+      "texto": "Agradeça pelo que você tem enquanto trabalha pelo que quer.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0636",
+      "texto": "Sorrir é o melhor remédio para qualquer dor.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0637",
+      "texto": "A alegria de fazer o bem é a única felicidade verdadeira.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0638",
+      "texto": "A vida é curta demais para não ser celebrada.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0639",
+      "texto": "Seja grato pelo hoje, o amanhã é uma promessa.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0640",
+      "texto": "Encontre motivos para sorrir mesmo em dias cinzentos.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0641",
+      "texto": "Felicidade é um estado de espírito, não um destino.",
+      "autor": "Messias",
+      "categoria": "Gratidão"
+    },
+    {
+      "id": "bot-0642",
+      "texto": "Liderar não é impor, é inspirar.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0643",
+      "texto": "O sucesso é ir de fracasso em fracasso sem perder o entusiasmo.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0644",
+      "texto": "Um líder é aquele que conhece o caminho, segue o caminho e mostra o caminho.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0645",
+      "texto": "Trabalhe em silêncio e deixe o seu sucesso fazer barulho.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0646",
+      "texto": "A competência é o que você é capaz de fazer.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0647",
+      "texto": "O talento ganha jogos, mas o trabalho em equipe ganha campeonatos.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0648",
+      "texto": "Inovação diferencia um líder de um seguidor.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0649",
+      "texto": "Defina metas que te façam querer pular da cama.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0650",
+      "texto": "O sucesso exige disciplina e foco constante.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0651",
+      "texto": "A liderança começa com o exemplo pessoal.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0652",
+      "texto": "O maior risco é não correr risco nenhum.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0653",
+      "texto": "Amigo é aquele que entra quando o resto do mundo sai.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0654",
+      "texto": "Amigos são a família que escolhemos.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0655",
+      "texto": "A amizade duplica as alegrias e divide as tristezas.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0656",
+      "texto": "Um bom amigo conhece suas histórias, um melhor amigo as viveu com você.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0657",
+      "texto": "A lealdade é a base de toda amizade verdadeira.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0658",
+      "texto": "Ter um amigo é ter um tesouro guardado no peito.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0659",
+      "texto": "Amizades sinceras resistem ao tempo e à distância.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0660",
+      "texto": "Onde houver um amigo, haverá um porto seguro.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0661",
+      "texto": "Agradeço aos amigos que tornam a jornada mais leve.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0662",
+      "texto": "Bons amigos são como estrelas, nem sempre os vemos, mas sabemos que estão lá.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0663",
+      "texto": "Cultivar amigos é cultivar felicidade.",
+      "autor": "Messias",
+      "categoria": "Amizade"
+    },
+    {
+      "id": "bot-0664",
+      "texto": "Foco é dizer não a centenas de outras boas ideias.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0665",
+      "texto": "Produtividade não é estar ocupado, é ser eficaz.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0666",
+      "texto": "Comece onde você está, use o que você tem, faça o que você pode.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0667",
+      "texto": "O segredo de progredir é começar.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0668",
+      "texto": "Não pare até se orgulhar.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0669",
+      "texto": "Disciplina é fazer o que precisa ser feito, mesmo quando não se quer.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0670",
+      "texto": "Onde o foco vai, a energia flui.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0671",
+      "texto": "Gestão do tempo é gestão da vida.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0672",
+      "texto": "Elimine as distrações e alimente o seu progresso.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0673",
+      "texto": "Um passo de cada vez, mas sempre em frente.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0674",
+      "texto": "A constância vence o talento quando o talento não é constante.",
+      "autor": "Messias",
+      "categoria": "Motivação"
+    },
+    {
+      "id": "bot-0675",
+      "texto": "A esperança é a última que morre e a primeira que nos levanta.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0676",
+      "texto": "Ter coragem é seguir em frente mesmo com as pernas tremendo.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0677",
+      "texto": "Dias difíceis preparam pessoas fortes.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0678",
+      "texto": "Enquanto houver vontade de lutar, haverá esperança de vencer.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0679",
+      "texto": "Acredite na magia dos novos começos.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0680",
+      "texto": "Não tenha medo de recomeçar, desta vez você não começa do zero, começa da experiência.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0681",
+      "texto": "O sol sempre volta a brilhar após a tempestade.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0682",
+      "texto": "Coragem é a resistência ao medo, o domínio do medo, e não a ausência do medo.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0683",
+      "texto": "Nunca perca a fé na humanidade e em si mesmo.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0684",
+      "texto": "A luz no fim do túnel é a sua determinação.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0685",
+      "texto": "Quem tem esperança enxerga o invisível.",
+      "autor": "Messias",
+      "categoria": "Esperança"
+    },
+    {
+      "id": "bot-0686",
+      "texto": "A paz começa com um sorriso.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0687",
+      "texto": "Equilíbrio é não deixar que o ruído externo abafe sua voz interior.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0688",
+      "texto": "Nada vale a sua paz de espírito.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0689",
+      "texto": "Respire fundo e encontre seu centro.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0690",
+      "texto": "Mantenha a calma em meio ao caos.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0691",
+      "texto": "A paz interior é o maior sucesso que alguém pode alcançar.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0692",
+      "texto": "O equilíbrio é a chave para uma vida longa e saudável.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0693",
+      "texto": "Menos pressa, mais presença.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0694",
+      "texto": "Cultive um jardim interno onde o estresse não floresça.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0695",
+      "texto": "A serenidade vem de aceitar o que não podemos mudar.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0696",
+      "texto": "Estar em paz consigo mesmo é a maior liberdade.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0697",
+      "texto": "Escolha um trabalho que você ame e não terá que trabalhar um único dia.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0698",
+      "texto": "O único caminho para fazer um excelente trabalho é amar o que você faz.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0699",
+      "texto": "O sucesso profissional é construído nos detalhes.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0700",
+      "texto": "Profissionalismo é a base da confiança.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0701",
+      "texto": "Aprender é a única coisa de que a mente nunca se cansa.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0702",
+      "texto": "Seja o profissional que você gostaria de contratar.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0703",
+      "texto": "O trabalho dignifica o homem e molda o caráter.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0704",
+      "texto": "Excelência não é um ato, mas um hábito.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0705",
+      "texto": "Sua carreira é uma maratona, não uma corrida de cem metros.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0706",
+      "texto": "Colabore mais, compita menos.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0707",
+      "texto": "O esforço de hoje é o resultado de amanhã.",
+      "autor": "Messias",
+      "categoria": "Sucesso"
+    },
+    {
+      "id": "bot-0708",
+      "texto": "A natureza não se apressa, no entanto, tudo é realizado.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0709",
+      "texto": "Somos parte de algo muito maior que nós mesmos.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0710",
+      "texto": "A conexão com a terra cura a alma.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0711",
+      "texto": "Floresça onde a vida te plantar.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0712",
+      "texto": "Respeite o ritmo das estações e da sua própria vida.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0713",
+      "texto": "A espiritualidade é o encontro do ser com o sagrado.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0714",
+      "texto": "Ouça o que o vento tem a dizer no silêncio da floresta.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0715",
+      "texto": "Preserve a natureza como quem preserva a própria casa.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0716",
+      "texto": "Fé é o firme fundamento das coisas que se esperam.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0717",
+      "texto": "A beleza do mundo está nos olhos de quem sabe contemplar.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0718",
+      "texto": "O universo conspira a favor de quem emana boas energias.",
+      "autor": "Messias",
+      "categoria": "Fé"
+    },
+    {
+      "id": "bot-0719",
+      "texto": "A criatividade é a inteligência se divertindo.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0720",
+      "texto": "Todo artista foi primeiro um amador.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0721",
+      "texto": "A arte lava da alma a poeira do dia a dia.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0722",
+      "texto": "Pense fora da caixa e crie novas realidades.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0723",
+      "texto": "A inspiração existe, mas ela tem que te encontrar trabalhando.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0724",
+      "texto": "Criar é dar forma aos sonhos.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0725",
+      "texto": "A imaginação é o limite para quem ousa inventar.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0726",
+      "texto": "A arte é a expressão mais profunda do ser humano.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0727",
+      "texto": "Não tenha medo de errar, o erro faz parte do processo criativo.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0728",
+      "texto": "Originalidade é a arte de esconder suas fontes.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    },
+    {
+      "id": "bot-0729",
+      "texto": "Cada pessoa é o arquiteto da sua própria obra-prima.",
+      "autor": "Messias",
+      "categoria": "Vida"
+    }
+  ]
+}

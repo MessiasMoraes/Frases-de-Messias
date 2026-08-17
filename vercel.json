@@ -6,6 +6,10 @@
     },
     "api/image.js": {
       "maxDuration": 15
+    },
+    "api/telegram-webhook.js": {
+      "maxDuration": 15,
+      "includeFiles": "dados/frases-bot.json"
     }
   },
   "rewrites": [
