@@ -1594,3 +1594,63 @@ body.dark {
     border-radius: 14px;
   }
 }
+
+/* Coleções editoriais */
+.selo-colecao { margin: 0 0 8px; color: #1d4ed8; font-size: .74rem; font-weight: 800; letter-spacing: .08em; }
+.colecao-hero { max-width: 1100px; margin: 26px auto 0; }
+.colecao-hero h1, .colecao-hero h2 { max-width: 820px; margin: 4px 0 12px; }
+.colecao-hero > p:not(.breadcrumb):not(.selo-colecao) { max-width: 780px; }
+.busca-colecao { box-sizing: border-box; display: block; width: min(100%, 700px); margin-top: 22px; padding: 16px 18px; border: 1px solid #b9d3f5; border-radius: 14px; background: #fff; color: #1e293b; font: inherit; font-size: 1rem; }
+.busca-colecao:focus { outline: 3px solid rgba(37, 99, 235, .22); border-color: #2563eb; }
+.introducao-colecao, .secao-frases-colecao, .colecoes-listagem, .colecoes-relacionadas, .colecoes-destaque { max-width: 1100px; margin: 28px auto; padding: 0 24px; }
+.introducao-colecao { padding-top: 28px; padding-bottom: 28px; border-radius: 18px; background: linear-gradient(135deg, #eff6ff, #f8fbff); box-shadow: 0 8px 24px rgba(15, 23, 42, .06); }
+.introducao-colecao h2, .colecoes-listagem h2, .colecoes-relacionadas h2, .colecoes-destaque h2, .secao-frases-colecao h2 { margin-top: 0; color: #123d68; }
+.introducao-colecao p { max-width: 900px; line-height: 1.75; }
+.cabecalho-secao-colecao, .cabecalho-colecoes-destaque { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin-bottom: 18px; }
+.cabecalho-secao-colecao h2, .cabecalho-colecoes-destaque h2 { margin-bottom: 0; }
+.cabecalho-secao-colecao > p { margin: 0 0 3px; color: #52606d; white-space: nowrap; }
+.cabecalho-colecoes-destaque > a { color: #1d4ed8; font-weight: 800; text-decoration: none; white-space: nowrap; }
+.grid-frases-colecao { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.card-frase-colecao { display: flex; min-height: 230px; flex-direction: column; justify-content: space-between; padding: 23px; border: 1px solid #dbeafe; border-radius: 18px; background: #fff; box-shadow: 0 8px 22px rgba(15, 23, 42, .06); transition: transform 160ms cubic-bezier(.23, 1, .32, 1), box-shadow 160ms cubic-bezier(.23, 1, .32, 1); }
+.card-frase-colecao:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(30, 64, 175, .13); }
+.card-frase-colecao[hidden] { display: none; }
+.etiqueta-colecao { align-self: flex-start; margin: 0 0 18px; padding: 5px 10px; border-radius: 999px; background: #e0edff; color: #1d4ed8; font-size: .78rem; font-weight: 800; }
+.card-frase-colecao blockquote { margin: 0; color: #182b3c; font-size: 1.2rem; font-style: normal; font-weight: 700; line-height: 1.5; }
+.card-frase-colecao .autor-frase { margin: 16px 0 0; color: #5f6f7f; font-size: .94rem; }
+.acoes-colecao { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.acoes-colecao button { min-height: 42px; padding: 9px 15px; border: 1px solid #2563eb; border-radius: 10px; background: #fff; color: #1d4ed8; cursor: pointer; font: inherit; font-size: .9rem; font-weight: 800; transition: transform 150ms cubic-bezier(.23, 1, .32, 1), background 150ms ease; }
+.acoes-colecao button:hover { background: #eff6ff; }
+.acoes-colecao button:active { transform: scale(.97); }
+.acoes-colecao button:focus-visible, .btn-colecao-relacionada:focus-visible, .card-colecao:focus-visible { outline: 3px solid rgba(37, 99, 235, .35); outline-offset: 3px; }
+.grid-colecoes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 18px; }
+.grid-colecoes-inicial { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.card-colecao { display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; min-height: 114px; padding: 18px; border: 1px solid #d8e7fb; border-radius: 17px; background: #fff; color: #173b61; text-decoration: none; box-shadow: 0 8px 22px rgba(15, 23, 42, .05); transition: transform 160ms cubic-bezier(.23, 1, .32, 1), border-color 160ms ease, box-shadow 160ms ease; }
+.card-colecao:hover { transform: translateY(-3px); border-color: #79a9e8; box-shadow: 0 14px 26px rgba(30, 64, 175, .12); }
+.card-colecao-icone { font-size: 1.9rem; }
+.card-colecao-conteudo { display: grid; gap: 5px; }
+.card-colecao-conteudo strong { color: #1f5fbd; font-size: 1.05rem; }
+.card-colecao-conteudo small { color: #5b6875; font-size: .88rem; line-height: 1.4; }
+.card-colecao-seta { color: #2563eb; font-size: 1.4rem; font-weight: 800; }
+.colecoes-relacionadas { padding-top: 28px; padding-bottom: 30px; border-top: 1px solid #d7e4f3; }
+.colecoes-relacionadas > p, .colecoes-listagem > p, .colecoes-destaque > p { color: #52606d; }
+.botoes-colecoes-relacionadas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+.btn-colecao-relacionada { display: inline-flex; align-items: center; min-height: 45px; padding: 0 16px; border: 2px solid #2563eb; border-radius: 999px; color: #1d4ed8; font-weight: 800; text-decoration: none; transition: transform 150ms cubic-bezier(.23, 1, .32, 1), background 150ms ease; }
+.btn-colecao-relacionada:hover { background: #eff6ff; }
+.btn-colecao-relacionada:active { transform: scale(.97); }
+.categorias-com-colecoes { padding-top: 12px; }
+.dark .busca-colecao { border-color: #365879; background: #12263a; color: #edf5ff; }
+.dark .selo-colecao { color: #8cc4ff; }
+.dark .introducao-colecao { background: linear-gradient(135deg, #12283e, #102033); box-shadow: none; }
+.dark .introducao-colecao h2, .dark .colecoes-listagem h2, .dark .colecoes-relacionadas h2, .dark .colecoes-destaque h2, .dark .secao-frases-colecao h2 { color: #b4d8ff; }
+.dark .introducao-colecao p, .dark .colecoes-relacionadas > p, .dark .colecoes-listagem > p, .dark .colecoes-destaque > p, .dark .cabecalho-secao-colecao > p { color: #c4d1de; }
+.dark .card-frase-colecao, .dark .card-colecao { border-color: #2c4a66; background: #102438; box-shadow: none; }
+.dark .card-frase-colecao blockquote { color: #eef6ff; }
+.dark .card-frase-colecao .autor-frase, .dark .card-colecao-conteudo small { color: #c4d1de; }
+.dark .etiqueta-colecao { background: #173d65; color: #acd8ff; }
+.dark .acoes-colecao button { border-color: #69aef7; background: #142c45; color: #b7dbff; }
+.dark .acoes-colecao button:hover, .dark .btn-colecao-relacionada:hover { background: #1b3a58; }
+.dark .card-colecao-conteudo strong, .dark .card-colecao-seta, .dark .cabecalho-colecoes-destaque > a { color: #9bccff; }
+.dark .colecoes-relacionadas { border-color: #2e4d69; }
+.dark .btn-colecao-relacionada { border-color: #69aef7; color: #b7dbff; }
+@media (max-width: 780px) { .introducao-colecao, .secao-frases-colecao, .colecoes-listagem, .colecoes-relacionadas, .colecoes-destaque { padding-right: 18px; padding-left: 18px; } .grid-frases-colecao, .grid-colecoes, .grid-colecoes-inicial { grid-template-columns: 1fr; } .cabecalho-secao-colecao, .cabecalho-colecoes-destaque { align-items: flex-start; flex-direction: column; } .cabecalho-secao-colecao > p { white-space: normal; } .card-frase-colecao { min-height: 0; } }
+@media (prefers-reduced-motion: reduce) { .card-frase-colecao, .card-colecao, .acoes-colecao button, .btn-colecao-relacionada { transition: none; } }
