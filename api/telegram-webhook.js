@@ -3,6 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const SITE_URL = 'https://frasesdemessias.com.br';
+const TELEGRAM_WEBHOOK_URL = 'https://frasesdemessiascombr.vercel.app/api/telegram-webhook';
 const CATALOGO_PATH = path.join(process.cwd(), 'dados', 'frases-bot.json');
 let catalogoEmMemoria;
 
@@ -97,6 +98,16 @@ async function telegram(metodo, dados) {
     throw new Error(resultado.description || `Falha ao chamar ${metodo}.`);
   }
   return resultado.result;
+}
+
+async function registrarWebhookTelegram() {
+  const segredo = process.env.TELEGRAM_WEBHOOK_SECRET;
+  if (!segredo) throw new Error('TELEGRAM_WEBHOOK_SECRET não configurado.');
+  return telegram('setWebhook', {
+    url: TELEGRAM_WEBHOOK_URL,
+    secret_token: segredo,
+    allowed_updates: ['message', 'callback_query']
+  });
 }
 
 async function enviarFrase(chatId, categoria) {
@@ -205,6 +216,22 @@ function segredoValido(req) {
 module.exports = async function handler(req, res) {
   if (req.method === 'GET') {
     const pronto = Boolean(process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_WEBHOOK_SECRET);
+
+    if (req.query?.registrar === '1') {
+      if (!segredoValido(req)) return res.status(401).json({ error: 'Origem não autorizada.' });
+      try {
+        await registrarWebhookTelegram();
+        return res.status(200).json({
+          servico: 'Frases de Messias — bot do Telegram',
+          webhook: 'registrado no Telegram',
+          comandos: ['/start', '/frase', '/categorias', '/site']
+        });
+      } catch (erro) {
+        console.error('Erro ao registrar webhook do Telegram:', erro.message);
+        return res.status(500).json({ error: 'Não foi possível registrar o webhook.' });
+      }
+    }
+
     return res.status(200).json({
       servico: 'Frases de Messias — bot do Telegram',
       webhook: pronto ? 'configurado' : 'aguardando variáveis de ambiente',
