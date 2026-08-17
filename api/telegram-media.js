@@ -4,7 +4,7 @@ const MAX_TEXT_LENGTH = 500;
 const MAX_AUTHOR_LENGTH = 120;
 const IMAGE_WIDTH = 1080;
 const STORY_HEIGHT = 1920;
-const VIDEO_SECONDS = 8;
+const VIDEO_SECONDS = 15;
 const FPS = 30;
 const limitePorChat = new Map();
 

@@ -1,4 +1,6 @@
 const assert = require('node:assert');
+const fs = require('node:fs');
+const path = require('node:path');
 const handler = require('../api/telegram-webhook.js');
 const processadorMidia = require('../api/telegram-media.js');
 
@@ -33,6 +35,11 @@ async function executar() {
   };
 
   try {
+    const renderizadorDoSite = fs.readFileSync(path.join(__dirname, '..', 'api', 'video.js'), 'utf8');
+    const renderizadorDoBot = fs.readFileSync(path.join(__dirname, '..', 'api', 'telegram-media.js'), 'utf8');
+    assert.match(renderizadorDoSite, /const RENDER_SECONDS = 15;/);
+    assert.match(renderizadorDoBot, /const VIDEO_SECONDS = 15;/);
+
     delete process.env.TELEGRAM_BOT_TOKEN;
     delete process.env.TELEGRAM_WEBHOOK_SECRET;
     let resposta = respostaFalsa();
@@ -150,7 +157,7 @@ async function executar() {
     assert.ok(chamadasTelegram[0].dados.commands.some((item) => item.command === 'video'));
     assert.ok(chamadasTelegram[0].dados.commands.some((item) => item.command === 'canal'));
 
-    console.log('Webhook, proteção, comandos, mídia, canal e respostas automáticas validados.');
+    console.log('Webhook, proteção, comandos, mídia de 15 segundos, canal e respostas automáticas validados.');
   } finally {
     global.fetch = fetchOriginal;
   }
