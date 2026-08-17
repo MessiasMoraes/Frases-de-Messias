@@ -28,6 +28,32 @@ const ATALHOS_CATEGORIA = {
   '/bomdia': 'Bom Dia',
   '/boanoite': 'Boa Noite'
 };
+const GATILHOS_MENSAGEM_LIVRE = [
+  {
+    categoria: 'Gratidão',
+    palavras: ['gratidao', 'agradec', 'obrigado', 'abencoada']
+  },
+  {
+    categoria: 'Fé',
+    palavras: ['deus', 'fe', 'oracao', 'jesus', 'senhor', 'milagre', 'bencao', 'abencoado', 'espiritual']
+  },
+  {
+    categoria: 'Motivação',
+    palavras: ['forca', 'coragem', 'desistir', 'desanimo', 'cansado', 'dificil', 'motivacao', 'conseguir', 'superar']
+  },
+  {
+    categoria: 'Amor',
+    palavras: ['amor', 'apaixon', 'namoro', 'casamento', 'relacionamento', 'saudade', 'coracao']
+  },
+  {
+    categoria: 'Boa Noite',
+    palavras: ['boa noite', 'dormir', 'sono']
+  },
+  {
+    categoria: 'Bom Dia',
+    palavras: ['bom dia', 'acordei', 'amanheceu']
+  }
+];
 let catalogoEmMemoria;
 
 function carregarCatalogo() {
@@ -125,6 +151,12 @@ function categoriaConhecida(texto) {
   return categorias.find((categoria) => normalizar(categoria) === normalizar(texto));
 }
 
+function categoriaDaMensagemLivre(texto) {
+  const mensagem = normalizar(texto);
+  const gatilho = GATILHOS_MENSAGEM_LIVRE.find(({ palavras }) => palavras.some((palavra) => mensagem.includes(palavra)));
+  return gatilho?.categoria || null;
+}
+
 async function telegram(metodo, dados) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   if (!token) throw new Error('TELEGRAM_BOT_TOKEN não configurado.');
@@ -181,7 +213,30 @@ async function enviarFraseDoDia(chatId) {
 async function enviarAjuda(chatId) {
   await telegram('sendMessage', {
     chat_id: chatId,
-    text: '<b>Comandos do Frases de Messias</b>\n\n🎲 <b>/frase</b> — frase aleatória\n☀️ <b>/hoje</b> — frase do dia\n❤️ <b>/amor</b> — frases de amor\n🙏 <b>/fe</b> — frases de fé\n💪 <b>/motivacao</b> — motivação\n🌞 <b>/bomdia</b> — bom dia\n🌙 <b>/boanoite</b> — boa noite\n📚 <b>/categorias</b> — escolher outro tema\n📢 <b>/whatsapp</b> — canal no WhatsApp\nℹ️ <b>/sobre</b> — conhecer o projeto\n🌐 <b>/site</b> — abrir o portal',
+    text: '<b>Comandos do Frases de Messias</b>\n\n🎲 <b>/frase</b> — frase aleatória\n☀️ <b>/hoje</b> — frase do dia\n❤️ <b>/amor</b> — frases de amor\n🙏 <b>/fe</b> — frases de fé\n💪 <b>/motivacao</b> — motivação\n🌞 <b>/bomdia</b> — bom dia\n🌙 <b>/boanoite</b> — boa noite\n📚 <b>/categorias</b> — escolher outro tema\n📢 <b>/whatsapp</b> — canal no WhatsApp\nℹ️ <b>/sobre</b> — conhecer o projeto\n🌐 <b>/site</b> — abrir o portal\n\nVocê também pode escrever uma mensagem, como “preciso de força” ou “quero uma frase de fé”.',
+    parse_mode: 'HTML',
+    reply_markup: tecladoInicial(),
+    disable_web_page_preview: true
+  });
+}
+
+async function responderMensagemLivre(chatId, texto) {
+  const categoria = categoriaDaMensagemLivre(texto);
+  if (categoria) {
+    const frase = obterFrase(categoria);
+    await telegram('sendMessage', {
+      chat_id: chatId,
+      text: `<b>Uma mensagem para você:</b>\n\n${mensagemDaFrase(frase)}`,
+      parse_mode: 'HTML',
+      reply_markup: tecladoDaFrase(frase.categoria),
+      disable_web_page_preview: true
+    });
+    return;
+  }
+
+  await telegram('sendMessage', {
+    chat_id: chatId,
+    text: '<b>Que bom receber sua mensagem.</b>\n\nPosso enviar uma frase para inspirar o seu dia. Experimente escrever “preciso de fé”, “quero motivação” ou “uma frase de amor”. Você também pode usar <b>/ajuda</b>.',
     parse_mode: 'HTML',
     reply_markup: tecladoInicial(),
     disable_web_page_preview: true
@@ -274,12 +329,7 @@ async function tratarMensagem(mensagem) {
     return;
   }
 
-  await telegram('sendMessage', {
-    chat_id: chatId,
-    text: 'Não reconheci esse comando. Use <b>/ajuda</b> para ver as opções ou toque em um botão abaixo.',
-    parse_mode: 'HTML',
-    reply_markup: tecladoInicial()
-  });
+  await responderMensagemLivre(chatId, texto);
 }
 
 async function tratarCallback(callback) {

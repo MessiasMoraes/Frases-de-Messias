@@ -86,6 +86,17 @@ async function executar() {
       'https://whatsapp.com/channel/0029Va94RaR3bbV779wzFL1J'
     );
 
+    const motivacaoLivre = await testarComando('Hoje estou muito cansado e preciso de força.');
+    assert.match(motivacaoLivre.text, /<i>Motivação<\/i>/);
+    assert.match(motivacaoLivre.text, /Uma mensagem para você/);
+
+    const gratidaoLivre = await testarComando('Estou agradecido pelas bênçãos de hoje.');
+    assert.match(gratidaoLivre.text, /<i>Gratidão<\/i>/);
+
+    const mensagemGenerica = await testarComando('Olá, tudo bem?');
+    assert.match(mensagemGenerica.text, /Que bom receber sua mensagem/);
+    assert.match(mensagemGenerica.text, /preciso de fé/);
+
     chamadasTelegram.length = 0;
     resposta = respostaFalsa();
     await handler({
@@ -98,7 +109,7 @@ async function executar() {
     assert.deepEqual(chamadasTelegram.map((chamada) => chamada.metodo), ['setMyCommands', 'setWebhook']);
     assert.ok(chamadasTelegram[0].dados.commands.some((item) => item.command === 'ajuda'));
 
-    console.log('Webhook, proteção e comandos personalizados validados.');
+    console.log('Webhook, proteção, comandos e respostas automáticas validados.');
   } finally {
     global.fetch = fetchOriginal;
   }
