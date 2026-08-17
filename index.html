@@ -11,22 +11,28 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Frases de Messias",
-    "url": "https://frasesdemessias.com.br/",
-    "inLanguage": "pt-BR",
-    "description": "Portal de frases de motivação, fé, amor e reflexão com uma comunidade de inspiração."
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Frases de Messias",
-    "url": "https://frasesdemessias.com.br/",
-    "sameAs": [
-      "https://www.instagram.com/frasesdemessias.com.br/",
-      "https://t.me/frasesdemessias"
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://frasesdemessias.com.br/#site",
+        "name": "Frases de Messias",
+        "url": "https://frasesdemessias.com.br/",
+        "inLanguage": "pt-BR",
+        "description": "Portal brasileiro de frases originais de motivação, fé, amor e reflexão para inspirar e compartilhar.",
+        "publisher": {"@id": "https://frasesdemessias.com.br/#organizacao"}
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://frasesdemessias.com.br/#organizacao",
+        "name": "Frases de Messias",
+        "url": "https://frasesdemessias.com.br/",
+        "logo": "https://frasesdemessias.com.br/imagens/1785461694182.png",
+        "sameAs": [
+          "https://www.instagram.com/frasesdemessias.com.br/",
+          "https://t.me/frasesdemessias",
+          "https://whatsapp.com/channel/0029Va94RaR3bbV779wzFL1J"
+        ]
+      }
     ]
   }
   </script>
