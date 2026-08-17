@@ -1474,3 +1474,123 @@ body.dark {
   cursor: not-allowed;
   animation: pulse 1.5s infinite;
 }
+
+/* Conteúdo editorial e links internos das páginas de categoria */
+.pagina-categoria main {
+  padding-bottom: 24px;
+}
+
+.pagina-categoria .categoria-hero {
+  text-align: left;
+}
+
+.pagina-categoria .categoria-hero h1 {
+  margin: 10px 0 12px;
+  color: #173b6c;
+  font-size: clamp(1.65rem, 4vw, 2.35rem);
+  line-height: 1.25;
+}
+
+.pagina-categoria .categoria-hero > p:last-of-type {
+  max-width: 760px;
+  margin: 0;
+  color: #40546c;
+  font-size: 1.05rem;
+}
+
+.breadcrumb {
+  margin: 0 0 8px;
+  color: #5f7187;
+  font-size: 0.92rem;
+}
+
+.breadcrumb a {
+  color: #176bd7;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover,
+.breadcrumb a:focus-visible {
+  text-decoration: underline;
+}
+
+.categoria-conteudo {
+  width: min(100% - 30px, 900px);
+  margin: 30px auto;
+  padding: clamp(22px, 4vw, 34px);
+  border: 1px solid #dbe9f9;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 8px 22px rgba(25, 76, 137, 0.08);
+}
+
+.categoria-conteudo h2 {
+  margin: 0 0 14px;
+  color: #174f92;
+  font-size: clamp(1.2rem, 3vw, 1.55rem);
+  line-height: 1.35;
+}
+
+.categoria-conteudo p {
+  margin: 0;
+  color: #40546c;
+  line-height: 1.75;
+}
+
+.categoria-conteudo p + p {
+  margin-top: 15px;
+}
+
+.texto-categorias-relacionadas {
+  margin: -8px 0 18px;
+  color: #52677f;
+  line-height: 1.6;
+}
+
+.pagina-categoria .categoria-links h2,
+.pagina-categoria .frases-categoria h2 {
+  color: #173b6c;
+}
+
+.dark .pagina-categoria .categoria-hero h1,
+.dark .pagina-categoria .categoria-links h2,
+.dark .pagina-categoria .frases-categoria h2,
+.dark .categoria-conteudo h2 {
+  color: #a9d2ff;
+}
+
+.dark .pagina-categoria .categoria-hero > p:last-of-type,
+.dark .breadcrumb,
+.dark .categoria-conteudo p,
+.dark .texto-categorias-relacionadas {
+  color: #c5d6e9;
+}
+
+.dark .breadcrumb a {
+  color: #7dc2ff;
+}
+
+.dark .categoria-conteudo {
+  border-color: #34506f;
+  background: #172a43;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.28);
+}
+
+@media (max-width: 600px) {
+  .pagina-categoria .categoria-hero {
+    margin: 18px 12px 24px;
+    padding: 22px 18px;
+  }
+
+  .pagina-categoria .categoria-hero h1 {
+    font-size: 1.6rem;
+  }
+
+  .categoria-conteudo {
+    width: calc(100% - 24px);
+    margin: 24px auto;
+    padding: 22px 18px;
+    border-radius: 14px;
+  }
+}
