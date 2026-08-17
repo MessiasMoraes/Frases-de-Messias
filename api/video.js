@@ -169,7 +169,7 @@ module.exports = async function renderVideo(req, res) {
       // O primeiro quadro é usado como miniatura por muitos players Android; ele precisa manter a capa visível.
       `fade=t=out:st=${RENDER_SECONDS - 1}:d=1`,
     ].join(",");
-    const audioFilter = `atrim=duration=${RENDER_SECONDS},volume=${trilha.volumeFundoDb}dB,afade=t=in:st=0:d=0.35,afade=t=out:st=${RENDER_SECONDS - 1}:d=1[a]`;
+    const audioFilter = `atrim=duration=${RENDER_SECONDS},volume=${trilha.volumeFundoDb}dB,afade=t=in:st=0:d=0.35,afade=t=out:st=${RENDER_SECONDS - 1}:d=1,alimiter=limit=0.95[a]`;
     await runCommand(sandbox, ffmpegPath, [
       "-y", "-loop", "1", "-i", "/tmp/input.jpg", "-stream_loop", "-1", "-i", "/tmp/trilha.mp3",
       "-filter_complex", `[0:v]${vf}[v];[1:a]${audioFilter}`,

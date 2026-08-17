@@ -43,6 +43,9 @@ async function executar() {
     assert.match(renderizadorDoSite, /-c:a", "aac"/);
     assert.match(renderizadorDoBot, /'-c:a', 'aac'/);
     assert.equal(configuracao.perfis.length, 6);
+    assert.equal(configuracao.volumeFundoDb, -12);
+    assert.match(renderizadorDoSite, /alimiter=limit=0\.95/);
+    assert.match(renderizadorDoBot, /alimiter=limit=0\.95/);
     assert.equal(selecionarTrilha({ quote: 'Em Deus encontro paz e esperança.', category: 'Reflexão' }).id, 'fe_esperanca');
     assert.equal(selecionarTrilha({ quote: 'Tenha força para superar os desafios.', category: 'Inspiração' }).id, 'motivacao');
     assert.equal(selecionarTrilha({ quote: 'O carinho torna a vida mais bonita.', category: 'Reflexão' }).id, 'amor');

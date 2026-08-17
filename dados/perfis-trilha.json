@@ -1,7 +1,7 @@
 {
-  "version": 1,
+  "version": 2,
   "duracaoFonteSegundos": 30,
-  "volumeFundoDb": -19,
+  "volumeFundoDb": -12,
   "perfis": [
     {
       "id": "fe_esperanca",

@@ -186,7 +186,7 @@ async function renderizarPedido(pedido) {
     });
     const arquivoTrilha = caminhoDaTrilha(trilha.arquivo);
     await sandbox.writeFiles([{ path: '/tmp/trilha.mp3', content: await fs.promises.readFile(arquivoTrilha) }]);
-    const filtroAudio = `atrim=duration=${VIDEO_SECONDS},volume=${trilha.volumeFundoDb}dB,afade=t=in:st=0:d=0.35,afade=t=out:st=${VIDEO_SECONDS - 1}:d=1[a]`;
+    const filtroAudio = `atrim=duration=${VIDEO_SECONDS},volume=${trilha.volumeFundoDb}dB,afade=t=in:st=0:d=0.35,afade=t=out:st=${VIDEO_SECONDS - 1}:d=1,alimiter=limit=0.95[a]`;
     await executar(sandbox, ffmpeg, [
       '-y', '-loop', '1', '-i', '/tmp/input.jpg', '-stream_loop', '-1', '-i', '/tmp/trilha.mp3',
       '-filter_complex', `[0:v]${filtro.video}[v];[1:a]${filtroAudio}`,
