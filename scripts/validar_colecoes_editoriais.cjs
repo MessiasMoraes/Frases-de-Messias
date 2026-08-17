@@ -59,7 +59,7 @@ for (const seletor of ['.grid-colecoes', '.card-colecao', '.card-frase-colecao',
   exigir(css.includes(seletor), `style.css: estilo esperado ausente (${seletor}).`);
 }
 
-if (index.includes('href="colecoes.html"') && !index.includes('style.css?v=20260817-colecoes-v1')) avisos.push('index.html: cache-busting do CSS não foi localizado; verifique a versão do stylesheet.');
+if (index.includes('href="colecoes.html"') && !index.includes('style.css?v=20260817-colecoes-v2')) avisos.push('index.html: cache-busting do CSS não foi localizado; verifique a versão do stylesheet.');
 
 if (erros.length) {
   console.error(`Falha na validação: ${erros.length} problema(s).`);
