@@ -1,5 +1,8 @@
 const crypto = require('node:crypto');
 
+const fs = require('node:fs');
+const { selecionarTrilha, caminhoDaTrilha } = require('./trilhas.js');
+
 const MAX_TEXT_LENGTH = 500;
 const MAX_AUTHOR_LENGTH = 120;
 const IMAGE_WIDTH = 1080;
@@ -176,18 +179,28 @@ async function renderizarPedido(pedido) {
       return { url: blob.url, tipo: 'imagem' };
     }
 
+    const trilha = selecionarTrilha({
+      quote: pedido.frase.texto,
+      author: pedido.frase.autor,
+      category: pedido.frase.categoria
+    });
+    const arquivoTrilha = caminhoDaTrilha(trilha.arquivo);
+    await sandbox.writeFiles([{ path: '/tmp/trilha.mp3', content: await fs.promises.readFile(arquivoTrilha) }]);
+    const filtroAudio = `atrim=duration=${VIDEO_SECONDS},volume=${trilha.volumeFundoDb}dB,afade=t=in:st=0:d=0.35,afade=t=out:st=${VIDEO_SECONDS - 1}:d=1[a]`;
     await executar(sandbox, ffmpeg, [
-      '-y', '-loop', '1', '-i', '/tmp/input.jpg', '-vf', filtro.video,
-      '-frames:v', String(VIDEO_SECONDS * FPS), '-an', '-c:v', 'libx264',
+      '-y', '-loop', '1', '-i', '/tmp/input.jpg', '-stream_loop', '-1', '-i', '/tmp/trilha.mp3',
+      '-filter_complex', `[0:v]${filtro.video}[v];[1:a]${filtroAudio}`,
+      '-map', '[v]', '-map', '[a]', '-t', String(VIDEO_SECONDS),
+      '-frames:v', String(VIDEO_SECONDS * FPS), '-c:v', 'libx264', '-c:a', 'aac', '-b:a', '128k',
       '-preset', 'veryfast', '-crf', '23', '-pix_fmt', 'yuv420p',
       '-g', String(FPS), '-keyint_min', String(FPS), '-sc_threshold', '0',
-      '-movflags', '+faststart', '/tmp/frase.mp4'
+      '-movflags', '+faststart', '-shortest', '/tmp/frase.mp4'
     ], 'Renderização do vídeo');
     const arquivo = await sandbox.readFileToBuffer({ path: '/tmp/frase.mp4' });
     const blob = await put(`telegram/videos/${identificador}.mp4`, arquivo, {
       access: 'public', contentType: 'video/mp4', cacheControlMaxAge: 3600
     });
-    return { url: blob.url, tipo: 'video' };
+    return { url: blob.url, tipo: 'video', trilha: { id: trilha.id, rotulo: trilha.rotulo } };
   } finally {
     if (sandbox) {
       try { await sandbox.delete(); }

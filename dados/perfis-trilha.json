@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "duracaoFonteSegundos": 30,
+  "volumeFundoDb": -19,
+  "perfis": [
+    {
+      "id": "fe_esperanca",
+      "arquivo": "fe-esperanca.mp3",
+      "rotulo": "Fé, esperança e paz",
+      "categorias": ["Fé", "Esperança", "Reflexão"],
+      "palavras": ["deus", "senhor", "jesus", "fé", "fe", "oração", "oracao", "paz", "milagre", "abenço", "abenco", "esperança", "esperanca"],
+      "prompt": "Instrumental only, no vocals. Create a 30-second background track at 64 BPM in C major. Serene spiritual ambient music for inspirational quote videos: warm felt piano, soft ethereal pads, subtle distant bell texture, sparse arrangement, lots of space between notes, peaceful and hopeful, wide but gentle stereo image, clean studio-quality mix. Avoid drums, percussion, dramatic swells, fast melodies, sadness, and any spoken words. [0:00 - 0:10] Immediate soft piano motif with airy pad, calm and welcoming. Intensity: 2/10. [0:10 - 0:22] Add a light shimmering texture while keeping the melody simple and spacious. Intensity: 3/10. [0:22 - 0:30] Return to the piano and pad, resolving gently without a sudden ending. Intensity: 2/10."
+    },
+    {
+      "id": "motivacao",
+      "arquivo": "motivacao.mp3",
+      "rotulo": "Força e superação",
+      "categorias": ["Motivação", "Superação"],
+      "palavras": ["força", "forca", "vencer", "superar", "coragem", "persistir", "conquistar", "vitória", "vitoria", "sonho", "objetivo"],
+      "prompt": "Instrumental only, no vocals. Create a 30-second background track at 88 BPM in D major. Uplifting cinematic-acoustic music for short motivational quote videos: bright piano, gentle acoustic guitar, soft pulse, minimal light percussion, warm optimistic tone, clean studio-quality mix. Keep it encouraging and elegant, never aggressive or loud; leave ample space for text. Avoid vocals, claps, heavy drums, EDM sounds, fast solos, abrupt changes, and any spoken words. [0:00 - 0:08] Start immediately with an inspiring piano and guitar motif. Intensity: 3/10. [0:08 - 0:21] Add a restrained rhythmic pulse and a subtle rising harmony. Intensity: 5/10. [0:21 - 0:30] Keep the energy hopeful and settle into a graceful resolution. Intensity: 4/10."
+    },
+    {
+      "id": "amor",
+      "arquivo": "amor.mp3",
+      "rotulo": "Amor e carinho",
+      "categorias": ["Amor", "Amizade"],
+      "palavras": ["amor", "coração", "coracao", "carinho", "saudade", "abraço", "abraco", "família", "familia", "amizade", "romance"],
+      "prompt": "Instrumental only, no vocals. Create a 30-second background track at 72 BPM in G major. Warm affectionate acoustic instrumental for short love quote videos: nylon-string guitar, soft piano, delicate sustained strings, intimate close-mic warmth, gentle reverb, sparse arrangement, tender and sincere mood. Avoid drums, percussion, melancholy, dramatic crescendos, flashy melodies, vocals, and any spoken words. [0:00 - 0:10] Begin immediately with a simple warm guitar and piano phrase. Intensity: 2/10. [0:10 - 0:22] Add a subtle string pad that supports the feeling of connection. Intensity: 3/10. [0:22 - 0:30] Let the guitar and piano resolve softly and naturally. Intensity: 2/10."
+    },
+    {
+      "id": "gratidao",
+      "arquivo": "gratidao.mp3",
+      "rotulo": "Gratidão e alegria",
+      "categorias": ["Gratidão", "Alegria"],
+      "palavras": ["gratidão", "gratidao", "agradeço", "agradeco", "feliz", "alegria", "bênção", "bencao", "conquista", "celebrar", "sorriso"],
+      "prompt": "Instrumental only, no vocals. Create a 30-second background track at 82 BPM in C major. Light joyful instrumental for gratitude quote videos: bright piano, gentle acoustic guitar, tiny soft glockenspiel accents, warm sunlight-like ambience, optimistic but refined, clean studio-quality mix. Keep the arrangement minimal and suitable beneath readable text. Avoid vocals, heavy percussion, party energy, abrupt transitions, complex solos, and any spoken words. [0:00 - 0:09] Start immediately with a clear optimistic piano motif. Intensity: 3/10. [0:09 - 0:21] Introduce gentle guitar and sparse sparkling accents. Intensity: 4/10. [0:21 - 0:30] Ease back to a light, grateful piano resolution. Intensity: 3/10."
+    },
+    {
+      "id": "bom_dia",
+      "arquivo": "bom-dia.mp3",
+      "rotulo": "Bom Dia e recomeço",
+      "categorias": ["Bom Dia"],
+      "palavras": ["bom dia", "amanhecer", "manhã", "manha", "novo dia", "recomeçar", "recomecar", "hoje"],
+      "prompt": "Instrumental only, no vocals. Create a 30-second background track at 86 BPM in D major. Fresh morning acoustic instrumental for inspirational good-morning quote videos: light acoustic guitar, clear piano, soft airy pad, warm bright tone, gentle forward motion, polished and uncluttered studio mix. Make it optimistic and refreshing, with no literal bird sounds. Avoid vocals, heavy drums, fast percussion, aggressive energy, sudden changes, and any spoken words. [0:00 - 0:08] Open immediately with bright guitar and piano, like a fresh sunrise. Intensity: 3/10. [0:08 - 0:21] Add a restrained uplifting pulse while retaining plenty of space. Intensity: 4/10. [0:21 - 0:30] Finish with a calm, sunny sustained chord and a simple piano motif. Intensity: 3/10."
+    },
+    {
+      "id": "boa_noite",
+      "arquivo": "boa-noite.mp3",
+      "rotulo": "Boa Noite e contemplação",
+      "categorias": ["Boa Noite"],
+      "palavras": ["boa noite", "noite", "descansar", "descanso", "silêncio", "silencio", "serenidade", "calma", "refletir"],
+      "prompt": "Instrumental only, no vocals. Create a 30-second background track at 56 BPM in A minor. Peaceful nighttime ambient piano music for reflective quote videos: soft felt piano, dark-warm synth pad, very subtle distant texture, intimate and spacious, slow breathing pace, clean high-quality studio mix. Keep it comforting rather than sad. Avoid drums, percussion, bass drops, sharp high notes, vocals, sudden swells, and any spoken words. [0:00 - 0:11] Begin immediately with a quiet piano phrase and a warm low pad. Intensity: 1/10. [0:11 - 0:22] Add a subtle sustained harmony, preserving silence between notes. Intensity: 2/10. [0:22 - 0:30] Gently release into a calm, peaceful ending. Intensity: 1/10."
+    }
+  ]
+}

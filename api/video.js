@@ -125,14 +125,17 @@ module.exports = async function renderVideo(req, res) {
       return;
     }
 
-    const { Sandbox } = await import("@vercel/sandbox");
-    const { put } = await import("@vercel/blob");
+    const { Sandbox } = require("@vercel/sandbox");
+    const { put } = require("@vercel/blob");
+    const { selecionarTrilha, caminhoDaTrilha } = require("./trilhas.js");
     const width = 1080;
     const height = formato === "feed" ? 1080 : 1920;
-    const quoteSize = formato === "feed" ? 58 : 68;
-    const authorSize = formato === "feed" ? 40 : 46;
+    const quoteSize = formato === "feed" ? 48 : 56;
+    const authorSize = formato === "feed" ? 29 : 34;
     const quoteText = wrapText(texto, formato === "feed" ? 27 : 31, formato === "feed" ? 6 : 8);
     const authorText = wrapText(autor, 28, 2);
+    const trilha = selecionarTrilha({ quote: quoteText, author: authorText, category: body.category });
+    const arquivoTrilha = caminhoDaTrilha(trilha.arquivo);
 
     sandbox = await Sandbox.create({
       name: `frases-video-${crypto.randomUUID()}`,
@@ -150,6 +153,7 @@ module.exports = async function renderVideo(req, res) {
       { path: "/tmp/author.txt", content: Buffer.from(cleanAuthor, "utf8") },
     ]);
     await runCommand(sandbox, "curl", ["-L", "--fail", "--max-time", "30", "--connect-timeout", "10", "-o", "/tmp/input.jpg", imageUrl], "Download da imagem");
+    await sandbox.writeFiles([{ path: "/tmp/trilha.mp3", content: await require("node:fs").promises.readFile(arquivoTrilha) }]);
 
     const ffmpegPath = String(process.env.FFMPEG_PATH || "/vercel/sandbox/ffmpeg");
     const fontDir = String(process.env.FFMPEG_FONT_DIR || "/vercel/sandbox/fonts");
@@ -164,12 +168,15 @@ module.exports = async function renderVideo(req, res) {
       // O primeiro quadro é usado como miniatura por muitos players Android; ele precisa manter a capa visível.
       `fade=t=out:st=${RENDER_SECONDS - 1}:d=1`,
     ].join(",");
+    const audioFilter = `atrim=duration=${RENDER_SECONDS},volume=${trilha.volumeFundoDb}dB,afade=t=in:st=0:d=0.35,afade=t=out:st=${RENDER_SECONDS - 1}:d=1[a]`;
     await runCommand(sandbox, ffmpegPath, [
-      "-y", "-loop", "1", "-i", "/tmp/input.jpg", "-vf", vf,
-      "-frames:v", String(RENDER_SECONDS * FPS), "-an", "-c:v", "libx264",
+      "-y", "-loop", "1", "-i", "/tmp/input.jpg", "-stream_loop", "-1", "-i", "/tmp/trilha.mp3",
+      "-filter_complex", `[0:v]${vf}[v];[1:a]${audioFilter}`,
+      "-map", "[v]", "-map", "[a]", "-t", String(RENDER_SECONDS),
+      "-frames:v", String(RENDER_SECONDS * FPS), "-c:v", "libx264", "-c:a", "aac", "-b:a", "128k",
       "-preset", "veryfast", "-crf", "23", "-pix_fmt", "yuv420p",
       "-g", String(FPS), "-keyint_min", String(FPS), "-sc_threshold", "0",
-      "-movflags", "+faststart", "/tmp/frases-de-messias.mp4",
+      "-movflags", "+faststart", "-shortest", "/tmp/frases-de-messias.mp4",
     ], "Renderização FFmpeg");
 
     const video = await sandbox.readFileToBuffer({ path: "/tmp/frases-de-messias.mp4" });
@@ -190,6 +197,7 @@ module.exports = async function renderVideo(req, res) {
       downloadUrl: blob.downloadUrl || `${blob.url}?download=1`,
       formato,
       filename: nomeArquivo,
+      trilha: { id: trilha.id, rotulo: trilha.rotulo },
     });
   } catch (error) {
     console.error("[render-video]", error);

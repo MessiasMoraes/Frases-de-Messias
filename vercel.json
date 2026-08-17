@@ -2,7 +2,8 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "functions": {
     "api/video.js": {
-      "maxDuration": 300
+      "maxDuration": 300,
+      "includeFiles": ["public/trilhas/**", "dados/perfis-trilha.json"]
     },
     "api/image.js": {
       "maxDuration": 15
@@ -12,7 +13,8 @@
       "includeFiles": "dados/frases-bot.json"
     },
     "api/telegram-media.js": {
-      "maxDuration": 300
+      "maxDuration": 300,
+      "includeFiles": ["public/trilhas/**", "dados/perfis-trilha.json"]
     }
   },
   "rewrites": [

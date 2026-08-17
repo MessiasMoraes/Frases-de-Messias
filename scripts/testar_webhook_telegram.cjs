@@ -3,6 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const handler = require('../api/telegram-webhook.js');
 const processadorMidia = require('../api/telegram-media.js');
+const { selecionarTrilha, caminhoDaTrilha, configuracao } = require('../api/trilhas.js');
 
 function respostaFalsa() {
   return {
@@ -39,6 +40,16 @@ async function executar() {
     const renderizadorDoBot = fs.readFileSync(path.join(__dirname, '..', 'api', 'telegram-media.js'), 'utf8');
     assert.match(renderizadorDoSite, /const RENDER_SECONDS = 15;/);
     assert.match(renderizadorDoBot, /const VIDEO_SECONDS = 15;/);
+    assert.match(renderizadorDoSite, /-c:a", "aac"/);
+    assert.match(renderizadorDoBot, /'-c:a', 'aac'/);
+    assert.equal(configuracao.perfis.length, 6);
+    assert.equal(selecionarTrilha({ quote: 'Em Deus encontro paz e esperança.', category: 'Reflexão' }).id, 'fe_esperanca');
+    assert.equal(selecionarTrilha({ quote: 'Tenha força para superar os desafios.', category: 'Inspiração' }).id, 'motivacao');
+    assert.equal(selecionarTrilha({ quote: 'O carinho torna a vida mais bonita.', category: 'Reflexão' }).id, 'amor');
+    assert.equal(selecionarTrilha({ quote: 'Sou grato por cada bênção.', category: 'Inspiração' }).id, 'gratidao');
+    assert.equal(selecionarTrilha({ quote: 'Bom dia! Hoje é um novo recomeço.', category: 'Inspiração' }).id, 'bom_dia');
+    assert.equal(selecionarTrilha({ quote: 'Boa noite. Descanse em paz.', category: 'Inspiração' }).id, 'boa_noite');
+    for (const perfil of configuracao.perfis) assert.ok(fs.existsSync(caminhoDaTrilha(perfil.arquivo)));
 
     delete process.env.TELEGRAM_BOT_TOKEN;
     delete process.env.TELEGRAM_WEBHOOK_SECRET;
@@ -157,7 +168,7 @@ async function executar() {
     assert.ok(chamadasTelegram[0].dados.commands.some((item) => item.command === 'video'));
     assert.ok(chamadasTelegram[0].dados.commands.some((item) => item.command === 'canal'));
 
-    console.log('Webhook, proteção, comandos, mídia de 15 segundos, canal e respostas automáticas validados.');
+    console.log('Webhook, proteção, comandos, mídia de 15 segundos com trilha automática, canal e respostas automáticas validados.');
   } finally {
     global.fetch = fetchOriginal;
   }
