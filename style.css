@@ -1721,3 +1721,52 @@ body.dark-mode .btn-explorar-colecoes:focus-visible {
   background: #8bb9ff;
   color: #10284f;
 }
+
+/* Download de imagem e vídeo nas coleções */
+.opcoes-download-colecao {
+  margin-top: 12px;
+  padding: 13px;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  background: #f8fbff;
+}
+.opcoes-download-colecao[hidden] { display: none; }
+.opcoes-download-colecao > p {
+  margin: 0 0 10px;
+  color: #34516e;
+  font-size: .82rem;
+  font-weight: 800;
+}
+.opcoes-download-colecao > div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+.opcoes-download-colecao button {
+  min-height: 44px;
+  padding: 9px 10px;
+  border: 1px solid #2563eb;
+  border-radius: 9px;
+  background: #fff;
+  color: #1d4ed8;
+  cursor: pointer;
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 800;
+  touch-action: manipulation;
+}
+.opcoes-download-colecao button:hover { background: #eaf3ff; }
+.opcoes-download-colecao .btn-video-colecao { background: #1d4ed8; color: #fff; }
+.opcoes-download-colecao .btn-video-colecao:hover { background: #1747a6; }
+.dark .opcoes-download-colecao { border-color: #365879; background: #102438; }
+.dark .opcoes-download-colecao > p { color: #c4d1de; }
+.dark .opcoes-download-colecao button { border-color: #69aef7; background: #142c45; color: #b7dbff; }
+.dark .opcoes-download-colecao .btn-video-colecao { background: #2b76bf; color: #fff; }
+@media (max-width: 480px) {
+  .acoes-colecao button { flex: 1 1 120px; }
+  .opcoes-download-colecao > div { grid-template-columns: 1fr; }
+  .opcoes-download-colecao button { min-height: 47px; font-size: .9rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .opcoes-download-colecao button { transition: none; }
+}

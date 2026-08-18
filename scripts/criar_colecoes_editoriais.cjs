@@ -58,6 +58,16 @@ function htmlColecao(colecao) {
           <div class="acoes-colecao" aria-label="Ações da frase">
             <button type="button" data-copiar-frase="${escapar(texto)}">Copiar</button>
             <button type="button" data-compartilhar-frase="${escapar(texto)}" data-titulo="${escapar(colecao.tituloCurto)}">Compartilhar</button>
+            <button type="button" class="btn-baixar-colecao" data-alternar-download aria-expanded="false">📥 Baixar</button>
+          </div>
+          <div class="opcoes-download-colecao" data-opcoes-download hidden aria-label="Formatos disponíveis para baixar">
+            <p>Escolha o formato:</p>
+            <div>
+              <button type="button" data-baixar-imagem="story">📱 Imagem Story</button>
+              <button type="button" data-baixar-imagem="feed">🖼️ Imagem Feed</button>
+              <button type="button" class="btn-video-colecao" data-baixar-video="story">🎬 Vídeo Story</button>
+              <button type="button" class="btn-video-colecao" data-baixar-video="feed">🎬 Vídeo Feed</button>
+            </div>
           </div>
         </article>`).join('');
   const relacionados = colecao.relacionados.map(([nome, url]) => `<a class="btn-colecao-relacionada" href="${url}">${nome}</a>`).join('');
@@ -81,7 +91,7 @@ function htmlColecao(colecao) {
   <meta name="twitter:image" content="${imagemSocial}">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#4A90E2">
-  <link rel="stylesheet" href="style.css?v=20260817-colecoes-v2">
+  <link rel="stylesheet" href="style.css?v=20260818-colecoes-midia-v1">
   <script type="application/ld+json">${dadosEstruturados(colecao)}</script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-3TZ1W3722P"></script>
   <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-3TZ1W3722P');</script>
@@ -116,7 +126,7 @@ function htmlColecao(colecao) {
   </main>
   <footer><p>© 2026 Frases de Messias</p><p><a href="index.html">Início</a> · <a href="colecoes.html">Coleções</a> · <a href="contato.html">Contato</a></p></footer>
   <button id="temaBtn" type="button" aria-pressed="false">🌙 Modo Escuro</button>
-  <script type="module" src="colecoes.js?v=20260817-v2"></script>
+  <script type="module" src="colecoes.js?v=20260818-midia-v1"></script>
 </body>
 </html>`;
 }
