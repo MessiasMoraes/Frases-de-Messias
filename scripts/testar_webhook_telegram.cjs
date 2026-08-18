@@ -74,6 +74,7 @@ async function executar() {
     assert.ok(resposta.body.comandos.includes('/video'));
     assert.ok(resposta.body.comandos.includes('/canal'));
     assert.ok(resposta.body.comandos.includes('/whatsapp'));
+    assert.ok(resposta.body.comandos.includes('/colecoes'));
 
     resposta = respostaFalsa();
     await handler({ method: 'POST', headers: {}, body: {} }, resposta);
@@ -100,6 +101,7 @@ async function executar() {
     assert.match(ajuda.text, /\/video/);
     assert.match(ajuda.text, /\/canal/);
     assert.match(ajuda.text, /\/whatsapp/);
+    assert.match(ajuda.text, /\/colecoes/);
 
     const amor = await testarComando('/amor');
     assert.match(amor.text, /<i>Amor<\/i>/);
@@ -108,6 +110,13 @@ async function executar() {
     const hojeSegunda = await testarComando('/hoje');
     assert.match(hojePrimeira.text, /Frase do dia/);
     assert.equal(hojePrimeira.text, hojeSegunda.text);
+
+    const colecoes = await testarComando('/colecoes');
+    assert.match(colecoes.text, /Coleções de Frases/);
+    assert.equal(colecoes.reply_markup.inline_keyboard[0][0].url, 'https://frasesdemessias.com.br/colecoes.html');
+
+    const inicio = await testarComando('/start');
+    assert.ok(inicio.reply_markup.inline_keyboard.some((linha) => linha.some((botao) => botao.url === 'https://frasesdemessias.com.br/colecoes.html')));
 
     const whatsapp = await testarComando('/whatsapp');
     assert.equal(
@@ -170,8 +179,9 @@ async function executar() {
     assert.ok(chamadasTelegram[0].dados.commands.some((item) => item.command === 'imagem'));
     assert.ok(chamadasTelegram[0].dados.commands.some((item) => item.command === 'video'));
     assert.ok(chamadasTelegram[0].dados.commands.some((item) => item.command === 'canal'));
+    assert.ok(chamadasTelegram[0].dados.commands.some((item) => item.command === 'colecoes'));
 
-    console.log('Webhook, proteção, comandos, mídia de 15 segundos com trilha automática, canal e respostas automáticas validados.');
+    console.log('Webhook, proteção, comandos, mídia de 15 segundos com trilha automática, canal, coleções e respostas automáticas validados.');
   } finally {
     global.fetch = fetchOriginal;
   }
