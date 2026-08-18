@@ -206,6 +206,10 @@ async function copiarTexto(texto) {
   }
 }
 
+function fraseEstatica(frase) {
+  return frase?.origem === "publica-estatica";
+}
+
 async function curtir(frase) {
   const chave = `like_${frase.id}`;
   if (localStorage.getItem(chave)) {
@@ -214,7 +218,9 @@ async function curtir(frase) {
   }
 
   try {
-    await updateDoc(doc(db, "frases", frase.id), { curtidas: increment(1) });
+    if (!fraseEstatica(frase)) {
+      await updateDoc(doc(db, "frases", frase.id), { curtidas: increment(1) });
+    }
     localStorage.setItem(chave, "1");
     frase.curtidas = Number(frase.curtidas || 0) + 1;
     renderizar(frasesDaCategoria);
@@ -233,7 +239,9 @@ async function compartilhar(frase) {
       await copiarTexto(texto);
       alert("Link e frase copiados para compartilhar.");
     }
-    await updateDoc(doc(db, "frases", frase.id), { compartilhamentos: increment(1) });
+    if (!fraseEstatica(frase)) {
+      await updateDoc(doc(db, "frases", frase.id), { compartilhamentos: increment(1) });
+    }
     frase.compartilhamentos = Number(frase.compartilhamentos || 0) + 1;
     renderizar(frasesDaCategoria);
   } catch (erro) {
@@ -689,15 +697,24 @@ function configurarTema() {
   });
 }
 
+async function carregarFrasesExpansaoPublica() {
+  const resposta = await fetch("dados/frases-expansao-publica.json", { cache: "no-store" });
+  if (!resposta.ok) throw new Error(`Falha ao carregar a expansão pública: HTTP ${resposta.status}`);
+  const dados = await resposta.json();
+  if (!Array.isArray(dados)) throw new Error("A expansão pública de frases está em formato inválido.");
+  return dados.filter((frase) => frase?.categoria === categoria && String(frase.texto || "").trim());
+}
+
 async function carregarCategoria() {
   if (!categoria || !lista) return;
   mostrarCarregando();
 
   try {
-    const [resultadoCategorias, resultadoFrases] = await Promise.all([
+    const [resultadoCategorias, resultadoFrases, frasesExpansao] = await Promise.all([
       getDocs(collection(db, "categorias")),
       // Cada página consulta apenas sua própria categoria, em vez de todo o acervo.
-      getDocs(query(collection(db, "frases"), where("categoria", "==", categoria)))
+      getDocs(query(collection(db, "frases"), where("categoria", "==", categoria))),
+      carregarFrasesExpansaoPublica()
     ]);
 
     resultadoCategorias.forEach((documento) => {
@@ -706,8 +723,10 @@ async function carregarCategoria() {
       if (nome) imagensCategorias[nome] = dados.imagem || "";
     });
 
-    frasesDaCategoria = resultadoFrases.docs
+    const frasesFirestore = resultadoFrases.docs
       .map((documento) => ({ id: documento.id, ...documento.data() }));
+    const ids = new Set(frasesFirestore.map((frase) => frase.id));
+    frasesDaCategoria = [...frasesFirestore, ...frasesExpansao.filter((frase) => !ids.has(frase.id))];
 
     renderizar(frasesDaCategoria);
   } catch (erro) {
