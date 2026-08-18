@@ -2,7 +2,7 @@ const busca = document.getElementById('buscaColecao');
 const lista = document.getElementById('listaFrasesColecao');
 const contador = document.getElementById('contadorColecao');
 const semResultado = document.getElementById('semResultadoColecao');
-const IMAGEM_PADRAO = new URL('imagens/1785461694182.png', window.location.href).href;
+const IMAGEM_PADRAO = new URL('imagens/fundo-frases-sereno.png', window.location.href).href;
 const ORIGEM_API_PADRAO = 'https://frasesdemessiascombr.vercel.app';
 
 function normalizar(valor = '') {
