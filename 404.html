@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,follow">
+  <meta name="theme-color" content="#1f5eb8">
+  <title>Página não encontrada | Frases de Messias</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    :root {
+      --azul: #1f5eb8;
+      --azul-escuro: #123d78;
+      --azul-suave: #e9f2ff;
+      --texto: #17304d;
+      --texto-suave: #5b6d82;
+      --fundo: #f6f9fe;
+      --card: #ffffff;
+      --borda: #dbe7f7;
+      --sombra: 0 20px 50px rgba(19, 61, 120, .14);
+    }
+
+    * { box-sizing: border-box; }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--texto);
+      background:
+        radial-gradient(circle at 8% 5%, rgba(86, 150, 255, .18), transparent 28rem),
+        radial-gradient(circle at 92% 94%, rgba(255, 202, 93, .15), transparent 28rem),
+        var(--fundo);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body.escuro {
+      --texto: #eaf2ff;
+      --texto-suave: #bdcae0;
+      --fundo: #0d1d32;
+      --card: #142a47;
+      --borda: #28496f;
+      --azul-suave: #173d69;
+      --sombra: 0 20px 50px rgba(0, 0, 0, .3);
+    }
+
+    a { color: inherit; }
+
+    .topo {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+      padding-top: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .marca {
+      color: var(--azul);
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 1.12rem;
+      letter-spacing: -.02em;
+    }
+
+    .marca span { font-size: 1.35rem; }
+
+    .controle-tema {
+      width: 46px;
+      height: 46px;
+      border: 0;
+      border-radius: 50%;
+      background: var(--azul);
+      color: #fff;
+      font-size: 1.18rem;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(31, 94, 184, .25);
+    }
+
+    .controle-tema:focus-visible,
+    .botao:focus-visible,
+    .atalho:focus-visible,
+    .campo-busca:focus-visible {
+      outline: 3px solid #f6be3e;
+      outline-offset: 3px;
+    }
+
+    main {
+      width: min(1160px, calc(100% - 32px));
+      min-height: calc(100vh - 118px);
+      margin: 0 auto;
+      display: grid;
+      place-items: center;
+      padding: 36px 0 58px;
+    }
+
+    .painel {
+      width: 100%;
+      max-width: 900px;
+      background: var(--card);
+      border: 1px solid var(--borda);
+      border-radius: 28px;
+      box-shadow: var(--sombra);
+      overflow: hidden;
+    }
+
+    .cabecalho-painel {
+      padding: 46px 40px 26px;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(31, 94, 184, .08), rgba(112, 178, 255, .02));
+      border-bottom: 1px solid var(--borda);
+    }
+
+    .numero {
+      margin: 0;
+      color: var(--azul);
+      font-size: clamp(4.4rem, 13vw, 7.5rem);
+      line-height: .84;
+      font-weight: 900;
+      letter-spacing: -.09em;
+      text-shadow: 0 8px 0 rgba(31, 94, 184, .08);
+    }
+
+    .selo {
+      display: inline-block;
+      margin: 25px 0 10px;
+      color: var(--azul);
+      background: var(--azul-suave);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+
+    h1 {
+      max-width: 630px;
+      margin: 0 auto;
+      font-size: clamp(1.65rem, 4vw, 2.45rem);
+      line-height: 1.15;
+      letter-spacing: -.04em;
+    }
+
+    .descricao {
+      max-width: 620px;
+      margin: 16px auto 0;
+      color: var(--texto-suave);
+      font-size: 1.04rem;
+      line-height: 1.6;
+    }
+
+    .conteudo { padding: 30px 40px 40px; }
+
+    .acoes-principais {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .botao {
+      min-height: 49px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: 13px;
+      text-decoration: none;
+      font-weight: 800;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: transform .16s ease, background .16s ease;
+    }
+
+    .botao:active, .atalho:active { transform: scale(.97); }
+    .botao-primario { color: #fff; background: var(--azul); }
+    .botao-secundario { color: var(--azul); background: var(--azul-suave); border-color: #c9dbf5; }
+
+    .busca-area {
+      max-width: 650px;
+      margin: 30px auto 0;
+      padding: 22px;
+      border: 1px solid var(--borda);
+      border-radius: 18px;
+      background: color-mix(in srgb, var(--azul-suave) 45%, transparent);
+    }
+
+    .busca-area h2 { margin: 0; font-size: 1.08rem; }
+    .busca-area p { margin: 7px 0 15px; color: var(--texto-suave); font-size: .93rem; line-height: 1.45; }
+    .form-busca { display: flex; gap: 10px; }
+
+    .campo-busca {
+      width: 100%;
+      min-height: 48px;
+      padding: 0 15px;
+      border: 1px solid #b9cbe5;
+      border-radius: 12px;
+      color: var(--texto);
+      background: var(--card);
+      font: inherit;
+    }
+
+    .resultado-busca {
+      min-height: 0;
+      margin: 14px 2px 0;
+      color: var(--texto-suave);
+      font-size: .92rem;
+      line-height: 1.45;
+    }
+
+    .resultado-busca:not([hidden]) { display: block; }
+    .resultado-busca a { color: var(--azul); font-weight: 800; }
+
+    .secao-atalhos { margin-top: 32px; }
+    .secao-atalhos h2 { margin: 0 0 14px; text-align: center; font-size: 1.08rem; }
+
+    .atalhos {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .atalho {
+      min-height: 110px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 7px;
+      padding: 14px 8px;
+      color: var(--texto);
+      text-decoration: none;
+      text-align: center;
+      border: 1px solid var(--borda);
+      border-radius: 16px;
+      background: var(--card);
+      font-weight: 800;
+      font-size: .92rem;
+      transition: transform .16s ease, border-color .16s ease, background .16s ease;
+    }
+
+    .atalho:hover { transform: translateY(-3px); border-color: #7ca8e3; background: var(--azul-suave); }
+    .atalho .icone { font-size: 1.55rem; }
+
+    .rodape-painel {
+      margin-top: 28px;
+      color: var(--texto-suave);
+      text-align: center;
+      font-size: .88rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 660px) {
+      .topo, main { width: min(100% - 22px, 1160px); }
+      main { padding: 24px 0 38px; }
+      .painel { border-radius: 22px; }
+      .cabecalho-painel { padding: 37px 20px 24px; }
+      .conteudo { padding: 24px 16px 30px; }
+      .form-busca { flex-direction: column; }
+      .form-busca .botao { width: 100%; }
+      .atalhos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .atalho { min-height: 98px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topo">
+    <a class="marca" href="index.html" aria-label="Ir para o início do Frases de Messias"><span>📖</span> Frases de Messias</a>
+    <button class="controle-tema" id="controleTema" type="button" aria-label="Ativar modo escuro" title="Alternar modo escuro">🌙</button>
+  </header>
+
+  <main>
+    <section class="painel" aria-labelledby="tituloErro">
+      <div class="cabecalho-painel">
+        <p class="numero" aria-label="Erro 404">404</p>
+        <p class="selo">PÁGINA NÃO ENCONTRADA</p>
+        <h1 id="tituloErro">Esta página não está mais por aqui.</h1>
+        <p class="descricao">Talvez o link esteja incompleto, a página tenha mudado de endereço ou você tenha recebido um link antigo. Mas a inspiração continua disponível.</p>
+      </div>
+
+      <div class="conteudo">
+        <div class="acoes-principais">
+          <a class="botao botao-primario" href="index.html">🏠 Voltar ao início</a>
+          <a class="botao botao-secundario" href="categorias.html">📂 Ver categorias</a>
+          <a class="botao botao-secundario" href="colecoes.html">✨ Explorar coleções</a>
+        </div>
+
+        <section class="busca-area" aria-labelledby="tituloBusca">
+          <h2 id="tituloBusca">Encontre uma frase por assunto</h2>
+          <p>Digite, por exemplo, fé, Deus, motivação, amor, bom dia ou paz.</p>
+          <form class="form-busca" id="formBusca404" role="search">
+            <label class="sr-only" for="busca404">Buscar uma categoria de frases</label>
+            <input class="campo-busca" id="busca404" name="busca" type="search" autocomplete="off" placeholder="Ex.: frases de fé" maxlength="80">
+            <button class="botao botao-primario" type="submit">Buscar</button>
+          </form>
+          <p class="resultado-busca" id="resultadoBusca" role="status" aria-live="polite" hidden></p>
+        </section>
+
+        <section class="secao-atalhos" aria-labelledby="tituloAtalhos">
+          <h2 id="tituloAtalhos">Ou escolha um caminho rápido</h2>
+          <div class="atalhos">
+            <a class="atalho" href="frases-de-fe.html"><span class="icone" aria-hidden="true">🙏</span>Frases de Fé</a>
+            <a class="atalho" href="frases-de-motivacao.html"><span class="icone" aria-hidden="true">💪</span>Motivação</a>
+            <a class="atalho" href="frases-de-amor.html"><span class="icone" aria-hidden="true">❤️</span>Amor</a>
+            <a class="atalho" href="frases-de-bom-dia.html"><span class="icone" aria-hidden="true">☀️</span>Bom Dia</a>
+          </div>
+        </section>
+
+        <p class="rodape-painel">Você também pode acessar a <a href="comunidade.html">Comunidade</a>, salvar frases nos <a href="favoritos.html">Favoritos</a> ou entrar em contato conosco.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const temaSalvo = localStorage.getItem('temaFrasesMessias');
+      const corpo = document.body;
+      const controleTema = document.getElementById('controleTema');
+
+      function aplicarTema(escuro) {
+        corpo.classList.toggle('escuro', escuro);
+        controleTema.textContent = escuro ? '☀️' : '🌙';
+        controleTema.setAttribute('aria-label', escuro ? 'Ativar modo claro' : 'Ativar modo escuro');
+      }
+
+      aplicarTema(temaSalvo === 'escuro');
+      controleTema.addEventListener('click', function () {
+        const escuro = !corpo.classList.contains('escuro');
+        localStorage.setItem('temaFrasesMessias', escuro ? 'escuro' : 'claro');
+        aplicarTema(escuro);
+      });
+
+      const destinos = [
+        { termos: ['fe', 'fé', 'deus', 'oracao', 'oração', 'biblia', 'bíblia', 'esperanca', 'esperança'], href: 'frases-de-fe.html', nome: 'Frases de Fé' },
+        { termos: ['motivacao', 'motivação', 'motivar', 'sucesso', 'forca', 'força', 'nao desistir', 'não desistir'], href: 'frases-de-motivacao.html', nome: 'Frases de Motivação' },
+        { termos: ['amor', 'casal', 'romantica', 'romântica'], href: 'frases-de-amor.html', nome: 'Frases de Amor' },
+        { termos: ['bom dia', 'manha', 'manhã', 'comecar o dia', 'começar o dia'], href: 'frases-de-bom-dia.html', nome: 'Frases de Bom Dia' },
+        { termos: ['boa noite', 'noite'], href: 'frases-de-boa-noite.html', nome: 'Frases de Boa Noite' },
+        { termos: ['paz', 'calma', 'tranquilidade'], href: 'frases-de-paz.html', nome: 'Frases de Paz' },
+        { termos: ['gratidao', 'gratidão', 'agradecimento'], href: 'frases-de-gratidao.html', nome: 'Frases de Gratidão' },
+        { termos: ['superacao', 'superação', 'recomeco', 'recomeço'], href: 'frases-de-superacao.html', nome: 'Frases de Superação' },
+        { termos: ['whatsapp', 'status'], href: 'frases-para-whatsapp.html', nome: 'Frases para WhatsApp' }
+      ];
+
+      document.getElementById('formBusca404').addEventListener('submit', function (evento) {
+        evento.preventDefault();
+        const termo = document.getElementById('busca404').value.trim().toLocaleLowerCase('pt-BR');
+        const resultado = document.getElementById('resultadoBusca');
+
+        if (!termo) {
+          resultado.hidden = false;
+          resultado.textContent = 'Digite um tema para encontrar uma página de frases.';
+          return;
+        }
+
+        const destino = destinos.find(function (item) {
+          return item.termos.some(function (palavra) { return termo.includes(palavra) || palavra.includes(termo); });
+        });
+
+        if (destino) {
+          window.location.href = destino.href;
+          return;
+        }
+
+        resultado.hidden = false;
+        resultado.innerHTML = 'Ainda não encontrei uma categoria exata para “' + termo.replace(/[<>&"']/g, '') + '”. Veja todas as <a href="categorias.html">categorias</a> ou as <a href="colecoes.html">coleções especiais</a> disponíveis.';
+      });
+    }());
+  </script>
+</body>
+</html>
