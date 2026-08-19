@@ -5,6 +5,8 @@ import {
   collectionGroup,
   deleteDoc,
   doc,
+  getCountFromServer,
+  getDoc,
   onSnapshot,
   query,
   setDoc,
@@ -26,7 +28,24 @@ const refs = {
   sair: $("sairModeracao"),
   total: $("totalPendencias"),
   lista: $("listaPendencias"),
-  template: $("templatePendencia")
+  template: $("templatePendencia"),
+  atualizarEstatisticas: $("atualizarEstatisticas"),
+  atualizacaoEstatisticas: $("atualizacaoEstatisticas"),
+  membros: $("estatisticaMembros"),
+  publicacoes: $("estatisticaPublicacoes"),
+  comentarios: $("estatisticaComentarios"),
+  seguidores: $("estatisticaSeguidores"),
+  visitas: $("estatisticaVisitas"),
+  publicacoesPendentes: $("estatisticaPublicacoesPendentes"),
+  comentariosPendentes: $("estatisticaComentariosPendentes"),
+  denuncias: $("estatisticaDenuncias"),
+  restricoes: $("estatisticaRestricoes"),
+  resumoPublicadas: $("resumoPublicadas"),
+  resumoPendentes: $("resumoPendentes"),
+  resumoRemovidas: $("resumoRemovidas"),
+  barraPublicadas: $("barraPublicadas"),
+  barraPendentes: $("barraPendentes"),
+  barraRemovidas: $("barraRemovidas")
 };
 
 let cancelarPublicacoes = null;
@@ -62,6 +81,85 @@ function mensagem(texto = "", erro = false) {
 
 function eAdministrador(usuario) {
   return usuario?.email?.toLowerCase() === EMAIL_ADMINISTRADOR;
+}
+
+function formatarNumero(valor) {
+  return new Intl.NumberFormat("pt-BR", { notation: "compact", maximumFractionDigits: 1 }).format(Math.max(0, Number(valor) || 0));
+}
+
+function definirIndicador(referencia, valor) {
+  referencia.textContent = Number.isFinite(valor) ? formatarNumero(valor) : "—";
+}
+
+async function contarRegistros(consulta) {
+  const resultado = await getCountFromServer(consulta);
+  return Number(resultado.data().count || 0);
+}
+
+function atualizarResumoDePublicacoes(publicadas, pendentes, removidas) {
+  definirIndicador(refs.resumoPublicadas, publicadas);
+  definirIndicador(refs.resumoPendentes, pendentes);
+  definirIndicador(refs.resumoRemovidas, removidas);
+
+  const total = publicadas + pendentes + removidas;
+  const largura = (valor) => `${total ? Math.max(0, (valor / total) * 100) : 0}%`;
+  refs.barraPublicadas.style.width = largura(publicadas);
+  refs.barraPendentes.style.width = largura(pendentes);
+  refs.barraRemovidas.style.width = largura(removidas);
+  const descricao = `${formatarNumero(publicadas)} publicadas, ${formatarNumero(pendentes)} pendentes e ${formatarNumero(removidas)} removidas.`;
+  refs.barraPublicadas.parentElement.setAttribute("aria-label", descricao);
+}
+
+async function carregarEstatisticas() {
+  refs.atualizarEstatisticas.disabled = true;
+  refs.atualizacaoEstatisticas.textContent = "Atualizando indicadores...";
+
+  const publicacoes = collection(db, "comunidadePublicacoes");
+  const resultados = await Promise.allSettled([
+    contarRegistros(collection(db, "comunidadePerfis")),
+    contarRegistros(query(publicacoes, where("status", "==", "publicado"))),
+    contarRegistros(query(collectionGroup(db, "comentarios"), where("status", "==", "publicado"))),
+    contarRegistros(collectionGroup(db, "seguidores")),
+    contarRegistros(query(publicacoes, where("status", "==", "pendente"))),
+    contarRegistros(query(collectionGroup(db, "comentarios"), where("status", "==", "pendente"))),
+    contarRegistros(query(collection(db, "comunidadeDenuncias"), where("status", "==", "aberta"))),
+    contarRegistros(collection(db, "comunidadeRestricoes")),
+    contarRegistros(query(publicacoes, where("status", "==", "removido"))),
+    getDoc(doc(db, "estatisticas", "global"))
+  ]);
+
+  const valor = (indice) => resultados[indice]?.status === "fulfilled" ? resultados[indice].value : NaN;
+  const membros = valor(0);
+  const publicadas = valor(1);
+  const comentarios = valor(2);
+  const seguidores = valor(3);
+  const publicacoesPendentes = valor(4);
+  const comentariosPendentes = valor(5);
+  const denuncias = valor(6);
+  const restricoes = valor(7);
+  const removidas = valor(8);
+  const documentoVisitas = resultados[9]?.status === "fulfilled" ? resultados[9].value : null;
+  const visitas = documentoVisitas?.exists?.() ? Number(documentoVisitas.data()?.visitas || 0) : 0;
+
+  definirIndicador(refs.membros, membros);
+  definirIndicador(refs.publicacoes, publicadas);
+  definirIndicador(refs.comentarios, comentarios);
+  definirIndicador(refs.seguidores, seguidores);
+  definirIndicador(refs.visitas, visitas);
+  definirIndicador(refs.publicacoesPendentes, publicacoesPendentes);
+  definirIndicador(refs.comentariosPendentes, comentariosPendentes);
+  definirIndicador(refs.denuncias, denuncias);
+  definirIndicador(refs.restricoes, restricoes);
+
+  if ([publicadas, publicacoesPendentes, removidas].every(Number.isFinite)) {
+    atualizarResumoDePublicacoes(publicadas, publicacoesPendentes, removidas);
+  }
+
+  const falhas = resultados.filter((resultado) => resultado.status === "rejected").length;
+  refs.atualizacaoEstatisticas.textContent = falhas
+    ? `Atualizado com ${falhas} indicador(es) indisponível(is).`
+    : `Dados atualizados em ${new Intl.DateTimeFormat("pt-BR", { timeStyle: "short" }).format(new Date())}.`;
+  refs.atualizarEstatisticas.disabled = false;
 }
 
 function limparObservadores() {
@@ -343,6 +441,7 @@ refs.formulario.addEventListener("submit", async (evento) => {
 });
 
 refs.sair.addEventListener("click", () => signOut(auth));
+refs.atualizarEstatisticas.addEventListener("click", () => { void carregarEstatisticas(); });
 
 onAuthStateChanged(auth, (usuario) => {
   const autorizado = eAdministrador(usuario);
@@ -358,6 +457,10 @@ onAuthStateChanged(auth, (usuario) => {
     return;
   }
 
-  if (autorizado) observarPendencias();
-  else limparObservadores();
+  if (autorizado) {
+    observarPendencias();
+    void carregarEstatisticas();
+  } else {
+    limparObservadores();
+  }
 });
