@@ -6,6 +6,75 @@ const contador = document.getElementById('contadorColecao');
 const semResultado = document.getElementById('semResultadoColecao');
 const IMAGEM_PADRAO = new URL('imagens/fundo-frases-sereno.png', window.location.href).href;
 const ORIGEM_API_PADRAO = 'https://frasesdemessiascombr.vercel.app';
+const FUNDOS_GERAIS = [
+  'imagens/fundo-frases-sereno.png',
+  'imagens/categorias/vida.png',
+  'imagens/categorias/reflexao.png',
+  'imagens/categorias/motivacao.png',
+  'imagens/categorias/esperanca.png',
+  'imagens/categorias/gratidao.png',
+  'imagens/categorias/sucesso.png'
+];
+const FUNDOS_POR_TEMA = {
+  amizade: ['amizade', 'amor', 'familia', 'gratidao', 'vida'],
+  'amor proprio': ['amor', 'vida', 'reflexao', 'sucesso', 'motivacao'],
+  aniversario: ['bom-dia', 'gratidao', 'amizade', 'vida', 'sucesso'],
+  'boa noite': ['boa-noite', 'reflexao', 'vida', 'fe', 'esperanca'],
+  'boa semana': ['bom-dia', 'sucesso', 'motivacao', 'vida', 'gratidao'],
+  'bom dia': ['bom-dia', 'vida', 'motivacao', 'esperanca', 'gratidao'],
+  carinho: ['amor', 'amizade', 'familia', 'gratidao', 'vida'],
+  casal: ['amor', 'amizade', 'familia', 'vida', 'gratidao'],
+  domingo: ['boa-noite', 'vida', 'gratidao', 'fe', 'esperanca'],
+  esperanca: ['esperanca', 'fe', 'vida', 'motivacao', 'reflexao'],
+  fe: ['fe', 'esperanca', 'vida', 'reflexao', 'gratidao'],
+  gratidao: ['gratidao', 'vida', 'familia', 'amizade', 'bom-dia'],
+  legenda: ['vida', 'reflexao', 'amor', 'sucesso', 'motivacao'],
+  motivacao: ['motivacao', 'sucesso', 'vida', 'esperanca', 'reflexao'],
+  mae: ['familia', 'amor', 'gratidao', 'amizade', 'vida'],
+  'novo dia': ['bom-dia', 'vida', 'motivacao', 'esperanca', 'gratidao'],
+  pai: ['familia', 'amor', 'gratidao', 'amizade', 'vida'],
+  paz: ['reflexao', 'boa-noite', 'esperanca', 'vida', 'fe'],
+  reflexao: ['reflexao', 'vida', 'motivacao', 'esperanca', 'gratidao'],
+  saudade: ['amizade', 'familia', 'amor', 'reflexao', 'vida'],
+  status: ['vida', 'sucesso', 'reflexao', 'motivacao', 'amor'],
+  superacao: ['motivacao', 'esperanca', 'sucesso', 'vida', 'reflexao'],
+  trabalho: ['sucesso', 'motivacao', 'vida', 'reflexao', 'esperanca'],
+  vida: ['vida', 'reflexao', 'motivacao', 'esperanca', 'gratidao']
+};
+
+function caminhoImagem(nome) {
+  return new URL(`imagens/categorias/${nome}.png`, window.location.href).href;
+}
+
+function hashDeterministico(valor = '') {
+  let hash = 2166136261;
+  for (let indice = 0; indice < valor.length; indice += 1) {
+    hash ^= valor.charCodeAt(indice);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function configuracaoVisual(card) {
+  const texto = String(card?.dataset.texto || '');
+  const tema = normalizar(card?.dataset.tema || '');
+  const hash = hashDeterministico(`${tema}|${texto}`);
+  const opcoesDoTema = FUNDOS_POR_TEMA[tema];
+  const opcoes = opcoesDoTema?.length
+    ? opcoesDoTema.map(caminhoImagem)
+    : FUNDOS_GERAIS.map((caminho) => new URL(caminho, window.location.href).href);
+  return {
+    fundo: opcoes[hash % opcoes.length] || IMAGEM_PADRAO,
+    // Mantém o mesmo enquadramento quando a frase for baixada novamente,
+    // mas cria variação visual mesmo quando duas frases usam a mesma foto-base.
+    focoX: 0.08 + (((hash & 0xffff) / 0xffff) * 0.84),
+    focoY: 0.08 + ((((hash >>> 16) & 0xffff) / 0xffff) * 0.84)
+  };
+}
+
+function escolherFundo(card) {
+  return configuracaoVisual(card).fundo;
+}
 
 function normalizar(valor = '') {
   return String(valor)
@@ -157,7 +226,7 @@ function quebrarLinhas(ctx, texto, larguraMaxima) {
   return linhas;
 }
 
-function desenharImagemDeFundo(ctx, imagem, largura, altura) {
+function desenharImagemDeFundo(ctx, imagem, largura, altura, foco = { focoX: 0.5, focoY: 0.5 }) {
   const proporcaoImagem = imagem.naturalWidth / imagem.naturalHeight;
   const proporcaoCanvas = largura / altura;
   let larguraDesenho = largura;
@@ -166,13 +235,13 @@ function desenharImagemDeFundo(ctx, imagem, largura, altura) {
   let y = 0;
   if (proporcaoImagem > proporcaoCanvas) {
     larguraDesenho = altura * proporcaoImagem;
-    x = (largura - larguraDesenho) / 2;
+    x = (largura - larguraDesenho) * foco.focoX;
   } else {
     alturaDesenho = largura / proporcaoImagem;
-    y = (altura - alturaDesenho) / 2;
+    y = (altura - alturaDesenho) * foco.focoY;
   }
   ctx.drawImage(imagem, x, y, larguraDesenho, alturaDesenho);
-  ctx.fillStyle = 'rgba(7, 20, 36, .62)';
+  ctx.fillStyle = 'rgba(7, 20, 36, .48)';
   ctx.fillRect(0, 0, largura, altura);
 }
 
@@ -208,13 +277,14 @@ async function gerarImagem(botao, formato) {
     const largura = 1080;
     const altura = formato === 'feed' ? 1080 : 1920;
     const tamanhoTexto = formato === 'feed' ? 56 : 72;
-    const imagem = await carregarImagem(IMAGEM_PADRAO);
+    const visual = configuracaoVisual(card);
+    const imagem = await carregarImagem(visual.fundo);
     const canvas = document.createElement('canvas');
     canvas.width = largura;
     canvas.height = altura;
     const ctx = canvas.getContext('2d');
     if (!ctx) throw new Error('Não foi possível preparar a imagem.');
-    desenharImagemDeFundo(ctx, imagem, largura, altura);
+    desenharImagemDeFundo(ctx, imagem, largura, altura, visual);
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = '#fff';
@@ -270,7 +340,7 @@ async function baixarVideo(url, arquivo, mensagem) {
   }
 }
 
-function mostrarVideoGerado(url, downloadUrl, formato) {
+function mostrarVideoGerado(url, downloadUrl, formato, fundo) {
   document.querySelectorAll('[data-modal-colecao="video"]').forEach((modal) => modal.remove());
   const modal = document.createElement('div');
   const arquivo = `${nomeArquivo('video', formato)}.mp4`;
@@ -279,7 +349,7 @@ function mostrarVideoGerado(url, downloadUrl, formato) {
   modal.setAttribute('aria-modal', 'true');
   modal.setAttribute('aria-label', 'Vídeo gerado');
   modal.style.cssText = 'position:fixed;inset:0;z-index:2147483647;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.92);color:#fff;text-align:center;overflow:auto;';
-  modal.innerHTML = `<p style="margin:0 0 12px;font-weight:800;">Vídeo MP4 ${formato === 'feed' ? 'Feed' : 'Story'} pronto!</p><video controls playsinline preload="metadata" poster="${IMAGEM_PADRAO}" style="width:min(100%,360px);max-height:58vh;border-radius:12px;background:#111;object-fit:contain;"><source src="${url}" type="video/mp4"></video><button type="button" data-baixar-mp4 style="margin-top:16px;padding:12px 22px;border:0;border-radius:9px;background:#2563eb;color:#fff;font-weight:800;">⬇️ Baixar MP4</button><p data-status-download style="max-width:360px;margin:12px 0;font-size:13px;line-height:1.4;">Toque em Baixar MP4 para salvar no seu celular.</p><button type="button" data-fechar-modal style="padding:11px 24px;border:0;border-radius:8px;background:#ef4444;color:#fff;font-weight:800;">Fechar</button>`;
+  modal.innerHTML = `<p style="margin:0 0 12px;font-weight:800;">Vídeo MP4 ${formato === 'feed' ? 'Feed' : 'Story'} pronto!</p><video controls playsinline preload="metadata" poster="${fundo || IMAGEM_PADRAO}" style="width:min(100%,360px);max-height:58vh;border-radius:12px;background:#111;object-fit:contain;"><source src="${url}" type="video/mp4"></video><button type="button" data-baixar-mp4 style="margin-top:16px;padding:12px 22px;border:0;border-radius:9px;background:#2563eb;color:#fff;font-weight:800;">⬇️ Baixar MP4</button><p data-status-download style="max-width:360px;margin:12px 0;font-size:13px;line-height:1.4;">Toque em Baixar MP4 para salvar no seu celular.</p><button type="button" data-fechar-modal style="padding:11px 24px;border:0;border-radius:8px;background:#ef4444;color:#fff;font-weight:800;">Fechar</button>`;
   const status = modal.querySelector('[data-status-download]');
   modal.querySelector('[data-baixar-mp4]')?.addEventListener('click', () => baixarVideo(downloadUrl || `${url}?download=1`, arquivo, status));
   modal.querySelector('[data-fechar-modal]')?.addEventListener('click', () => modal.remove());
@@ -295,14 +365,22 @@ async function gerarVideo(botao, formato) {
   botao.disabled = true;
   botao.textContent = '⏳ Gerando MP4...';
   try {
+    const visual = configuracaoVisual(card);
     const resposta = await fetch(`${origemApiVideo()}/api/video`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ imageUrl: IMAGEM_PADRAO, texto, autor: 'Messias', formato })
+      body: JSON.stringify({
+        imageUrl: visual.fundo,
+        texto,
+        autor: 'Messias',
+        formato,
+        focoX: visual.focoX,
+        focoY: visual.focoY
+      })
     });
     const dados = await resposta.json().catch(() => ({}));
     if (!resposta.ok || !dados.ok || !dados.url) throw new Error(dados.error || `Falha HTTP ${resposta.status}.`);
-    mostrarVideoGerado(dados.url, dados.downloadUrl, formato);
+    mostrarVideoGerado(dados.url, dados.downloadUrl, formato, visual.fundo);
   } catch (erro) {
     console.error('Erro ao gerar vídeo da coleção:', erro);
     alert(`Não foi possível gerar o vídeo agora. ${erro.message || 'Tente novamente em instantes.'}`);

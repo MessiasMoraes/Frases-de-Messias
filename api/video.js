@@ -67,6 +67,12 @@ function validateImageUrl(value) {
   return parsed.toString();
 }
 
+function normalizeFocus(value) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return 0.5;
+  return Math.min(0.92, Math.max(0.08, parsed));
+}
+
 async function parseBody(req) {
   if (req.body && typeof req.body === "object") return req.body;
   if (typeof req.body === "string") return JSON.parse(req.body);
@@ -114,6 +120,8 @@ module.exports = async function renderVideo(req, res) {
     const texto = normalizeText(body.texto, "Uma nova inspiração para o seu dia.").slice(0, MAX_TEXT_LENGTH);
     const autor = normalizeText(body.autor, "— Messias").slice(0, MAX_AUTHOR_LENGTH);
     const imageUrl = validateImageUrl(String(body.imageUrl || "").slice(0, MAX_IMAGE_URL_LENGTH));
+    const focoX = normalizeFocus(body.focoX);
+    const focoY = normalizeFocus(body.focoY);
     if (!texto) throw new Error("A frase não pode ficar vazia.");
 
     const snapshotId = String(process.env.SANDBOX_SNAPSHOT_ID || "").trim();
@@ -160,7 +168,7 @@ module.exports = async function renderVideo(req, res) {
     const fontDir = String(process.env.FFMPEG_FONT_DIR || "/vercel/sandbox/fonts");
     const vf = [
       `scale=${Math.round(width * 1.08)}:${Math.round(height * 1.08)}:force_original_aspect_ratio=increase`,
-      `crop=${Math.round(width * 1.08)}:${Math.round(height * 1.08)}`,
+      `crop=${Math.round(width * 1.08)}:${Math.round(height * 1.08)}:(in_w-out_w)*${focoX.toFixed(4)}:(in_h-out_h)*${focoY.toFixed(4)}`,
       `zoompan=z='min(zoom+0.00035,1.08)':d=${RENDER_SECONDS * FPS}:s=${width}x${height}:fps=${FPS}`,
       "drawbox=x=0:y=0:w=iw:h=ih:color=black@0.43:t=fill",
       `drawtext=fontfile=${fontDir}/LiberationSans-Bold.ttf:textfile=/tmp/quote.txt:fontcolor=white:fontsize=${quoteSize}:line_spacing=16:text_align=center:x=(w-text_w)/2:y=(h-text_h)/2-80:shadowcolor=black@0.65:shadowx=2:shadowy=2`,

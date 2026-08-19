@@ -21,12 +21,12 @@ for (const colecao of colecoes) {
   for (const [nome, total] of Object.entries(contagens)) {
     if (total !== totalEsperado) erros.push(`${colecao.arquivo}: ${nome} deveria ter ${totalEsperado} ocorrências e tem ${total}.`);
   }
-  if (!html.includes('colecoes.js?v=20260818-midia-v1')) erros.push(`${colecao.arquivo}: versão nova de colecoes.js não foi referenciada.`);
+  if (!html.includes('colecoes.js?v=20260820-fundos-variados-v1')) erros.push(`${colecao.arquivo}: versão de colecoes.js com fundos variados não foi referenciada.`);
   if (!html.includes('style.css?v=20260818-colecoes-midia-v1')) erros.push(`${colecao.arquivo}: versão nova de style.css não foi referenciada.`);
 }
 
 const script = fs.readFileSync(path.join(raiz, 'colecoes.js'), 'utf8');
-for (const trecho of ['async function gerarImagem', 'async function gerarVideo', 'async function baixarVideo', 'data-baixar-imagem', 'data-baixar-video']) {
+for (const trecho of ['async function gerarImagem', 'async function gerarVideo', 'async function baixarVideo', 'function configuracaoVisual', 'FUNDOS_POR_TEMA', 'data-baixar-imagem', 'data-baixar-video']) {
   if (!script.includes(trecho)) erros.push(`colecoes.js: integração ausente (${trecho}).`);
 }
 
