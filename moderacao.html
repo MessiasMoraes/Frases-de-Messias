@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Moderação da Comunidade | Frases de Messias</title>
   <link rel="stylesheet" href="style.css?v=20260814-comunidade-v2">
-  <link rel="stylesheet" href="comunidade.css?v=20260814-comunidade-v2">
-  <link rel="stylesheet" href="moderacao.css?v=20260814-comunidade-v2">
+  <link rel="stylesheet" href="comunidade.css?v=20260819-seguranca-v1">
+  <link rel="stylesheet" href="moderacao.css?v=20260819-seguranca-v1">
 </head>
 <body class="pagina-comunidade pagina-moderacao">
   <header class="cabecalho-comunidade">
@@ -38,9 +38,9 @@
     <section id="painelModeracao" hidden aria-labelledby="tituloModeracao">
       <div class="hero-moderacao">
         <div>
-          <p class="selo-comunidade">FILA DE APROVAÇÃO</p>
-          <h1 id="tituloModeracao">Conteúdos da comunidade</h1>
-          <p>Revise cada frase e comentário antes de permitir sua exibição pública.</p>
+          <p class="selo-comunidade">MODERAÇÃO E SEGURANÇA</p>
+          <h1 id="tituloModeracao">Conteúdos e denúncias</h1>
+          <p>Revise conteúdos pendentes e denúncias privadas. Você pode ocultar um conteúdo, arquivar uma denúncia ou restringir contas que desrespeitem as regras.</p>
         </div>
         <div class="contador-pendencias"><strong id="totalPendencias">0</strong><span>pendentes</span></div>
       </div>
@@ -63,11 +63,12 @@
       <blockquote class="texto-pendencia"></blockquote>
       <div class="acoes-moderacao">
         <button class="botao-recusar" type="button">Recusar</button>
+        <button class="botao-bloquear-conta" type="button" hidden>Restringir conta</button>
         <button class="botao-primario botao-aprovar" type="button">✓ Aprovar publicação</button>
       </div>
       <p class="mensagem-moderacao" role="status"></p>
     </article>
   </template>
-  <script type="module" src="moderacao.js?v=20260814-comunidade-v2"></script>
+  <script type="module" src="moderacao.js?v=20260819-seguranca-v1"></script>
 </body>
 </html>

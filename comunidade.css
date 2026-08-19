@@ -293,3 +293,74 @@ body.pagina-comunidade.tema-escuro .acao-comentario.ativo {
     font-size: .78rem;
   }
 }
+
+/* Denúncias e ações de segurança. */
+.modal-denuncia .campo-auth select,
+.modal-denuncia .campo-auth textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #cdd8ea;
+  border-radius: 11px;
+  background: #fff;
+  color: var(--comunidade-texto);
+  font: inherit;
+  outline: 0;
+}
+
+.modal-denuncia .campo-auth select {
+  min-height: 43px;
+  padding: 10px 12px;
+}
+
+.modal-denuncia .campo-auth textarea {
+  min-height: 100px;
+  padding: 11px 12px;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.modal-denuncia .campo-auth select:focus,
+.modal-denuncia .campo-auth textarea:focus {
+  border-color: var(--comunidade-azul);
+  box-shadow: 0 0 0 3px rgba(23, 105, 224, .13);
+}
+
+.acao-denunciar-publicacao,
+.acao-denunciar-comentario {
+  color: #a94228;
+}
+
+.acao-denunciar-publicacao:hover,
+.acao-denunciar-publicacao:focus-visible,
+.acao-denunciar-comentario:hover,
+.acao-denunciar-comentario:focus-visible {
+  background: #fff0ec;
+  color: #8d301b;
+  outline: none;
+}
+
+body.pagina-comunidade.tema-escuro .modal-denuncia .campo-auth select,
+body.pagina-comunidade.tema-escuro .modal-denuncia .campo-auth textarea {
+  background: #101a2b;
+  border-color: #3a4b69;
+  color: #f2f6ff;
+}
+
+body.pagina-comunidade.tema-escuro .acao-denunciar-publicacao,
+body.pagina-comunidade.tema-escuro .acao-denunciar-comentario {
+  color: #ffaf9c;
+}
+
+body.pagina-comunidade.tema-escuro .acao-denunciar-publicacao:hover,
+body.pagina-comunidade.tema-escuro .acao-denunciar-publicacao:focus-visible,
+body.pagina-comunidade.tema-escuro .acao-denunciar-comentario:hover,
+body.pagina-comunidade.tema-escuro .acao-denunciar-comentario:focus-visible {
+  background: #4a2b2a;
+  color: #ffd3c8;
+}
+
+@media (max-width: 560px) {
+  .acao-denunciar-publicacao {
+    flex-basis: 100%;
+  }
+}

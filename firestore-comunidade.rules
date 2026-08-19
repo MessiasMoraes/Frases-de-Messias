@@ -18,6 +18,39 @@ service cloud.firestore {
       return conectado() && request.resource.data.autorId == request.auth.uid;
     }
 
+    // Uma restrição administrativa impede novas interações e envios na Comunidade.
+    // A pessoa continua podendo acessar os próprios dados de perfil e encerrar a conta.
+    function contaLiberadaParaInteragir() {
+      return conectado() && !exists(/databases/$(database)/documents/comunidadeRestricoes/$(request.auth.uid));
+    }
+
+    function denunciaValida() {
+      return request.resource.data.keys().hasOnly([
+        'denuncianteId', 'alvoTipo', 'publicacaoId', 'comentarioId',
+        'autorAlvoId', 'autorAlvoNome', 'conteudo', 'motivo',
+        'detalhes', 'status', 'criadoEm'
+      ])
+        && request.resource.data.denuncianteId == request.auth.uid
+        && request.resource.data.alvoTipo in ['publicacao', 'comentario', 'perfil']
+        && request.resource.data.autorAlvoId is string
+        && request.resource.data.autorAlvoId.size() > 0
+        && request.resource.data.autorAlvoId != request.auth.uid
+        && request.resource.data.autorAlvoNome is string
+        && request.resource.data.autorAlvoNome.size() <= 48
+        && request.resource.data.publicacaoId is string
+        && request.resource.data.publicacaoId.size() <= 180
+        && request.resource.data.comentarioId is string
+        && request.resource.data.comentarioId.size() <= 180
+        && request.resource.data.conteudo is string
+        && request.resource.data.conteudo.size() <= 360
+        && request.resource.data.motivo is string
+        && request.resource.data.motivo.size() >= 3
+        && request.resource.data.motivo.size() <= 80
+        && request.resource.data.detalhes is string
+        && request.resource.data.detalhes.size() <= 240
+        && request.resource.data.status == 'aberta';
+    }
+
     function publicacaoPublica(publicacaoId) {
       return get(/databases/$(database)/documents/comunidadePublicacoes/$(publicacaoId)).data.status == 'publicado';
     }
@@ -102,7 +135,22 @@ service cloud.firestore {
       }
 
       match /salvos/{publicacaoId} {
-        allow read, create, delete: if conectado() && request.auth.uid == usuarioId;
+        allow read: if conectado() && request.auth.uid == usuarioId;
+        allow create: if contaLiberadaParaInteragir() && request.auth.uid == usuarioId;
+        allow delete: if conectado() && request.auth.uid == usuarioId;
+        allow update: if false;
+      }
+
+      // Esta lista é privada: cada pessoa consegue ver e alterar somente os perfis
+      // que escolheu ocultar da própria experiência na Comunidade.
+      match /bloqueados/{usuarioBloqueadoId} {
+        allow read: if conectado() && request.auth.uid == usuarioId;
+        allow create: if contaLiberadaParaInteragir()
+          && request.auth.uid == usuarioId
+          && usuarioBloqueadoId != usuarioId
+          && request.resource.data.keys().hasOnly(['usuarioId', 'criadoEm'])
+          && request.resource.data.usuarioId == usuarioBloqueadoId;
+        allow delete: if conectado() && request.auth.uid == usuarioId;
         allow update: if false;
       }
     }
@@ -130,7 +178,7 @@ service cloud.firestore {
       // Cada pessoa cria ou remove apenas o registro que tem o próprio UID.
       match /seguidores/{seguidorId} {
         allow read: if true;
-        allow create: if conectado()
+        allow create: if contaLiberadaParaInteragir()
           && request.auth.uid == seguidorId
           && request.resource.data.keys().hasOnly(['usuarioId', 'criadoEm'])
           && request.resource.data.usuarioId == request.auth.uid;
@@ -142,7 +190,7 @@ service cloud.firestore {
       // exclusivamente pelo próprio dono, sem expor suas conexões a terceiros.
       match /seguindo/{seguidoId} {
         allow get, list: if conectado() && request.auth.uid == usuarioId;
-        allow create: if conectado()
+        allow create: if contaLiberadaParaInteragir()
           && request.auth.uid == usuarioId
           && request.resource.data.keys().hasOnly(['usuarioId', 'criadoEm'])
           && request.resource.data.usuarioId == seguidoId;
@@ -151,10 +199,33 @@ service cloud.firestore {
       }
     }
 
+    // Regra de leitura para consulta collectionGroup("seguidores"). O caminho
+    // recursivo permite somente a leitura das relações públicas; as permissões
+    // de criar e apagar seguem restritas no caminho específico do perfil acima.
+    match /{caminho=**}/seguidores/{seguidorId} {
+      allow read: if true;
+    }
+
+    // Denúncias só ficam disponíveis para quem enviou e para a moderação. Elas
+    // não aparecem em perfis ou feeds públicos e não podem ser alteradas pelo membro.
+    match /comunidadeDenuncias/{denunciaId} {
+      allow create: if contaLiberadaParaInteragir() && denunciaValida();
+      allow get: if administrador() || (conectado() && resource.data.denuncianteId == request.auth.uid);
+      allow list: if administrador();
+      allow update, delete: if administrador();
+    }
+
+    // Restrição administrativa para contas que descumprirem as regras da Comunidade.
+    match /comunidadeRestricoes/{usuarioId} {
+      allow get: if administrador() || (conectado() && request.auth.uid == usuarioId);
+      allow list: if administrador();
+      allow create, update, delete: if administrador();
+    }
+
     // Comunidade: publicações entram pendentes e só o administrador publica.
     match /comunidadePublicacoes/{publicacaoId} {
       allow get, list: if resource.data.status == 'publicado' || donoDoRecurso() || administrador();
-      allow create: if conectado()
+      allow create: if contaLiberadaParaInteragir()
         && donoDoNovoRecurso()
         && request.resource.data.status == 'pendente'
         && request.resource.data.texto is string
@@ -168,6 +239,7 @@ service cloud.firestore {
       // ainda estiver pendente. Ele nunca pode mudar o status nem a autoria.
       allow update: if administrador() || (
         donoDoRecurso()
+        && contaLiberadaParaInteragir()
         && resource.data.status == 'pendente'
         && request.resource.data.status == 'pendente'
         && request.resource.data.autorId == resource.data.autorId
@@ -182,7 +254,8 @@ service cloud.firestore {
         // o administrador continua podendo auditar a coleção quando necessário.
         allow get: if administrador() || (conectado() && request.auth.uid == usuarioId);
         allow list: if administrador();
-        allow create, delete: if conectado() && request.auth.uid == usuarioId && publicacaoPublica(publicacaoId);
+        allow create: if contaLiberadaParaInteragir() && request.auth.uid == usuarioId && publicacaoPublica(publicacaoId);
+        allow delete: if conectado() && request.auth.uid == usuarioId && publicacaoPublica(publicacaoId);
         allow update: if false;
       }
 
@@ -190,7 +263,7 @@ service cloud.firestore {
         allow get, list: if resource.data.status == 'publicado' || administrador() || (
           conectado() && resource.data.autorId == request.auth.uid
         );
-        allow create: if conectado()
+        allow create: if contaLiberadaParaInteragir()
           && publicacaoPublica(publicacaoId)
           && request.resource.data.autorId == request.auth.uid
           && request.resource.data.status == 'pendente'
@@ -210,7 +283,7 @@ service cloud.firestore {
         match /curtidas/{usuarioId} {
           allow get: if administrador() || (conectado() && request.auth.uid == usuarioId);
           allow list: if administrador();
-          allow create: if conectado()
+          allow create: if contaLiberadaParaInteragir()
             && request.auth.uid == usuarioId
             && comentarioPublicado(publicacaoId, comentarioId)
             && request.resource.data.keys().hasOnly(['usuarioId', 'criadoEm'])

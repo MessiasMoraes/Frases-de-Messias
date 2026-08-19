@@ -1,4 +1,5 @@
 import { app, db } from "./firebase.js";
+import { MOTIVOS_DENUNCIA, alternarBloqueio, carregarBloqueios, mensagemDeErroSeguranca, registrarDenuncia } from "./seguranca-comunidade.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 import {
   addDoc,
@@ -33,6 +34,15 @@ const refs = {
   seguidores: document.getElementById("contadorSeguidores"),
   seguindo: document.getElementById("contadorSeguindo"),
   botaoSeguir: document.getElementById("botaoSeguir"),
+  botaoBloquear: document.getElementById("botaoBloquearPerfil"),
+  botaoDenunciar: document.getElementById("botaoDenunciarPerfil"),
+  modalDenuncia: document.getElementById("modalDenunciaPerfil"),
+  fecharDenuncia: document.getElementById("fecharDenunciaPerfil"),
+  formularioDenuncia: document.getElementById("formularioDenunciaPerfil"),
+  motivoDenuncia: document.getElementById("motivoDenunciaPerfil"),
+  detalhesDenuncia: document.getElementById("detalhesDenunciaPerfil"),
+  enviarDenuncia: document.getElementById("enviarDenunciaPerfil"),
+  mensagemDenuncia: document.getElementById("mensagemDenunciaPerfil"),
   botaoEditar: document.getElementById("botaoEditarPerfil"),
   mensagem: document.getElementById("mensagemPerfil"),
   abaPublicadas: document.getElementById("abaPublicadas"),
@@ -45,6 +55,7 @@ const refs = {
 let usuarioAtual = null;
 let dadosPerfil = null;
 let seguindo = false;
+let perfilBloqueado = false;
 let abaAtual = "publicadas";
 let cancelarPerfil = null;
 let cancelarFrases = null;
@@ -133,9 +144,12 @@ function renderizarPerfil() {
   const dono = souDonoDoPerfil();
   refs.botaoEditar.hidden = !dono;
   refs.botaoSeguir.hidden = dono;
+  refs.botaoBloquear.hidden = dono;
+  refs.botaoDenunciar.hidden = dono;
   refs.abaPendentes.hidden = !dono;
   if (!dono && abaAtual === "pendentes") mudarAba("publicadas");
   atualizarBotaoSeguir();
+  atualizarBotaoBloquear();
 }
 
 function atualizarBotaoSeguir() {
@@ -146,9 +160,47 @@ function atualizarBotaoSeguir() {
     refs.botaoSeguir.disabled = false;
     return;
   }
+  if (perfilBloqueado) {
+    refs.botaoSeguir.textContent = "Perfil bloqueado";
+    refs.botaoSeguir.classList.remove("botao-seguindo");
+    refs.botaoSeguir.disabled = true;
+    return;
+  }
   refs.botaoSeguir.textContent = seguindo ? "✓ Seguindo" : "Seguir";
   refs.botaoSeguir.classList.toggle("botao-seguindo", seguindo);
   refs.botaoSeguir.disabled = false;
+}
+
+function atualizarBotaoBloquear() {
+  if (souDonoDoPerfil()) return;
+  if (!usuarioAtual) {
+    refs.botaoBloquear.textContent = "Entrar para bloquear";
+    refs.botaoBloquear.classList.remove("ativo");
+    refs.botaoBloquear.disabled = false;
+    return;
+  }
+  refs.botaoBloquear.textContent = perfilBloqueado ? "Desbloquear perfil" : "Bloquear perfil";
+  refs.botaoBloquear.classList.toggle("ativo", perfilBloqueado);
+  refs.botaoBloquear.disabled = false;
+}
+
+async function atualizarEstadoDeBloqueio() {
+  if (!usuarioAtual || souDonoDoPerfil()) {
+    perfilBloqueado = false;
+    atualizarBotaoBloquear();
+    atualizarBotaoSeguir();
+    return;
+  }
+  try {
+    const bloqueados = await carregarBloqueios(usuarioAtual.uid);
+    perfilBloqueado = bloqueados.has(uidPerfil);
+  } catch (erro) {
+    console.warn("Não foi possível carregar a lista de bloqueios.", erro);
+    perfilBloqueado = false;
+  }
+  atualizarBotaoBloquear();
+  atualizarBotaoSeguir();
+  escutarFrases();
 }
 
 async function garantirPerfilPublico(usuario) {
@@ -505,7 +557,12 @@ function renderizarFrases(resultado) {
 
 function escutarFrases() {
   if (cancelarFrases) cancelarFrases();
+  cancelarFrases = null;
   if (!uidPerfil) return;
+  if (perfilBloqueado && !souDonoDoPerfil()) {
+    renderizarEstadoVazio("Você bloqueou este perfil. Desbloqueie-o para voltar a ver suas frases.");
+    return;
+  }
   const status = abaAtual === "pendentes" ? "pendente" : "publicado";
   const consulta = query(
     collection(db, "comunidadePublicacoes"),
@@ -537,6 +594,10 @@ async function alternarSeguimento() {
     return;
   }
   if (souDonoDoPerfil() || !dadosPerfil) return;
+  if (perfilBloqueado) {
+    mostrarMensagem("Desbloqueie este perfil antes de segui-lo.", true);
+    return;
+  }
 
   refs.botaoSeguir.disabled = true;
   mostrarMensagem(seguindo ? "Deixando de seguir..." : "Seguindo perfil...");
@@ -568,6 +629,93 @@ async function alternarSeguimento() {
   }
 }
 
+async function alternarBloqueioPerfil() {
+  if (!usuarioAtual) { pedirLogin(); return; }
+  if (souDonoDoPerfil() || !uidPerfil) return;
+
+  const bloquear = !perfilBloqueado;
+  const pergunta = bloquear
+    ? "Bloquear este perfil? Suas frases deixarão de aparecer para você."
+    : "Desbloquear este perfil e voltar a ver suas frases?";
+  if (!confirm(pergunta)) return;
+
+  refs.botaoBloquear.disabled = true;
+  mostrarMensagem(bloquear ? "Bloqueando perfil..." : "Desbloqueando perfil...");
+  try {
+    await alternarBloqueio(usuarioAtual.uid, uidPerfil, bloquear);
+    perfilBloqueado = bloquear;
+    atualizarBotaoBloquear();
+    atualizarBotaoSeguir();
+    escutarFrases();
+    mostrarMensagem(bloquear ? "Perfil bloqueado. Você não verá mais suas frases no feed." : "Perfil desbloqueado com sucesso.");
+  } catch (erro) {
+    console.error("Erro ao alterar bloqueio.", erro);
+    mostrarMensagem(mensagemDeErroSeguranca(erro, "Não foi possível alterar o bloqueio agora."), true);
+  } finally {
+    refs.botaoBloquear.disabled = false;
+  }
+}
+
+function preencherMotivosDeDenuncia() {
+  refs.motivoDenuncia.innerHTML = '<option value="">Selecione um motivo</option>';
+  MOTIVOS_DENUNCIA.forEach((motivo) => {
+    const opcao = document.createElement("option");
+    opcao.value = motivo;
+    opcao.textContent = motivo;
+    refs.motivoDenuncia.appendChild(opcao);
+  });
+}
+
+function fecharDenunciaPerfil() {
+  refs.modalDenuncia.close();
+  refs.formularioDenuncia.reset();
+  refs.mensagemDenuncia.textContent = "";
+}
+
+function abrirDenunciaPerfil() {
+  if (!usuarioAtual) { pedirLogin(); return; }
+  if (souDonoDoPerfil()) return;
+  refs.formularioDenuncia.reset();
+  refs.mensagemDenuncia.textContent = "";
+  refs.modalDenuncia.showModal();
+}
+
+async function enviarDenunciaPerfil(evento) {
+  evento.preventDefault();
+  if (!usuarioAtual) { fecharDenunciaPerfil(); pedirLogin(); return; }
+  if (souDonoDoPerfil()) return;
+
+  const motivo = refs.motivoDenuncia.value;
+  if (!motivo) {
+    refs.mensagemDenuncia.textContent = "Selecione o motivo da denúncia.";
+    refs.mensagemDenuncia.classList.add("erro");
+    return;
+  }
+
+  refs.enviarDenuncia.disabled = true;
+  refs.mensagemDenuncia.classList.remove("erro");
+  refs.mensagemDenuncia.textContent = "Enviando denúncia...";
+  try {
+    const nome = textoLimpo(dadosPerfil?.nome || NOME_PADRAO);
+    await registrarDenuncia({
+      denunciante: usuarioAtual,
+      alvoId: uidPerfil,
+      alvoTipo: "perfil",
+      conteudo: `Perfil de ${nome}`,
+      motivo,
+      detalhes: refs.detalhesDenuncia.value
+    });
+    fecharDenunciaPerfil();
+    mostrarMensagem("Denúncia enviada de forma privada para a moderação.");
+  } catch (erro) {
+    console.error("Erro ao denunciar perfil.", erro);
+    refs.mensagemDenuncia.textContent = mensagemDeErroSeguranca(erro, "Não foi possível enviar a denúncia agora.");
+    refs.mensagemDenuncia.classList.add("erro");
+  } finally {
+    refs.enviarDenuncia.disabled = false;
+  }
+}
+
 function iniciarPerfil() {
   if (!uidPerfil || uidPerfil.length > 128) {
     mostrarEstado("Perfil inválido ou não informado.", true);
@@ -590,6 +738,7 @@ function iniciarPerfil() {
       refs.conteudo.hidden = false;
       renderizarPerfil();
       atualizarEstadoDeSeguimento();
+      void atualizarEstadoDeBloqueio();
       if (!cancelarFrases) escutarFrases();
       return;
     }
@@ -606,6 +755,11 @@ function iniciarPerfil() {
 }
 
 refs.botaoSeguir.addEventListener("click", alternarSeguimento);
+refs.botaoBloquear.addEventListener("click", alternarBloqueioPerfil);
+refs.botaoDenunciar.addEventListener("click", abrirDenunciaPerfil);
+refs.fecharDenuncia.addEventListener("click", fecharDenunciaPerfil);
+refs.modalDenuncia.addEventListener("click", (evento) => { if (evento.target === refs.modalDenuncia) fecharDenunciaPerfil(); });
+refs.formularioDenuncia.addEventListener("submit", enviarDenunciaPerfil);
 refs.abaPublicadas.addEventListener("click", () => mudarAba("publicadas"));
 refs.abaPendentes.addEventListener("click", () => mudarAba("pendentes"));
 refs.alternarTema.addEventListener("click", () => {
@@ -621,6 +775,7 @@ onAuthStateChanged(auth, async (usuario) => {
   if (dadosPerfil) {
     renderizarPerfil();
     atualizarEstadoDeSeguimento();
+    await atualizarEstadoDeBloqueio();
     if (souDonoDoPerfil()) escutarFrases();
   }
 });
@@ -634,4 +789,5 @@ window.addEventListener("beforeunload", () => {
 });
 
 ajustarTema();
+preencherMotivosDeDenuncia();
 iniciarPerfil();

@@ -6,8 +6,8 @@
   <meta name="description" content="Perfil público da Comunidade Frases de Messias.">
   <title>Perfil | Frases de Messias</title>
   <link rel="stylesheet" href="style.css?v=20260814-perfis-v1">
-  <link rel="stylesheet" href="comunidade.css?v=20260814-interacoes-v2">
-  <link rel="stylesheet" href="perfil.css?v=20260814-perfis-v1">
+  <link rel="stylesheet" href="comunidade.css?v=20260819-seguranca-v1">
+  <link rel="stylesheet" href="perfil.css?v=20260819-seguranca-v2">
 </head>
 <body class="pagina-comunidade pagina-perfil">
   <header class="cabecalho-comunidade">
@@ -40,6 +40,8 @@
         </div>
         <div class="acoes-perfil">
           <button id="botaoSeguir" class="botao-primario" type="button">Seguir</button>
+          <button id="botaoBloquearPerfil" class="botao-bloquear-perfil" type="button">Bloquear perfil</button>
+          <button id="botaoDenunciarPerfil" class="botao-denunciar-perfil" type="button">Denunciar perfil</button>
           <a id="botaoEditarPerfil" class="botao-secundario botao-editar-perfil" href="meu-perfil.html" hidden>Editar meu perfil</a>
         </div>
         <p id="mensagemPerfil" class="mensagem-formulario" role="status" aria-live="polite"></p>
@@ -53,6 +55,21 @@
       <section id="listaFrasesPerfil" class="feed-comunidade lista-frases-perfil" aria-live="polite" aria-label="Frases do perfil"></section>
     </section>
   </main>
+
+  <dialog id="modalDenunciaPerfil" class="modal-autenticacao modal-denuncia" aria-labelledby="tituloDenunciaPerfil">
+    <form id="formularioDenunciaPerfil" class="formulario-autenticacao formulario-denuncia" novalidate>
+      <button id="fecharDenunciaPerfil" class="fechar-modal" type="button" aria-label="Fechar">×</button>
+      <p class="selo-comunidade">SEGURANÇA DA COMUNIDADE</p>
+      <h2 id="tituloDenunciaPerfil">Denunciar perfil</h2>
+      <p class="texto-apoio-denuncia">A denúncia será analisada de forma privada pela moderação. O perfil denunciado não verá quem enviou o relato.</p>
+      <label for="motivoDenunciaPerfil">Motivo</label>
+      <select id="motivoDenunciaPerfil" required></select>
+      <label for="detalhesDenunciaPerfil">Detalhes opcionais</label>
+      <textarea id="detalhesDenunciaPerfil" rows="3" maxlength="500" placeholder="Explique o que aconteceu, se desejar."></textarea>
+      <button id="enviarDenunciaPerfil" class="botao-primario botao-largo" type="submit">Enviar denúncia</button>
+      <p id="mensagemDenunciaPerfil" class="mensagem-formulario" role="status" aria-live="polite"></p>
+    </form>
+  </dialog>
 
   <template id="templateFrasePerfil">
     <article class="cartao-publicacao cartao-frase-perfil">
@@ -80,6 +97,6 @@
     </article>
   </template>
 
-  <script type="module" src="perfil.js?v=20260814-interacoes-v2"></script>
+  <script type="module" src="perfil.js?v=20260819-seguranca-v2"></script>
 </body>
 </html>

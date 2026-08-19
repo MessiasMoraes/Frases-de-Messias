@@ -1,4 +1,5 @@
 import { app, db } from "./firebase.js";
+import { MOTIVOS_DENUNCIA, carregarBloqueios, mensagemDeErroSeguranca, registrarDenuncia } from "./seguranca-comunidade.js";
 import {
   getAuth,
   onAuthStateChanged,
@@ -43,6 +44,13 @@ const refs = {
   abrirAutenticacaoHero: elemento("abrirAutenticacaoHero"),
   modalAutenticacao: elemento("modalAutenticacao"),
   fecharAutenticacao: elemento("fecharAutenticacao"),
+  modalDenuncia: elemento("modalDenuncia"),
+  fecharDenuncia: elemento("fecharDenuncia"),
+  formularioDenuncia: elemento("formularioDenuncia"),
+  motivoDenuncia: elemento("motivoDenuncia"),
+  detalhesDenuncia: elemento("detalhesDenuncia"),
+  enviarDenuncia: elemento("enviarDenuncia"),
+  mensagemDenuncia: elemento("mensagemDenuncia"),
   abaEntrar: elemento("abaEntrar"),
   abaCriar: elemento("abaCriar"),
   campoNome: elemento("campoNome"),
@@ -69,8 +77,10 @@ let usuarioAtual = null;
 let modoCadastro = false;
 let categorias = [];
 let publicacoes = [];
+let perfisBloqueados = new Set();
 let cancelarFeed = null;
 let comentariosAbertos = new Map();
+let denunciaAtual = null;
 
 function textoLimpo(valor = "") {
   return String(valor).replace(/[<>]/g, "").replace(/\s+/g, " ").trim();
@@ -122,6 +132,63 @@ function fecharModal() {
   if (refs.modalAutenticacao.open) refs.modalAutenticacao.close();
 }
 
+function preencherMotivosDenuncia() {
+  refs.motivoDenuncia.innerHTML = '<option value="">Selecione um motivo</option>';
+  MOTIVOS_DENUNCIA.forEach((motivo) => {
+    const opcao = document.createElement("option");
+    opcao.value = motivo;
+    opcao.textContent = motivo;
+    refs.motivoDenuncia.appendChild(opcao);
+  });
+}
+
+function fecharDenuncia() {
+  denunciaAtual = null;
+  if (refs.modalDenuncia.open) refs.modalDenuncia.close();
+}
+
+function abrirDenuncia(dados) {
+  if (!usuarioAtual) { abrirModal(); return; }
+  if (!dados?.autorAlvoId || dados.autorAlvoId === usuarioAtual.uid) {
+    alert("Você não pode denunciar seu próprio conteúdo.");
+    return;
+  }
+  denunciaAtual = dados;
+  refs.formularioDenuncia.reset();
+  mostrarMensagem(refs.mensagemDenuncia);
+  if (!refs.modalDenuncia.open) refs.modalDenuncia.showModal();
+  setTimeout(() => refs.motivoDenuncia.focus(), 80);
+}
+
+async function enviarDenuncia(evento) {
+  evento.preventDefault();
+  if (!usuarioAtual) { fecharDenuncia(); abrirModal(); return; }
+  if (!denunciaAtual) { fecharDenuncia(); return; }
+  const motivo = textoLimpo(refs.motivoDenuncia.value);
+  const detalhes = textoLimpo(refs.detalhesDenuncia.value);
+  if (!MOTIVOS_DENUNCIA.includes(motivo)) {
+    mostrarMensagem(refs.mensagemDenuncia, "Selecione o motivo da denúncia.", true);
+    return;
+  }
+  refs.enviarDenuncia.disabled = true;
+  mostrarMensagem(refs.mensagemDenuncia, "Enviando para análise...");
+  try {
+    await registrarDenuncia({
+      denuncianteId: usuarioAtual.uid,
+      ...denunciaAtual,
+      motivo,
+      detalhes
+    });
+    mostrarMensagem(refs.mensagemDenuncia, "Denúncia enviada. Obrigado por ajudar a cuidar da comunidade.");
+    setTimeout(fecharDenuncia, 900);
+  } catch (erro) {
+    console.error("Erro ao enviar denúncia.", erro);
+    mostrarMensagem(refs.mensagemDenuncia, mensagemDeErroSeguranca(erro, "Não foi possível enviar a denúncia agora. Tente novamente."), true);
+  } finally {
+    refs.enviarDenuncia.disabled = false;
+  }
+}
+
 function preencherSeletoresDeCategoria() {
   [refs.categoriaPublicacao, refs.filtroCategoria].forEach((seletor, indice) => {
     const valorAnterior = seletor.value;
@@ -168,7 +235,8 @@ function dataFormatada(valor) {
 
 function renderizarFeed() {
   const categoria = refs.filtroCategoria.value;
-  const filtradas = categoria ? publicacoes.filter((post) => post.categoria === categoria) : publicacoes;
+  const publicacoesVisiveis = publicacoes.filter((post) => !perfisBloqueados.has(post.autorId));
+  const filtradas = categoria ? publicacoesVisiveis.filter((post) => post.categoria === categoria) : publicacoesVisiveis;
   refs.feed.innerHTML = "";
 
   if (!filtradas.length) {
@@ -203,6 +271,7 @@ function criarCartaoPublicacao(post) {
   const botaoSalvar = fragmento.querySelector(".botao-salvar-publicacao");
   const botaoComentarios = fragmento.querySelector(".botao-comentarios");
   const botaoCompartilhar = fragmento.querySelector(".botao-compartilhar-publicacao");
+  const botaoDenunciar = fragmento.querySelector(".acao-denunciar-publicacao");
   const areaComentarios = fragmento.querySelector(".area-comentarios");
   const listaComentarios = fragmento.querySelector(".lista-comentarios");
   const formularioComentario = fragmento.querySelector(".formulario-comentario");
@@ -214,6 +283,13 @@ function criarCartaoPublicacao(post) {
   botaoComentarios.addEventListener("click", () => alternarComentarios(post.id, areaComentarios, listaComentarios, botaoComentarios, inputComentario));
   sincronizarEstadoDeInteracoes(post.id, botaoCurtir, botaoSalvar);
   botaoCompartilhar.addEventListener("click", () => compartilharPublicacao(post));
+  botaoDenunciar.addEventListener("click", () => abrirDenuncia({
+    alvoTipo: "publicacao",
+    publicacaoId: post.id,
+    autorAlvoId: post.autorId || "",
+    autorAlvoNome: nome,
+    conteudo: post.texto || ""
+  }));
   formularioComentario.addEventListener("submit", (evento) => enviarComentario(evento, post.id, inputComentario, mensagemComentario));
   cartao.dataset.publicacaoId = post.id;
   return fragmento;
@@ -387,8 +463,20 @@ function criarComentario(publicacaoId, comentarioId, dados, input) {
   compartilhar.className = "acao-comentario";
   compartilhar.textContent = "↗ Compartilhar";
   compartilhar.addEventListener("click", () => compartilharComentario(dados));
+  const denunciar = document.createElement("button");
+  denunciar.type = "button";
+  denunciar.className = "acao-comentario acao-denunciar-comentario";
+  denunciar.textContent = "🚩 Denunciar";
+  denunciar.addEventListener("click", () => abrirDenuncia({
+    alvoTipo: "comentario",
+    publicacaoId,
+    comentarioId,
+    autorAlvoId: dados.autorId || "",
+    autorAlvoNome: dados.autorNome || NOME_PADRAO,
+    conteudo: dados.texto || ""
+  }));
   cabecalho.appendChild(autor);
-  acoes.append(curtir, responder, compartilhar);
+  acoes.append(curtir, responder, compartilhar, denunciar);
   comentario.append(cabecalho, texto, acoes);
   return comentario;
 }
@@ -559,6 +647,9 @@ refs.abrirAutenticacao.addEventListener("click", abrirModal);
 refs.abrirAutenticacaoHero.addEventListener("click", abrirModal);
 refs.fecharAutenticacao.addEventListener("click", fecharModal);
 refs.modalAutenticacao.addEventListener("click", (evento) => { if (evento.target === refs.modalAutenticacao) fecharModal(); });
+refs.fecharDenuncia.addEventListener("click", fecharDenuncia);
+refs.modalDenuncia.addEventListener("click", (evento) => { if (evento.target === refs.modalDenuncia) fecharDenuncia(); });
+refs.formularioDenuncia.addEventListener("submit", enviarDenuncia);
 refs.abaEntrar.addEventListener("click", () => configurarModoCadastro(false));
 refs.abaCriar.addEventListener("click", () => configurarModoCadastro(true));
 refs.sair.addEventListener("click", () => signOut(auth));
@@ -608,11 +699,21 @@ refs.formularioAutenticacao.addEventListener("submit", async (evento) => {
 onAuthStateChanged(auth, async (usuario) => {
   atualizarInterfaceDoUsuario(usuario);
   if (usuario) {
-    try { await salvarPerfil(usuario); } catch (erro) { console.warn("Perfil social não pôde ser atualizado.", erro); }
+    try {
+      await salvarPerfil(usuario);
+      perfisBloqueados = await carregarBloqueios(usuario.uid);
+    } catch (erro) {
+      console.warn("Preferências sociais não puderam ser atualizadas.", erro);
+      perfisBloqueados = new Set();
+    }
+  } else {
+    perfisBloqueados = new Set();
   }
+  renderizarFeed();
 });
 
 ajustarTema();
 configurarModoCadastro(false);
+preencherMotivosDenuncia();
 carregarCategorias();
 escutarFeed();

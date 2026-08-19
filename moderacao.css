@@ -23,4 +23,9 @@
 .mensagem-moderacao { min-height: 1em; margin: 9px 0 0; color: #b42318; font-size: .84rem; }
 body.pagina-comunidade.tema-escuro .login-moderacao input { background: #101a2b; }
 body.pagina-comunidade.tema-escuro .botao-recusar { background: #442226; color: #fec9c4; border-color: #75414a; }
-@media (max-width: 600px) { .moderacao-principal { padding-top: 22px; } .hero-moderacao { align-items: flex-start; flex-direction: column; } .contador-pendencias { min-width: 110px; } .acoes-moderacao { flex-direction: column-reverse; } .acoes-moderacao .botao-primario, .botao-recusar { width: 100%; } }
+@media (max-width: 600px) { .moderacao-principal { padding-top: 22px; } .hero-moderacao { align-items: flex-start; flex-direction: column; } .contador-pendencias { min-width: 110px; } .acoes-moderacao { flex-direction: column-reverse; } .acoes-moderacao .botao-primario, .botao-recusar, .botao-bloquear-conta { width: 100%; } }
+
+.texto-pendencia { white-space: pre-line; }
+.botao-bloquear-conta { min-height: 43px; border: 1px solid #dbb568; border-radius: 10px; padding: 9px 14px; background: #fff8e7; color: #815b00; font: inherit; font-weight: 800; cursor: pointer; }
+.botao-bloquear-conta:hover, .botao-bloquear-conta:focus-visible { background: #fce7b4; outline: none; }
+body.pagina-comunidade.tema-escuro .botao-bloquear-conta { background: #423716; color: #ffe39a; border-color: #766428; }

@@ -13,7 +13,7 @@
   <meta property="og:description" content="Compartilhe inspiração, fé e esperança em uma comunidade com moderação e respeito.">
   <meta property="og:image" content="https://frasesdemessias.com.br/imagens/1785461694182.png">
   <link rel="stylesheet" href="style.css?v=20260814-comunidade-v2">
-  <link rel="stylesheet" href="comunidade.css?v=20260814-interacoes-v2">
+  <link rel="stylesheet" href="comunidade.css?v=20260819-seguranca-v1">
 </head>
 <body class="pagina-comunidade">
   <header class="cabecalho-comunidade">
@@ -107,6 +107,27 @@
     </section>
   </main>
 
+  <dialog id="modalDenuncia" class="modal-autenticacao modal-denuncia" aria-labelledby="tituloDenuncia">
+    <div class="modal-conteudo">
+      <button id="fecharDenuncia" class="fechar-modal" type="button" aria-label="Fechar">×</button>
+      <p class="rotulo">SEGURANÇA DA COMUNIDADE</p>
+      <h2 id="tituloDenuncia">Denunciar conteúdo</h2>
+      <p class="texto-modal">Explique o problema para que a moderação possa analisar. A pessoa denunciada não verá quem enviou a denúncia.</p>
+      <form id="formularioDenuncia" novalidate>
+        <div class="campo-auth">
+          <label for="motivoDenuncia">Motivo da denúncia</label>
+          <select id="motivoDenuncia" required></select>
+        </div>
+        <div class="campo-auth">
+          <label for="detalhesDenuncia">Detalhes opcionais</label>
+          <textarea id="detalhesDenuncia" maxlength="240" rows="4" placeholder="Conte o que aconteceu, se desejar."></textarea>
+        </div>
+        <button id="enviarDenuncia" class="botao-primario botao-largo" type="submit">Enviar denúncia para análise</button>
+        <p id="mensagemDenuncia" class="mensagem-formulario" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </dialog>
+
   <dialog id="modalAutenticacao" class="modal-autenticacao" aria-labelledby="tituloAutenticacao">
     <div class="modal-conteudo">
       <button id="fecharAutenticacao" class="fechar-modal" type="button" aria-label="Fechar">×</button>
@@ -153,6 +174,7 @@
         <button class="acao-publicacao botao-salvar-publicacao" type="button">🔖 <span>Salvar</span></button>
         <button class="acao-publicacao botao-comentarios" type="button">💬 <span>Comentários</span></button>
         <button class="acao-publicacao botao-compartilhar-publicacao" type="button">↗️ <span>Compartilhar</span></button>
+        <button class="acao-publicacao acao-denunciar-publicacao" type="button">🚩 <span>Denunciar</span></button>
       </footer>
       <section class="area-comentarios" hidden>
         <div class="lista-comentarios"></div>
@@ -166,6 +188,6 @@
     </article>
   </template>
 
-  <script type="module" src="comunidade.js?v=20260814-interacoes-v2"></script>
+  <script type="module" src="comunidade.js?v=20260819-seguranca-v1"></script>
 </body>
 </html>

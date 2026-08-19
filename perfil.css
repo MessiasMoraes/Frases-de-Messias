@@ -78,3 +78,66 @@ body.pagina-perfil.tema-escuro .campo-perfil textarea { border-color: #3a4b69; b
 @media (max-width: 390px) {
   .acoes-perfil { grid-template-columns: 1fr; }
 }
+
+/* Ação privada de bloqueio de perfil. */
+.botao-bloquear-perfil {
+  min-height: 42px;
+  border: 1px solid #d9a095;
+  border-radius: 11px;
+  padding: 9px 14px;
+  background: #fff7f5;
+  color: #a94228;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+  transition: background .16s ease-out, color .16s ease-out, transform .16s ease-out;
+}
+
+.botao-bloquear-perfil:hover,
+.botao-bloquear-perfil:focus-visible,
+.botao-bloquear-perfil.ativo {
+  background: #ffe7e1;
+  color: #8d301b;
+  outline: none;
+}
+
+.botao-bloquear-perfil:disabled {
+  cursor: not-allowed;
+  opacity: .62;
+}
+
+body.pagina-comunidade.tema-escuro .botao-bloquear-perfil {
+  border-color: #8b4b46;
+  background: #382526;
+  color: #ffb5a5;
+}
+
+body.pagina-comunidade.tema-escuro .botao-bloquear-perfil:hover,
+body.pagina-comunidade.tema-escuro .botao-bloquear-perfil:focus-visible,
+body.pagina-comunidade.tema-escuro .botao-bloquear-perfil.ativo {
+  background: #512e2e;
+  color: #ffd4ca;
+}
+
+@media (max-width: 620px) {
+  .botao-bloquear-perfil { width: 100%; }
+}
+
+.botao-denunciar-perfil {
+  min-height: 40px;
+  border: 1px solid #e2c48e;
+  border-radius: 11px;
+  padding: 8px 12px;
+  background: #fffaf0;
+  color: #885d00;
+  cursor: pointer;
+  font: inherit;
+  font-size: .88rem;
+  font-weight: 800;
+}
+
+.botao-denunciar-perfil:hover,
+.botao-denunciar-perfil:focus-visible { background: #fff0ca; outline: none; }
+body.pagina-comunidade.tema-escuro .botao-denunciar-perfil { border-color: #766428; background: #423716; color: #ffe39a; }
+body.pagina-comunidade.tema-escuro .botao-denunciar-perfil:hover,
+body.pagina-comunidade.tema-escuro .botao-denunciar-perfil:focus-visible { background: #5a4a1b; }
