@@ -1770,3 +1770,114 @@ body.dark-mode .btn-explorar-colecoes:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .opcoes-download-colecao button { transition: none; }
 }
+
+/* ============================
+   CONVITES PARA CANAIS OFICIAIS
+============================ */
+.convite-canais {
+  width: min(100% - 30px, 1100px);
+  margin: 30px auto;
+  padding: 26px 30px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.06fr) minmax(360px, .94fr);
+  gap: 24px;
+  align-items: center;
+  background: linear-gradient(135deg, #f8fbff 0%, #eef7ff 52%, #f0fbf4 100%);
+  border: 1px solid #c7e0f5;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(30, 92, 145, .12);
+}
+
+.convite-canais-selo {
+  margin: 0 0 5px;
+  color: #2563eb;
+  font-size: .74rem;
+  font-weight: 800;
+  letter-spacing: .11em;
+}
+
+.convite-canais h2 {
+  margin: 0;
+  color: #153f70;
+  font-size: clamp(1.25rem, 2.7vw, 1.72rem);
+  line-height: 1.2;
+}
+
+.convite-canais-texto > p:last-child {
+  margin: 9px 0 0;
+  max-width: 580px;
+  color: #425466;
+}
+
+.convite-canais-acoes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.convite-canal {
+  min-height: 84px;
+  padding: 14px;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: 13px;
+  transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+
+.convite-canal:hover,
+.convite-canal:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 9px 18px rgba(15, 48, 80, .16);
+}
+
+.convite-canal:active { transform: scale(.98); }
+.convite-canal:focus-visible { outline: 3px solid #153f70; outline-offset: 3px; }
+
+.convite-canal-whatsapp { background: #ebfbf2; border-color: #a9e6bf; color: #14532d; }
+.convite-canal-telegram { background: #eaf7ff; border-color: #a9d9f4; color: #0c4a6e; }
+
+.convite-canal-sigla {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  font-weight: 900;
+}
+
+.convite-canal-whatsapp .convite-canal-sigla { background: #19a561; }
+.convite-canal-telegram .convite-canal-sigla { background: #229ed9; }
+
+.convite-canal-corpo { min-width: 0; display: grid; line-height: 1.2; }
+.convite-canal-corpo strong { font-size: .96rem; }
+.convite-canal-corpo small { margin-top: 4px; font-size: .76rem; opacity: .82; }
+.convite-canal-seta { font-size: 1.15rem; font-weight: 800; }
+
+.dark .convite-canais {
+  background: linear-gradient(135deg, #10283c 0%, #112b43 55%, #123a34 100%);
+  border-color: #315a73;
+  box-shadow: none;
+}
+
+.dark .convite-canais-selo { color: #8cc4ff; }
+.dark .convite-canais h2 { color: #d9ecff; }
+.dark .convite-canais-texto > p:last-child { color: #c7d8e6; }
+.dark .convite-canal-whatsapp { background: #103c2a; border-color: #276f4b; color: #c4f5d7; }
+.dark .convite-canal-telegram { background: #10364d; border-color: #286988; color: #ccecff; }
+.dark .convite-canal:focus-visible { outline-color: #a7d8ff; }
+
+@media (max-width: 820px) {
+  .convite-canais { grid-template-columns: 1fr; gap: 18px; padding: 22px; }
+}
+
+@media (max-width: 520px) {
+  .convite-canais { width: min(100% - 22px, 1100px); padding: 20px 16px; }
+  .convite-canais-acoes { grid-template-columns: 1fr; }
+  .convite-canal { min-height: 70px; }
+}
