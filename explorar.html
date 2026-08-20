@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Explore perfis e encontre pessoas que compartilham fé, motivação, esperança e reflexão na Comunidade Frases de Messias.">
+  <meta name="description" content="Explore perfis e publicações aprovadas de fé, motivação, esperança e reflexão na Comunidade Frases de Messias.">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="https://frasesdemessias.com.br/explorar.html">
-  <title>Explorar pessoas | Comunidade Frases de Messias</title>
+  <title>Explorar a Comunidade | Frases de Messias</title>
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://frasesdemessias.com.br/explorar.html">
-  <meta property="og:title" content="Explorar pessoas | Frases de Messias">
-  <meta property="og:description" content="Conheça pessoas que compartilham inspiração, fé e esperança na Comunidade Frases de Messias.">
+  <meta property="og:title" content="Explorar a Comunidade | Frases de Messias">
+  <meta property="og:description" content="Encontre pessoas e publicações aprovadas de inspiração, fé e esperança na Comunidade Frases de Messias.">
   <link rel="stylesheet" href="style.css?v=20260820-rede-social-v1">
-  <link rel="stylesheet" href="comunidade.css?v=20260820-rede-social-v1">
+  <link rel="stylesheet" href="comunidade.css?v=20260820-rede-social-v2">
 </head>
 <body class="pagina-comunidade pagina-explorar">
   <header class="cabecalho-comunidade">
@@ -33,10 +33,21 @@
 
   <main class="container comunidade-principal">
     <section class="hero-comunidade hero-explorar" aria-labelledby="tituloExplorar">
-      <p class="selo-comunidade">PESSOAS DA COMUNIDADE</p>
-      <h1 id="tituloExplorar">Encontre pessoas que inspiram</h1>
-      <p>Conheça membros que compartilham palavras de fé, esperança, amor e motivação. Visite um perfil para seguir e acompanhar suas publicações.</p>
+      <p class="selo-comunidade">DESCUBRA A COMUNIDADE</p>
+      <h1 id="tituloExplorar">Encontre pessoas e inspirações</h1>
+      <p>Conheça membros e localize publicações aprovadas sobre fé, esperança, amor e motivação. Visite um perfil para seguir e acompanhar suas inspirações.</p>
       <a class="botao-secundario" href="comunidade.html#feedComunidade">Ver o feed da Comunidade</a>
+    </section>
+
+    <section id="painelSugestoesExplorar" class="cartao-comunidade painel-explorar painel-sugestoes" aria-labelledby="tituloSugestoesExplorar" hidden>
+      <div class="cabecalho-explorar">
+        <div>
+          <p class="rotulo">PARA VOCÊ</p>
+          <h2 id="tituloSugestoesExplorar">Pessoas para acompanhar</h2>
+          <p class="texto-sugestoes">Sugestões baseadas nos perfis públicos que você ainda não segue.</p>
+        </div>
+      </div>
+      <div id="listaSugestoesExplorar" class="grade-perfis grade-sugestoes" aria-live="polite"></div>
     </section>
 
     <section class="cartao-comunidade painel-explorar" aria-labelledby="tituloListaPerfis">
@@ -54,8 +65,24 @@
         <div class="estado-feed carregando-feed">⏳ Carregando perfis da Comunidade...</div>
       </div>
     </section>
+
+    <section class="cartao-comunidade painel-explorar painel-publicacoes-explorar" aria-labelledby="tituloListaPublicacoes">
+      <div class="cabecalho-explorar">
+        <div>
+          <p class="rotulo">PESQUISAR NO FEED</p>
+          <h2 id="tituloListaPublicacoes">Frases e publicações aprovadas</h2>
+        </div>
+        <label class="busca-perfis" for="buscaPublicacoes">Buscar publicação
+          <input id="buscaPublicacoes" type="search" maxlength="80" autocomplete="off" placeholder="Ex.: esperança, amor ou fé">
+        </label>
+      </div>
+      <p id="mensagemPublicacoesExplorar" class="mensagem-formulario" role="status" aria-live="polite"></p>
+      <div id="listaPublicacoesExplorar" class="lista-publicacoes-explorar" aria-live="polite">
+        <div class="estado-feed carregando-feed">⏳ Carregando publicações aprovadas...</div>
+      </div>
+    </section>
   </main>
 
-  <script type="module" src="explorar.js?v=20260820-rede-social-v1"></script>
+  <script type="module" src="explorar.js?v=20260820-rede-social-v2"></script>
 </body>
 </html>

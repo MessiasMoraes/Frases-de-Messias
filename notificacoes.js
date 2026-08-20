@@ -69,6 +69,14 @@ function detalhesNotificacao(item) {
       href: `perfil.html?uid=${encodeURIComponent(item.atorId)}`
     };
   }
+  if (item.tipo === "comentario_aprovado") {
+    return {
+      icone: "💬",
+      titulo: "Seu comentário foi aprovado",
+      descricao: "Ele já está visível na publicação da Comunidade.",
+      href: "comunidade.html#feedComunidade"
+    };
+  }
   return {
     icone: "❤️",
     titulo: `${nome} curtiu sua publicação`,
@@ -86,7 +94,7 @@ function renderizarNotificacoes() {
     return;
   }
   if (!notificacoes.length) {
-    refs.lista.innerHTML = '<div class="estado-feed">Ainda não há notificações. Quando alguém seguir você ou curtir uma publicação sua, o aviso aparecerá aqui.</div>';
+    refs.lista.innerHTML = '<div class="estado-feed">Ainda não há notificações. Quando alguém seguir você, curtir uma publicação sua ou a moderação aprovar um comentário seu, o aviso aparecerá aqui.</div>';
     refs.mensagem.textContent = "";
     atualizarContador();
     return;

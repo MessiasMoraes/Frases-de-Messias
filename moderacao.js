@@ -12,7 +12,8 @@ import {
   setDoc,
   updateDoc,
   where,
-  serverTimestamp
+  serverTimestamp,
+  writeBatch
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 const EMAIL_ADMINISTRADOR = "moraesoficialll@gmail.com";
@@ -409,11 +410,34 @@ async function executarAcao(pendencia, cartao, alvoMensagem, acao) {
     }
 
     if (acao === "aprovar") {
-      await updateDoc(pendencia.referencia, {
+      const atualizacao = {
         status: "publicado",
         publicadoEm: serverTimestamp(),
         moderadoPor: auth.currentUser.uid
-      });
+      };
+
+      if (pendencia.tipo === "comentario") {
+        const autorId = textoLimpo(pendencia.dados.autorId);
+        const publicacaoId = textoLimpo(pendencia.publicacaoId);
+        const comentarioId = textoLimpo(pendencia.referencia.id);
+        const lote = writeBatch(db);
+        lote.update(pendencia.referencia, atualizacao);
+        if (autorId && autorId !== auth.currentUser.uid && publicacaoId && comentarioId) {
+          lote.set(doc(db, "comunidadeUsuarios", autorId, "notificacoes", `comentario_${comentarioId}`), {
+            tipo: "comentario_aprovado",
+            atorId: auth.currentUser.uid,
+            atorNome: "Moderação Frases de Messias",
+            publicacaoId,
+            comentarioId,
+            texto: "Seu comentário foi aprovado e já está visível.",
+            lida: false,
+            criadoEm: serverTimestamp()
+          });
+        }
+        await lote.commit();
+      } else {
+        await updateDoc(pendencia.referencia, atualizacao);
+      }
     } else {
       await updateDoc(pendencia.referencia, {
         status: "removido",

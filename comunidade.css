@@ -528,3 +528,39 @@ body.pagina-comunidade.tema-escuro .conteudo-notificacao strong { color: var(--c
   .cabecalho-notificacoes { align-items: stretch; flex-direction: column; }
   .cabecalho-notificacoes .botao-pequeno { width: 100%; }
 }
+
+
+/* Busca pública de publicações aprovadas — Rede Social V2. */
+.painel-publicacoes-explorar { margin-top: 20px; }
+.lista-publicacoes-explorar { display: grid; gap: 13px; margin-top: 15px; }
+.cartao-publicacao-explorar {
+  display: grid;
+  gap: 12px;
+  border: 1px solid var(--comunidade-borda);
+  border-radius: 15px;
+  padding: 17px;
+  background: var(--comunidade-cartao);
+}
+.cabecalho-publicacao-explorar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.cabecalho-publicacao-explorar a { color: var(--comunidade-azul); font-weight: 800; text-decoration: none; }
+.cabecalho-publicacao-explorar a:hover { text-decoration: underline; }
+.cabecalho-publicacao-explorar span { color: var(--comunidade-suave); font-size: .78rem; text-align: right; }
+.cartao-publicacao-explorar blockquote {
+  margin: 0;
+  color: var(--comunidade-texto);
+  font-size: 1.02rem;
+  font-weight: 650;
+  line-height: 1.55;
+}
+.cartao-publicacao-explorar .acao-perfil-explorar { justify-self: start; }
+
+@media (max-width: 700px) {
+  .cabecalho-publicacao-explorar { align-items: flex-start; flex-direction: column; gap: 4px; }
+  .cabecalho-publicacao-explorar span { text-align: left; }
+}
+
+
+/* Sugestões pessoais de perfis — Rede Social V2. */
+.painel-sugestoes { margin-top: 20px; }
+.texto-sugestoes { margin: 5px 0 0; color: var(--comunidade-suave); line-height: 1.45; }
+.grade-sugestoes .estado-feed { grid-column: 1 / -1; }

@@ -61,11 +61,10 @@ service cloud.firestore {
 
     // A notificação nunca inclui e-mail ou dados privados. O UID de quem gerou
     // a interação é obrigatório para impedir que alguém finja ser outro membro.
-    function notificacaoValida(destinatarioId) {
+    function notificacaoBaseValida(destinatarioId) {
       return request.resource.data.keys().hasOnly([
-        'tipo', 'atorId', 'atorNome', 'publicacaoId', 'texto', 'lida', 'criadoEm'
+        'tipo', 'atorId', 'atorNome', 'publicacaoId', 'comentarioId', 'texto', 'lida', 'criadoEm'
       ])
-        && request.resource.data.tipo in ['seguidor', 'curtida']
         && request.resource.data.atorId == request.auth.uid
         && request.resource.data.atorId != destinatarioId
         && request.resource.data.atorNome is string
@@ -77,6 +76,24 @@ service cloud.firestore {
         && request.resource.data.texto.size() >= 3
         && request.resource.data.texto.size() <= 120
         && request.resource.data.lida == false;
+    }
+
+    function notificacaoDeInteracaoValida(destinatarioId) {
+      return notificacaoBaseValida(destinatarioId)
+        && request.resource.data.tipo in ['seguidor', 'curtida'];
+    }
+
+    // A aprovação do comentário só pode gerar aviso pela própria moderação, no
+    // mesmo lote que torna o comentário público. Isso impede avisos falsos.
+    function notificacaoDeComentarioAprovadoValida(destinatarioId, notificacaoId) {
+      return notificacaoBaseValida(destinatarioId)
+        && request.resource.data.tipo == 'comentario_aprovado'
+        && request.resource.data.comentarioId is string
+        && request.resource.data.comentarioId.size() > 0
+        && notificacaoId == 'comentario_' + request.resource.data.comentarioId
+        && publicacaoPublica(request.resource.data.publicacaoId)
+        && getAfter(/databases/$(database)/documents/comunidadePublicacoes/$(request.resource.data.publicacaoId)/comentarios/$(request.resource.data.comentarioId)).data.status == 'publicado'
+        && getAfter(/databases/$(database)/documents/comunidadePublicacoes/$(request.resource.data.publicacaoId)/comentarios/$(request.resource.data.comentarioId)).data.autorId == destinatarioId;
     }
 
     function dadosPublicosDePerfilValidos() {
@@ -178,10 +195,12 @@ service cloud.firestore {
       // relação real de seguir ou curtida realizada pelo próprio autor.
       match /notificacoes/{notificacaoId} {
         allow get, list: if administrador() || (conectado() && request.auth.uid == usuarioId);
-        allow create: if contaLiberadaParaInteragir()
-          && notificacaoValida(usuarioId)
-          && (
-            (
+        allow create: if (
+            administrador() && notificacaoDeComentarioAprovadoValida(usuarioId, notificacaoId)
+          ) || (
+            contaLiberadaParaInteragir()
+            && notificacaoDeInteracaoValida(usuarioId)
+            && (
               request.resource.data.tipo == 'seguidor'
               && request.resource.data.publicacaoId == ''
               && notificacaoId == 'seguidor_' + request.auth.uid
