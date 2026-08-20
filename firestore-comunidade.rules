@@ -55,6 +55,13 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/comunidadePublicacoes/$(publicacaoId)).data.status == 'publicado';
     }
 
+    // A preferência é consultada tanto na interface quanto nas regras para que
+    // não seja possível criar relações de seguimento fora da tela do portal.
+    function perfilAceitaSeguidores(usuarioId) {
+      return !exists(/databases/$(database)/documents/comunidadePerfis/$(usuarioId))
+        || get(/databases/$(database)/documents/comunidadePerfis/$(usuarioId)).data.aceitaSeguidores != false;
+    }
+
     function comentarioPublicado(publicacaoId, comentarioId) {
       return get(/databases/$(database)/documents/comunidadePublicacoes/$(publicacaoId)/comentarios/$(comentarioId)).data.status == 'publicado';
     }
@@ -98,7 +105,8 @@ service cloud.firestore {
 
     function dadosPublicosDePerfilValidos() {
       return request.resource.data.keys().hasOnly([
-        'nome', 'bio', 'fotoUrl', 'criadoEm', 'atualizadoEm'
+        'nome', 'bio', 'fotoUrl', 'visivelEmExplorar', 'aceitaSeguidores',
+        'mostrarMetricasSociais', 'criadoEm', 'atualizadoEm'
       ])
         && request.resource.data.nome is string
         && request.resource.data.nome.size() >= 2
@@ -110,7 +118,10 @@ service cloud.firestore {
         && (!('fotoUrl' in request.resource.data) || (
           request.resource.data.fotoUrl is string
           && request.resource.data.fotoUrl.size() <= 500
-        ));
+        ))
+        && (!('visivelEmExplorar' in request.resource.data) || request.resource.data.visivelEmExplorar is bool)
+        && (!('aceitaSeguidores' in request.resource.data) || request.resource.data.aceitaSeguidores is bool)
+        && (!('mostrarMetricasSociais' in request.resource.data) || request.resource.data.mostrarMetricasSociais is bool);
     }
 
     // Portal existente: leitura pública; gravação administrativa.
@@ -244,7 +255,8 @@ service cloud.firestore {
         && request.auth.uid == usuarioId
         && dadosPublicosDePerfilValidos()
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
-          'nome', 'bio', 'fotoUrl', 'atualizadoEm'
+          'nome', 'bio', 'fotoUrl', 'visivelEmExplorar', 'aceitaSeguidores',
+          'mostrarMetricasSociais', 'atualizadoEm'
         ])
       );
       allow delete: if administrador();
@@ -254,6 +266,7 @@ service cloud.firestore {
       match /seguidores/{seguidorId} {
         allow read: if true;
         allow create: if contaLiberadaParaInteragir()
+          && perfilAceitaSeguidores(usuarioId)
           && request.auth.uid == seguidorId
           && request.resource.data.keys().hasOnly(['usuarioId', 'criadoEm'])
           && request.resource.data.usuarioId == request.auth.uid;
@@ -266,6 +279,7 @@ service cloud.firestore {
       match /seguindo/{seguidoId} {
         allow get, list: if conectado() && request.auth.uid == usuarioId;
         allow create: if contaLiberadaParaInteragir()
+          && perfilAceitaSeguidores(seguidoId)
           && request.auth.uid == usuarioId
           && request.resource.data.keys().hasOnly(['usuarioId', 'criadoEm'])
           && request.resource.data.usuarioId == seguidoId;
@@ -279,6 +293,15 @@ service cloud.firestore {
     // de criar e apagar seguem restritas no caminho específico do perfil acima.
     match /{caminho=**}/seguidores/{seguidorId} {
       allow read: if true;
+    }
+
+    // Necessário para consultas collectionGroup("comentarios"): somente comentários
+    // publicados podem compor a atividade pública de um perfil. Pendentes continuam
+    // restritos ao autor e à moderação no caminho específico da publicação.
+    match /{caminho=**}/comentarios/{comentarioId} {
+      allow get, list: if resource.data.status == 'publicado' || administrador() || (
+        conectado() && resource.data.autorId == request.auth.uid
+      );
     }
 
     // Denúncias só ficam disponíveis para quem enviou e para a moderação. Elas

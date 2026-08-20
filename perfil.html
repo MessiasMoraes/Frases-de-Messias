@@ -7,7 +7,7 @@
   <title>Perfil | Frases de Messias</title>
   <link rel="stylesheet" href="style.css?v=20260820-rede-social-v1">
   <link rel="stylesheet" href="comunidade.css?v=20260820-rede-social-v1">
-  <link rel="stylesheet" href="perfil.css?v=20260819-seguranca-v2">
+  <link rel="stylesheet" href="perfil.css?v=20260820-rede-social-v3">
 </head>
 <body class="pagina-comunidade pagina-perfil">
   <header class="cabecalho-comunidade">
@@ -35,10 +35,18 @@
           <p class="rotulo">MEMBRO DA COMUNIDADE</p>
           <h1 id="nomePerfil">Membro da comunidade</h1>
           <p id="bioPerfil" class="bio-perfil">Este membro ainda não adicionou uma biografia.</p>
-          <div class="metricas-perfil" aria-label="Informações do perfil">
+          <div class="metricas-perfil" aria-label="Informações sociais do perfil">
             <span><strong id="contadorSeguidores">0</strong> seguidores</span>
             <span><strong id="contadorSeguindo">0</strong> seguindo</span>
           </div>
+          <section class="atividade-perfil" aria-labelledby="tituloAtividadePerfil">
+            <p id="tituloAtividadePerfil" class="rotulo">ATIVIDADE PÚBLICA</p>
+            <div class="metricas-atividade-perfil" aria-label="Atividade aprovada na Comunidade">
+              <span><strong id="contadorPublicacoesPerfil">—</strong> publicações</span>
+              <span><strong id="contadorComentariosPerfil">—</strong> comentários aprovados</span>
+              <span id="membroDesdePerfil">Membro da Comunidade</span>
+            </div>
+          </section>
         </div>
         <div class="acoes-perfil">
           <button id="botaoSeguir" class="botao-primario" type="button">Seguir</button>
@@ -99,6 +107,6 @@
     </article>
   </template>
 
-  <script type="module" src="perfil.js?v=20260820-rede-social-v1"></script>
+  <script type="module" src="perfil.js?v=20260820-rede-social-v3-atividade-v2"></script>
 </body>
 </html>

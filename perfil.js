@@ -7,6 +7,7 @@ import {
   collectionGroup,
   deleteDoc,
   doc,
+  getCountFromServer,
   getDoc,
   limit,
   onSnapshot,
@@ -32,8 +33,12 @@ const refs = {
   foto: document.getElementById("fotoPerfil"),
   nome: document.getElementById("nomePerfil"),
   bio: document.getElementById("bioPerfil"),
+  metricas: document.querySelector(".metricas-perfil"),
   seguidores: document.getElementById("contadorSeguidores"),
   seguindo: document.getElementById("contadorSeguindo"),
+  publicacoes: document.getElementById("contadorPublicacoesPerfil"),
+  comentarios: document.getElementById("contadorComentariosPerfil"),
+  membroDesde: document.getElementById("membroDesdePerfil"),
   botaoSeguir: document.getElementById("botaoSeguir"),
   botaoBloquear: document.getElementById("botaoBloquearPerfil"),
   botaoDenunciar: document.getElementById("botaoDenunciarPerfil"),
@@ -97,6 +102,12 @@ function dataFormatada(valor) {
   return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short", year: "numeric" }).format(data);
 }
 
+function membroDesdeFormatado(valor) {
+  const data = valor?.toDate?.() || null;
+  if (!data) return "Membro da Comunidade";
+  return `Membro desde ${new Intl.DateTimeFormat("pt-BR", { month: "long", year: "numeric" }).format(data)}`;
+}
+
 function mostrarEstado(mensagem, erro = false) {
   refs.estado.textContent = mensagem;
   refs.estado.classList.toggle("erro", erro);
@@ -136,13 +147,18 @@ function renderizarPerfil() {
   const bio = textoLimpo(dadosPerfil?.bio || "") || "Este membro ainda não adicionou uma biografia.";
   refs.nome.textContent = nome;
   refs.bio.textContent = bio;
-  refs.seguidores.textContent = "…";
-  refs.seguindo.textContent = "…";
+  const dono = souDonoDoPerfil();
+  const mostrarMetricas = dono || dadosPerfil?.mostrarMetricasSociais !== false;
+  refs.metricas.hidden = !mostrarMetricas;
+  refs.seguidores.textContent = mostrarMetricas ? "…" : "";
+  refs.seguindo.textContent = mostrarMetricas ? "…" : "";
   carregarContadoresSociais();
+  carregarAtividadePublica();
+  refs.membroDesde.textContent = membroDesdeFormatado(dadosPerfil?.criadoEm);
   mostrarImagem(dadosPerfil?.fotoUrl, nome);
   document.title = `${nome} | Frases de Messias`;
 
-  const dono = souDonoDoPerfil();
+
   refs.botaoEditar.hidden = !dono;
   refs.botaoSeguir.hidden = dono;
   refs.botaoBloquear.hidden = dono;
@@ -155,6 +171,13 @@ function renderizarPerfil() {
 
 function atualizarBotaoSeguir() {
   if (souDonoDoPerfil()) return;
+  const aceitaSeguidores = dadosPerfil?.aceitaSeguidores !== false;
+  if (!aceitaSeguidores && !seguindo) {
+    refs.botaoSeguir.textContent = "Este perfil não aceita seguidores";
+    refs.botaoSeguir.classList.remove("botao-seguindo");
+    refs.botaoSeguir.disabled = true;
+    return;
+  }
   if (!usuarioAtual) {
     refs.botaoSeguir.textContent = "Entrar para seguir";
     refs.botaoSeguir.classList.remove("botao-seguindo");
@@ -212,6 +235,9 @@ async function garantirPerfilPublico(usuario) {
     nome: nomePadrao(usuario),
     bio: "",
     fotoUrl: "",
+    visivelEmExplorar: true,
+    aceitaSeguidores: true,
+    mostrarMetricasSociais: true,
     criadoEm: serverTimestamp(),
     atualizadoEm: serverTimestamp()
   });
@@ -221,6 +247,10 @@ function carregarContadoresSociais() {
   if (!uidPerfil) return;
   if (cancelarSeguidores) cancelarSeguidores();
   if (cancelarSeguindo) cancelarSeguindo();
+  cancelarSeguidores = null;
+  cancelarSeguindo = null;
+
+  if (!souDonoDoPerfil() && dadosPerfil?.mostrarMetricasSociais === false) return;
 
   // O contador de seguidores é sempre uma coleção pública do perfil exibido.
   // Usar um observador separado impede que falhas no cálculo de “seguindo”
@@ -249,6 +279,44 @@ function carregarContadoresSociais() {
       refs.seguindo.textContent = "—";
     }
   );
+}
+
+async function carregarAtividadePublica() {
+  if (!uidPerfil) return;
+  refs.publicacoes.textContent = "…";
+  refs.comentarios.textContent = "…";
+  try {
+    const publicacoesAprovadas = query(
+      collection(db, "comunidadePublicacoes"),
+      where("autorId", "==", uidPerfil),
+      where("status", "==", "publicado")
+    );
+    const comentariosAprovados = query(
+      collectionGroup(db, "comentarios"),
+      where("autorId", "==", uidPerfil),
+      where("status", "==", "publicado")
+    );
+    const [resultadoPublicacoes, resultadoComentarios] = await Promise.allSettled([
+      getCountFromServer(publicacoesAprovadas),
+      getCountFromServer(comentariosAprovados)
+    ]);
+    if (resultadoPublicacoes.status === "fulfilled") {
+      refs.publicacoes.textContent = formatarNumero(resultadoPublicacoes.value.data().count);
+    } else {
+      console.warn("Não foi possível carregar as publicações aprovadas do perfil.", resultadoPublicacoes.reason);
+      refs.publicacoes.textContent = "—";
+    }
+    if (resultadoComentarios.status === "fulfilled") {
+      refs.comentarios.textContent = formatarNumero(resultadoComentarios.value.data().count);
+    } else {
+      console.warn("Não foi possível carregar os comentários aprovados do perfil.", resultadoComentarios.reason);
+      refs.comentarios.textContent = "—";
+    }
+  } catch (erro) {
+    console.warn("Não foi possível preparar a atividade pública do perfil.", erro);
+    refs.publicacoes.textContent = "—";
+    refs.comentarios.textContent = "—";
+  }
 }
 
 async function atualizarEstadoDeSeguimento() {

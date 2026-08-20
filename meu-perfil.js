@@ -12,6 +12,9 @@ const refs = {
   nome: document.getElementById("nomePerfilInput"),
   bio: document.getElementById("bioPerfilInput"),
   fotoUrl: document.getElementById("fotoUrlInput"),
+  visivelEmExplorar: document.getElementById("visivelEmExplorarInput"),
+  aceitaSeguidores: document.getElementById("aceitaSeguidoresInput"),
+  mostrarMetricasSociais: document.getElementById("mostrarMetricasSociaisInput"),
   contadorBio: document.getElementById("contadorBio"),
   avatar: document.getElementById("avatarEdicao"),
   iniciais: document.getElementById("iniciaisEdicao"),
@@ -90,6 +93,9 @@ async function carregarPerfil(usuario) {
   refs.nome.value = textoLimpo(dados.nome || nomePadrao(usuario));
   refs.bio.value = textoLimpo(dados.bio || "");
   refs.fotoUrl.value = urlDeImagemSegura(dados.fotoUrl || "");
+  refs.visivelEmExplorar.checked = dados.visivelEmExplorar !== false;
+  refs.aceitaSeguidores.checked = dados.aceitaSeguidores !== false;
+  refs.mostrarMetricasSociais.checked = dados.mostrarMetricasSociais !== false;
   refs.verPerfil.href = `perfil.html?uid=${encodeURIComponent(usuario.uid)}`;
   atualizarContadorBio();
   atualizarPrevia();
@@ -102,6 +108,9 @@ async function salvarPerfil(evento) {
   const bio = textoLimpo(refs.bio.value).slice(0, 180);
   const fotoUrlInformada = textoLimpo(refs.fotoUrl.value);
   const fotoUrl = urlDeImagemSegura(fotoUrlInformada);
+  const visivelEmExplorar = refs.visivelEmExplorar.checked;
+  const aceitaSeguidores = refs.aceitaSeguidores.checked;
+  const mostrarMetricasSociais = refs.mostrarMetricasSociais.checked;
 
   if (nome.length < 2) {
     mostrarMensagem("Informe um nome público com pelo menos 2 caracteres.", true);
@@ -125,6 +134,9 @@ async function salvarPerfil(evento) {
         nome,
         bio,
         fotoUrl,
+        visivelEmExplorar,
+        aceitaSeguidores,
+        mostrarMetricasSociais,
         atualizadoEm: serverTimestamp()
       }, { merge: true }),
       setDoc(perfilPrivado, {
@@ -137,7 +149,7 @@ async function salvarPerfil(evento) {
     refs.fotoUrl.value = fotoUrl;
     atualizarContadorBio();
     atualizarPrevia();
-    mostrarMensagem("Perfil atualizado com sucesso. Suas informações públicas já estão visíveis na Comunidade.");
+    mostrarMensagem("Perfil e preferências de privacidade atualizados com sucesso.");
   } catch (erro) {
     console.error("Erro ao salvar perfil.", erro);
     mostrarMensagem("Não foi possível salvar suas alterações agora. Tente novamente.", true);

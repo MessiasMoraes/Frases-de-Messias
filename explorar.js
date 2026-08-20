@@ -168,6 +168,7 @@ async function carregarPerfis() {
   try {
     const resultado = await getDocs(query(collection(db, "comunidadePerfis"), limit(80)));
     perfis = resultado.docs
+      .filter((item) => item.data().visivelEmExplorar !== false)
       .map((item) => ({
         id: item.id,
         nome: textoLimpo(item.data().nome) || "Membro da comunidade",

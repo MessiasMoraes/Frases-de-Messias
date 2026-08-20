@@ -693,6 +693,9 @@ async function salvarPerfil(usuario) {
       nome: nomeExibicao(usuario),
       bio: "",
       fotoUrl: "",
+      visivelEmExplorar: true,
+      aceitaSeguidores: true,
+      mostrarMetricasSociais: true,
       criadoEm: serverTimestamp(),
       atualizadoEm: serverTimestamp()
     });

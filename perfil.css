@@ -141,3 +141,40 @@ body.pagina-comunidade.tema-escuro .botao-bloquear-perfil.ativo {
 body.pagina-comunidade.tema-escuro .botao-denunciar-perfil { border-color: #766428; background: #423716; color: #ffe39a; }
 body.pagina-comunidade.tema-escuro .botao-denunciar-perfil:hover,
 body.pagina-comunidade.tema-escuro .botao-denunciar-perfil:focus-visible { background: #5a4a1b; }
+
+
+/* Preferências públicas de privacidade — Rede Social V3. */
+.grupo-privacidade-perfil {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  border: 1px solid #cdd8ea;
+  border-radius: 14px;
+  padding: 17px;
+  background: #f8fbff;
+}
+.grupo-privacidade-perfil legend { padding: 0 5px; color: var(--comunidade-texto); font-size: .92rem; font-weight: 900; }
+.grupo-privacidade-perfil > p { margin: 0 0 2px; color: var(--comunidade-suave); font-size: .84rem; line-height: 1.5; }
+.opcao-privacidade-perfil { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 11px; align-items: start; padding: 9px 0; cursor: pointer; }
+.opcao-privacidade-perfil + .opcao-privacidade-perfil { border-top: 1px solid #dbe5f3; }
+.opcao-privacidade-perfil input { width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--comunidade-azul); cursor: pointer; }
+.opcao-privacidade-perfil span { display: grid; gap: 3px; }
+.opcao-privacidade-perfil strong { color: var(--comunidade-texto); font-size: .9rem; }
+.opcao-privacidade-perfil small { color: var(--comunidade-suave); font-size: .79rem; line-height: 1.42; }
+body.pagina-perfil.tema-escuro .grupo-privacidade-perfil { border-color: #3a4b69; background: #132039; }
+body.pagina-perfil.tema-escuro .opcao-privacidade-perfil + .opcao-privacidade-perfil { border-top-color: #33435f; }
+
+
+/* Resumo de atividade pública — Rede Social V3. */
+.atividade-perfil { margin-top: 18px; }
+.atividade-perfil .rotulo { margin: 0 0 7px; }
+.metricas-atividade-perfil { display: flex; flex-wrap: wrap; gap: 8px 17px; align-items: center; color: var(--comunidade-suave); font-size: .82rem; line-height: 1.45; }
+.metricas-atividade-perfil strong { margin-right: 3px; color: var(--comunidade-texto); font-size: .98rem; }
+.metricas-atividade-perfil span:last-child { padding-left: 17px; border-left: 1px solid var(--comunidade-borda); }
+body.pagina-perfil.tema-escuro .metricas-atividade-perfil strong { color: var(--comunidade-texto); }
+@media (max-width: 700px) {
+  .metricas-atividade-perfil { justify-content: center; }
+}
+@media (max-width: 430px) {
+  .metricas-atividade-perfil span:last-child { width: 100%; padding-left: 0; border-left: 0; }
+}
