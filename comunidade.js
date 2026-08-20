@@ -375,12 +375,20 @@ function escutarFeed() {
 
 function atualizarBotaoCurtir(botao, ativo) {
   botao.classList.toggle("ativo", ativo);
-  botao.innerHTML = ativo ? "❤️ <span>Curtido</span>" : "🤍 <span>Curtir</span>";
+  botao.setAttribute("aria-pressed", String(ativo));
+  botao.setAttribute("aria-label", ativo ? "Remover curtida" : "Curtir publicação");
+  botao.innerHTML = ativo
+    ? '<span class="icone-acao" aria-hidden="true">♥</span><span>Curtido</span>'
+    : '<span class="icone-acao" aria-hidden="true">♡</span><span>Curtir</span>';
 }
 
 function atualizarBotaoSalvar(botao, ativo) {
   botao.classList.toggle("ativo", ativo);
-  botao.innerHTML = ativo ? "🔖 <span>Salvo</span>" : "🔖 <span>Salvar</span>";
+  botao.setAttribute("aria-pressed", String(ativo));
+  botao.setAttribute("aria-label", ativo ? "Remover dos salvos" : "Salvar publicação");
+  botao.innerHTML = ativo
+    ? '<span class="icone-acao" aria-hidden="true">🔖</span><span>Salvo</span>'
+    : '<span class="icone-acao" aria-hidden="true">🔖</span><span>Salvar</span>';
 }
 
 async function sincronizarEstadoDeInteracoes(publicacaoId, botaoCurtir, botaoSalvar) {
@@ -567,6 +575,8 @@ function alternarComentarios(publicacaoId, area, lista, botao, input) {
   const abrir = area.hidden;
   area.hidden = !abrir;
   botao.classList.toggle("ativo", abrir);
+  botao.setAttribute("aria-expanded", String(abrir));
+  botao.setAttribute("aria-label", abrir ? "Fechar comentários" : "Abrir comentários");
   if (!abrir) return;
   if (comentariosAbertos.has(publicacaoId)) return;
 

@@ -13,7 +13,7 @@
   <meta property="og:description" content="Compartilhe inspiração, fé e esperança em uma comunidade com moderação e respeito.">
   <meta property="og:image" content="https://frasesdemessias.com.br/imagens/1785461694182.png">
   <link rel="stylesheet" href="style.css?v=20260820-menu-canais-v1">
-  <link rel="stylesheet" href="comunidade.css?v=20260820-rede-social-v1">
+  <link rel="stylesheet" href="comunidade.css?v=20260820-rede-social-v4-botoes">
 </head>
 <body class="pagina-comunidade">
   <header class="cabecalho-comunidade">
@@ -176,12 +176,12 @@
         <span class="selo-categoria"></span>
       </header>
       <blockquote class="texto-publicacao"></blockquote>
-      <footer class="acoes-publicacao">
-        <button class="acao-publicacao botao-curtir-publicacao" type="button">🤍 <span>Curtir</span></button>
-        <button class="acao-publicacao botao-salvar-publicacao" type="button">🔖 <span>Salvar</span></button>
-        <button class="acao-publicacao botao-comentarios" type="button">💬 <span>Comentários</span></button>
-        <button class="acao-publicacao botao-compartilhar-publicacao" type="button">↗️ <span>Compartilhar</span></button>
-        <button class="acao-publicacao acao-denunciar-publicacao" type="button">🚩 <span>Denunciar</span></button>
+      <footer class="acoes-publicacao" aria-label="Ações da publicação">
+        <button class="acao-publicacao botao-curtir-publicacao" type="button" aria-pressed="false"><span class="icone-acao" aria-hidden="true">♡</span><span>Curtir</span></button>
+        <button class="acao-publicacao botao-salvar-publicacao" type="button" aria-pressed="false"><span class="icone-acao" aria-hidden="true">🔖</span><span>Salvar</span></button>
+        <button class="acao-publicacao botao-comentarios" type="button" aria-expanded="false"><span class="icone-acao" aria-hidden="true">💬</span><span>Comentar</span></button>
+        <button class="acao-publicacao botao-compartilhar-publicacao" type="button"><span class="icone-acao" aria-hidden="true">↗</span><span>Compartilhar</span></button>
+        <button class="acao-publicacao acao-denunciar-publicacao" type="button"><span class="icone-acao" aria-hidden="true">⚑</span><span>Denunciar</span></button>
       </footer>
       <section class="area-comentarios" hidden>
         <div class="lista-comentarios"></div>
@@ -195,6 +195,6 @@
     </article>
   </template>
 
-  <script type="module" src="comunidade.js?v=20260820-rede-social-v3"></script>
+  <script type="module" src="comunidade.js?v=20260820-rede-social-v4-botoes"></script>
 </body>
 </html>
