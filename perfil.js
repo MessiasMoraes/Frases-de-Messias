@@ -14,7 +14,8 @@ import {
   runTransaction,
   serverTimestamp,
   setDoc,
-  where
+  where,
+  writeBatch
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 const auth = getAuth(app);
@@ -299,16 +300,40 @@ async function sincronizarInteracoesDaFrase(publicacaoId, botaoCurtir, botaoSalv
   }
 }
 
-async function curtirFrase(publicacaoId, botao) {
+async function curtirFrase(frase, botao) {
   if (!usuarioAtual) { pedirLogin(); return; }
+  const publicacaoId = frase?.id || "";
+  if (!publicacaoId) return;
+
   const referencia = doc(db, "comunidadePublicacoes", publicacaoId, "curtidas", usuarioAtual.uid);
+  const autorId = String(frase.autorId || "");
+  const deveNotificar = Boolean(autorId && autorId !== usuarioAtual.uid);
+  const referenciaNotificacao = deveNotificar
+    ? doc(db, "comunidadeUsuarios", autorId, "notificacoes", `curtida_${publicacaoId}_${usuarioAtual.uid}`)
+    : null;
+
   try {
     const existente = await getDoc(referencia);
+    const lote = writeBatch(db);
     if (existente.exists()) {
-      await deleteDoc(referencia);
+      lote.delete(referencia);
+      if (referenciaNotificacao) lote.delete(referenciaNotificacao);
+      await lote.commit();
       atualizarBotaoCurtir(botao, false);
     } else {
-      await setDoc(referencia, { usuarioId: usuarioAtual.uid, criadoEm: serverTimestamp() });
+      lote.set(referencia, { usuarioId: usuarioAtual.uid, criadoEm: serverTimestamp() });
+      if (referenciaNotificacao) {
+        lote.set(referenciaNotificacao, {
+          tipo: "curtida",
+          atorId: usuarioAtual.uid,
+          atorNome: nomePadrao(usuarioAtual),
+          publicacaoId,
+          texto: "curtiu sua publicação.",
+          lida: false,
+          criadoEm: serverTimestamp()
+        });
+      }
+      await lote.commit();
       atualizarBotaoCurtir(botao, true);
     }
   } catch (erro) {
@@ -535,7 +560,7 @@ function renderizarFrases(resultado) {
     const inputComentario = fragmento.querySelector(".texto-comentario");
     const mensagemComentario = fragmento.querySelector(".mensagem-comentario");
     if (abaAtual === "publicadas") {
-      botaoCurtir.addEventListener("click", () => curtirFrase(frase.id, botaoCurtir));
+      botaoCurtir.addEventListener("click", () => curtirFrase(frase, botaoCurtir));
       botaoSalvar.addEventListener("click", () => salvarFrase(frase.id, botaoSalvar));
       botaoComentarios.addEventListener("click", () => alternarComentarios(frase.id, areaComentarios, listaComentarios, botaoComentarios, inputComentario));
       botaoCompartilhar.addEventListener("click", () => compartilharTexto(`“${textoLimpo(frase.texto)}”`, "Frase | Frases de Messias"));
@@ -608,12 +633,23 @@ async function alternarSeguimento() {
     const novoEstado = await runTransaction(db, async (transacao) => {
       const registroAtual = await transacao.get(seguidorNoAlvo);
       const jaSegue = registroAtual.exists();
+      const notificacao = doc(db, "comunidadeUsuarios", uidPerfil, "notificacoes", `seguidor_${usuarioAtual.uid}`);
       if (jaSegue) {
         transacao.delete(seguidorNoAlvo);
         transacao.delete(alvoNoMeuSeguindo);
+        transacao.delete(notificacao);
       } else {
         transacao.set(seguidorNoAlvo, { usuarioId: usuarioAtual.uid, criadoEm: serverTimestamp() });
         transacao.set(alvoNoMeuSeguindo, { usuarioId: uidPerfil, criadoEm: serverTimestamp() });
+        transacao.set(notificacao, {
+          tipo: "seguidor",
+          atorId: usuarioAtual.uid,
+          atorNome: nomePadrao(usuarioAtual),
+          publicacaoId: "",
+          texto: "começou a seguir você.",
+          lida: false,
+          criadoEm: serverTimestamp()
+        });
       }
       return !jaSegue;
     });

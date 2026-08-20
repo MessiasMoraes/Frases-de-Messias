@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Explore perfis e encontre pessoas que compartilham fé, motivação, esperança e reflexão na Comunidade Frases de Messias.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://frasesdemessias.com.br/explorar.html">
+  <title>Explorar pessoas | Comunidade Frases de Messias</title>
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://frasesdemessias.com.br/explorar.html">
+  <meta property="og:title" content="Explorar pessoas | Frases de Messias">
+  <meta property="og:description" content="Conheça pessoas que compartilham inspiração, fé e esperança na Comunidade Frases de Messias.">
+  <link rel="stylesheet" href="style.css?v=20260820-rede-social-v1">
+  <link rel="stylesheet" href="comunidade.css?v=20260820-rede-social-v1">
+</head>
+<body class="pagina-comunidade pagina-explorar">
+  <header class="cabecalho-comunidade">
+    <div class="container cabecalho-comunidade-conteudo">
+      <a class="marca-comunidade" href="index.html" aria-label="Voltar ao início">📖 <span>Frases de Messias</span></a>
+      <nav class="nav-comunidade" aria-label="Navegação principal">
+        <a href="index.html">🏠 Início</a>
+        <a href="comunidade.html">💬 Comunidade</a>
+        <a class="ativo" href="explorar.html" aria-current="page">🔎 Explorar</a>
+        <a id="linkNotificacoesExplorar" href="notificacoes.html">🔔 Notificações<span id="contadorNotificacoesExplorar" class="contador-notificacoes" hidden></span></a>
+        <a id="linkMeuPerfilExplorar" href="meu-perfil.html">👤 Meu Perfil</a>
+        <a href="favoritos.html">❤️ Favoritos</a>
+        <a href="contato.html">📞 Contato</a>
+      </nav>
+      <button id="alternarTemaExplorar" class="botao-icone" type="button" aria-label="Alternar tema">🌙</button>
+    </div>
+  </header>
+
+  <main class="container comunidade-principal">
+    <section class="hero-comunidade hero-explorar" aria-labelledby="tituloExplorar">
+      <p class="selo-comunidade">PESSOAS DA COMUNIDADE</p>
+      <h1 id="tituloExplorar">Encontre pessoas que inspiram</h1>
+      <p>Conheça membros que compartilham palavras de fé, esperança, amor e motivação. Visite um perfil para seguir e acompanhar suas publicações.</p>
+      <a class="botao-secundario" href="comunidade.html#feedComunidade">Ver o feed da Comunidade</a>
+    </section>
+
+    <section class="cartao-comunidade painel-explorar" aria-labelledby="tituloListaPerfis">
+      <div class="cabecalho-explorar">
+        <div>
+          <p class="rotulo">DESCOBRIR PESSOAS</p>
+          <h2 id="tituloListaPerfis">Perfis inspiradores</h2>
+        </div>
+        <label class="busca-perfis" for="buscaPerfis">Buscar perfil
+          <input id="buscaPerfis" type="search" maxlength="48" autocomplete="off" placeholder="Digite um nome ou tema">
+        </label>
+      </div>
+      <p id="mensagemExplorar" class="mensagem-formulario" role="status" aria-live="polite"></p>
+      <div id="listaPerfisExplorar" class="grade-perfis" aria-live="polite">
+        <div class="estado-feed carregando-feed">⏳ Carregando perfis da Comunidade...</div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="explorar.js?v=20260820-rede-social-v1"></script>
+</body>
+</html>

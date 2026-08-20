@@ -59,6 +59,26 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/comunidadePublicacoes/$(publicacaoId)/comentarios/$(comentarioId)).data.status == 'publicado';
     }
 
+    // A notificação nunca inclui e-mail ou dados privados. O UID de quem gerou
+    // a interação é obrigatório para impedir que alguém finja ser outro membro.
+    function notificacaoValida(destinatarioId) {
+      return request.resource.data.keys().hasOnly([
+        'tipo', 'atorId', 'atorNome', 'publicacaoId', 'texto', 'lida', 'criadoEm'
+      ])
+        && request.resource.data.tipo in ['seguidor', 'curtida']
+        && request.resource.data.atorId == request.auth.uid
+        && request.resource.data.atorId != destinatarioId
+        && request.resource.data.atorNome is string
+        && request.resource.data.atorNome.size() >= 2
+        && request.resource.data.atorNome.size() <= 48
+        && request.resource.data.publicacaoId is string
+        && request.resource.data.publicacaoId.size() <= 180
+        && request.resource.data.texto is string
+        && request.resource.data.texto.size() >= 3
+        && request.resource.data.texto.size() <= 120
+        && request.resource.data.lida == false;
+    }
+
     function dadosPublicosDePerfilValidos() {
       return request.resource.data.keys().hasOnly([
         'nome', 'bio', 'fotoUrl', 'criadoEm', 'atualizadoEm'
@@ -152,6 +172,42 @@ service cloud.firestore {
           && request.resource.data.usuarioId == usuarioBloqueadoId;
         allow delete: if conectado() && request.auth.uid == usuarioId;
         allow update: if false;
+      }
+
+      // Cada membro vê somente os próprios avisos. A criação é limitada à
+      // relação real de seguir ou curtida realizada pelo próprio autor.
+      match /notificacoes/{notificacaoId} {
+        allow get, list: if administrador() || (conectado() && request.auth.uid == usuarioId);
+        allow create: if contaLiberadaParaInteragir()
+          && notificacaoValida(usuarioId)
+          && (
+            (
+              request.resource.data.tipo == 'seguidor'
+              && request.resource.data.publicacaoId == ''
+              && notificacaoId == 'seguidor_' + request.auth.uid
+              && existsAfter(/databases/$(database)/documents/comunidadePerfis/$(usuarioId)/seguidores/$(request.auth.uid))
+            ) || (
+              request.resource.data.tipo == 'curtida'
+              && request.resource.data.publicacaoId.size() > 0
+              && notificacaoId == 'curtida_' + request.resource.data.publicacaoId + '_' + request.auth.uid
+              && publicacaoPublica(request.resource.data.publicacaoId)
+              && get(/databases/$(database)/documents/comunidadePublicacoes/$(request.resource.data.publicacaoId)).data.autorId == usuarioId
+              && existsAfter(/databases/$(database)/documents/comunidadePublicacoes/$(request.resource.data.publicacaoId)/curtidas/$(request.auth.uid))
+            )
+          );
+        // O destinatário somente altera o estado lida; o conteúdo e a autoria
+        // do aviso jamais podem ser modificados pelo cliente.
+        allow update: if administrador() || (
+          conectado()
+          && request.auth.uid == usuarioId
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lida'])
+          && request.resource.data.lida is bool
+        );
+        // A pessoa que gerou uma interação pode retirar o aviso ao desfazer a
+        // curtida ou o seguimento. O destinatário mantém seu histórico lido.
+        allow delete: if administrador() || (
+          conectado() && resource.data.atorId == request.auth.uid
+        );
       }
     }
 

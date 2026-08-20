@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Veja notificações de seguidores e curtidas do seu perfil na Comunidade Frases de Messias.">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://frasesdemessias.com.br/notificacoes.html">
+  <title>Notificações | Comunidade Frases de Messias</title>
+  <link rel="stylesheet" href="style.css?v=20260820-rede-social-v1">
+  <link rel="stylesheet" href="comunidade.css?v=20260820-rede-social-v1">
+</head>
+<body class="pagina-comunidade pagina-notificacoes">
+  <header class="cabecalho-comunidade">
+    <div class="container cabecalho-comunidade-conteudo">
+      <a class="marca-comunidade" href="index.html" aria-label="Voltar ao início">📖 <span>Frases de Messias</span></a>
+      <nav class="nav-comunidade" aria-label="Navegação principal">
+        <a href="index.html">🏠 Início</a>
+        <a href="comunidade.html">💬 Comunidade</a>
+        <a href="explorar.html">🔎 Explorar</a>
+        <a class="ativo" href="notificacoes.html" aria-current="page">🔔 Notificações<span id="contadorNotificacoes" class="contador-notificacoes" hidden></span></a>
+        <a id="linkMeuPerfil" href="meu-perfil.html">👤 Meu Perfil</a>
+        <a href="favoritos.html">❤️ Favoritos</a>
+        <a href="contato.html">📞 Contato</a>
+      </nav>
+      <button id="alternarTemaNotificacoes" class="botao-icone" type="button" aria-label="Alternar tema">🌙</button>
+    </div>
+  </header>
+
+  <main class="container comunidade-principal">
+    <section class="hero-comunidade hero-notificacoes" aria-labelledby="tituloNotificacoes">
+      <p class="selo-comunidade">SUA ATIVIDADE</p>
+      <h1 id="tituloNotificacoes">Notificações</h1>
+      <p>Acompanhe quem começou a seguir você e as curtidas recebidas nas suas publicações. Seus avisos são privados.</p>
+    </section>
+
+    <section class="cartao-comunidade painel-notificacoes" aria-labelledby="tituloListaNotificacoes">
+      <div class="cabecalho-notificacoes">
+        <div>
+          <p class="rotulo">INTERAÇÕES RECEBIDAS</p>
+          <h2 id="tituloListaNotificacoes">O que aconteceu na sua Comunidade</h2>
+        </div>
+        <button id="marcarTudoLido" class="botao-secundario botao-pequeno" type="button" hidden>Marcar tudo como lido</button>
+      </div>
+      <p id="mensagemNotificacoes" class="mensagem-formulario" role="status" aria-live="polite"></p>
+      <div id="listaNotificacoes" class="lista-notificacoes" aria-live="polite">
+        <div class="estado-feed carregando-feed">⏳ Carregando notificações...</div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="notificacoes.js?v=20260820-rede-social-v1"></script>
+</body>
+</html>

@@ -22,7 +22,8 @@ import {
   where,
   limit,
   serverTimestamp,
-  Timestamp
+  Timestamp,
+  writeBatch
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 const auth = getAuth(app);
@@ -71,7 +72,10 @@ const refs = {
   feed: elemento("feedComunidade"),
   template: elemento("templatePublicacao"),
   alternarTema: elemento("alternarTemaComunidade"),
-  linkMeuPerfil: elemento("linkMeuPerfil")
+  linkMeuPerfil: elemento("linkMeuPerfil"),
+  linkNotificacoes: elemento("linkNotificacoes"),
+  contadorNotificacoes: elemento("contadorNotificacoes"),
+  abasFeed: Array.from(document.querySelectorAll("[data-modo-feed]"))
 };
 
 let usuarioAtual = null;
@@ -82,6 +86,10 @@ let perfisBloqueados = new Set();
 let cancelarFeed = null;
 let comentariosAbertos = new Map();
 let denunciaAtual = null;
+let modoFeedAtual = "para-voce";
+let perfisSeguidos = new Set();
+let cancelarSeguindo = null;
+let cancelarNotificacoes = null;
 
 function textoLimpo(valor = "") {
   return String(valor).replace(/[<>]/g, "").replace(/\s+/g, " ").trim();
@@ -234,18 +242,67 @@ function dataFormatada(valor) {
   return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short", year: "numeric" }).format(data);
 }
 
+function atualizarAbasDoFeed() {
+  refs.abasFeed.forEach((aba) => {
+    const ativa = aba.dataset.modoFeed === modoFeedAtual;
+    aba.classList.toggle("ativa", ativa);
+    aba.setAttribute("aria-selected", String(ativa));
+  });
+}
+
+function mudarModoDeFeed(modo) {
+  if (!refs.abasFeed.some((aba) => aba.dataset.modoFeed === modo)) return;
+  if (modo === "seguindo" && !usuarioAtual) {
+    abrirModal();
+    return;
+  }
+  modoFeedAtual = modo;
+  atualizarAbasDoFeed();
+  renderizarFeed();
+}
+
+function carregarPerfisSeguidos(usuario) {
+  if (cancelarSeguindo) cancelarSeguindo();
+  cancelarSeguindo = null;
+  perfisSeguidos = new Set();
+  if (!usuario) return;
+
+  cancelarSeguindo = onSnapshot(
+    collection(db, "comunidadePerfis", usuario.uid, "seguindo"),
+    (resultado) => {
+      perfisSeguidos = new Set(resultado.docs.map((item) => item.id));
+      renderizarFeed();
+    },
+    (erro) => {
+      console.warn("Não foi possível atualizar os perfis seguidos.", erro);
+      perfisSeguidos = new Set();
+      renderizarFeed();
+    }
+  );
+}
+
 function renderizarFeed() {
   const categoria = refs.filtroCategoria.value;
   const publicacoesVisiveis = publicacoes.filter((post) => !perfisBloqueados.has(post.autorId));
-  const filtradas = categoria ? publicacoesVisiveis.filter((post) => post.categoria === categoria) : publicacoesVisiveis;
-  refs.feed.innerHTML = "";
+  let filtradas = categoria ? publicacoesVisiveis.filter((post) => post.categoria === categoria) : publicacoesVisiveis;
 
+  if (modoFeedAtual === "seguindo") {
+    filtradas = filtradas.filter((post) => perfisSeguidos.has(post.autorId));
+  }
+
+  refs.feed.innerHTML = "";
   if (!filtradas.length) {
     const estado = document.createElement("div");
     estado.className = "estado-feed";
-    estado.textContent = categoria
-      ? `Ainda não há publicações aprovadas em ${categoria}.`
-      : "A comunidade está começando. Seja a primeira pessoa a enviar uma frase inspiradora!";
+    if (modoFeedAtual === "seguindo" && usuarioAtual && !perfisSeguidos.size) {
+      estado.innerHTML = 'Você ainda não segue nenhum perfil. <a href="explorar.html">Explore pessoas inspiradoras</a> para montar o seu feed.';
+    } else if (modoFeedAtual === "seguindo") {
+      estado.textContent = "Ainda não há publicações aprovadas dos perfis que você segue nesta categoria.";
+    } else {
+      estado.textContent = categoria
+        ? `Ainda não há publicações aprovadas em ${categoria}.`
+        : "A comunidade está começando. Seja a primeira pessoa a enviar uma frase inspiradora!";
+    }
     refs.feed.appendChild(estado);
     return;
   }
@@ -279,7 +336,7 @@ function criarCartaoPublicacao(post) {
   const inputComentario = fragmento.querySelector(".texto-comentario");
   const mensagemComentario = fragmento.querySelector(".mensagem-comentario");
 
-  botaoCurtir.addEventListener("click", () => curtirPublicacao(post.id, botaoCurtir));
+  botaoCurtir.addEventListener("click", () => curtirPublicacao(post, botaoCurtir));
   botaoSalvar.addEventListener("click", () => salvarPublicacao(post.id, botaoSalvar));
   botaoComentarios.addEventListener("click", () => alternarComentarios(post.id, areaComentarios, listaComentarios, botaoComentarios, inputComentario));
   sincronizarEstadoDeInteracoes(post.id, botaoCurtir, botaoSalvar);
@@ -344,16 +401,40 @@ async function sincronizarEstadoDeInteracoes(publicacaoId, botaoCurtir, botaoSal
   }
 }
 
-async function curtirPublicacao(publicacaoId, botao) {
+async function curtirPublicacao(post, botao) {
   if (!usuarioAtual) { abrirModal(); return; }
+  const publicacaoId = post?.id || "";
+  if (!publicacaoId) return;
+
   const referencia = doc(db, "comunidadePublicacoes", publicacaoId, "curtidas", usuarioAtual.uid);
+  const autorId = String(post.autorId || "");
+  const deveNotificar = Boolean(autorId && autorId !== usuarioAtual.uid);
+  const referenciaNotificacao = deveNotificar
+    ? doc(db, "comunidadeUsuarios", autorId, "notificacoes", `curtida_${publicacaoId}_${usuarioAtual.uid}`)
+    : null;
+
   try {
     const existente = await getDoc(referencia);
+    const lote = writeBatch(db);
     if (existente.exists()) {
-      await deleteDoc(referencia);
+      lote.delete(referencia);
+      if (referenciaNotificacao) lote.delete(referenciaNotificacao);
+      await lote.commit();
       atualizarBotaoCurtir(botao, false);
     } else {
-      await setDoc(referencia, { usuarioId: usuarioAtual.uid, criadoEm: serverTimestamp() });
+      lote.set(referencia, { usuarioId: usuarioAtual.uid, criadoEm: serverTimestamp() });
+      if (referenciaNotificacao) {
+        lote.set(referenciaNotificacao, {
+          tipo: "curtida",
+          atorId: usuarioAtual.uid,
+          atorNome: nomeExibicao(usuarioAtual),
+          publicacaoId,
+          texto: "curtiu sua publicação.",
+          lida: false,
+          criadoEm: serverTimestamp()
+        });
+      }
+      await lote.commit();
       atualizarBotaoCurtir(botao, true);
     }
   } catch (erro) {
@@ -618,6 +699,34 @@ async function salvarPerfil(usuario) {
   }
 }
 
+function atualizarContadorNotificacoes(quantidade = 0) {
+  if (!refs.contadorNotificacoes) return;
+  const total = Math.max(0, Number(quantidade) || 0);
+  refs.contadorNotificacoes.hidden = total === 0;
+  refs.contadorNotificacoes.textContent = total > 9 ? "9+" : String(total);
+  refs.linkNotificacoes?.setAttribute("aria-label", total
+    ? `Notificações, ${total} não ${total === 1 ? "lida" : "lidas"}`
+    : "Notificações");
+}
+
+function escutarContadorNotificacoes(uid = "") {
+  if (cancelarNotificacoes) cancelarNotificacoes();
+  cancelarNotificacoes = null;
+  atualizarContadorNotificacoes(0);
+  if (!uid) return;
+
+  const avisos = query(
+    collection(db, "comunidadeUsuarios", uid, "notificacoes"),
+    where("lida", "==", false)
+  );
+  cancelarNotificacoes = onSnapshot(avisos, (resultado) => {
+    atualizarContadorNotificacoes(resultado.size);
+  }, (erro) => {
+    console.warn("Não foi possível atualizar o contador de notificações.", erro);
+    atualizarContadorNotificacoes(0);
+  });
+}
+
 function atualizarInterfaceDoUsuario(usuario) {
   usuarioAtual = usuario || null;
   const autenticado = Boolean(usuarioAtual);
@@ -625,9 +734,13 @@ function atualizarInterfaceDoUsuario(usuario) {
   refs.painelMembro.hidden = !autenticado;
   if (!autenticado) {
     refs.linkMeuPerfil.href = "meu-perfil.html";
+    refs.linkNotificacoes.href = "notificacoes.html";
+    escutarContadorNotificacoes();
     return;
   }
   refs.linkMeuPerfil.href = `perfil.html?uid=${encodeURIComponent(usuarioAtual.uid)}`;
+  refs.linkNotificacoes.href = "notificacoes.html";
+  escutarContadorNotificacoes(usuarioAtual.uid);
   const nome = nomeExibicao(usuarioAtual);
   refs.avatarMembro.textContent = iniciais(nome);
   refs.tituloMembro.textContent = `Olá, ${nome.split(" ")[0]}!`;
@@ -665,6 +778,7 @@ refs.textoPublicacao.addEventListener("input", () => {
 // O envio deve passar pelo manipulador que grava a frase como pendente no Firestore.
 refs.formularioPublicacao.addEventListener("submit", enviarPublicacao);
 refs.filtroCategoria.addEventListener("change", renderizarFeed);
+refs.abasFeed.forEach((aba) => aba.addEventListener("click", () => mudarModoDeFeed(aba.dataset.modoFeed)));
 
 refs.formularioAutenticacao.addEventListener("submit", async (evento) => {
   evento.preventDefault();
@@ -699,6 +813,7 @@ refs.formularioAutenticacao.addEventListener("submit", async (evento) => {
 
 onAuthStateChanged(auth, async (usuario) => {
   atualizarInterfaceDoUsuario(usuario);
+  carregarPerfisSeguidos(usuario);
   if (usuario) {
     try {
       await salvarPerfil(usuario);
@@ -716,5 +831,6 @@ onAuthStateChanged(auth, async (usuario) => {
 ajustarTema();
 configurarModoCadastro(false);
 preencherMotivosDenuncia();
+atualizarAbasDoFeed();
 carregarCategorias();
 escutarFeed();

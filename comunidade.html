@@ -13,7 +13,7 @@
   <meta property="og:description" content="Compartilhe inspiração, fé e esperança em uma comunidade com moderação e respeito.">
   <meta property="og:image" content="https://frasesdemessias.com.br/imagens/1785461694182.png">
   <link rel="stylesheet" href="style.css?v=20260820-menu-canais-v1">
-  <link rel="stylesheet" href="comunidade.css?v=20260819-seguranca-v1">
+  <link rel="stylesheet" href="comunidade.css?v=20260820-rede-social-v1">
 </head>
 <body class="pagina-comunidade">
   <header class="cabecalho-comunidade">
@@ -22,6 +22,8 @@
       <nav class="nav-comunidade" aria-label="Navegação principal">
         <a href="index.html">🏠 Início</a>
         <a class="ativo" href="comunidade.html" aria-current="page">💬 Comunidade</a>
+        <a href="explorar.html">🔎 Explorar</a>
+        <a id="linkNotificacoes" href="notificacoes.html">🔔 Notificações<span id="contadorNotificacoes" class="contador-notificacoes" hidden></span></a>
         <a id="linkMeuPerfil" href="meu-perfil.html">👤 Meu Perfil</a>
         <a href="favoritos.html">❤️ Favoritos</a>
         <a href="contato.html">📞 Contato</a>
@@ -92,8 +94,13 @@
 
     <section class="feed-cabecalho" aria-labelledby="tituloFeed">
       <div>
-        <p class="rotulo">FEED DA COMUNIDADE</p>
+        <p class="rotulo">REDE SOCIAL FRASES DE MESSIAS</p>
         <h2 id="tituloFeed">Inspirações compartilhadas</h2>
+        <div class="abas-feed-social" role="tablist" aria-label="Escolha o feed da Comunidade">
+          <button class="aba-feed-social ativa" id="abaFeedParaVoce" type="button" role="tab" aria-selected="true" aria-controls="feedComunidade" data-modo-feed="para-voce">✨ Para você</button>
+          <button class="aba-feed-social" id="abaFeedSeguindo" type="button" role="tab" aria-selected="false" aria-controls="feedComunidade" data-modo-feed="seguindo">👥 Seguindo</button>
+          <button class="aba-feed-social" id="abaFeedRecentes" type="button" role="tab" aria-selected="false" aria-controls="feedComunidade" data-modo-feed="recentes">🕒 Recentes</button>
+        </div>
       </div>
       <label class="filtro-feed" for="filtroCategoriaFeed">Categoria
         <select id="filtroCategoriaFeed">
@@ -188,6 +195,6 @@
     </article>
   </template>
 
-  <script type="module" src="comunidade.js?v=20260820-menu-canais-v1"></script>
+  <script type="module" src="comunidade.js?v=20260820-rede-social-v1"></script>
 </body>
 </html>
