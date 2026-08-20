@@ -11,3 +11,5 @@ A verificação de sintaxe com `node --check` foi concluída sem erros para `com
 A caixa privada foi testada novamente após o ajuste: visitantes são redirecionados para `comunidade.html?entrar=1` com retorno para `notificacoes.html`, sem exposição de avisos privados.
 
 No feed da Comunidade, as abas `Para você`, `Seguindo` e `Recentes` aparecem corretamente. Ao selecionar `Seguindo` sem sessão autenticada, o formulário de entrada é aberto, impedindo a leitura do feed personalizado antes do acesso.
+
+A publicação automática do GitHub Pages para o commit `e37b018` terminou com sucesso. Em seguida, a página pública `https://frasesdemessias.com.br/explorar.html` foi aberta no domínio oficial e ficou disponível com a navegação social e o carregamento da lista de perfis.
