@@ -1,5 +1,5 @@
 import { app, db } from "./firebase.js";
-import "./convites-canais.js?v=20260819-canais-v1";
+import "./convites-canais.js?v=20260820-menu-canais-v1";
 import { MOTIVOS_DENUNCIA, carregarBloqueios, mensagemDeErroSeguranca, registrarDenuncia } from "./seguranca-comunidade.js";
 import {
   getAuth,

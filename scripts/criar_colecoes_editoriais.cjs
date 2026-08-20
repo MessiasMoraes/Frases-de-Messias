@@ -126,7 +126,7 @@ function htmlColecao(colecao) {
   </main>
   <footer><p>© 2026 Frases de Messias</p><p><a href="index.html">Início</a> · <a href="colecoes.html">Coleções</a> · <a href="termos-de-uso.html">Termos de Uso</a> · <a href="contato.html">Contato</a></p></footer>
   <button id="temaBtn" type="button" aria-pressed="false">🌙 Modo Escuro</button>
-  <script type="module" src="colecoes.js?v=20260820-fundos-variados-v1"></script>
+  <script type="module" src="colecoes.js?v=20260820-menu-canais-v1"></script>
 </body>
 </html>`;
 }
@@ -164,7 +164,7 @@ function htmlHub() {
     <section class="colecoes-listagem" aria-labelledby="tituloColecoes"><h2 id="tituloColecoes">Encontre a coleção certa</h2><div class="grid-colecoes">${cards}</div></section>
     <section class="colecoes-relacionadas"><h2>Quer explorar por tema?</h2><p>Veja também todas as categorias de fé, amor, motivação, reflexão, bom dia e muito mais.</p><div class="botoes-colecoes-relacionadas"><a class="btn-colecao-relacionada" href="categorias.html">📂 Ver todas as categorias</a><a class="btn-colecao-relacionada" href="frases-importantes.html">⭐ Frases em destaque</a></div></section>
   </main>
-  <footer><p>© 2026 Frases de Messias</p><p><a href="index.html">Início</a> · <a href="categorias.html">Categorias</a> · <a href="termos-de-uso.html">Termos de Uso</a> · <a href="contato.html">Contato</a></p></footer><button id="temaBtn" type="button" aria-pressed="false">🌙 Modo Escuro</button><script type="module" src="colecoes.js?v=20260820-fundos-variados-v1"></script>
+  <footer><p>© 2026 Frases de Messias</p><p><a href="index.html">Início</a> · <a href="categorias.html">Categorias</a> · <a href="termos-de-uso.html">Termos de Uso</a> · <a href="contato.html">Contato</a></p></footer><button id="temaBtn" type="button" aria-pressed="false">🌙 Modo Escuro</button><script type="module" src="colecoes.js?v=20260820-menu-canais-v1"></script>
 </body></html>`;
 }
 

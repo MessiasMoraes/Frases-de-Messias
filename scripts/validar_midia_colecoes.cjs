@@ -21,7 +21,7 @@ for (const colecao of colecoes) {
   for (const [nome, total] of Object.entries(contagens)) {
     if (total !== totalEsperado) erros.push(`${colecao.arquivo}: ${nome} deveria ter ${totalEsperado} ocorrências e tem ${total}.`);
   }
-  if (!html.includes('colecoes.js?v=20260820-fundos-variados-v1')) erros.push(`${colecao.arquivo}: versão de colecoes.js com fundos variados não foi referenciada.`);
+  if (!html.includes('colecoes.js?v=20260820-menu-canais-v1')) erros.push(`${colecao.arquivo}: versão de colecoes.js com fundos variados não foi referenciada.`);
   if (!html.includes('style.css?v=20260818-colecoes-midia-v1')) erros.push(`${colecao.arquivo}: versão nova de style.css não foi referenciada.`);
 }
 
