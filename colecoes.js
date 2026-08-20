@@ -1,5 +1,5 @@
 const busca = document.getElementById('buscaColecao');
-import "./convites-canais.js?v=20260819-canais-v1";
+import "./convites-canais.js?v=20260820-navegacao-canais-v1";
 
 const lista = document.getElementById('listaFrasesColecao');
 const contador = document.getElementById('contadorColecao');

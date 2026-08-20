@@ -66,7 +66,7 @@
   <meta name="theme-color" content="#4A90E2">
 
   <!-- Vínculo do CSS com forçador de atualização de cache -->
-  <link rel="stylesheet" href="./style.css?v=20260817-colecoes-v2">
+  <link rel="stylesheet" href="./style.css?v=20260820-navegacao-canais-v1">
 
   <!-- Biblioteca html2canvas para permitir baixar os cards como imagem -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -128,8 +128,10 @@
       <a href="categorias.html">📂 Categorias</a>
       <a href="colecoes.html">✨ Coleções</a>
       <a href="frases-importantes.html">⭐ Frases em destaque</a>
-      <a class="link-canal-telegram" href="https://t.me/frasesdemessias" target="_blank" rel="noopener noreferrer">📣 Canal Telegram</a>
-      <a class="link-canal-whatsapp" href="https://whatsapp.com/channel/0029Va94RaR3bbV779wzFL1J" target="_blank" rel="noopener noreferrer">📢 Canal WhatsApp</a>
+      <span class="atalhos-canais-nav" role="group" aria-label="Canais oficiais do Frases de Messias">
+        <a class="atalho-canal atalho-canal-whatsapp" href="https://whatsapp.com/channel/0029Va94RaR3bbV779wzFL1J" target="_blank" rel="noopener noreferrer" data-canal="whatsapp" aria-label="Abrir canal oficial no WhatsApp, abre em uma nova guia"><span aria-hidden="true">💬</span><span>WhatsApp</span></a>
+        <a class="atalho-canal atalho-canal-telegram" href="https://t.me/frasesdemessias" target="_blank" rel="noopener noreferrer" data-canal="telegram" aria-label="Abrir canal oficial no Telegram, abre em uma nova guia"><span aria-hidden="true">✈️</span><span>Telegram</span></a>
+      </span>
       <a href="favoritos.html">❤️ Favoritos</a>
       <a href="comunidade.html">💬 Comunidade</a>
       <a href="sobre.html">ℹ️ Sobre</a>
@@ -162,26 +164,6 @@
   </blockquote>
 
   <button id="copiarBtn">Copiar Frase</button>
-</section>
-
-<section class="canal-whatsapp" aria-labelledby="tituloCanalWhatsapp">
-  <div class="canal-whatsapp-icone" aria-hidden="true">📢</div>
-  <div class="canal-whatsapp-conteudo">
-    <p class="canal-whatsapp-selo">MENSAGENS DIÁRIAS</p>
-    <h2 id="tituloCanalWhatsapp">Siga o canal Frases de Messias no WhatsApp</h2>
-    <p>Receba frases de fé, motivação, amor e reflexão diretamente no WhatsApp.</p>
-  </div>
-  <a class="btn-canal-whatsapp" href="https://whatsapp.com/channel/0029Va94RaR3bbV779wzFL1J" target="_blank" rel="noopener noreferrer" aria-label="Seguir o canal Frases de Messias no WhatsApp, abre em uma nova guia">Seguir no WhatsApp <span aria-hidden="true">↗</span></a>
-</section>
-
-<section class="canal-telegram" aria-labelledby="tituloCanalTelegram">
-  <div class="canal-telegram-icone" aria-hidden="true">✈️</div>
-  <div class="canal-telegram-conteudo">
-    <p class="canal-telegram-selo">CANAL OFICIAL NO TELEGRAM</p>
-    <h2 id="tituloCanalTelegram">Receba inspiração no canal Frases de Messias</h2>
-    <p>Entre para acompanhar frases, imagens e vídeos de fé, amor e motivação diretamente no Telegram.</p>
-  </div>
-  <a class="btn-canal-telegram" href="https://t.me/frasesdemessias" target="_blank" rel="noopener noreferrer" aria-label="Entrar no canal Frases de Messias no Telegram, abre em uma nova guia">Entrar no Telegram <span aria-hidden="true">↗</span></a>
 </section>
 
 <section class="categoriasDestaque">
