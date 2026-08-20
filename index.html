@@ -19,7 +19,8 @@
         "url": "https://frasesdemessias.com.br/",
         "inLanguage": "pt-BR",
         "description": "Portal brasileiro de frases originais de motivação, fé, amor e reflexão para inspirar e compartilhar.",
-        "publisher": {"@id": "https://frasesdemessias.com.br/#organizacao"}
+        "publisher": {"@id": "https://frasesdemessias.com.br/#organizacao"},
+        "creator": {"@id": "https://frasesdemessias.com.br/sobre.html#criador"}
       },
       {
         "@type": "Organization",
@@ -27,11 +28,20 @@
         "name": "Frases de Messias",
         "url": "https://frasesdemessias.com.br/",
         "logo": "https://frasesdemessias.com.br/imagens/1785461694182.png",
+        "founder": {"@id": "https://frasesdemessias.com.br/sobre.html#criador"},
         "sameAs": [
           "https://www.instagram.com/frasesdemessias.com.br/",
           "https://t.me/frasesdemessias",
           "https://whatsapp.com/channel/0029Va94RaR3bbV779wzFL1J"
         ]
+      },
+      {
+        "@type": "Person",
+        "@id": "https://frasesdemessias.com.br/sobre.html#criador",
+        "name": "Messias Augusto",
+        "jobTitle": "Criador e autor do Frases de Messias",
+        "url": "https://www.instagram.com/ue_messiasaugusto/",
+        "sameAs": ["https://www.instagram.com/ue_messiasaugusto/"]
       }
     ]
   }
@@ -231,7 +241,7 @@
 </section>
 
 <footer>
-  <p>© 2026 Frases de Messias</p>
+  <p>© 2026 Frases de Messias · Criado por <a href="sobre.html#criador-titulo" rel="author">Messias Augusto</a></p>
   <div style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">
     🚀 <span id="contadorGlobal">...</span> visitas ao portal
   </div>
