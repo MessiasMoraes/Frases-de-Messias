@@ -28,3 +28,7 @@ A primeira consulta de contagem de comentários por `collectionGroup` retornou `
 A validação posterior confirmou que a regra de comentários foi aceita. O retorno passou a indicar que o índice composto de comentários está em criação, em vez de negar a leitura. A interface será ajustada para tratar as duas métricas de forma independente: a contagem de publicações aprovadas não ficará indisponível enquanto o Firebase conclui o índice de comentários.
 
 Na validação visual, o perfil público passou a exibir corretamente **4 publicações** aprovadas. A contagem de comentários permanece temporariamente como `—` até a finalização do índice composto que o Firebase já aceitou para criação. O comportamento independente evita dados falsos e preserva a métrica de publicações durante esse período.
+
+## Confirmação no domínio oficial
+
+A publicação automática do GitHub Pages foi concluída com sucesso para o commit `262412f`. No perfil oficial de Messias Augusto, a área de atividade foi carregada com **4 publicações** e **0 comentários aprovados**, confirmando a disponibilidade do índice e das contagens públicas no portal publicado.
