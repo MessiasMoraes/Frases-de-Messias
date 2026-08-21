@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Frases de Messias | Frases originais de Messias Augusto</title>
-  <meta name="description" content="Frases de Messias: portal criado por Messias Augusto com frases originais de sua autoria sobre fé, amor, motivação e reflexão.">
+  <meta name="description" content="Frases de Messias: portal criado por Messias Augusto com frases originais sobre fé, amor, motivação e reflexão. Leia e participe da Rede Social de Frases.">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="https://frasesdemessias.com.br/">
 
@@ -77,7 +77,7 @@
   <meta name="theme-color" content="#4A90E2">
 
   <!-- Vínculo do CSS com forçador de atualização de cache -->
-  <link rel="stylesheet" href="./style.css?v=20260821-autoria-oficial-v2">
+  <link rel="stylesheet" href="./style.css?v=20260821-rede-social-home-v1">
 
   <!-- Biblioteca html2canvas para permitir baixar os cards como imagem -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -141,7 +141,7 @@
       <a href="frases-importantes.html">⭐ Frases em destaque</a>
       <div data-menu-canais></div>
       <a href="favoritos.html">❤️ Favoritos</a>
-      <a href="comunidade.html">💬 Comunidade</a>
+      <a class="link-rede-social-nav" href="comunidade.html">🌐 Rede Social</a>
       <a href="sobre.html">ℹ️ Sobre</a>
       <a href="contato.html">📞 Contato</a>
     </nav>
@@ -172,6 +172,39 @@
   </blockquote>
 
   <button id="copiarBtn">Copiar Frase</button>
+</section>
+
+<section class="chamada-rede-social" aria-labelledby="tituloChamadaRedeSocial">
+  <div class="chamada-rede-social-conteudo">
+    <div>
+      <p class="selo-rede-social">REDE SOCIAL DE FRASES</p>
+      <h2 id="tituloChamadaRedeSocial">Sua frase pode inspirar alguém</h2>
+      <p>Leia o feed gratuitamente. Crie sua conta para curtir, salvar, comentar, seguir perfis e publicar inspirações em uma comunidade moderada e respeitosa.</p>
+      <div class="beneficios-rede-social" aria-label="Benefícios da Rede Social">
+        <span>👀 Leitura livre</span>
+        <span>💬 Conexão com pessoas</span>
+        <span>✍️ Publicações moderadas</span>
+      </div>
+    </div>
+    <div class="chamada-rede-social-acoes">
+      <a class="btn-rede-social btn-rede-social-principal" href="comunidade.html">🌐 Conhecer a Rede Social</a>
+      <a class="btn-rede-social btn-rede-social-secundario" href="#publicacoesComunidade">Ver publicações recentes</a>
+    </div>
+  </div>
+</section>
+
+<section class="previa-comunidade" id="publicacoesComunidade" aria-labelledby="tituloPreviaComunidade">
+  <div class="cabecalho-previa-comunidade">
+    <div>
+      <p class="selo-rede-social">O QUE A COMUNIDADE ESTÁ COMPARTILHANDO</p>
+      <h2 id="tituloPreviaComunidade">Inspirações recentes</h2>
+      <p>Conheça palavras aprovadas e compartilhadas pelos membros da Rede Social.</p>
+    </div>
+    <a class="link-ver-rede-social" href="comunidade.html">Ver na Rede Social →</a>
+  </div>
+  <div id="listaPublicacoesComunidade" class="grade-previa-comunidade" aria-live="polite">
+    <p class="estado-previa-comunidade">⏳ Carregando inspirações da comunidade...</p>
+  </div>
 </section>
 
 <section class="declaracao-autoria" aria-labelledby="tituloDeclaracaoAutoria">
@@ -245,6 +278,7 @@
     🚀 <span id="contadorGlobal">...</span> visitas ao portal
   </div>
   <p><a href="colecoes.html">✨ Explorar coleções especiais</a></p>
+  <p><a class="link-rodape-rede-social" href="comunidade.html">🌐 Participar da Rede Social de Frases</a></p>
   <p class="rodape-canal-telegram"><a href="https://t.me/frasesdemessias" target="_blank" rel="noopener noreferrer">📣 Entre no canal Frases de Messias no Telegram</a></p>
   <p class="rodape-canal-whatsapp"><a href="https://whatsapp.com/channel/0029Va94RaR3bbV779wzFL1J" target="_blank" rel="noopener noreferrer">📢 Siga o canal Frases de Messias no WhatsApp</a></p>
 
@@ -270,7 +304,7 @@
   </div>
 
   <!-- Script do projeto carregado como módulo JavaScript -->
-  <script type="module" src="script.js?v=20260815-consumo-eficiente-v4"></script>
+  <script type="module" src="script.js?v=20260821-rede-social-home-v1"></script>
   <script type="module" src="convites-canais.js?v=20260820-menu-canais-v1"></script>
   
   </body>

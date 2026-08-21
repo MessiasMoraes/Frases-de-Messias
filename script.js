@@ -8,6 +8,7 @@ import {
     increment,
     runTransaction,
     query,
+    where,
     orderBy,
     limit,
     startAfter,
@@ -210,6 +211,88 @@ async function contarVisitaGlobal() {
         }
     } catch (e) {
         console.error("Erro ao contar visita global:", e);
+    }
+}
+
+// ======================
+// PRÉVIA DA REDE SOCIAL
+// ======================
+function dataDaPublicacaoSocial(valor) {
+    if (valor?.toDate) return valor.toDate();
+    if (valor?.seconds) return new Date(valor.seconds * 1000);
+    return valor instanceof Date ? valor : null;
+}
+
+function criarCartaoPreviaComunidade(publicacao) {
+    const link = document.createElement("a");
+    link.className = "cartao-previa-comunidade";
+    link.href = "comunidade.html";
+    link.setAttribute("aria-label", "Ver publicação de " + (publicacao.autorNome || "membro da comunidade") + " na Rede Social");
+
+    const cabecalho = document.createElement("div");
+    cabecalho.className = "meta-previa-comunidade";
+
+    const autor = document.createElement("strong");
+    autor.textContent = publicacao.autorNome || "Membro da comunidade";
+
+    const categoria = document.createElement("span");
+    categoria.textContent = publicacao.categoria || "Comunidade";
+    cabecalho.append(autor, categoria);
+
+    const texto = document.createElement("blockquote");
+    const conteudo = String(publicacao.texto || "").trim();
+    texto.textContent = `“${conteudo.length > 170 ? conteudo.slice(0, 170).trimEnd() + "…" : conteudo}”`;
+
+    const rodape = document.createElement("span");
+    rodape.className = "link-cartao-previa";
+    const data = dataDaPublicacaoSocial(publicacao.publicadoEm || publicacao.criadoEm);
+    const dataFormatada = data
+        ? data.toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" })
+        : "Na Rede Social";
+    rodape.textContent = `${dataFormatada} · Ver publicação →`;
+
+    link.append(cabecalho, texto, rodape);
+    return link;
+}
+
+async function carregarPreviaComunidade() {
+    const lista = document.getElementById("listaPublicacoesComunidade");
+    if (!lista) return;
+
+    try {
+        // A filtragem espelha o feed público: somente conteúdo já aprovado é exibido.
+        // A ordenação no navegador mantém a consulta compatível com os índices existentes.
+        const resultado = await getDocs(query(
+            collection(db, "comunidadePublicacoes"),
+            where("status", "==", "publicado"),
+            limit(12)
+        ));
+        const publicacoes = resultado.docs
+            .map(item => ({ id: item.id, ...item.data() }))
+            .sort((primeira, segunda) => {
+                const dataPrimeira = dataDaPublicacaoSocial(primeira.publicadoEm || primeira.criadoEm)?.getTime() || 0;
+                const dataSegunda = dataDaPublicacaoSocial(segunda.publicadoEm || segunda.criadoEm)?.getTime() || 0;
+                return dataSegunda - dataPrimeira;
+            })
+            .slice(0, 3);
+
+        lista.replaceChildren();
+        if (!publicacoes.length) {
+            const estado = document.createElement("p");
+            estado.className = "estado-previa-comunidade";
+            estado.textContent = "A Comunidade está começando. Seja uma das primeiras pessoas a compartilhar uma frase inspiradora.";
+            lista.appendChild(estado);
+            return;
+        }
+
+        publicacoes.forEach(publicacao => lista.appendChild(criarCartaoPreviaComunidade(publicacao)));
+    } catch (erro) {
+        console.error("Não foi possível carregar a prévia da Comunidade:", erro);
+        lista.replaceChildren();
+        const estado = document.createElement("p");
+        estado.className = "estado-previa-comunidade";
+        estado.textContent = "As publicações recentes não puderam ser carregadas agora.";
+        lista.appendChild(estado);
     }
 }
 
@@ -1377,6 +1460,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa);
+    carregarPreviaComunidade();
     configurarBotoesCategoriasFixos(pesquisa, lista);
 
     // Modo escuro compartilhado por todas as páginas públicas.
