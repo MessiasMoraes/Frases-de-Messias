@@ -5,6 +5,7 @@ const { waitUntil } = require('@vercel/functions');
 
 const SITE_URL = 'https://frasesdemessias.com.br';
 const COLECOES_URL = `${SITE_URL}/colecoes.html`;
+const COMUNIDADE_URL = `${SITE_URL}/comunidade.html`;
 const WHATSAPP_CHANNEL_URL = 'https://whatsapp.com/channel/0029Va94RaR3bbV779wzFL1J';
 const TELEGRAM_CHANNEL_URL = 'https://t.me/frasesdemessias';
 const TELEGRAM_WEBHOOK_URL = 'https://frasesdemessiascombr.vercel.app/api/telegram-webhook';
@@ -23,6 +24,7 @@ const COMANDOS_BOT = [
   { command: 'boanoite', description: 'Receber uma frase de boa noite' },
   { command: 'categorias', description: 'Escolher um tema' },
   { command: 'colecoes', description: 'Explorar coleções de frases' },
+  { command: 'comunidade', description: 'Entrar na Rede Social pública' },
   { command: 'whatsapp', description: 'Abrir o canal no WhatsApp' },
   { command: 'canal', description: 'Entrar no canal do Telegram' },
   { command: 'sobre', description: 'Conhecer o Frases de Messias' },
@@ -63,6 +65,7 @@ const GATILHOS_MENSAGEM_LIVRE = [
   }
 ];
 let catalogoEmMemoria;
+let comandosSincronizados = false;
 
 function carregarCatalogo() {
   if (!catalogoEmMemoria) {
@@ -123,6 +126,7 @@ function tecladoInicial() {
       ],
       [{ text: '📚 Escolher categoria', callback_data: 'menu:categorias' }],
       [{ text: '✨ Explorar coleções', url: COLECOES_URL }],
+      [{ text: '🌐 Entrar na Rede Social', url: COMUNIDADE_URL }],
       [{ text: '📣 Entrar no canal do Telegram', url: TELEGRAM_CHANNEL_URL }],
       [{ text: '📢 Canal no WhatsApp', url: WHATSAPP_CHANNEL_URL }],
       [{ text: '🌐 Acessar o site', url: SITE_URL }]
@@ -141,6 +145,7 @@ function tecladoCategorias() {
   }
   linhas.push([{ text: '🎲 Frase aleatória', callback_data: 'frase:aleatoria' }]);
   linhas.push([{ text: '✨ Ver coleções de frases', url: COLECOES_URL }]);
+  linhas.push([{ text: '🌐 Entrar na Rede Social', url: COMUNIDADE_URL }]);
   linhas.push([{ text: '📣 Canal do Telegram', url: TELEGRAM_CHANNEL_URL }]);
   linhas.push([{ text: '🌐 Abrir Frases de Messias', url: SITE_URL }]);
   return { inline_keyboard: linhas };
@@ -156,6 +161,7 @@ function tecladoDaFrase(frase) {
   ]);
   if (categoria !== 'aleatoria') botoes.push([{ text: '📚 Outras categorias', callback_data: 'menu:categorias' }]);
   botoes.push([{ text: '✨ Mais coleções de frases', url: COLECOES_URL }]);
+  botoes.push([{ text: '🌐 Ver a Rede Social', url: COMUNIDADE_URL }]);
   botoes.push([{ text: '📣 Entrar no canal do Telegram', url: TELEGRAM_CHANNEL_URL }]);
   botoes.push([{ text: '🌐 Ver no site', url: SITE_URL }]);
   return { inline_keyboard: botoes };
@@ -239,6 +245,15 @@ async function registrarComandosTelegram() {
   return telegram('setMyCommands', { commands: COMANDOS_BOT });
 }
 
+function sincronizarComandosAoReceberAtualizacao() {
+  if (comandosSincronizados) return;
+  comandosSincronizados = true;
+  agendarEmSegundoPlano(registrarComandosTelegram().catch((erro) => {
+    comandosSincronizados = false;
+    console.error('Não foi possível sincronizar os comandos do Telegram:', erro.message);
+  }));
+}
+
 async function registrarWebhookTelegram() {
   const segredo = process.env.TELEGRAM_WEBHOOK_SECRET;
   if (!segredo) throw new Error('TELEGRAM_WEBHOOK_SECRET não configurado.');
@@ -276,7 +291,7 @@ async function enviarFraseDoDia(chatId) {
 async function enviarAjuda(chatId) {
   await telegram('sendMessage', {
     chat_id: chatId,
-    text: '<b>Comandos do Frases de Messias</b>\n\n🎲 <b>/frase</b> — frase aleatória\n☀️ <b>/hoje</b> — frase do dia\n🖼️ <b>/imagem</b> — criar arte de uma frase\n🎬 <b>/video</b> — criar MP4 vertical de uma frase\n❤️ <b>/amor</b> — frases de amor\n🙏 <b>/fe</b> — frases de fé\n💪 <b>/motivacao</b> — motivação\n🌞 <b>/bomdia</b> — bom dia\n🌙 <b>/boanoite</b> — boa noite\n📚 <b>/categorias</b> — escolher outro tema\n✨ <b>/colecoes</b> — explorar coleções de frases\n📣 <b>/canal</b> — entrar no canal do Telegram\n📢 <b>/whatsapp</b> — canal no WhatsApp\nℹ️ <b>/sobre</b> — conhecer o projeto\n🌐 <b>/site</b> — abrir o portal\n\nUse, por exemplo, <b>/imagem fé</b> ou <b>/video motivação</b>. Você também pode escrever uma mensagem, como “preciso de força” ou “quero uma frase de fé”.',
+    text: '<b>Comandos do Frases de Messias</b>\n\n🎲 <b>/frase</b> — frase aleatória\n☀️ <b>/hoje</b> — frase do dia\n🖼️ <b>/imagem</b> — criar arte de uma frase\n🎬 <b>/video</b> — criar MP4 vertical de uma frase\n❤️ <b>/amor</b> — frases de amor\n🙏 <b>/fe</b> — frases de fé\n💪 <b>/motivacao</b> — motivação\n🌞 <b>/bomdia</b> — bom dia\n🌙 <b>/boanoite</b> — boa noite\n📚 <b>/categorias</b> — escolher outro tema\n✨ <b>/colecoes</b> — explorar coleções de frases\n🌐 <b>/comunidade</b> — entrar na Rede Social pública\n📣 <b>/canal</b> — entrar no canal do Telegram\n📢 <b>/whatsapp</b> — canal no WhatsApp\nℹ️ <b>/sobre</b> — conhecer o projeto\n🌐 <b>/site</b> — abrir o portal\n\nUse, por exemplo, <b>/imagem fé</b> ou <b>/video motivação</b>. Você também pode escrever uma mensagem, como “preciso de força” ou “quero uma frase de fé”.',
     parse_mode: 'HTML',
     reply_markup: tecladoInicial(),
     disable_web_page_preview: true
@@ -315,7 +330,7 @@ async function tratarMensagem(mensagem) {
   if (comando === '/start') {
     await telegram('sendMessage', {
       chat_id: chatId,
-      text: '<b>Bem-vindo ao Frases de Messias.</b>\n\nEncontre uma palavra de fé, amor, motivação e esperança para o seu dia. Use <b>/ajuda</b> para conhecer todos os comandos.',
+      text: '<b>Bem-vindo ao Frases de Messias.</b>\n\nEncontre uma palavra de fé, amor, motivação e esperança para o seu dia. Você também pode conhecer a <b>Rede Social pública</b>, onde a leitura é livre e a participação é gratuita. Use <b>/ajuda</b> para conhecer todos os comandos.',
       parse_mode: 'HTML',
       reply_markup: tecladoInicial(),
       disable_web_page_preview: true
@@ -370,6 +385,17 @@ async function tratarMensagem(mensagem) {
     return;
   }
 
+  if (comando === '/comunidade') {
+    await telegram('sendMessage', {
+      chat_id: chatId,
+      text: '<b>🌐 Rede Social do Frases de Messias</b>\n\nLeia publicações gratuitamente e crie sua conta para curtir, comentar, seguir perfis e compartilhar suas próprias inspirações.',
+      parse_mode: 'HTML',
+      reply_markup: { inline_keyboard: [[{ text: '🌐 Entrar na Rede Social', url: COMUNIDADE_URL }]] },
+      disable_web_page_preview: true
+    });
+    return;
+  }
+
   if (comando === '/whatsapp') {
     await telegram('sendMessage', {
       chat_id: chatId,
@@ -395,10 +421,11 @@ async function tratarMensagem(mensagem) {
   if (comando === '/sobre') {
     await telegram('sendMessage', {
       chat_id: chatId,
-      text: '<b>Frases de Messias</b>\n\nUm portal de mensagens de fé, amor, motivação, gratidão e reflexão para inspirar o seu dia.',
+      text: '<b>Frases de Messias</b>\n\nO Frases de Messias foi criado por <b>Messias Augusto</b>. As frases publicadas são de Messias Augusto.\n\nEncontre mensagens de fé, amor, motivação, gratidão e reflexão; participe também da nossa Rede Social pública.',
       parse_mode: 'HTML',
       reply_markup: { inline_keyboard: [
         [{ text: '🌐 Conhecer o site', url: SITE_URL }],
+        [{ text: '🌐 Entrar na Rede Social', url: COMUNIDADE_URL }],
         [{ text: '✨ Explorar coleções', url: COLECOES_URL }],
         [{ text: '📣 Canal no Telegram', url: TELEGRAM_CHANNEL_URL }]
       ] },
@@ -412,7 +439,10 @@ async function tratarMensagem(mensagem) {
       chat_id: chatId,
       text: `<b>Frases de Messias</b>\n${SITE_URL}`,
       parse_mode: 'HTML',
-      reply_markup: { inline_keyboard: [[{ text: '🌐 Abrir o site', url: SITE_URL }]] },
+      reply_markup: { inline_keyboard: [
+        [{ text: '🌐 Abrir o site', url: SITE_URL }],
+        [{ text: '🌐 Entrar na Rede Social', url: COMUNIDADE_URL }]
+      ] },
       disable_web_page_preview: false
     });
     return;
@@ -506,6 +536,7 @@ module.exports = async function handler(req, res) {
   }
 
   if (!segredoValido(req)) return res.status(401).json({ error: 'Origem não autorizada.' });
+  sincronizarComandosAoReceberAtualizacao();
 
   try {
     const atualizacao = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
