@@ -7,7 +7,7 @@
   <title>Meu Perfil | Frases de Messias</title>
   <link rel="stylesheet" href="style.css?v=20260820-rede-social-v1">
   <link rel="stylesheet" href="comunidade.css?v=20260820-rede-social-v1">
-  <link rel="stylesheet" href="perfil.css?v=20260820-rede-social-v3">
+  <link rel="stylesheet" href="perfil.css?v=20260821-foto-galeria-v1">
 </head>
 <body class="pagina-comunidade pagina-perfil">
   <header class="cabecalho-comunidade">
@@ -50,10 +50,15 @@
             <textarea id="bioPerfilInput" maxlength="180" rows="4" placeholder="Ex.: Compartilho mensagens de fé, esperança e gratidão."></textarea>
             <small><span id="contadorBio">0</span> / 180 caracteres</small>
           </div>
-          <div class="campo-perfil">
-            <label for="fotoUrlInput">Endereço da foto de perfil</label>
-            <input id="fotoUrlInput" type="url" maxlength="500" inputmode="url" placeholder="https://exemplo.com/minha-foto.jpg">
-            <small>Opcional. Cole apenas um link de imagem que você tenha direito de usar. Caso deixe em branco, serão exibidas suas iniciais.</small>
+          <div class="campo-perfil campo-foto-perfil">
+            <span id="rotuloFotoPerfil" class="rotulo-campo-perfil">Foto de perfil</span>
+            <input id="fotoPerfilInput" class="input-arquivo-perfil" type="file" accept="image/jpeg,image/png,image/webp" aria-labelledby="rotuloFotoPerfil" aria-describedby="ajudaFotoPerfil">
+            <div class="acoes-foto-perfil">
+              <label class="botao-selecionar-foto" for="fotoPerfilInput">🖼️ Escolher da galeria</label>
+              <button id="removerFotoPerfil" class="botao-remover-foto" type="button" hidden>Remover foto</button>
+            </div>
+            <small id="nomeArquivoFoto" class="nome-arquivo-foto">Nenhuma foto selecionada.</small>
+            <small id="ajudaFotoPerfil">Escolha uma foto JPEG, PNG ou WebP do seu celular. A imagem será ajustada para o perfil antes de ser salva.</small>
           </div>
           <fieldset class="grupo-privacidade-perfil">
             <legend>Privacidade do perfil</legend>
@@ -81,6 +86,6 @@
     </section>
   </main>
 
-  <script type="module" src="meu-perfil.js?v=20260820-rede-social-v3"></script>
+  <script type="module" src="meu-perfil.js?v=20260821-foto-galeria-v1"></script>
 </body>
 </html>

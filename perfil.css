@@ -178,3 +178,30 @@ body.pagina-perfil.tema-escuro .metricas-atividade-perfil strong { color: var(--
 @media (max-width: 430px) {
   .metricas-atividade-perfil span:last-child { width: 100%; padding-left: 0; border-left: 0; }
 }
+
+
+/* Foto de perfil escolhida da galeria. */
+.campo-foto-perfil { gap: 9px; }
+.rotulo-campo-perfil { color: var(--comunidade-texto); font-size: .9rem; font-weight: 800; }
+.input-arquivo-perfil { position: absolute; width: 1px; height: 1px; margin: -1px; border: 0; padding: 0; clip: rect(0 0 0 0); clip-path: inset(50%); overflow: hidden; white-space: nowrap; }
+.acoes-foto-perfil { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.botao-selecionar-foto,
+.botao-remover-foto { display: inline-flex; min-height: 44px; box-sizing: border-box; align-items: center; justify-content: center; border-radius: 11px; padding: 10px 14px; font: inherit; font-size: .9rem; font-weight: 800; cursor: pointer; transition: transform .16s ease-out, background .16s ease-out, border-color .16s ease-out; }
+.botao-selecionar-foto { border: 1px solid #b9d0f8; background: #edf5ff; color: var(--comunidade-azul); }
+.botao-remover-foto { border: 1px solid #e4b2aa; background: #fff6f4; color: #a74434; }
+.botao-selecionar-foto:hover,
+.botao-selecionar-foto:focus-visible { border-color: var(--comunidade-azul); background: #ddebff; outline: none; }
+.botao-remover-foto:hover,
+.botao-remover-foto:focus-visible { border-color: #c86b5d; background: #ffebe7; outline: none; }
+.botao-selecionar-foto:active,
+.botao-remover-foto:active { transform: scale(.97); }
+.input-arquivo-perfil:focus-visible + .acoes-foto-perfil .botao-selecionar-foto { outline: 3px solid rgba(23, 105, 224, .22); outline-offset: 2px; }
+.nome-arquivo-foto { color: var(--comunidade-azul) !important; font-weight: 700; }
+body.pagina-perfil.tema-escuro .botao-selecionar-foto { border-color: #466b9e; background: #1c355b; color: #c7dcff; }
+body.pagina-perfil.tema-escuro .botao-remover-foto { border-color: #824b45; background: #3c292b; color: #ffc3b9; }
+
+@media (max-width: 480px) {
+  .acoes-foto-perfil { display: grid; grid-template-columns: 1fr; }
+  .botao-selecionar-foto,
+  .botao-remover-foto { width: 100%; }
+}
