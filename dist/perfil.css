@@ -78,3 +78,130 @@ body.pagina-perfil.tema-escuro .campo-perfil textarea { border-color: #3a4b69; b
 @media (max-width: 390px) {
   .acoes-perfil { grid-template-columns: 1fr; }
 }
+
+/* Ação privada de bloqueio de perfil. */
+.botao-bloquear-perfil {
+  min-height: 42px;
+  border: 1px solid #d9a095;
+  border-radius: 11px;
+  padding: 9px 14px;
+  background: #fff7f5;
+  color: #a94228;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+  transition: background .16s ease-out, color .16s ease-out, transform .16s ease-out;
+}
+
+.botao-bloquear-perfil:hover,
+.botao-bloquear-perfil:focus-visible,
+.botao-bloquear-perfil.ativo {
+  background: #ffe7e1;
+  color: #8d301b;
+  outline: none;
+}
+
+.botao-bloquear-perfil:disabled {
+  cursor: not-allowed;
+  opacity: .62;
+}
+
+body.pagina-comunidade.tema-escuro .botao-bloquear-perfil {
+  border-color: #8b4b46;
+  background: #382526;
+  color: #ffb5a5;
+}
+
+body.pagina-comunidade.tema-escuro .botao-bloquear-perfil:hover,
+body.pagina-comunidade.tema-escuro .botao-bloquear-perfil:focus-visible,
+body.pagina-comunidade.tema-escuro .botao-bloquear-perfil.ativo {
+  background: #512e2e;
+  color: #ffd4ca;
+}
+
+@media (max-width: 620px) {
+  .botao-bloquear-perfil { width: 100%; }
+}
+
+.botao-denunciar-perfil {
+  min-height: 40px;
+  border: 1px solid #e2c48e;
+  border-radius: 11px;
+  padding: 8px 12px;
+  background: #fffaf0;
+  color: #885d00;
+  cursor: pointer;
+  font: inherit;
+  font-size: .88rem;
+  font-weight: 800;
+}
+
+.botao-denunciar-perfil:hover,
+.botao-denunciar-perfil:focus-visible { background: #fff0ca; outline: none; }
+body.pagina-comunidade.tema-escuro .botao-denunciar-perfil { border-color: #766428; background: #423716; color: #ffe39a; }
+body.pagina-comunidade.tema-escuro .botao-denunciar-perfil:hover,
+body.pagina-comunidade.tema-escuro .botao-denunciar-perfil:focus-visible { background: #5a4a1b; }
+
+
+/* Preferências públicas de privacidade — Rede Social V3. */
+.grupo-privacidade-perfil {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  border: 1px solid #cdd8ea;
+  border-radius: 14px;
+  padding: 17px;
+  background: #f8fbff;
+}
+.grupo-privacidade-perfil legend { padding: 0 5px; color: var(--comunidade-texto); font-size: .92rem; font-weight: 900; }
+.grupo-privacidade-perfil > p { margin: 0 0 2px; color: var(--comunidade-suave); font-size: .84rem; line-height: 1.5; }
+.opcao-privacidade-perfil { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 11px; align-items: start; padding: 9px 0; cursor: pointer; }
+.opcao-privacidade-perfil + .opcao-privacidade-perfil { border-top: 1px solid #dbe5f3; }
+.opcao-privacidade-perfil input { width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--comunidade-azul); cursor: pointer; }
+.opcao-privacidade-perfil span { display: grid; gap: 3px; }
+.opcao-privacidade-perfil strong { color: var(--comunidade-texto); font-size: .9rem; }
+.opcao-privacidade-perfil small { color: var(--comunidade-suave); font-size: .79rem; line-height: 1.42; }
+body.pagina-perfil.tema-escuro .grupo-privacidade-perfil { border-color: #3a4b69; background: #132039; }
+body.pagina-perfil.tema-escuro .opcao-privacidade-perfil + .opcao-privacidade-perfil { border-top-color: #33435f; }
+
+
+/* Resumo de atividade pública — Rede Social V3. */
+.atividade-perfil { margin-top: 18px; }
+.atividade-perfil .rotulo { margin: 0 0 7px; }
+.metricas-atividade-perfil { display: flex; flex-wrap: wrap; gap: 8px 17px; align-items: center; color: var(--comunidade-suave); font-size: .82rem; line-height: 1.45; }
+.metricas-atividade-perfil strong { margin-right: 3px; color: var(--comunidade-texto); font-size: .98rem; }
+.metricas-atividade-perfil span:last-child { padding-left: 17px; border-left: 1px solid var(--comunidade-borda); }
+body.pagina-perfil.tema-escuro .metricas-atividade-perfil strong { color: var(--comunidade-texto); }
+@media (max-width: 700px) {
+  .metricas-atividade-perfil { justify-content: center; }
+}
+@media (max-width: 430px) {
+  .metricas-atividade-perfil span:last-child { width: 100%; padding-left: 0; border-left: 0; }
+}
+
+
+/* Foto de perfil escolhida da galeria. */
+.campo-foto-perfil { gap: 9px; }
+.rotulo-campo-perfil { color: var(--comunidade-texto); font-size: .9rem; font-weight: 800; }
+.input-arquivo-perfil { position: absolute; width: 1px; height: 1px; margin: -1px; border: 0; padding: 0; clip: rect(0 0 0 0); clip-path: inset(50%); overflow: hidden; white-space: nowrap; }
+.acoes-foto-perfil { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.botao-selecionar-foto,
+.botao-remover-foto { display: inline-flex; min-height: 44px; box-sizing: border-box; align-items: center; justify-content: center; border-radius: 11px; padding: 10px 14px; font: inherit; font-size: .9rem; font-weight: 800; cursor: pointer; transition: transform .16s ease-out, background .16s ease-out, border-color .16s ease-out; }
+.botao-selecionar-foto { border: 1px solid #b9d0f8; background: #edf5ff; color: var(--comunidade-azul); }
+.botao-remover-foto { border: 1px solid #e4b2aa; background: #fff6f4; color: #a74434; }
+.botao-selecionar-foto:hover,
+.botao-selecionar-foto:focus-visible { border-color: var(--comunidade-azul); background: #ddebff; outline: none; }
+.botao-remover-foto:hover,
+.botao-remover-foto:focus-visible { border-color: #c86b5d; background: #ffebe7; outline: none; }
+.botao-selecionar-foto:active,
+.botao-remover-foto:active { transform: scale(.97); }
+.input-arquivo-perfil:focus-visible + .acoes-foto-perfil .botao-selecionar-foto { outline: 3px solid rgba(23, 105, 224, .22); outline-offset: 2px; }
+.nome-arquivo-foto { color: var(--comunidade-azul) !important; font-weight: 700; }
+body.pagina-perfil.tema-escuro .botao-selecionar-foto { border-color: #466b9e; background: #1c355b; color: #c7dcff; }
+body.pagina-perfil.tema-escuro .botao-remover-foto { border-color: #824b45; background: #3c292b; color: #ffc3b9; }
+
+@media (max-width: 480px) {
+  .acoes-foto-perfil { display: grid; grid-template-columns: 1fr; }
+  .botao-selecionar-foto,
+  .botao-remover-foto { width: 100%; }
+}

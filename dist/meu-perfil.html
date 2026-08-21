@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Edite seu perfil na Comunidade Frases de Messias.">
   <title>Meu Perfil | Frases de Messias</title>
-  <link rel="stylesheet" href="style.css?v=20260814-perfis-v1">
-  <link rel="stylesheet" href="comunidade.css?v=20260814-perfis-v1">
-  <link rel="stylesheet" href="perfil.css?v=20260814-perfis-v1">
+  <link rel="stylesheet" href="style.css?v=20260820-rede-social-v1">
+  <link rel="stylesheet" href="comunidade.css?v=20260820-rede-social-v1">
+  <link rel="stylesheet" href="perfil.css?v=20260821-foto-galeria-v1">
 </head>
 <body class="pagina-comunidade pagina-perfil">
   <header class="cabecalho-comunidade">
@@ -16,6 +16,8 @@
       <nav class="nav-comunidade" aria-label="Navegação principal">
         <a href="index.html">🏠 Início</a>
         <a href="comunidade.html">💬 Comunidade</a>
+        <a href="explorar.html">🔎 Explorar</a>
+        <a href="notificacoes.html">🔔 Notificações</a>
         <a class="ativo" href="meu-perfil.html" aria-current="page">👤 Meu Perfil</a>
         <a href="favoritos.html">❤️ Favoritos</a>
       </nav>
@@ -48,11 +50,32 @@
             <textarea id="bioPerfilInput" maxlength="180" rows="4" placeholder="Ex.: Compartilho mensagens de fé, esperança e gratidão."></textarea>
             <small><span id="contadorBio">0</span> / 180 caracteres</small>
           </div>
-          <div class="campo-perfil">
-            <label for="fotoUrlInput">Endereço da foto de perfil</label>
-            <input id="fotoUrlInput" type="url" maxlength="500" inputmode="url" placeholder="https://exemplo.com/minha-foto.jpg">
-            <small>Opcional. Cole apenas um link de imagem que você tenha direito de usar. Caso deixe em branco, serão exibidas suas iniciais.</small>
+          <div class="campo-perfil campo-foto-perfil">
+            <span id="rotuloFotoPerfil" class="rotulo-campo-perfil">Foto de perfil</span>
+            <input id="fotoPerfilInput" class="input-arquivo-perfil" type="file" accept="image/jpeg,image/png,image/webp" aria-labelledby="rotuloFotoPerfil" aria-describedby="ajudaFotoPerfil">
+            <div class="acoes-foto-perfil">
+              <label class="botao-selecionar-foto" for="fotoPerfilInput">🖼️ Escolher da galeria</label>
+              <button id="removerFotoPerfil" class="botao-remover-foto" type="button" hidden>Remover foto</button>
+            </div>
+            <small id="nomeArquivoFoto" class="nome-arquivo-foto">Nenhuma foto selecionada.</small>
+            <small id="ajudaFotoPerfil">Escolha uma foto JPEG, PNG ou WebP do seu celular. A imagem será ajustada para o perfil antes de ser salva.</small>
           </div>
+          <fieldset class="grupo-privacidade-perfil">
+            <legend>Privacidade do perfil</legend>
+            <p>Essas escolhas controlam somente informações públicas. Seu e-mail, seus salvos e sua lista de pessoas seguidas continuam privados.</p>
+            <label class="opcao-privacidade-perfil">
+              <input id="visivelEmExplorarInput" type="checkbox" checked>
+              <span><strong>Mostrar meu perfil em Explorar</strong><small>Permite que outras pessoas encontrem seu perfil na área de descoberta.</small></span>
+            </label>
+            <label class="opcao-privacidade-perfil">
+              <input id="aceitaSeguidoresInput" type="checkbox" checked>
+              <span><strong>Permitir novos seguidores</strong><small>Quando desativado, seu conteúdo público continua visível, mas o botão Seguir fica indisponível.</small></span>
+            </label>
+            <label class="opcao-privacidade-perfil">
+              <input id="mostrarMetricasSociaisInput" type="checkbox" checked>
+              <span><strong>Exibir contagens sociais</strong><small>Controla a exibição pública das quantidades de seguidores e de perfis seguidos.</small></span>
+            </label>
+          </fieldset>
           <div class="acoes-editor-perfil">
             <button id="salvarMeuPerfil" class="botao-primario" type="submit">Salvar alterações</button>
             <a id="verMeuPerfil" class="botao-secundario botao-secundario-azul" href="perfil.html">Ver meu perfil público</a>
@@ -63,6 +86,6 @@
     </section>
   </main>
 
-  <script type="module" src="meu-perfil.js?v=20260814-perfis-v1"></script>
+  <script type="module" src="meu-perfil.js?v=20260821-foto-galeria-v1"></script>
 </body>
 </html>
