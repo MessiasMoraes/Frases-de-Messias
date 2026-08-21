@@ -13,8 +13,8 @@ android {
         applicationId "com.messiasmoraes.frases"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 16
-        versionName "1.15"
+        versionCode 17
+        versionName "1.16"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -30,8 +30,8 @@ android {
         play {
             dimension "distribuicao"
             applicationId "com.frasesdemessias"
-            versionCode 5
-            versionName "1.2.2"
+            versionCode 6
+            versionName "1.2.3"
         }
     }
 
