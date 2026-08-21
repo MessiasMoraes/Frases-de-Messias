@@ -1974,3 +1974,79 @@ body.dark-mode .btn-explorar-colecoes:focus-visible {
   .convite-canais-acoes { grid-template-columns: 1fr; }
   .convite-canal { min-height: 70px; }
 }
+
+/* ============================
+   DECLARAÇÃO OFICIAL DE AUTORIA
+============================ */
+.declaracao-autoria {
+  width: min(100% - 30px, 1100px);
+  margin: 30px auto;
+  padding: 26px 30px;
+  border: 1px solid #b8d8fb;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #eff7ff 0%, #f9fcff 62%, #eef6ff 100%);
+  box-shadow: 0 10px 25px rgba(37, 99, 235, .10);
+  text-align: center;
+}
+
+.declaracao-autoria-conteudo {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.declaracao-autoria-selo {
+  margin: 0 0 6px;
+  color: #1d4ed8;
+  font-size: .74rem;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+
+.declaracao-autoria h2 {
+  margin: 0;
+  color: #163f73;
+  font-size: clamp(1.28rem, 2.7vw, 1.72rem);
+  line-height: 1.25;
+}
+
+.declaracao-autoria p {
+  margin: 11px 0 0;
+  color: #284866;
+  font-size: 1rem;
+}
+
+.declaracao-autoria p strong {
+  color: #153f70;
+}
+
+.declaracao-autoria a {
+  color: #1d4ed8;
+  font-weight: 800;
+}
+
+.declaracao-autoria a:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 3px;
+}
+
+.dark .declaracao-autoria {
+  border-color: #315f8c;
+  background: linear-gradient(135deg, #102b45 0%, #122f4d 62%, #11283d 100%);
+  box-shadow: none;
+}
+
+.dark .declaracao-autoria-selo { color: #9dceff; }
+.dark .declaracao-autoria h2,
+.dark .declaracao-autoria p strong { color: #e3f1ff; }
+.dark .declaracao-autoria p { color: #c7d9ea; }
+.dark .declaracao-autoria a { color: #9dceff; }
+
+@media (max-width: 520px) {
+  .declaracao-autoria {
+    width: min(100% - 22px, 1100px);
+    margin: 22px auto;
+    padding: 22px 17px;
+  }
+
+  .declaracao-autoria p { font-size: .96rem; }
+}
