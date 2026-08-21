@@ -38,12 +38,14 @@ const CATEGORIAS_PADRAO = [
 const elemento = (id) => document.getElementById(id);
 const refs = {
   painelVisitante: elemento("painelVisitante"),
+  avisoModoVisitante: elemento("avisoModoVisitante"),
   painelMembro: elemento("painelMembro"),
   avatarMembro: elemento("avatarMembro"),
   tituloMembro: elemento("tituloMembro"),
   subtituloMembro: elemento("subtituloMembro"),
   abrirAutenticacao: elemento("abrirAutenticacao"),
   abrirAutenticacaoHero: elemento("abrirAutenticacaoHero"),
+  abrirAutenticacaoFeed: elemento("abrirAutenticacaoFeed"),
   modalAutenticacao: elemento("modalAutenticacao"),
   fecharAutenticacao: elemento("fecharAutenticacao"),
   modalDenuncia: elemento("modalDenuncia"),
@@ -62,6 +64,8 @@ const refs = {
   formularioAutenticacao: elemento("formularioAutenticacao"),
   confirmarAutenticacao: elemento("confirmarAutenticacao"),
   mensagemAutenticacao: elemento("mensagemAutenticacao"),
+  tituloAutenticacao: elemento("tituloAutenticacao"),
+  textoAutenticacao: elemento("textoAutenticacao"),
   formularioPublicacao: elemento("formularioPublicacao"),
   textoPublicacao: elemento("textoPublicacao"),
   categoriaPublicacao: elemento("categoriaPublicacao"),
@@ -124,17 +128,45 @@ function configurarModoCadastro(ativo) {
   refs.campoNome.hidden = !ativo;
   refs.nomeCadastro.required = ativo;
   refs.senha.autocomplete = ativo ? "new-password" : "current-password";
+  refs.tituloAutenticacao.textContent = ativo ? "Crie sua conta gratuita" : "Entre na sua conta";
+  refs.textoAutenticacao.textContent = ativo
+    ? "Junte-se à rede social de frases para interagir com a comunidade e publicar suas inspirações com segurança."
+    : "Acesse seu perfil para continuar interagindo na rede social de frases.";
   refs.confirmarAutenticacao.textContent = ativo ? "Criar minha conta" : "Entrar na comunidade";
   mostrarMensagem(refs.mensagemAutenticacao);
 }
 
-function abrirModal() {
+function abrirModal(preferirCadastro = true) {
   if (usuarioAtual) {
     refs.textoPublicacao.focus();
     return;
   }
+  configurarModoCadastro(preferirCadastro);
   if (!refs.modalAutenticacao.open) refs.modalAutenticacao.showModal();
   setTimeout(() => refs.email.focus(), 80);
+}
+
+function orientarAcaoDeVisitante(botao, mensagem) {
+  if (usuarioAtual || !botao) return;
+  botao.classList.add("requer-login");
+  botao.title = mensagem;
+  botao.setAttribute("aria-label", mensagem);
+}
+
+function redirecionarAposAutenticacao() {
+  const retorno = new URLSearchParams(window.location.search).get("retorno");
+  if (!retorno) return;
+  try {
+    const destino = new URL(retorno, window.location.href);
+    const paginasPermitidas = new Set([
+      "/comunidade.html", "/explorar.html", "/notificacoes.html", "/perfil.html", "/meu-perfil.html"
+    ]);
+    if (destino.origin === window.location.origin && paginasPermitidas.has(destino.pathname)) {
+      window.location.assign(destino.href);
+    }
+  } catch (erro) {
+    console.warn("Endereço de retorno inválido após a autenticação.", erro);
+  }
 }
 
 function fecharModal() {
@@ -339,6 +371,15 @@ function criarCartaoPublicacao(post) {
   botaoCurtir.addEventListener("click", () => curtirPublicacao(post, botaoCurtir));
   botaoSalvar.addEventListener("click", () => salvarPublicacao(post.id, botaoSalvar));
   botaoComentarios.addEventListener("click", () => alternarComentarios(post.id, areaComentarios, listaComentarios, botaoComentarios, inputComentario));
+  if (!usuarioAtual) {
+    orientarAcaoDeVisitante(botaoCurtir, "Crie uma conta gratuita para curtir esta publicação");
+    orientarAcaoDeVisitante(botaoSalvar, "Crie uma conta gratuita para salvar esta publicação");
+    orientarAcaoDeVisitante(botaoComentarios, "Entre para comentar; a leitura dos comentários continua livre");
+    orientarAcaoDeVisitante(botaoDenunciar, "Entre para denunciar este conteúdo à moderação");
+    inputComentario.placeholder = "Entre para comentar com respeito...";
+    inputComentario.readOnly = true;
+    inputComentario.addEventListener("focus", () => abrirModal());
+  }
   sincronizarEstadoDeInteracoes(post.id, botaoCurtir, botaoSalvar);
   botaoCompartilhar.addEventListener("click", () => compartilharPublicacao(post));
   botaoDenunciar.addEventListener("click", () => abrirDenuncia({
@@ -744,6 +785,7 @@ function atualizarInterfaceDoUsuario(usuario) {
   usuarioAtual = usuario || null;
   const autenticado = Boolean(usuarioAtual);
   refs.painelVisitante.hidden = autenticado;
+  refs.avisoModoVisitante.hidden = autenticado;
   refs.painelMembro.hidden = !autenticado;
   if (!autenticado) {
     refs.linkMeuPerfil.href = "meu-perfil.html";
@@ -770,8 +812,9 @@ function mensagemDeErroAuth(erro) {
   return "Não foi possível concluir o acesso agora. Tente novamente.";
 }
 
-refs.abrirAutenticacao.addEventListener("click", abrirModal);
-refs.abrirAutenticacaoHero.addEventListener("click", abrirModal);
+refs.abrirAutenticacao.addEventListener("click", () => abrirModal(true));
+refs.abrirAutenticacaoHero.addEventListener("click", () => abrirModal(true));
+refs.abrirAutenticacaoFeed.addEventListener("click", () => abrirModal(true));
 refs.fecharAutenticacao.addEventListener("click", fecharModal);
 refs.modalAutenticacao.addEventListener("click", (evento) => { if (evento.target === refs.modalAutenticacao) fecharModal(); });
 refs.fecharDenuncia.addEventListener("click", fecharDenuncia);
@@ -814,8 +857,7 @@ refs.formularioAutenticacao.addEventListener("submit", async (evento) => {
     }
     fecharModal();
     refs.formularioAutenticacao.reset();
-    const retorno = new URLSearchParams(window.location.search).get("retorno");
-    if (retorno && retorno.startsWith("perfil.html?")) window.location.assign(retorno);
+    redirecionarAposAutenticacao();
   } catch (erro) {
     console.error("Erro de autenticação.", erro);
     mostrarMensagem(refs.mensagemAutenticacao, mensagemDeErroAuth(erro), true);
@@ -827,6 +869,7 @@ refs.formularioAutenticacao.addEventListener("submit", async (evento) => {
 onAuthStateChanged(auth, async (usuario) => {
   atualizarInterfaceDoUsuario(usuario);
   carregarPerfisSeguidos(usuario);
+  if (!usuario && new URLSearchParams(window.location.search).get("entrar") === "1") abrirModal(false);
   if (usuario) {
     try {
       await salvarPerfil(usuario);

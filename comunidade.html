@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Participe da Comunidade Frases de Messias: publique frases de fé, esperança e motivação, interaja com respeito e encontre inspiração diária.">
+  <meta name="description" content="A rede social pública Frases de Messias permite ler frases de fé, esperança e motivação livremente. Crie uma conta gratuita para curtir, comentar, seguir perfis e publicar com moderação.">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="https://frasesdemessias.com.br/comunidade.html">
-  <title>Comunidade de Frases, Fé e Motivação | Frases de Messias</title>
+  <title>Rede Social de Frases | Frases de Messias</title>
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://frasesdemessias.com.br/comunidade.html">
-  <meta property="og:title" content="Comunidade Frases de Messias">
-  <meta property="og:description" content="Compartilhe inspiração, fé e esperança em uma comunidade com moderação e respeito.">
+  <meta property="og:title" content="Rede Social de Frases | Frases de Messias">
+  <meta property="og:description" content="Leia gratuitamente frases de fé, esperança e motivação. Crie uma conta para participar, sempre com moderação e respeito.">
   <meta property="og:image" content="https://frasesdemessias.com.br/imagens/1785461694182.png">
   <link rel="stylesheet" href="style.css?v=20260820-menu-canais-v1">
-  <link rel="stylesheet" href="comunidade.css?v=20260820-rede-social-v4-botoes">
+  <link rel="stylesheet" href="comunidade.css?v=20260820-rede-social-publica-v1">
 </head>
 <body class="pagina-comunidade">
   <header class="cabecalho-comunidade">
@@ -21,7 +21,7 @@
       <a class="marca-comunidade" href="index.html" aria-label="Voltar ao início">📖 <span>Frases de Messias</span></a>
       <nav class="nav-comunidade" aria-label="Navegação principal">
         <a href="index.html">🏠 Início</a>
-        <a class="ativo" href="comunidade.html" aria-current="page">💬 Comunidade</a>
+        <a class="ativo" href="comunidade.html" aria-current="page">🌐 Rede social</a>
         <a href="explorar.html">🔎 Explorar</a>
         <a id="linkNotificacoes" href="notificacoes.html">🔔 Notificações<span id="contadorNotificacoes" class="contador-notificacoes" hidden></span></a>
         <a id="linkMeuPerfil" href="meu-perfil.html">👤 Meu Perfil</a>
@@ -34,23 +34,36 @@
 
   <main class="container comunidade-principal">
     <section class="hero-comunidade" aria-labelledby="tituloComunidade">
-      <p class="selo-comunidade">COMUNIDADE DE INSPIRAÇÃO</p>
-      <h1 id="tituloComunidade">Palavras que aproximam pessoas</h1>
-      <p>Compartilhe frases de fé, esperança e motivação. Toda publicação da comunidade passa pela aprovação antes de aparecer no feed público.</p>
+      <p class="selo-comunidade">REDE SOCIAL PÚBLICA</p>
+      <h1 id="tituloComunidade">Leia, inspire e conecte-se</h1>
+      <p>O feed é aberto para todos. Crie uma conta gratuita para curtir, salvar, comentar, seguir perfis e publicar suas frases de fé, esperança e motivação. Todo conteúdo enviado passa por aprovação.</p>
       <div class="hero-comunidade-acoes">
-        <a href="#feedComunidade" class="botao-secundario">Ver publicações</a>
-        <button id="abrirAutenticacaoHero" class="botao-primario" type="button">Participar da comunidade</button>
+        <a href="#feedComunidade" class="botao-secundario">Explorar publicações</a>
+        <button id="abrirAutenticacaoHero" class="botao-primario" type="button">Criar conta gratuita</button>
       </div>
     </section>
 
     <section id="painelVisitante" class="cartao-comunidade cartao-boas-vindas" aria-labelledby="tituloVisitante">
       <div class="avatar-grande" aria-hidden="true">✨</div>
-      <div>
+      <div class="conteudo-boas-vindas">
+        <p class="rotulo">VOCÊ PODE LER LIVREMENTE</p>
         <h2 id="tituloVisitante">Sua voz também inspira</h2>
-        <p>Crie uma conta gratuita para publicar frases, curtir conteúdos e comentar com respeito.</p>
+        <p>Entre na rede social para transformar inspiração em conexão, sempre em um espaço moderado e respeitoso.</p>
+        <ul class="beneficios-visitante" aria-label="Benefícios de criar uma conta">
+          <li><span aria-hidden="true">👀</span> Leia o feed sem cadastro</li>
+          <li><span aria-hidden="true">♡</span> Curta e salve suas favoritas</li>
+          <li><span aria-hidden="true">💬</span> Comente e siga perfis</li>
+          <li><span aria-hidden="true">✍️</span> Publique suas próprias frases</li>
+        </ul>
       </div>
-      <button id="abrirAutenticacao" class="botao-primario" type="button">Entrar ou criar conta</button>
+      <button id="abrirAutenticacao" class="botao-primario botao-criar-conta" type="button">Criar conta gratuita</button>
     </section>
+
+    <aside id="avisoModoVisitante" class="aviso-visitante" aria-label="Modo visitante">
+      <span class="icone-aviso-visitante" aria-hidden="true">👀</span>
+      <p><strong>Você está navegando como visitante.</strong> A leitura é livre; entre para curtir, salvar, comentar, seguir e publicar.</p>
+      <button id="abrirAutenticacaoFeed" class="botao-texto botao-entrar-feed" type="button">Entrar para interagir</button>
+    </aside>
 
     <section id="painelMembro" class="painel-membro" hidden aria-labelledby="tituloMembro">
       <div class="cartao-comunidade perfil-resumo">
@@ -139,8 +152,13 @@
     <div class="modal-conteudo">
       <button id="fecharAutenticacao" class="fechar-modal" type="button" aria-label="Fechar">×</button>
       <p class="rotulo">COMUNIDADE FRASES DE MESSIAS</p>
-      <h2 id="tituloAutenticacao">Entre para compartilhar</h2>
-      <p class="texto-modal">Use seu e-mail para criar uma conta gratuita ou entrar em uma conta existente.</p>
+      <h2 id="tituloAutenticacao">Crie sua conta gratuita</h2>
+      <p id="textoAutenticacao" class="texto-modal">Junte-se à rede social de frases para interagir com a comunidade e publicar suas inspirações com segurança.</p>
+      <ul class="beneficios-modal" aria-label="O que você pode fazer com uma conta">
+        <li>Curtir, salvar e comentar publicações</li>
+        <li>Seguir perfis e receber notificações privadas</li>
+        <li>Enviar frases para aprovação da moderação</li>
+      </ul>
       <div class="abas-autenticacao" role="tablist" aria-label="Acesso à comunidade">
         <button class="aba-autenticacao ativa" id="abaEntrar" type="button" role="tab" aria-selected="true">Entrar</button>
         <button class="aba-autenticacao" id="abaCriar" type="button" role="tab" aria-selected="false">Criar conta</button>
@@ -195,6 +213,6 @@
     </article>
   </template>
 
-  <script type="module" src="comunidade.js?v=20260820-rede-social-v4-botoes"></script>
+  <script type="module" src="comunidade.js?v=20260820-rede-social-publica-v1"></script>
 </body>
 </html>
