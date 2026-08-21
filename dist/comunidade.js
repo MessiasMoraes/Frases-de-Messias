@@ -1,4 +1,6 @@
 import { app, db } from "./firebase.js";
+import "./convites-canais.js?v=20260820-menu-canais-v1";
+import { MOTIVOS_DENUNCIA, carregarBloqueios, mensagemDeErroSeguranca, registrarDenuncia } from "./seguranca-comunidade.js";
 import {
   getAuth,
   onAuthStateChanged,
@@ -20,7 +22,8 @@ import {
   where,
   limit,
   serverTimestamp,
-  Timestamp
+  Timestamp,
+  writeBatch
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 const auth = getAuth(app);
@@ -35,14 +38,23 @@ const CATEGORIAS_PADRAO = [
 const elemento = (id) => document.getElementById(id);
 const refs = {
   painelVisitante: elemento("painelVisitante"),
+  avisoModoVisitante: elemento("avisoModoVisitante"),
   painelMembro: elemento("painelMembro"),
   avatarMembro: elemento("avatarMembro"),
   tituloMembro: elemento("tituloMembro"),
   subtituloMembro: elemento("subtituloMembro"),
   abrirAutenticacao: elemento("abrirAutenticacao"),
   abrirAutenticacaoHero: elemento("abrirAutenticacaoHero"),
+  abrirAutenticacaoFeed: elemento("abrirAutenticacaoFeed"),
   modalAutenticacao: elemento("modalAutenticacao"),
   fecharAutenticacao: elemento("fecharAutenticacao"),
+  modalDenuncia: elemento("modalDenuncia"),
+  fecharDenuncia: elemento("fecharDenuncia"),
+  formularioDenuncia: elemento("formularioDenuncia"),
+  motivoDenuncia: elemento("motivoDenuncia"),
+  detalhesDenuncia: elemento("detalhesDenuncia"),
+  enviarDenuncia: elemento("enviarDenuncia"),
+  mensagemDenuncia: elemento("mensagemDenuncia"),
   abaEntrar: elemento("abaEntrar"),
   abaCriar: elemento("abaCriar"),
   campoNome: elemento("campoNome"),
@@ -52,6 +64,8 @@ const refs = {
   formularioAutenticacao: elemento("formularioAutenticacao"),
   confirmarAutenticacao: elemento("confirmarAutenticacao"),
   mensagemAutenticacao: elemento("mensagemAutenticacao"),
+  tituloAutenticacao: elemento("tituloAutenticacao"),
+  textoAutenticacao: elemento("textoAutenticacao"),
   formularioPublicacao: elemento("formularioPublicacao"),
   textoPublicacao: elemento("textoPublicacao"),
   categoriaPublicacao: elemento("categoriaPublicacao"),
@@ -62,15 +76,26 @@ const refs = {
   feed: elemento("feedComunidade"),
   template: elemento("templatePublicacao"),
   alternarTema: elemento("alternarTemaComunidade"),
-  linkMeuPerfil: elemento("linkMeuPerfil")
+  linkMeuPerfil: elemento("linkMeuPerfil"),
+  linkNotificacoes: elemento("linkNotificacoes"),
+  contadorNotificacoes: elemento("contadorNotificacoes"),
+  abasFeed: Array.from(document.querySelectorAll("[data-modo-feed]"))
 };
 
 let usuarioAtual = null;
 let modoCadastro = false;
 let categorias = [];
 let publicacoes = [];
+let perfisBloqueados = new Set();
 let cancelarFeed = null;
 let comentariosAbertos = new Map();
+let denunciaAtual = null;
+let modoFeedAtual = "para-voce";
+let perfisSeguidos = new Set();
+let cancelarSeguindo = null;
+let cancelarNotificacoes = null;
+const fotosDePerfil = new Map();
+const consultasFotosPerfil = new Map();
 
 function textoLimpo(valor = "") {
   return String(valor).replace(/[<>]/g, "").replace(/\s+/g, " ").trim();
@@ -82,6 +107,63 @@ function nomeExibicao(usuario) {
 
 function iniciais(nome) {
   return nome.split(" ").filter(Boolean).slice(0, 2).map((parte) => parte[0]).join("").toUpperCase() || "FM";
+}
+
+function fotoPerfilSegura(valor) {
+  const endereco = String(valor || "").trim();
+  if (!endereco || endereco.length > 700) return "";
+  try {
+    const url = new URL(endereco);
+    return ["https:", "http:"].includes(url.protocol) ? url.href : "";
+  } catch {
+    return "";
+  }
+}
+
+function aplicarAvatarDaPublicacao(avatar, nome, fotoUrl = "") {
+  const iniciaisDoAutor = iniciais(nome);
+  const fotoSegura = fotoPerfilSegura(fotoUrl);
+  avatar.classList.toggle("tem-foto", Boolean(fotoSegura));
+  avatar.replaceChildren();
+
+  if (!fotoSegura) {
+    avatar.textContent = iniciaisDoAutor;
+    return;
+  }
+
+  const imagem = document.createElement("img");
+  imagem.src = fotoSegura;
+  imagem.alt = "";
+  imagem.loading = "lazy";
+  imagem.decoding = "async";
+  imagem.addEventListener("error", () => {
+    avatar.classList.remove("tem-foto");
+    avatar.replaceChildren();
+    avatar.textContent = iniciaisDoAutor;
+  }, { once: true });
+  avatar.appendChild(imagem);
+}
+
+async function carregarFotoDoPerfil(autorId) {
+  const id = String(autorId || "").trim();
+  if (!id) return "";
+  if (fotosDePerfil.has(id)) return fotosDePerfil.get(id);
+  if (consultasFotosPerfil.has(id)) return consultasFotosPerfil.get(id);
+
+  const consulta = getDoc(doc(db, "comunidadePerfis", id))
+    .then((perfil) => fotoPerfilSegura(perfil.exists() ? perfil.data().fotoUrl : ""))
+    .catch((erro) => {
+      console.warn("Não foi possível carregar a foto de um perfil.", erro);
+      return "";
+    })
+    .then((fotoUrl) => {
+      fotosDePerfil.set(id, fotoUrl);
+      consultasFotosPerfil.delete(id);
+      return fotoUrl;
+    });
+
+  consultasFotosPerfil.set(id, consulta);
+  return consulta;
 }
 
 function mostrarMensagem(alvo, mensagem = "", erro = false) {
@@ -105,21 +187,106 @@ function configurarModoCadastro(ativo) {
   refs.campoNome.hidden = !ativo;
   refs.nomeCadastro.required = ativo;
   refs.senha.autocomplete = ativo ? "new-password" : "current-password";
+  refs.tituloAutenticacao.textContent = ativo ? "Crie sua conta gratuita" : "Entre na sua conta";
+  refs.textoAutenticacao.textContent = ativo
+    ? "Junte-se à rede social de frases para interagir com a comunidade e publicar suas inspirações com segurança."
+    : "Acesse seu perfil para continuar interagindo na rede social de frases.";
   refs.confirmarAutenticacao.textContent = ativo ? "Criar minha conta" : "Entrar na comunidade";
   mostrarMensagem(refs.mensagemAutenticacao);
 }
 
-function abrirModal() {
+function abrirModal(preferirCadastro = true) {
   if (usuarioAtual) {
     refs.textoPublicacao.focus();
     return;
   }
+  configurarModoCadastro(preferirCadastro);
   if (!refs.modalAutenticacao.open) refs.modalAutenticacao.showModal();
   setTimeout(() => refs.email.focus(), 80);
 }
 
+function orientarAcaoDeVisitante(botao, mensagem) {
+  if (usuarioAtual || !botao) return;
+  botao.classList.add("requer-login");
+  botao.title = mensagem;
+  botao.setAttribute("aria-label", mensagem);
+}
+
+function redirecionarAposAutenticacao() {
+  const retorno = new URLSearchParams(window.location.search).get("retorno");
+  if (!retorno) return;
+  try {
+    const destino = new URL(retorno, window.location.href);
+    const paginasPermitidas = new Set([
+      "/comunidade.html", "/explorar.html", "/notificacoes.html", "/perfil.html", "/meu-perfil.html"
+    ]);
+    if (destino.origin === window.location.origin && paginasPermitidas.has(destino.pathname)) {
+      window.location.assign(destino.href);
+    }
+  } catch (erro) {
+    console.warn("Endereço de retorno inválido após a autenticação.", erro);
+  }
+}
+
 function fecharModal() {
   if (refs.modalAutenticacao.open) refs.modalAutenticacao.close();
+}
+
+function preencherMotivosDenuncia() {
+  refs.motivoDenuncia.innerHTML = '<option value="">Selecione um motivo</option>';
+  MOTIVOS_DENUNCIA.forEach((motivo) => {
+    const opcao = document.createElement("option");
+    opcao.value = motivo;
+    opcao.textContent = motivo;
+    refs.motivoDenuncia.appendChild(opcao);
+  });
+}
+
+function fecharDenuncia() {
+  denunciaAtual = null;
+  if (refs.modalDenuncia.open) refs.modalDenuncia.close();
+}
+
+function abrirDenuncia(dados) {
+  if (!usuarioAtual) { abrirModal(); return; }
+  if (!dados?.autorAlvoId || dados.autorAlvoId === usuarioAtual.uid) {
+    alert("Você não pode denunciar seu próprio conteúdo.");
+    return;
+  }
+  denunciaAtual = dados;
+  refs.formularioDenuncia.reset();
+  mostrarMensagem(refs.mensagemDenuncia);
+  if (!refs.modalDenuncia.open) refs.modalDenuncia.showModal();
+  setTimeout(() => refs.motivoDenuncia.focus(), 80);
+}
+
+async function enviarDenuncia(evento) {
+  evento.preventDefault();
+  if (!usuarioAtual) { fecharDenuncia(); abrirModal(); return; }
+  if (!denunciaAtual) { fecharDenuncia(); return; }
+  const motivo = textoLimpo(refs.motivoDenuncia.value);
+  const detalhes = textoLimpo(refs.detalhesDenuncia.value);
+  if (!MOTIVOS_DENUNCIA.includes(motivo)) {
+    mostrarMensagem(refs.mensagemDenuncia, "Selecione o motivo da denúncia.", true);
+    return;
+  }
+  refs.enviarDenuncia.disabled = true;
+  mostrarMensagem(refs.mensagemDenuncia, "Enviando para análise...");
+  try {
+    await registrarDenuncia({
+      denuncianteId: usuarioAtual.uid,
+      ...denunciaAtual,
+      motivo,
+      detalhes
+    });
+    mostrarMensagem(refs.mensagemDenuncia, "Denúncia enviada. Obrigado por ajudar a cuidar da comunidade.");
+    setTimeout(fecharDenuncia, 900);
+  } catch (erro) {
+    console.error("Erro ao enviar denúncia.", erro);
+    mostrarMensagem(refs.mensagemDenuncia, mensagemDeErroSeguranca(erro, "Não foi possível enviar a denúncia agora. Tente novamente."), true);
+  } finally {
+    refs.enviarDenuncia.disabled = false;
+  }
 }
 
 function preencherSeletoresDeCategoria() {
@@ -166,17 +333,67 @@ function dataFormatada(valor) {
   return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short", year: "numeric" }).format(data);
 }
 
+function atualizarAbasDoFeed() {
+  refs.abasFeed.forEach((aba) => {
+    const ativa = aba.dataset.modoFeed === modoFeedAtual;
+    aba.classList.toggle("ativa", ativa);
+    aba.setAttribute("aria-selected", String(ativa));
+  });
+}
+
+function mudarModoDeFeed(modo) {
+  if (!refs.abasFeed.some((aba) => aba.dataset.modoFeed === modo)) return;
+  if (modo === "seguindo" && !usuarioAtual) {
+    abrirModal();
+    return;
+  }
+  modoFeedAtual = modo;
+  atualizarAbasDoFeed();
+  renderizarFeed();
+}
+
+function carregarPerfisSeguidos(usuario) {
+  if (cancelarSeguindo) cancelarSeguindo();
+  cancelarSeguindo = null;
+  perfisSeguidos = new Set();
+  if (!usuario) return;
+
+  cancelarSeguindo = onSnapshot(
+    collection(db, "comunidadePerfis", usuario.uid, "seguindo"),
+    (resultado) => {
+      perfisSeguidos = new Set(resultado.docs.map((item) => item.id));
+      renderizarFeed();
+    },
+    (erro) => {
+      console.warn("Não foi possível atualizar os perfis seguidos.", erro);
+      perfisSeguidos = new Set();
+      renderizarFeed();
+    }
+  );
+}
+
 function renderizarFeed() {
   const categoria = refs.filtroCategoria.value;
-  const filtradas = categoria ? publicacoes.filter((post) => post.categoria === categoria) : publicacoes;
-  refs.feed.innerHTML = "";
+  const publicacoesVisiveis = publicacoes.filter((post) => !perfisBloqueados.has(post.autorId));
+  let filtradas = categoria ? publicacoesVisiveis.filter((post) => post.categoria === categoria) : publicacoesVisiveis;
 
+  if (modoFeedAtual === "seguindo") {
+    filtradas = filtradas.filter((post) => perfisSeguidos.has(post.autorId));
+  }
+
+  refs.feed.innerHTML = "";
   if (!filtradas.length) {
     const estado = document.createElement("div");
     estado.className = "estado-feed";
-    estado.textContent = categoria
-      ? `Ainda não há publicações aprovadas em ${categoria}.`
-      : "A comunidade está começando. Seja a primeira pessoa a enviar uma frase inspiradora!";
+    if (modoFeedAtual === "seguindo" && usuarioAtual && !perfisSeguidos.size) {
+      estado.innerHTML = 'Você ainda não segue nenhum perfil. <a href="explorar.html">Explore pessoas inspiradoras</a> para montar o seu feed.';
+    } else if (modoFeedAtual === "seguindo") {
+      estado.textContent = "Ainda não há publicações aprovadas dos perfis que você segue nesta categoria.";
+    } else {
+      estado.textContent = categoria
+        ? `Ainda não há publicações aprovadas em ${categoria}.`
+        : "A comunidade está começando. Seja a primeira pessoa a enviar uma frase inspiradora!";
+    }
     refs.feed.appendChild(estado);
     return;
   }
@@ -190,7 +407,10 @@ function criarCartaoPublicacao(post) {
   const nome = textoLimpo(post.autorNome || NOME_PADRAO);
   const avatar = fragmento.querySelector(".avatar-publicacao");
   const linkPerfil = `perfil.html?uid=${encodeURIComponent(post.autorId || "")}`;
-  avatar.textContent = iniciais(nome);
+  aplicarAvatarDaPublicacao(avatar, nome, post.autorFotoUrl);
+  carregarFotoDoPerfil(post.autorId).then((fotoUrl) => {
+    if (avatar.isConnected && fotoUrl) aplicarAvatarDaPublicacao(avatar, nome, fotoUrl);
+  });
   fragmento.querySelector(".link-avatar-publicacao").href = linkPerfil;
   const nomeAutor = fragmento.querySelector(".nome-publicacao");
   nomeAutor.href = linkPerfil;
@@ -203,17 +423,34 @@ function criarCartaoPublicacao(post) {
   const botaoSalvar = fragmento.querySelector(".botao-salvar-publicacao");
   const botaoComentarios = fragmento.querySelector(".botao-comentarios");
   const botaoCompartilhar = fragmento.querySelector(".botao-compartilhar-publicacao");
+  const botaoDenunciar = fragmento.querySelector(".acao-denunciar-publicacao");
   const areaComentarios = fragmento.querySelector(".area-comentarios");
   const listaComentarios = fragmento.querySelector(".lista-comentarios");
   const formularioComentario = fragmento.querySelector(".formulario-comentario");
   const inputComentario = fragmento.querySelector(".texto-comentario");
   const mensagemComentario = fragmento.querySelector(".mensagem-comentario");
 
-  botaoCurtir.addEventListener("click", () => curtirPublicacao(post.id, botaoCurtir));
+  botaoCurtir.addEventListener("click", () => curtirPublicacao(post, botaoCurtir));
   botaoSalvar.addEventListener("click", () => salvarPublicacao(post.id, botaoSalvar));
   botaoComentarios.addEventListener("click", () => alternarComentarios(post.id, areaComentarios, listaComentarios, botaoComentarios, inputComentario));
+  if (!usuarioAtual) {
+    orientarAcaoDeVisitante(botaoCurtir, "Crie uma conta gratuita para curtir esta publicação");
+    orientarAcaoDeVisitante(botaoSalvar, "Crie uma conta gratuita para salvar esta publicação");
+    orientarAcaoDeVisitante(botaoComentarios, "Entre para comentar; a leitura dos comentários continua livre");
+    orientarAcaoDeVisitante(botaoDenunciar, "Entre para denunciar este conteúdo à moderação");
+    inputComentario.placeholder = "Entre para comentar com respeito...";
+    inputComentario.readOnly = true;
+    inputComentario.addEventListener("focus", () => abrirModal());
+  }
   sincronizarEstadoDeInteracoes(post.id, botaoCurtir, botaoSalvar);
   botaoCompartilhar.addEventListener("click", () => compartilharPublicacao(post));
+  botaoDenunciar.addEventListener("click", () => abrirDenuncia({
+    alvoTipo: "publicacao",
+    publicacaoId: post.id,
+    autorAlvoId: post.autorId || "",
+    autorAlvoNome: nome,
+    conteudo: post.texto || ""
+  }));
   formularioComentario.addEventListener("submit", (evento) => enviarComentario(evento, post.id, inputComentario, mensagemComentario));
   cartao.dataset.publicacaoId = post.id;
   return fragmento;
@@ -241,12 +478,20 @@ function escutarFeed() {
 
 function atualizarBotaoCurtir(botao, ativo) {
   botao.classList.toggle("ativo", ativo);
-  botao.innerHTML = ativo ? "❤️ <span>Curtido</span>" : "🤍 <span>Curtir</span>";
+  botao.setAttribute("aria-pressed", String(ativo));
+  botao.setAttribute("aria-label", ativo ? "Remover curtida" : "Curtir publicação");
+  botao.innerHTML = ativo
+    ? '<span class="icone-acao" aria-hidden="true">♥</span><span>Curtido</span>'
+    : '<span class="icone-acao" aria-hidden="true">♡</span><span>Curtir</span>';
 }
 
 function atualizarBotaoSalvar(botao, ativo) {
   botao.classList.toggle("ativo", ativo);
-  botao.innerHTML = ativo ? "🔖 <span>Salvo</span>" : "🔖 <span>Salvar</span>";
+  botao.setAttribute("aria-pressed", String(ativo));
+  botao.setAttribute("aria-label", ativo ? "Remover dos salvos" : "Salvar publicação");
+  botao.innerHTML = ativo
+    ? '<span class="icone-acao" aria-hidden="true">🔖</span><span>Salvo</span>'
+    : '<span class="icone-acao" aria-hidden="true">🔖</span><span>Salvar</span>';
 }
 
 async function sincronizarEstadoDeInteracoes(publicacaoId, botaoCurtir, botaoSalvar) {
@@ -267,16 +512,40 @@ async function sincronizarEstadoDeInteracoes(publicacaoId, botaoCurtir, botaoSal
   }
 }
 
-async function curtirPublicacao(publicacaoId, botao) {
+async function curtirPublicacao(post, botao) {
   if (!usuarioAtual) { abrirModal(); return; }
+  const publicacaoId = post?.id || "";
+  if (!publicacaoId) return;
+
   const referencia = doc(db, "comunidadePublicacoes", publicacaoId, "curtidas", usuarioAtual.uid);
+  const autorId = String(post.autorId || "");
+  const deveNotificar = Boolean(autorId && autorId !== usuarioAtual.uid);
+  const referenciaNotificacao = deveNotificar
+    ? doc(db, "comunidadeUsuarios", autorId, "notificacoes", `curtida_${publicacaoId}_${usuarioAtual.uid}`)
+    : null;
+
   try {
     const existente = await getDoc(referencia);
+    const lote = writeBatch(db);
     if (existente.exists()) {
-      await deleteDoc(referencia);
+      lote.delete(referencia);
+      if (referenciaNotificacao) lote.delete(referenciaNotificacao);
+      await lote.commit();
       atualizarBotaoCurtir(botao, false);
     } else {
-      await setDoc(referencia, { usuarioId: usuarioAtual.uid, criadoEm: serverTimestamp() });
+      lote.set(referencia, { usuarioId: usuarioAtual.uid, criadoEm: serverTimestamp() });
+      if (referenciaNotificacao) {
+        lote.set(referenciaNotificacao, {
+          tipo: "curtida",
+          atorId: usuarioAtual.uid,
+          atorNome: nomeExibicao(usuarioAtual),
+          publicacaoId,
+          texto: "curtiu sua publicação.",
+          lida: false,
+          criadoEm: serverTimestamp()
+        });
+      }
+      await lote.commit();
       atualizarBotaoCurtir(botao, true);
     }
   } catch (erro) {
@@ -387,8 +656,20 @@ function criarComentario(publicacaoId, comentarioId, dados, input) {
   compartilhar.className = "acao-comentario";
   compartilhar.textContent = "↗ Compartilhar";
   compartilhar.addEventListener("click", () => compartilharComentario(dados));
+  const denunciar = document.createElement("button");
+  denunciar.type = "button";
+  denunciar.className = "acao-comentario acao-denunciar-comentario";
+  denunciar.textContent = "🚩 Denunciar";
+  denunciar.addEventListener("click", () => abrirDenuncia({
+    alvoTipo: "comentario",
+    publicacaoId,
+    comentarioId,
+    autorAlvoId: dados.autorId || "",
+    autorAlvoNome: dados.autorNome || NOME_PADRAO,
+    conteudo: dados.texto || ""
+  }));
   cabecalho.appendChild(autor);
-  acoes.append(curtir, responder, compartilhar);
+  acoes.append(curtir, responder, compartilhar, denunciar);
   comentario.append(cabecalho, texto, acoes);
   return comentario;
 }
@@ -397,6 +678,8 @@ function alternarComentarios(publicacaoId, area, lista, botao, input) {
   const abrir = area.hidden;
   area.hidden = !abrir;
   botao.classList.toggle("ativo", abrir);
+  botao.setAttribute("aria-expanded", String(abrir));
+  botao.setAttribute("aria-label", abrir ? "Fechar comentários" : "Abrir comentários");
   if (!abrir) return;
   if (comentariosAbertos.has(publicacaoId)) return;
 
@@ -523,22 +806,58 @@ async function salvarPerfil(usuario) {
       nome: nomeExibicao(usuario),
       bio: "",
       fotoUrl: "",
+      visivelEmExplorar: true,
+      aceitaSeguidores: true,
+      mostrarMetricasSociais: true,
       criadoEm: serverTimestamp(),
       atualizadoEm: serverTimestamp()
     });
   }
 }
 
+function atualizarContadorNotificacoes(quantidade = 0) {
+  if (!refs.contadorNotificacoes) return;
+  const total = Math.max(0, Number(quantidade) || 0);
+  refs.contadorNotificacoes.hidden = total === 0;
+  refs.contadorNotificacoes.textContent = total > 9 ? "9+" : String(total);
+  refs.linkNotificacoes?.setAttribute("aria-label", total
+    ? `Notificações, ${total} não ${total === 1 ? "lida" : "lidas"}`
+    : "Notificações");
+}
+
+function escutarContadorNotificacoes(uid = "") {
+  if (cancelarNotificacoes) cancelarNotificacoes();
+  cancelarNotificacoes = null;
+  atualizarContadorNotificacoes(0);
+  if (!uid) return;
+
+  const avisos = query(
+    collection(db, "comunidadeUsuarios", uid, "notificacoes"),
+    where("lida", "==", false)
+  );
+  cancelarNotificacoes = onSnapshot(avisos, (resultado) => {
+    atualizarContadorNotificacoes(resultado.size);
+  }, (erro) => {
+    console.warn("Não foi possível atualizar o contador de notificações.", erro);
+    atualizarContadorNotificacoes(0);
+  });
+}
+
 function atualizarInterfaceDoUsuario(usuario) {
   usuarioAtual = usuario || null;
   const autenticado = Boolean(usuarioAtual);
   refs.painelVisitante.hidden = autenticado;
+  refs.avisoModoVisitante.hidden = autenticado;
   refs.painelMembro.hidden = !autenticado;
   if (!autenticado) {
     refs.linkMeuPerfil.href = "meu-perfil.html";
+    refs.linkNotificacoes.href = "notificacoes.html";
+    escutarContadorNotificacoes();
     return;
   }
   refs.linkMeuPerfil.href = `perfil.html?uid=${encodeURIComponent(usuarioAtual.uid)}`;
+  refs.linkNotificacoes.href = "notificacoes.html";
+  escutarContadorNotificacoes(usuarioAtual.uid);
   const nome = nomeExibicao(usuarioAtual);
   refs.avatarMembro.textContent = iniciais(nome);
   refs.tituloMembro.textContent = `Olá, ${nome.split(" ")[0]}!`;
@@ -555,10 +874,14 @@ function mensagemDeErroAuth(erro) {
   return "Não foi possível concluir o acesso agora. Tente novamente.";
 }
 
-refs.abrirAutenticacao.addEventListener("click", abrirModal);
-refs.abrirAutenticacaoHero.addEventListener("click", abrirModal);
+refs.abrirAutenticacao.addEventListener("click", () => abrirModal(true));
+refs.abrirAutenticacaoHero.addEventListener("click", () => abrirModal(true));
+refs.abrirAutenticacaoFeed.addEventListener("click", () => abrirModal(true));
 refs.fecharAutenticacao.addEventListener("click", fecharModal);
 refs.modalAutenticacao.addEventListener("click", (evento) => { if (evento.target === refs.modalAutenticacao) fecharModal(); });
+refs.fecharDenuncia.addEventListener("click", fecharDenuncia);
+refs.modalDenuncia.addEventListener("click", (evento) => { if (evento.target === refs.modalDenuncia) fecharDenuncia(); });
+refs.formularioDenuncia.addEventListener("submit", enviarDenuncia);
 refs.abaEntrar.addEventListener("click", () => configurarModoCadastro(false));
 refs.abaCriar.addEventListener("click", () => configurarModoCadastro(true));
 refs.sair.addEventListener("click", () => signOut(auth));
@@ -573,6 +896,7 @@ refs.textoPublicacao.addEventListener("input", () => {
 // O envio deve passar pelo manipulador que grava a frase como pendente no Firestore.
 refs.formularioPublicacao.addEventListener("submit", enviarPublicacao);
 refs.filtroCategoria.addEventListener("change", renderizarFeed);
+refs.abasFeed.forEach((aba) => aba.addEventListener("click", () => mudarModoDeFeed(aba.dataset.modoFeed)));
 
 refs.formularioAutenticacao.addEventListener("submit", async (evento) => {
   evento.preventDefault();
@@ -595,8 +919,7 @@ refs.formularioAutenticacao.addEventListener("submit", async (evento) => {
     }
     fecharModal();
     refs.formularioAutenticacao.reset();
-    const retorno = new URLSearchParams(window.location.search).get("retorno");
-    if (retorno && retorno.startsWith("perfil.html?")) window.location.assign(retorno);
+    redirecionarAposAutenticacao();
   } catch (erro) {
     console.error("Erro de autenticação.", erro);
     mostrarMensagem(refs.mensagemAutenticacao, mensagemDeErroAuth(erro), true);
@@ -607,12 +930,25 @@ refs.formularioAutenticacao.addEventListener("submit", async (evento) => {
 
 onAuthStateChanged(auth, async (usuario) => {
   atualizarInterfaceDoUsuario(usuario);
+  carregarPerfisSeguidos(usuario);
+  if (!usuario && new URLSearchParams(window.location.search).get("entrar") === "1") abrirModal(false);
   if (usuario) {
-    try { await salvarPerfil(usuario); } catch (erro) { console.warn("Perfil social não pôde ser atualizado.", erro); }
+    try {
+      await salvarPerfil(usuario);
+      perfisBloqueados = await carregarBloqueios(usuario.uid);
+    } catch (erro) {
+      console.warn("Preferências sociais não puderam ser atualizadas.", erro);
+      perfisBloqueados = new Set();
+    }
+  } else {
+    perfisBloqueados = new Set();
   }
+  renderizarFeed();
 });
 
 ajustarTema();
 configurarModoCadastro(false);
+preencherMotivosDenuncia();
+atualizarAbasDoFeed();
 carregarCategorias();
 escutarFeed();

@@ -94,6 +94,8 @@ let modoFeedAtual = "para-voce";
 let perfisSeguidos = new Set();
 let cancelarSeguindo = null;
 let cancelarNotificacoes = null;
+const fotosDePerfil = new Map();
+const consultasFotosPerfil = new Map();
 
 function textoLimpo(valor = "") {
   return String(valor).replace(/[<>]/g, "").replace(/\s+/g, " ").trim();
@@ -105,6 +107,63 @@ function nomeExibicao(usuario) {
 
 function iniciais(nome) {
   return nome.split(" ").filter(Boolean).slice(0, 2).map((parte) => parte[0]).join("").toUpperCase() || "FM";
+}
+
+function fotoPerfilSegura(valor) {
+  const endereco = String(valor || "").trim();
+  if (!endereco || endereco.length > 700) return "";
+  try {
+    const url = new URL(endereco);
+    return ["https:", "http:"].includes(url.protocol) ? url.href : "";
+  } catch {
+    return "";
+  }
+}
+
+function aplicarAvatarDaPublicacao(avatar, nome, fotoUrl = "") {
+  const iniciaisDoAutor = iniciais(nome);
+  const fotoSegura = fotoPerfilSegura(fotoUrl);
+  avatar.classList.toggle("tem-foto", Boolean(fotoSegura));
+  avatar.replaceChildren();
+
+  if (!fotoSegura) {
+    avatar.textContent = iniciaisDoAutor;
+    return;
+  }
+
+  const imagem = document.createElement("img");
+  imagem.src = fotoSegura;
+  imagem.alt = "";
+  imagem.loading = "lazy";
+  imagem.decoding = "async";
+  imagem.addEventListener("error", () => {
+    avatar.classList.remove("tem-foto");
+    avatar.replaceChildren();
+    avatar.textContent = iniciaisDoAutor;
+  }, { once: true });
+  avatar.appendChild(imagem);
+}
+
+async function carregarFotoDoPerfil(autorId) {
+  const id = String(autorId || "").trim();
+  if (!id) return "";
+  if (fotosDePerfil.has(id)) return fotosDePerfil.get(id);
+  if (consultasFotosPerfil.has(id)) return consultasFotosPerfil.get(id);
+
+  const consulta = getDoc(doc(db, "comunidadePerfis", id))
+    .then((perfil) => fotoPerfilSegura(perfil.exists() ? perfil.data().fotoUrl : ""))
+    .catch((erro) => {
+      console.warn("Não foi possível carregar a foto de um perfil.", erro);
+      return "";
+    })
+    .then((fotoUrl) => {
+      fotosDePerfil.set(id, fotoUrl);
+      consultasFotosPerfil.delete(id);
+      return fotoUrl;
+    });
+
+  consultasFotosPerfil.set(id, consulta);
+  return consulta;
 }
 
 function mostrarMensagem(alvo, mensagem = "", erro = false) {
@@ -348,7 +407,10 @@ function criarCartaoPublicacao(post) {
   const nome = textoLimpo(post.autorNome || NOME_PADRAO);
   const avatar = fragmento.querySelector(".avatar-publicacao");
   const linkPerfil = `perfil.html?uid=${encodeURIComponent(post.autorId || "")}`;
-  avatar.textContent = iniciais(nome);
+  aplicarAvatarDaPublicacao(avatar, nome, post.autorFotoUrl);
+  carregarFotoDoPerfil(post.autorId).then((fotoUrl) => {
+    if (avatar.isConnected && fotoUrl) aplicarAvatarDaPublicacao(avatar, nome, fotoUrl);
+  });
   fragmento.querySelector(".link-avatar-publicacao").href = linkPerfil;
   const nomeAutor = fragmento.querySelector(".nome-publicacao");
   nomeAutor.href = linkPerfil;

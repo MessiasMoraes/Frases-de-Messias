@@ -167,7 +167,9 @@ body.pagina-comunidade {
 .estado-feed { padding: 35px 20px; border: 1px dashed #b9c9e4; border-radius: 16px; background: rgba(255,255,255,.65); text-align: center; color: var(--comunidade-suave); font-weight: 700; }
 .cartao-publicacao { padding: 20px; }
 .publicacao-cabecalho { display: flex; align-items: center; gap: 11px; }
-.avatar-publicacao { display: grid; width: 42px; height: 42px; flex: 0 0 auto; place-items: center; border-radius: 50%; background: linear-gradient(145deg, #1769e0, #77a9f4); color: #fff; font-weight: 900; }
+.avatar-publicacao { display: grid; width: 42px; height: 42px; flex: 0 0 auto; place-items: center; overflow: hidden; border-radius: 50%; background: linear-gradient(145deg, #1769e0, #77a9f4); color: #fff; font-weight: 900; }
+.avatar-publicacao.tem-foto { background: #dce8f8; }
+.avatar-publicacao img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .nome-publicacao { margin: 0; font-size: 1rem; color: var(--comunidade-texto); }
 .meta-publicacao { margin: 3px 0 0; color: var(--comunidade-suave); font-size: .8rem; }
 .selo-categoria { margin-left: auto; padding: 6px 9px; border-radius: 999px; background: #f8efd5; color: #8b6200; font-size: .74rem; font-weight: 800; }
