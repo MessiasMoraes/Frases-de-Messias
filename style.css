@@ -188,6 +188,51 @@ nav .menu-canais-link:focus-visible{ outline:3px solid #2563eb; outline-offset:1
   margin-bottom:15px;
 }
 
+/* Direção visual da chamada: Aurora Editorial — dourado de esperança sobre azul profundo. */
+.chamada-criador-imagem{
+  max-width:1100px;
+  margin:30px auto;
+  padding:0 15px;
+}
+
+.chamada-criador-imagem-conteudo{
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:28px;
+  padding:34px clamp(24px, 5vw, 58px);
+  border-radius:18px;
+  background:radial-gradient(circle at 88% 0%, rgba(255,219,139,.42), transparent 26%), linear-gradient(117deg,#102a43,#1d4b73 57%,#b87321 160%);
+  color:#fff9ee;
+  box-shadow:0 16px 32px rgba(22,62,95,.18);
+}
+
+.chamada-criador-imagem-conteudo::after{
+  content:"";
+  position:absolute;
+  right:-55px;
+  bottom:-105px;
+  width:230px;
+  height:230px;
+  border:1px solid rgba(255,226,161,.28);
+  border-radius:50%;
+  box-shadow:0 0 0 27px rgba(255,226,161,.06);
+}
+
+.chamada-criador-imagem-conteudo > *{ position:relative; z-index:1; }
+.selo-criador-imagem{ margin:0 0 6px; color:#ffcf78; font-size:.72rem; font-weight:800; letter-spacing:.13em; }
+.chamada-criador-imagem h2{ max-width:580px; margin:0; color:#fff9ee; font-family:Georgia,serif; font-size:clamp(1.85rem,4vw,3rem); line-height:1.02; }
+.chamada-criador-imagem p:not(.selo-criador-imagem){ max-width:630px; margin:10px 0 0; color:rgba(255,255,255,.86); }
+.btn-criador-imagem{ display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:11px 18px; border-radius:8px; background:#f3c466; color:#51300f; font-weight:800; text-decoration:none; white-space:nowrap; transition:transform .18s ease, background .18s ease; }
+.btn-criador-imagem:hover{ background:#ffe09b; color:#51300f; text-decoration:none; transform:translateY(-2px); }
+
+@media (max-width:650px){
+  .chamada-criador-imagem-conteudo{ align-items:flex-start; flex-direction:column; gap:18px; padding:27px 24px; }
+  .btn-criador-imagem{ width:100%; }
+}
+
 blockquote{
   font-size:22px;
   font-style:italic;
