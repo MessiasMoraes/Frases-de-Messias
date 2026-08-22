@@ -487,9 +487,29 @@ async function curtirComentario(publicacaoId, comentarioId, botao) {
   }
 }
 
+function limparModoResposta(input, estadoResposta, textoEstadoResposta) {
+  delete input.dataset.parentId;
+  input.placeholder = "Escreva um comentário respeitoso...";
+  estadoResposta.hidden = true;
+  textoEstadoResposta.textContent = "";
+}
+
+function ativarModoResposta(comentarioId, autorNome, input) {
+  const area = input.closest(".area-comentarios");
+  const estadoResposta = area?.querySelector(".estado-resposta");
+  const textoEstadoResposta = area?.querySelector(".texto-estado-resposta");
+  if (!estadoResposta || !textoEstadoResposta) return;
+  input.dataset.parentId = comentarioId;
+  input.placeholder = `Responder a ${autorNome}...`;
+  textoEstadoResposta.textContent = `Respondendo a ${autorNome}`;
+  estadoResposta.hidden = false;
+  input.focus();
+}
+
 function criarComentario(publicacaoId, comentarioId, dados, input) {
+  const eResposta = Boolean(dados.parentId);
   const comentario = document.createElement("article");
-  comentario.className = "comentario";
+  comentario.className = eResposta ? "comentario comentario-resposta" : "comentario";
   const cabecalho = document.createElement("div");
   cabecalho.className = "cabecalho-comentario";
   const autor = document.createElement("a");
@@ -507,25 +527,56 @@ function criarComentario(publicacaoId, comentarioId, dados, input) {
   atualizarBotaoCurtirComentario(curtir, false);
   curtir.addEventListener("click", () => curtirComentario(publicacaoId, comentarioId, curtir));
   sincronizarCurtidaComentario(publicacaoId, comentarioId, curtir);
-  const responder = document.createElement("button");
-  responder.type = "button";
-  responder.className = "acao-comentario";
-  responder.textContent = "↩ Responder";
-  responder.addEventListener("click", () => {
-    if (!usuarioAtual) { pedirLogin(); return; }
-    const mencao = `@${textoLimpo(dados.autorNome || NOME_PADRAO)} `;
-    if (!input.value.startsWith(mencao)) input.value = `${mencao}${input.value}`.slice(0, 240);
-    input.focus();
-  });
   const compartilhar = document.createElement("button");
   compartilhar.type = "button";
   compartilhar.className = "acao-comentario";
   compartilhar.textContent = "↗ Compartilhar";
   compartilhar.addEventListener("click", () => compartilharTexto(`“${textoLimpo(dados.texto)}”`, "Comentário | Frases de Messias"));
   cabecalho.appendChild(autor);
-  acoes.append(curtir, responder, compartilhar);
+  acoes.appendChild(curtir);
+  if (!eResposta) {
+    const responder = document.createElement("button");
+    responder.type = "button";
+    responder.className = "acao-comentario";
+    responder.textContent = "↩ Responder";
+    responder.addEventListener("click", () => {
+      if (!usuarioAtual) { pedirLogin(); return; }
+      ativarModoResposta(comentarioId, textoLimpo(dados.autorNome || NOME_PADRAO), input);
+    });
+    acoes.appendChild(responder);
+  }
+  acoes.appendChild(compartilhar);
   comentario.append(cabecalho, texto, acoes);
   return comentario;
+}
+
+function renderizarComentariosEncadeados(publicacaoId, lista, documentos, input) {
+  lista.innerHTML = "";
+  if (!documentos.length) {
+    const vazio = document.createElement("p");
+    vazio.className = "comentario";
+    vazio.textContent = "Ainda não há comentários aprovados. Seja o primeiro a deixar uma palavra positiva.";
+    lista.appendChild(vazio);
+    return;
+  }
+  const porId = new Map(documentos.map((item) => [item.id, item]));
+  const principais = documentos.filter((item) => !item.data().parentId || !porId.has(item.data().parentId));
+  const respostasPorComentario = new Map();
+  documentos.filter((item) => item.data().parentId && porId.has(item.data().parentId)).forEach((item) => {
+    const respostas = respostasPorComentario.get(item.data().parentId) || [];
+    respostas.push(item);
+    respostasPorComentario.set(item.data().parentId, respostas);
+  });
+  principais.forEach((item) => {
+    lista.appendChild(criarComentario(publicacaoId, item.id, item.data(), input));
+    const respostas = respostasPorComentario.get(item.id) || [];
+    if (respostas.length) {
+      const listaRespostas = document.createElement("div");
+      listaRespostas.className = "lista-respostas";
+      respostas.forEach((resposta) => listaRespostas.appendChild(criarComentario(publicacaoId, resposta.id, resposta.data(), input)));
+      lista.appendChild(listaRespostas);
+    }
+  });
 }
 
 function alternarComentarios(publicacaoId, area, lista, botao, input) {
@@ -541,23 +592,15 @@ function alternarComentarios(publicacaoId, area, lista, botao, input) {
     limit(LIMITE_FRASES)
   );
   const cancelar = onSnapshot(consulta, (resultado) => {
-    lista.innerHTML = "";
-    if (resultado.empty) {
-      const vazio = document.createElement("p");
-      vazio.className = "comentario";
-      vazio.textContent = "Ainda não há comentários aprovados. Seja o primeiro a deixar uma palavra positiva.";
-      lista.appendChild(vazio);
-      return;
-    }
     const comentarios = resultado.docs.slice().sort((a, b) => (a.data().publicadoEm?.toMillis?.() || 0) - (b.data().publicadoEm?.toMillis?.() || 0));
-    comentarios.forEach((item) => lista.appendChild(criarComentario(publicacaoId, item.id, item.data(), input)));
+    renderizarComentariosEncadeados(publicacaoId, lista, comentarios, input);
   }, () => {
     lista.innerHTML = '<p class="comentario">Os comentários não puderam ser carregados agora.</p>';
   });
   comentariosAbertos.set(publicacaoId, cancelar);
 }
 
-async function enviarComentario(evento, publicacaoId, input, mensagem) {
+async function enviarComentario(evento, publicacaoId, input, mensagem, estadoResposta, textoEstadoResposta) {
   evento.preventDefault();
   if (!usuarioAtual) { pedirLogin(); return; }
   const texto = textoLimpo(input.value);
@@ -565,17 +608,20 @@ async function enviarComentario(evento, publicacaoId, input, mensagem) {
     mensagem.textContent = "Escreva um comentário com pelo menos 2 caracteres.";
     return;
   }
+  const parentId = textoLimpo(input.dataset.parentId || "");
   try {
     await addDoc(collection(db, "comunidadePublicacoes", publicacaoId, "comentarios"), {
       texto,
       autorId: usuarioAtual.uid,
       autorNome: nomePadrao(usuarioAtual),
       status: "pendente",
+      parentId,
       criadoEm: serverTimestamp(),
       publicadoEm: null
     });
     input.value = "";
-    mensagem.textContent = "Comentário enviado para aprovação.";
+    limparModoResposta(input, estadoResposta, textoEstadoResposta);
+    mensagem.textContent = parentId ? "Resposta enviada para aprovação." : "Comentário enviado para aprovação.";
   } catch (erro) {
     console.error("Erro ao enviar comentário.", erro);
     mensagem.textContent = "Não foi possível enviar seu comentário agora.";
@@ -637,12 +683,16 @@ function renderizarFrases(resultado) {
     const formularioComentario = fragmento.querySelector(".formulario-comentario");
     const inputComentario = fragmento.querySelector(".texto-comentario");
     const mensagemComentario = fragmento.querySelector(".mensagem-comentario");
+    const estadoResposta = fragmento.querySelector(".estado-resposta");
+    const textoEstadoResposta = fragmento.querySelector(".texto-estado-resposta");
+    const cancelarResposta = fragmento.querySelector(".cancelar-resposta");
+    cancelarResposta.addEventListener("click", () => limparModoResposta(inputComentario, estadoResposta, textoEstadoResposta));
     if (abaAtual === "publicadas") {
       botaoCurtir.addEventListener("click", () => curtirFrase(frase, botaoCurtir));
       botaoSalvar.addEventListener("click", () => salvarFrase(frase.id, botaoSalvar));
       botaoComentarios.addEventListener("click", () => alternarComentarios(frase.id, areaComentarios, listaComentarios, botaoComentarios, inputComentario));
       botaoCompartilhar.addEventListener("click", () => compartilharTexto(`“${textoLimpo(frase.texto)}”`, "Frase | Frases de Messias"));
-      formularioComentario.addEventListener("submit", (evento) => enviarComentario(evento, frase.id, inputComentario, mensagemComentario));
+      formularioComentario.addEventListener("submit", (evento) => enviarComentario(evento, frase.id, inputComentario, mensagemComentario, estadoResposta, textoEstadoResposta));
       sincronizarInteracoesDaFrase(frase.id, botaoCurtir, botaoSalvar);
     } else {
       acoes.hidden = true;

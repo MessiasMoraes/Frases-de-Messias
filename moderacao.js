@@ -267,10 +267,11 @@ function criarPendencia(pendencia) {
   const eDenuncia = tipo === "denuncia";
   const eRestricao = tipo === "restricao";
   const eComentario = tipo === "comentario";
+  const eResposta = eComentario && Boolean(textoLimpo(dados.parentId));
   const nome = textoLimpo(eDenuncia ? dados.autorAlvoNome : eRestricao ? dados.usuarioNome : dados.autorNome) || "Membro da comunidade";
   const rotulo = eDenuncia
     ? `DENÚNCIA · ${textoLimpo(dados.alvoTipo || "conteúdo").toUpperCase()}`
-    : eRestricao ? "CONTA RESTRITA" : eComentario ? "COMENTÁRIO PENDENTE" : "FRASE PENDENTE";
+    : eRestricao ? "CONTA RESTRITA" : eComentario ? (eResposta ? "RESPOSTA PENDENTE" : "COMENTÁRIO PENDENTE") : "FRASE PENDENTE";
 
   fragmento.querySelector(".avatar-publicacao").textContent = iniciais(nome);
   fragmento.querySelector(".nome-pendencia").textContent = nome;
@@ -323,14 +324,14 @@ function criarPendencia(pendencia) {
       await executarAcao(pendencia, cartao, mensagemCartao, "bloquear");
     });
   } else {
-    botaoAprovar.textContent = eComentario ? "✓ Aprovar comentário" : "✓ Aprovar publicação";
+    botaoAprovar.textContent = eComentario ? (eResposta ? "✓ Aprovar resposta" : "✓ Aprovar comentário") : "✓ Aprovar publicação";
     botaoAprovar.addEventListener("click", async () => {
-      const descricaoConteudo = eComentario ? "comentário" : "publicação";
+      const descricaoConteudo = eComentario ? (eResposta ? "resposta" : "comentário") : "publicação";
       if (!confirm(`Aprovar este ${descricaoConteudo} e exibi-lo publicamente?`)) return;
       await executarAcao(pendencia, cartao, mensagemCartao, "aprovar");
     });
     botaoRecusar.addEventListener("click", async () => {
-      const descricaoConteudo = eComentario ? "comentário" : "publicação";
+      const descricaoConteudo = eComentario ? (eResposta ? "resposta" : "comentário") : "publicação";
       if (!confirm(`Recusar e excluir este ${descricaoConteudo} pendente? Esta ação não pode ser desfeita.`)) return;
       await executarAcao(pendencia, cartao, mensagemCartao, "recusar");
     });
@@ -429,7 +430,9 @@ async function executarAcao(pendencia, cartao, alvoMensagem, acao) {
             atorNome: "Moderação Frases de Messias",
             publicacaoId,
             comentarioId,
-            texto: "Seu comentário foi aprovado e já está visível.",
+            texto: textoLimpo(pendencia.dados.parentId)
+              ? "Sua resposta foi aprovada e já está visível."
+              : "Seu comentário foi aprovado e já está visível.",
             lida: false,
             criadoEm: serverTimestamp()
           });

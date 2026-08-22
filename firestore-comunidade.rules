@@ -66,6 +66,23 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/comunidadePublicacoes/$(publicacaoId)/comentarios/$(comentarioId)).data.status == 'publicado';
     }
 
+    function comentarioOuRespostaValido(publicacaoId) {
+      return request.resource.data.keys().hasOnly([
+        'texto', 'autorId', 'autorNome', 'status', 'parentId', 'criadoEm', 'publicadoEm'
+      ])
+        && request.resource.data.autorId == request.auth.uid
+        && request.resource.data.status == 'pendente'
+        && request.resource.data.texto is string
+        && request.resource.data.texto.size() >= 2
+        && request.resource.data.texto.size() <= 240
+        && request.resource.data.autorNome is string
+        && request.resource.data.autorNome.size() >= 2
+        && request.resource.data.autorNome.size() <= 48
+        && request.resource.data.parentId is string
+        && request.resource.data.parentId.size() <= 180
+        && (request.resource.data.parentId == '' || comentarioPublicado(publicacaoId, request.resource.data.parentId));
+    }
+
     // A notificação nunca inclui e-mail ou dados privados. O UID de quem gerou
     // a interação é obrigatório para impedir que alguém finja ser outro membro.
     function notificacaoBaseValida(destinatarioId) {
@@ -363,12 +380,7 @@ service cloud.firestore {
         );
         allow create: if contaLiberadaParaInteragir()
           && publicacaoPublica(publicacaoId)
-          && request.resource.data.autorId == request.auth.uid
-          && request.resource.data.status == 'pendente'
-          && request.resource.data.texto is string
-          && request.resource.data.texto.size() >= 2
-          && request.resource.data.texto.size() <= 240
-          && request.resource.data.autorNome is string;
+          && comentarioOuRespostaValido(publicacaoId);
         allow update: if administrador();
         allow delete: if administrador() || (
           conectado()

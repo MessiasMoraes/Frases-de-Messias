@@ -1,4 +1,5 @@
 import { app, db } from "./firebase.js";
+import { MOTIVOS_DENUNCIA, alternarBloqueio, carregarBloqueios, mensagemDeErroSeguranca, registrarDenuncia } from "./seguranca-comunidade.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 import {
   addDoc,
@@ -6,6 +7,7 @@ import {
   collectionGroup,
   deleteDoc,
   doc,
+  getCountFromServer,
   getDoc,
   limit,
   onSnapshot,
@@ -13,7 +15,8 @@ import {
   runTransaction,
   serverTimestamp,
   setDoc,
-  where
+  where,
+  writeBatch
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 const auth = getAuth(app);
@@ -30,9 +33,22 @@ const refs = {
   foto: document.getElementById("fotoPerfil"),
   nome: document.getElementById("nomePerfil"),
   bio: document.getElementById("bioPerfil"),
+  metricas: document.querySelector(".metricas-perfil"),
   seguidores: document.getElementById("contadorSeguidores"),
   seguindo: document.getElementById("contadorSeguindo"),
+  publicacoes: document.getElementById("contadorPublicacoesPerfil"),
+  comentarios: document.getElementById("contadorComentariosPerfil"),
+  membroDesde: document.getElementById("membroDesdePerfil"),
   botaoSeguir: document.getElementById("botaoSeguir"),
+  botaoBloquear: document.getElementById("botaoBloquearPerfil"),
+  botaoDenunciar: document.getElementById("botaoDenunciarPerfil"),
+  modalDenuncia: document.getElementById("modalDenunciaPerfil"),
+  fecharDenuncia: document.getElementById("fecharDenunciaPerfil"),
+  formularioDenuncia: document.getElementById("formularioDenunciaPerfil"),
+  motivoDenuncia: document.getElementById("motivoDenunciaPerfil"),
+  detalhesDenuncia: document.getElementById("detalhesDenunciaPerfil"),
+  enviarDenuncia: document.getElementById("enviarDenunciaPerfil"),
+  mensagemDenuncia: document.getElementById("mensagemDenunciaPerfil"),
   botaoEditar: document.getElementById("botaoEditarPerfil"),
   mensagem: document.getElementById("mensagemPerfil"),
   abaPublicadas: document.getElementById("abaPublicadas"),
@@ -45,6 +61,7 @@ const refs = {
 let usuarioAtual = null;
 let dadosPerfil = null;
 let seguindo = false;
+let perfilBloqueado = false;
 let abaAtual = "publicadas";
 let cancelarPerfil = null;
 let cancelarFrases = null;
@@ -83,6 +100,12 @@ function dataFormatada(valor) {
   const data = valor?.toDate?.() || null;
   if (!data) return "Enviada recentemente";
   return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short", year: "numeric" }).format(data);
+}
+
+function membroDesdeFormatado(valor) {
+  const data = valor?.toDate?.() || null;
+  if (!data) return "Membro da Comunidade";
+  return `Membro desde ${new Intl.DateTimeFormat("pt-BR", { month: "long", year: "numeric" }).format(data)}`;
 }
 
 function mostrarEstado(mensagem, erro = false) {
@@ -124,31 +147,84 @@ function renderizarPerfil() {
   const bio = textoLimpo(dadosPerfil?.bio || "") || "Este membro ainda não adicionou uma biografia.";
   refs.nome.textContent = nome;
   refs.bio.textContent = bio;
-  refs.seguidores.textContent = "…";
-  refs.seguindo.textContent = "…";
+  const dono = souDonoDoPerfil();
+  const mostrarMetricas = dono || dadosPerfil?.mostrarMetricasSociais !== false;
+  refs.metricas.hidden = !mostrarMetricas;
+  refs.seguidores.textContent = mostrarMetricas ? "…" : "";
+  refs.seguindo.textContent = mostrarMetricas ? "…" : "";
   carregarContadoresSociais();
+  carregarAtividadePublica();
+  refs.membroDesde.textContent = membroDesdeFormatado(dadosPerfil?.criadoEm);
   mostrarImagem(dadosPerfil?.fotoUrl, nome);
   document.title = `${nome} | Frases de Messias`;
 
-  const dono = souDonoDoPerfil();
+
   refs.botaoEditar.hidden = !dono;
   refs.botaoSeguir.hidden = dono;
+  refs.botaoBloquear.hidden = dono;
+  refs.botaoDenunciar.hidden = dono;
   refs.abaPendentes.hidden = !dono;
   if (!dono && abaAtual === "pendentes") mudarAba("publicadas");
   atualizarBotaoSeguir();
+  atualizarBotaoBloquear();
 }
 
 function atualizarBotaoSeguir() {
   if (souDonoDoPerfil()) return;
+  const aceitaSeguidores = dadosPerfil?.aceitaSeguidores !== false;
+  if (!aceitaSeguidores && !seguindo) {
+    refs.botaoSeguir.textContent = "Este perfil não aceita seguidores";
+    refs.botaoSeguir.classList.remove("botao-seguindo");
+    refs.botaoSeguir.disabled = true;
+    return;
+  }
   if (!usuarioAtual) {
     refs.botaoSeguir.textContent = "Entrar para seguir";
     refs.botaoSeguir.classList.remove("botao-seguindo");
     refs.botaoSeguir.disabled = false;
     return;
   }
+  if (perfilBloqueado) {
+    refs.botaoSeguir.textContent = "Perfil bloqueado";
+    refs.botaoSeguir.classList.remove("botao-seguindo");
+    refs.botaoSeguir.disabled = true;
+    return;
+  }
   refs.botaoSeguir.textContent = seguindo ? "✓ Seguindo" : "Seguir";
   refs.botaoSeguir.classList.toggle("botao-seguindo", seguindo);
   refs.botaoSeguir.disabled = false;
+}
+
+function atualizarBotaoBloquear() {
+  if (souDonoDoPerfil()) return;
+  if (!usuarioAtual) {
+    refs.botaoBloquear.textContent = "Entrar para bloquear";
+    refs.botaoBloquear.classList.remove("ativo");
+    refs.botaoBloquear.disabled = false;
+    return;
+  }
+  refs.botaoBloquear.textContent = perfilBloqueado ? "Desbloquear perfil" : "Bloquear perfil";
+  refs.botaoBloquear.classList.toggle("ativo", perfilBloqueado);
+  refs.botaoBloquear.disabled = false;
+}
+
+async function atualizarEstadoDeBloqueio() {
+  if (!usuarioAtual || souDonoDoPerfil()) {
+    perfilBloqueado = false;
+    atualizarBotaoBloquear();
+    atualizarBotaoSeguir();
+    return;
+  }
+  try {
+    const bloqueados = await carregarBloqueios(usuarioAtual.uid);
+    perfilBloqueado = bloqueados.has(uidPerfil);
+  } catch (erro) {
+    console.warn("Não foi possível carregar a lista de bloqueios.", erro);
+    perfilBloqueado = false;
+  }
+  atualizarBotaoBloquear();
+  atualizarBotaoSeguir();
+  escutarFrases();
 }
 
 async function garantirPerfilPublico(usuario) {
@@ -159,6 +235,9 @@ async function garantirPerfilPublico(usuario) {
     nome: nomePadrao(usuario),
     bio: "",
     fotoUrl: "",
+    visivelEmExplorar: true,
+    aceitaSeguidores: true,
+    mostrarMetricasSociais: true,
     criadoEm: serverTimestamp(),
     atualizadoEm: serverTimestamp()
   });
@@ -168,6 +247,10 @@ function carregarContadoresSociais() {
   if (!uidPerfil) return;
   if (cancelarSeguidores) cancelarSeguidores();
   if (cancelarSeguindo) cancelarSeguindo();
+  cancelarSeguidores = null;
+  cancelarSeguindo = null;
+
+  if (!souDonoDoPerfil() && dadosPerfil?.mostrarMetricasSociais === false) return;
 
   // O contador de seguidores é sempre uma coleção pública do perfil exibido.
   // Usar um observador separado impede que falhas no cálculo de “seguindo”
@@ -198,6 +281,44 @@ function carregarContadoresSociais() {
   );
 }
 
+async function carregarAtividadePublica() {
+  if (!uidPerfil) return;
+  refs.publicacoes.textContent = "…";
+  refs.comentarios.textContent = "…";
+  try {
+    const publicacoesAprovadas = query(
+      collection(db, "comunidadePublicacoes"),
+      where("autorId", "==", uidPerfil),
+      where("status", "==", "publicado")
+    );
+    const comentariosAprovados = query(
+      collectionGroup(db, "comentarios"),
+      where("autorId", "==", uidPerfil),
+      where("status", "==", "publicado")
+    );
+    const [resultadoPublicacoes, resultadoComentarios] = await Promise.allSettled([
+      getCountFromServer(publicacoesAprovadas),
+      getCountFromServer(comentariosAprovados)
+    ]);
+    if (resultadoPublicacoes.status === "fulfilled") {
+      refs.publicacoes.textContent = formatarNumero(resultadoPublicacoes.value.data().count);
+    } else {
+      console.warn("Não foi possível carregar as publicações aprovadas do perfil.", resultadoPublicacoes.reason);
+      refs.publicacoes.textContent = "—";
+    }
+    if (resultadoComentarios.status === "fulfilled") {
+      refs.comentarios.textContent = formatarNumero(resultadoComentarios.value.data().count);
+    } else {
+      console.warn("Não foi possível carregar os comentários aprovados do perfil.", resultadoComentarios.reason);
+      refs.comentarios.textContent = "—";
+    }
+  } catch (erro) {
+    console.warn("Não foi possível preparar a atividade pública do perfil.", erro);
+    refs.publicacoes.textContent = "—";
+    refs.comentarios.textContent = "—";
+  }
+}
+
 async function atualizarEstadoDeSeguimento() {
   if (!usuarioAtual || souDonoDoPerfil() || !dadosPerfil) {
     seguindo = false;
@@ -221,12 +342,20 @@ function pedirLogin() {
 
 function atualizarBotaoCurtir(botao, ativo) {
   botao.classList.toggle("ativo", ativo);
-  botao.innerHTML = ativo ? "❤️ <span>Curtido</span>" : "🤍 <span>Curtir</span>";
+  botao.setAttribute("aria-pressed", String(ativo));
+  botao.setAttribute("aria-label", ativo ? "Remover curtida" : "Curtir publicação");
+  botao.innerHTML = ativo
+    ? '<span class="icone-acao" aria-hidden="true">♥</span><span>Curtido</span>'
+    : '<span class="icone-acao" aria-hidden="true">♡</span><span>Curtir</span>';
 }
 
 function atualizarBotaoSalvar(botao, ativo) {
   botao.classList.toggle("ativo", ativo);
-  botao.innerHTML = ativo ? "🔖 <span>Salvo</span>" : "🔖 <span>Salvar</span>";
+  botao.setAttribute("aria-pressed", String(ativo));
+  botao.setAttribute("aria-label", ativo ? "Remover dos salvos" : "Salvar publicação");
+  botao.innerHTML = ativo
+    ? '<span class="icone-acao" aria-hidden="true">🔖</span><span>Salvo</span>'
+    : '<span class="icone-acao" aria-hidden="true">🔖</span><span>Salvar</span>';
 }
 
 async function sincronizarInteracoesDaFrase(publicacaoId, botaoCurtir, botaoSalvar) {
@@ -247,16 +376,40 @@ async function sincronizarInteracoesDaFrase(publicacaoId, botaoCurtir, botaoSalv
   }
 }
 
-async function curtirFrase(publicacaoId, botao) {
+async function curtirFrase(frase, botao) {
   if (!usuarioAtual) { pedirLogin(); return; }
+  const publicacaoId = frase?.id || "";
+  if (!publicacaoId) return;
+
   const referencia = doc(db, "comunidadePublicacoes", publicacaoId, "curtidas", usuarioAtual.uid);
+  const autorId = String(frase.autorId || "");
+  const deveNotificar = Boolean(autorId && autorId !== usuarioAtual.uid);
+  const referenciaNotificacao = deveNotificar
+    ? doc(db, "comunidadeUsuarios", autorId, "notificacoes", `curtida_${publicacaoId}_${usuarioAtual.uid}`)
+    : null;
+
   try {
     const existente = await getDoc(referencia);
+    const lote = writeBatch(db);
     if (existente.exists()) {
-      await deleteDoc(referencia);
+      lote.delete(referencia);
+      if (referenciaNotificacao) lote.delete(referenciaNotificacao);
+      await lote.commit();
       atualizarBotaoCurtir(botao, false);
     } else {
-      await setDoc(referencia, { usuarioId: usuarioAtual.uid, criadoEm: serverTimestamp() });
+      lote.set(referencia, { usuarioId: usuarioAtual.uid, criadoEm: serverTimestamp() });
+      if (referenciaNotificacao) {
+        lote.set(referenciaNotificacao, {
+          tipo: "curtida",
+          atorId: usuarioAtual.uid,
+          atorNome: nomePadrao(usuarioAtual),
+          publicacaoId,
+          texto: "curtiu sua publicação.",
+          lida: false,
+          criadoEm: serverTimestamp()
+        });
+      }
+      await lote.commit();
       atualizarBotaoCurtir(botao, true);
     }
   } catch (erro) {
@@ -334,9 +487,29 @@ async function curtirComentario(publicacaoId, comentarioId, botao) {
   }
 }
 
+function limparModoResposta(input, estadoResposta, textoEstadoResposta) {
+  delete input.dataset.parentId;
+  input.placeholder = "Escreva um comentário respeitoso...";
+  estadoResposta.hidden = true;
+  textoEstadoResposta.textContent = "";
+}
+
+function ativarModoResposta(comentarioId, autorNome, input) {
+  const area = input.closest(".area-comentarios");
+  const estadoResposta = area?.querySelector(".estado-resposta");
+  const textoEstadoResposta = area?.querySelector(".texto-estado-resposta");
+  if (!estadoResposta || !textoEstadoResposta) return;
+  input.dataset.parentId = comentarioId;
+  input.placeholder = `Responder a ${autorNome}...`;
+  textoEstadoResposta.textContent = `Respondendo a ${autorNome}`;
+  estadoResposta.hidden = false;
+  input.focus();
+}
+
 function criarComentario(publicacaoId, comentarioId, dados, input) {
+  const eResposta = Boolean(dados.parentId);
   const comentario = document.createElement("article");
-  comentario.className = "comentario";
+  comentario.className = eResposta ? "comentario comentario-resposta" : "comentario";
   const cabecalho = document.createElement("div");
   cabecalho.className = "cabecalho-comentario";
   const autor = document.createElement("a");
@@ -354,31 +527,64 @@ function criarComentario(publicacaoId, comentarioId, dados, input) {
   atualizarBotaoCurtirComentario(curtir, false);
   curtir.addEventListener("click", () => curtirComentario(publicacaoId, comentarioId, curtir));
   sincronizarCurtidaComentario(publicacaoId, comentarioId, curtir);
-  const responder = document.createElement("button");
-  responder.type = "button";
-  responder.className = "acao-comentario";
-  responder.textContent = "↩ Responder";
-  responder.addEventListener("click", () => {
-    if (!usuarioAtual) { pedirLogin(); return; }
-    const mencao = `@${textoLimpo(dados.autorNome || NOME_PADRAO)} `;
-    if (!input.value.startsWith(mencao)) input.value = `${mencao}${input.value}`.slice(0, 240);
-    input.focus();
-  });
   const compartilhar = document.createElement("button");
   compartilhar.type = "button";
   compartilhar.className = "acao-comentario";
   compartilhar.textContent = "↗ Compartilhar";
   compartilhar.addEventListener("click", () => compartilharTexto(`“${textoLimpo(dados.texto)}”`, "Comentário | Frases de Messias"));
   cabecalho.appendChild(autor);
-  acoes.append(curtir, responder, compartilhar);
+  acoes.appendChild(curtir);
+  if (!eResposta) {
+    const responder = document.createElement("button");
+    responder.type = "button";
+    responder.className = "acao-comentario";
+    responder.textContent = "↩ Responder";
+    responder.addEventListener("click", () => {
+      if (!usuarioAtual) { pedirLogin(); return; }
+      ativarModoResposta(comentarioId, textoLimpo(dados.autorNome || NOME_PADRAO), input);
+    });
+    acoes.appendChild(responder);
+  }
+  acoes.appendChild(compartilhar);
   comentario.append(cabecalho, texto, acoes);
   return comentario;
+}
+
+function renderizarComentariosEncadeados(publicacaoId, lista, documentos, input) {
+  lista.innerHTML = "";
+  if (!documentos.length) {
+    const vazio = document.createElement("p");
+    vazio.className = "comentario";
+    vazio.textContent = "Ainda não há comentários aprovados. Seja o primeiro a deixar uma palavra positiva.";
+    lista.appendChild(vazio);
+    return;
+  }
+  const porId = new Map(documentos.map((item) => [item.id, item]));
+  const principais = documentos.filter((item) => !item.data().parentId || !porId.has(item.data().parentId));
+  const respostasPorComentario = new Map();
+  documentos.filter((item) => item.data().parentId && porId.has(item.data().parentId)).forEach((item) => {
+    const respostas = respostasPorComentario.get(item.data().parentId) || [];
+    respostas.push(item);
+    respostasPorComentario.set(item.data().parentId, respostas);
+  });
+  principais.forEach((item) => {
+    lista.appendChild(criarComentario(publicacaoId, item.id, item.data(), input));
+    const respostas = respostasPorComentario.get(item.id) || [];
+    if (respostas.length) {
+      const listaRespostas = document.createElement("div");
+      listaRespostas.className = "lista-respostas";
+      respostas.forEach((resposta) => listaRespostas.appendChild(criarComentario(publicacaoId, resposta.id, resposta.data(), input)));
+      lista.appendChild(listaRespostas);
+    }
+  });
 }
 
 function alternarComentarios(publicacaoId, area, lista, botao, input) {
   const abrir = area.hidden;
   area.hidden = !abrir;
   botao.classList.toggle("ativo", abrir);
+  botao.setAttribute("aria-expanded", String(abrir));
+  botao.setAttribute("aria-label", abrir ? "Fechar comentários" : "Abrir comentários");
   if (!abrir || comentariosAbertos.has(publicacaoId)) return;
   const consulta = query(
     collection(db, "comunidadePublicacoes", publicacaoId, "comentarios"),
@@ -386,23 +592,15 @@ function alternarComentarios(publicacaoId, area, lista, botao, input) {
     limit(LIMITE_FRASES)
   );
   const cancelar = onSnapshot(consulta, (resultado) => {
-    lista.innerHTML = "";
-    if (resultado.empty) {
-      const vazio = document.createElement("p");
-      vazio.className = "comentario";
-      vazio.textContent = "Ainda não há comentários aprovados. Seja o primeiro a deixar uma palavra positiva.";
-      lista.appendChild(vazio);
-      return;
-    }
     const comentarios = resultado.docs.slice().sort((a, b) => (a.data().publicadoEm?.toMillis?.() || 0) - (b.data().publicadoEm?.toMillis?.() || 0));
-    comentarios.forEach((item) => lista.appendChild(criarComentario(publicacaoId, item.id, item.data(), input)));
+    renderizarComentariosEncadeados(publicacaoId, lista, comentarios, input);
   }, () => {
     lista.innerHTML = '<p class="comentario">Os comentários não puderam ser carregados agora.</p>';
   });
   comentariosAbertos.set(publicacaoId, cancelar);
 }
 
-async function enviarComentario(evento, publicacaoId, input, mensagem) {
+async function enviarComentario(evento, publicacaoId, input, mensagem, estadoResposta, textoEstadoResposta) {
   evento.preventDefault();
   if (!usuarioAtual) { pedirLogin(); return; }
   const texto = textoLimpo(input.value);
@@ -410,17 +608,20 @@ async function enviarComentario(evento, publicacaoId, input, mensagem) {
     mensagem.textContent = "Escreva um comentário com pelo menos 2 caracteres.";
     return;
   }
+  const parentId = textoLimpo(input.dataset.parentId || "");
   try {
     await addDoc(collection(db, "comunidadePublicacoes", publicacaoId, "comentarios"), {
       texto,
       autorId: usuarioAtual.uid,
       autorNome: nomePadrao(usuarioAtual),
       status: "pendente",
+      parentId,
       criadoEm: serverTimestamp(),
       publicadoEm: null
     });
     input.value = "";
-    mensagem.textContent = "Comentário enviado para aprovação.";
+    limparModoResposta(input, estadoResposta, textoEstadoResposta);
+    mensagem.textContent = parentId ? "Resposta enviada para aprovação." : "Comentário enviado para aprovação.";
   } catch (erro) {
     console.error("Erro ao enviar comentário.", erro);
     mensagem.textContent = "Não foi possível enviar seu comentário agora.";
@@ -482,12 +683,16 @@ function renderizarFrases(resultado) {
     const formularioComentario = fragmento.querySelector(".formulario-comentario");
     const inputComentario = fragmento.querySelector(".texto-comentario");
     const mensagemComentario = fragmento.querySelector(".mensagem-comentario");
+    const estadoResposta = fragmento.querySelector(".estado-resposta");
+    const textoEstadoResposta = fragmento.querySelector(".texto-estado-resposta");
+    const cancelarResposta = fragmento.querySelector(".cancelar-resposta");
+    cancelarResposta.addEventListener("click", () => limparModoResposta(inputComentario, estadoResposta, textoEstadoResposta));
     if (abaAtual === "publicadas") {
-      botaoCurtir.addEventListener("click", () => curtirFrase(frase.id, botaoCurtir));
+      botaoCurtir.addEventListener("click", () => curtirFrase(frase, botaoCurtir));
       botaoSalvar.addEventListener("click", () => salvarFrase(frase.id, botaoSalvar));
       botaoComentarios.addEventListener("click", () => alternarComentarios(frase.id, areaComentarios, listaComentarios, botaoComentarios, inputComentario));
       botaoCompartilhar.addEventListener("click", () => compartilharTexto(`“${textoLimpo(frase.texto)}”`, "Frase | Frases de Messias"));
-      formularioComentario.addEventListener("submit", (evento) => enviarComentario(evento, frase.id, inputComentario, mensagemComentario));
+      formularioComentario.addEventListener("submit", (evento) => enviarComentario(evento, frase.id, inputComentario, mensagemComentario, estadoResposta, textoEstadoResposta));
       sincronizarInteracoesDaFrase(frase.id, botaoCurtir, botaoSalvar);
     } else {
       acoes.hidden = true;
@@ -505,7 +710,12 @@ function renderizarFrases(resultado) {
 
 function escutarFrases() {
   if (cancelarFrases) cancelarFrases();
+  cancelarFrases = null;
   if (!uidPerfil) return;
+  if (perfilBloqueado && !souDonoDoPerfil()) {
+    renderizarEstadoVazio("Você bloqueou este perfil. Desbloqueie-o para voltar a ver suas frases.");
+    return;
+  }
   const status = abaAtual === "pendentes" ? "pendente" : "publicado";
   const consulta = query(
     collection(db, "comunidadePublicacoes"),
@@ -537,6 +747,10 @@ async function alternarSeguimento() {
     return;
   }
   if (souDonoDoPerfil() || !dadosPerfil) return;
+  if (perfilBloqueado) {
+    mostrarMensagem("Desbloqueie este perfil antes de segui-lo.", true);
+    return;
+  }
 
   refs.botaoSeguir.disabled = true;
   mostrarMensagem(seguindo ? "Deixando de seguir..." : "Seguindo perfil...");
@@ -547,12 +761,23 @@ async function alternarSeguimento() {
     const novoEstado = await runTransaction(db, async (transacao) => {
       const registroAtual = await transacao.get(seguidorNoAlvo);
       const jaSegue = registroAtual.exists();
+      const notificacao = doc(db, "comunidadeUsuarios", uidPerfil, "notificacoes", `seguidor_${usuarioAtual.uid}`);
       if (jaSegue) {
         transacao.delete(seguidorNoAlvo);
         transacao.delete(alvoNoMeuSeguindo);
+        transacao.delete(notificacao);
       } else {
         transacao.set(seguidorNoAlvo, { usuarioId: usuarioAtual.uid, criadoEm: serverTimestamp() });
         transacao.set(alvoNoMeuSeguindo, { usuarioId: uidPerfil, criadoEm: serverTimestamp() });
+        transacao.set(notificacao, {
+          tipo: "seguidor",
+          atorId: usuarioAtual.uid,
+          atorNome: nomePadrao(usuarioAtual),
+          publicacaoId: "",
+          texto: "começou a seguir você.",
+          lida: false,
+          criadoEm: serverTimestamp()
+        });
       }
       return !jaSegue;
     });
@@ -565,6 +790,93 @@ async function alternarSeguimento() {
     mostrarMensagem("Não foi possível atualizar o seguimento agora. Tente novamente.", true);
   } finally {
     refs.botaoSeguir.disabled = false;
+  }
+}
+
+async function alternarBloqueioPerfil() {
+  if (!usuarioAtual) { pedirLogin(); return; }
+  if (souDonoDoPerfil() || !uidPerfil) return;
+
+  const bloquear = !perfilBloqueado;
+  const pergunta = bloquear
+    ? "Bloquear este perfil? Suas frases deixarão de aparecer para você."
+    : "Desbloquear este perfil e voltar a ver suas frases?";
+  if (!confirm(pergunta)) return;
+
+  refs.botaoBloquear.disabled = true;
+  mostrarMensagem(bloquear ? "Bloqueando perfil..." : "Desbloqueando perfil...");
+  try {
+    await alternarBloqueio(usuarioAtual.uid, uidPerfil, bloquear);
+    perfilBloqueado = bloquear;
+    atualizarBotaoBloquear();
+    atualizarBotaoSeguir();
+    escutarFrases();
+    mostrarMensagem(bloquear ? "Perfil bloqueado. Você não verá mais suas frases no feed." : "Perfil desbloqueado com sucesso.");
+  } catch (erro) {
+    console.error("Erro ao alterar bloqueio.", erro);
+    mostrarMensagem(mensagemDeErroSeguranca(erro, "Não foi possível alterar o bloqueio agora."), true);
+  } finally {
+    refs.botaoBloquear.disabled = false;
+  }
+}
+
+function preencherMotivosDeDenuncia() {
+  refs.motivoDenuncia.innerHTML = '<option value="">Selecione um motivo</option>';
+  MOTIVOS_DENUNCIA.forEach((motivo) => {
+    const opcao = document.createElement("option");
+    opcao.value = motivo;
+    opcao.textContent = motivo;
+    refs.motivoDenuncia.appendChild(opcao);
+  });
+}
+
+function fecharDenunciaPerfil() {
+  refs.modalDenuncia.close();
+  refs.formularioDenuncia.reset();
+  refs.mensagemDenuncia.textContent = "";
+}
+
+function abrirDenunciaPerfil() {
+  if (!usuarioAtual) { pedirLogin(); return; }
+  if (souDonoDoPerfil()) return;
+  refs.formularioDenuncia.reset();
+  refs.mensagemDenuncia.textContent = "";
+  refs.modalDenuncia.showModal();
+}
+
+async function enviarDenunciaPerfil(evento) {
+  evento.preventDefault();
+  if (!usuarioAtual) { fecharDenunciaPerfil(); pedirLogin(); return; }
+  if (souDonoDoPerfil()) return;
+
+  const motivo = refs.motivoDenuncia.value;
+  if (!motivo) {
+    refs.mensagemDenuncia.textContent = "Selecione o motivo da denúncia.";
+    refs.mensagemDenuncia.classList.add("erro");
+    return;
+  }
+
+  refs.enviarDenuncia.disabled = true;
+  refs.mensagemDenuncia.classList.remove("erro");
+  refs.mensagemDenuncia.textContent = "Enviando denúncia...";
+  try {
+    const nome = textoLimpo(dadosPerfil?.nome || NOME_PADRAO);
+    await registrarDenuncia({
+      denunciante: usuarioAtual,
+      alvoId: uidPerfil,
+      alvoTipo: "perfil",
+      conteudo: `Perfil de ${nome}`,
+      motivo,
+      detalhes: refs.detalhesDenuncia.value
+    });
+    fecharDenunciaPerfil();
+    mostrarMensagem("Denúncia enviada de forma privada para a moderação.");
+  } catch (erro) {
+    console.error("Erro ao denunciar perfil.", erro);
+    refs.mensagemDenuncia.textContent = mensagemDeErroSeguranca(erro, "Não foi possível enviar a denúncia agora.");
+    refs.mensagemDenuncia.classList.add("erro");
+  } finally {
+    refs.enviarDenuncia.disabled = false;
   }
 }
 
@@ -590,6 +902,7 @@ function iniciarPerfil() {
       refs.conteudo.hidden = false;
       renderizarPerfil();
       atualizarEstadoDeSeguimento();
+      void atualizarEstadoDeBloqueio();
       if (!cancelarFrases) escutarFrases();
       return;
     }
@@ -606,6 +919,11 @@ function iniciarPerfil() {
 }
 
 refs.botaoSeguir.addEventListener("click", alternarSeguimento);
+refs.botaoBloquear.addEventListener("click", alternarBloqueioPerfil);
+refs.botaoDenunciar.addEventListener("click", abrirDenunciaPerfil);
+refs.fecharDenuncia.addEventListener("click", fecharDenunciaPerfil);
+refs.modalDenuncia.addEventListener("click", (evento) => { if (evento.target === refs.modalDenuncia) fecharDenunciaPerfil(); });
+refs.formularioDenuncia.addEventListener("submit", enviarDenunciaPerfil);
 refs.abaPublicadas.addEventListener("click", () => mudarAba("publicadas"));
 refs.abaPendentes.addEventListener("click", () => mudarAba("pendentes"));
 refs.alternarTema.addEventListener("click", () => {
@@ -621,6 +939,7 @@ onAuthStateChanged(auth, async (usuario) => {
   if (dadosPerfil) {
     renderizarPerfil();
     atualizarEstadoDeSeguimento();
+    await atualizarEstadoDeBloqueio();
     if (souDonoDoPerfil()) escutarFrases();
   }
 });
@@ -634,4 +953,5 @@ window.addEventListener("beforeunload", () => {
 });
 
 ajustarTema();
+preencherMotivosDeDenuncia();
 iniciarPerfil();

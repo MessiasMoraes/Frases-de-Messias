@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Moderação da Comunidade | Frases de Messias</title>
   <link rel="stylesheet" href="style.css?v=20260814-comunidade-v2">
-  <link rel="stylesheet" href="comunidade.css?v=20260814-comunidade-v2">
-  <link rel="stylesheet" href="moderacao.css?v=20260814-comunidade-v2">
+  <link rel="stylesheet" href="comunidade.css?v=20260819-seguranca-v1">
+  <link rel="stylesheet" href="moderacao.css?v=20260819-estatisticas-v1">
 </head>
 <body class="pagina-comunidade pagina-moderacao">
   <header class="cabecalho-comunidade">
@@ -38,12 +38,52 @@
     <section id="painelModeracao" hidden aria-labelledby="tituloModeracao">
       <div class="hero-moderacao">
         <div>
-          <p class="selo-comunidade">FILA DE APROVAÇÃO</p>
-          <h1 id="tituloModeracao">Conteúdos da comunidade</h1>
-          <p>Revise cada frase e comentário antes de permitir sua exibição pública.</p>
+          <p class="selo-comunidade">MODERAÇÃO E SEGURANÇA</p>
+          <h1 id="tituloModeracao">Conteúdos e denúncias</h1>
+          <p>Revise conteúdos pendentes e denúncias privadas. Você pode ocultar um conteúdo, arquivar uma denúncia ou restringir contas que desrespeitem as regras.</p>
         </div>
         <div class="contador-pendencias"><strong id="totalPendencias">0</strong><span>pendentes</span></div>
       </div>
+      <section class="secao-estatisticas" aria-labelledby="tituloEstatisticas">
+        <div class="cabecalho-estatisticas">
+          <div>
+            <p class="selo-comunidade">VISÃO GERAL</p>
+            <h2 id="tituloEstatisticas">Estatísticas da Comunidade</h2>
+            <p id="atualizacaoEstatisticas" class="atualizacao-estatisticas" aria-live="polite">Carregando indicadores reais...</p>
+          </div>
+          <button id="atualizarEstatisticas" class="botao-atualizar-estatisticas" type="button">↻ Atualizar</button>
+        </div>
+
+        <div class="grade-estatisticas" aria-live="polite" aria-label="Indicadores administrativos">
+          <article class="card-estatistica destaque"><span class="icone-estatistica" aria-hidden="true">👥</span><p>Membros com perfil</p><strong id="estatisticaMembros">—</strong><small>Perfis públicos criados</small></article>
+          <article class="card-estatistica destaque"><span class="icone-estatistica" aria-hidden="true">✦</span><p>Publicações aprovadas</p><strong id="estatisticaPublicacoes">—</strong><small>Frases visíveis na Comunidade</small></article>
+          <article class="card-estatistica"><span class="icone-estatistica" aria-hidden="true">◌</span><p>Comentários aprovados</p><strong id="estatisticaComentarios">—</strong><small>Interações publicadas</small></article>
+          <article class="card-estatistica"><span class="icone-estatistica" aria-hidden="true">↗</span><p>Seguidores</p><strong id="estatisticaSeguidores">—</strong><small>Conexões entre perfis</small></article>
+          <article class="card-estatistica"><span class="icone-estatistica" aria-hidden="true">◉</span><p>Visitas ao portal</p><strong id="estatisticaVisitas">—</strong><small>Contador global da página inicial</small></article>
+          <article class="card-estatistica alerta"><span class="icone-estatistica" aria-hidden="true">⌛</span><p>Publicações pendentes</p><strong id="estatisticaPublicacoesPendentes">—</strong><small>Aguardando moderação</small></article>
+          <article class="card-estatistica alerta"><span class="icone-estatistica" aria-hidden="true">⌛</span><p>Comentários pendentes</p><strong id="estatisticaComentariosPendentes">—</strong><small>Aguardando moderação</small></article>
+          <article class="card-estatistica alerta"><span class="icone-estatistica" aria-hidden="true">⚑</span><p>Denúncias abertas</p><strong id="estatisticaDenuncias">—</strong><small>Relatos privados em análise</small></article>
+          <article class="card-estatistica alerta"><span class="icone-estatistica" aria-hidden="true">⊘</span><p>Contas restritas</p><strong id="estatisticaRestricoes">—</strong><small>Impedidas de interagir</small></article>
+        </div>
+
+        <div class="resumo-conteudo" aria-labelledby="tituloResumoConteudo">
+          <div>
+            <p class="selo-comunidade">QUALIDADE DO CONTEÚDO</p>
+            <h3 id="tituloResumoConteudo">Situação das publicações</h3>
+          </div>
+          <div class="barra-situacao" role="img" aria-label="Distribuição de publicações por situação">
+            <span id="barraPublicadas" class="segmento publicado"></span>
+            <span id="barraPendentes" class="segmento pendente"></span>
+            <span id="barraRemovidas" class="segmento removido"></span>
+          </div>
+          <div class="legenda-situacao">
+            <span><i class="ponto publicado"></i><b id="resumoPublicadas">—</b> publicadas</span>
+            <span><i class="ponto pendente"></i><b id="resumoPendentes">—</b> pendentes</span>
+            <span><i class="ponto removido"></i><b id="resumoRemovidas">—</b> removidas</span>
+          </div>
+        </div>
+      </section>
+
       <div id="listaPendencias" class="lista-pendencias" aria-live="polite">
         <div class="estado-feed">⏳ Carregando conteúdos pendentes...</div>
       </div>
@@ -63,11 +103,12 @@
       <blockquote class="texto-pendencia"></blockquote>
       <div class="acoes-moderacao">
         <button class="botao-recusar" type="button">Recusar</button>
+        <button class="botao-bloquear-conta" type="button" hidden>Restringir conta</button>
         <button class="botao-primario botao-aprovar" type="button">✓ Aprovar publicação</button>
       </div>
       <p class="mensagem-moderacao" role="status"></p>
     </article>
   </template>
-  <script type="module" src="moderacao.js?v=20260814-comunidade-v2"></script>
+  <script type="module" src="moderacao.js?v=20260822-respostas-v1"></script>
 </body>
 </html>

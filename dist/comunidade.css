@@ -624,3 +624,60 @@ body.pagina-comunidade.tema-escuro .area-comentarios {
 @media (prefers-reduced-motion: reduce) {
   .acao-publicacao { transition: none; }
 }
+
+
+/* Respostas encadeadas nos comentários */
+.estado-resposta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0.75rem 0 0;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid rgba(23, 105, 224, .22);
+  border-radius: 0.85rem;
+  background: #edf4ff;
+  color: var(--comunidade-azul-escuro);
+  font-size: .86rem;
+  font-weight: 800;
+}
+
+.estado-resposta[hidden] { display: none; }
+
+.cancelar-resposta {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: .8rem;
+  font-weight: 800;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.lista-respostas {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0.7rem 0 0 1rem;
+  padding-left: 0.9rem;
+  border-left: 2px solid rgba(23, 105, 224, .22);
+}
+
+.comentario.comentario-resposta {
+  margin: 0;
+  background: #f8faff;
+}
+
+body.pagina-comunidade.tema-escuro .estado-resposta {
+  border-color: rgba(147, 197, 253, .32);
+  background: #1c3158;
+  color: #dbeafe;
+}
+
+body.pagina-comunidade.tema-escuro .lista-respostas { border-left-color: rgba(147, 197, 253, .35); }
+body.pagina-comunidade.tema-escuro .comentario.comentario-resposta { background: #182640; }
+
+@media (max-width: 520px) {
+  .estado-resposta { align-items: flex-start; flex-direction: column; gap: 0.35rem; }
+  .lista-respostas { margin-left: 0.55rem; padding-left: 0.65rem; }
+}
