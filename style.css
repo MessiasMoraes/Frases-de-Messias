@@ -1740,9 +1740,9 @@ body.dark {
 .colecao-hero > p:not(.breadcrumb):not(.selo-colecao) { max-width: 780px; }
 .busca-colecao { box-sizing: border-box; display: block; width: min(100%, 700px); margin-top: 22px; padding: 16px 18px; border: 1px solid #b9d3f5; border-radius: 14px; background: #fff; color: #1e293b; font: inherit; font-size: 1rem; }
 .busca-colecao:focus { outline: 3px solid rgba(37, 99, 235, .22); border-color: #2563eb; }
-.introducao-colecao, .secao-frases-colecao, .colecoes-listagem, .colecoes-relacionadas, .colecoes-destaque { max-width: 1100px; margin: 28px auto; padding: 0 24px; }
+.introducao-colecao, .secao-frases-colecao, .colecoes-listagem, .colecoes-relacionadas, .colecoes-destaque, .bloco-seo-frases-messias { max-width: 1100px; margin: 28px auto; padding: 0 24px; }
 .introducao-colecao { padding-top: 28px; padding-bottom: 28px; border-radius: 18px; background: linear-gradient(135deg, #eff6ff, #f8fbff); box-shadow: 0 8px 24px rgba(15, 23, 42, .06); }
-.introducao-colecao h2, .colecoes-listagem h2, .colecoes-relacionadas h2, .colecoes-destaque h2, .secao-frases-colecao h2 { margin-top: 0; color: #123d68; }
+.introducao-colecao h2, .colecoes-listagem h2, .colecoes-relacionadas h2, .colecoes-destaque h2, .secao-frases-colecao h2, .bloco-seo-frases-messias h2 { margin-top: 0; color: #123d68; }
 .introducao-colecao p { max-width: 900px; line-height: 1.75; }
 .cabecalho-secao-colecao, .cabecalho-colecoes-destaque { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin-bottom: 18px; }
 .cabecalho-secao-colecao h2, .cabecalho-colecoes-destaque h2 { margin-bottom: 0; }
@@ -1770,7 +1770,7 @@ body.dark {
 .card-colecao-conteudo small { color: #5b6875; font-size: .88rem; line-height: 1.4; }
 .card-colecao-seta { color: #2563eb; font-size: 1.4rem; font-weight: 800; }
 .colecoes-relacionadas { padding-top: 28px; padding-bottom: 30px; border-top: 1px solid #d7e4f3; }
-.colecoes-relacionadas > p, .colecoes-listagem > p, .colecoes-destaque > p { color: #52606d; }
+.colecoes-relacionadas > p, .colecoes-listagem > p, .colecoes-destaque > p, .bloco-seo-frases-messias > p { color: #52606d; }
 .botoes-colecoes-relacionadas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
 .btn-colecao-relacionada { display: inline-flex; align-items: center; min-height: 45px; padding: 0 16px; border: 2px solid #2563eb; border-radius: 999px; color: #1d4ed8; font-weight: 800; text-decoration: none; transition: transform 150ms cubic-bezier(.23, 1, .32, 1), background 150ms ease; }
 .btn-colecao-relacionada:hover { background: #eff6ff; }
@@ -1779,8 +1779,8 @@ body.dark {
 .dark .busca-colecao { border-color: #365879; background: #12263a; color: #edf5ff; }
 .dark .selo-colecao { color: #8cc4ff; }
 .dark .introducao-colecao { background: linear-gradient(135deg, #12283e, #102033); box-shadow: none; }
-.dark .introducao-colecao h2, .dark .colecoes-listagem h2, .dark .colecoes-relacionadas h2, .dark .colecoes-destaque h2, .dark .secao-frases-colecao h2 { color: #b4d8ff; }
-.dark .introducao-colecao p, .dark .colecoes-relacionadas > p, .dark .colecoes-listagem > p, .dark .colecoes-destaque > p, .dark .cabecalho-secao-colecao > p { color: #c4d1de; }
+.dark .introducao-colecao h2, .dark .colecoes-listagem h2, .dark .colecoes-relacionadas h2, .dark .colecoes-destaque h2, .dark .secao-frases-colecao h2, .dark .bloco-seo-frases-messias h2 { color: #b4d8ff; }
+.dark .introducao-colecao p, .dark .colecoes-relacionadas > p, .dark .colecoes-listagem > p, .dark .colecoes-destaque > p, .dark .bloco-seo-frases-messias > p, .dark .cabecalho-secao-colecao > p { color: #c4d1de; }
 .dark .card-frase-colecao, .dark .card-colecao { border-color: #2c4a66; background: #102438; box-shadow: none; }
 .dark .card-frase-colecao blockquote { color: #eef6ff; }
 .dark .card-frase-colecao .autor-frase, .dark .card-colecao-conteudo small { color: #c4d1de; }
@@ -1790,7 +1790,7 @@ body.dark {
 .dark .card-colecao-conteudo strong, .dark .card-colecao-seta, .dark .cabecalho-colecoes-destaque > a { color: #9bccff; }
 .dark .colecoes-relacionadas { border-color: #2e4d69; }
 .dark .btn-colecao-relacionada { border-color: #69aef7; color: #b7dbff; }
-@media (max-width: 780px) { .introducao-colecao, .secao-frases-colecao, .colecoes-listagem, .colecoes-relacionadas, .colecoes-destaque { padding-right: 18px; padding-left: 18px; } .grid-frases-colecao, .grid-colecoes, .grid-colecoes-inicial { grid-template-columns: 1fr; } .cabecalho-secao-colecao, .cabecalho-colecoes-destaque { align-items: flex-start; flex-direction: column; } .cabecalho-secao-colecao > p { white-space: normal; } .card-frase-colecao { min-height: 0; } }
+@media (max-width: 780px) { .introducao-colecao, .secao-frases-colecao, .colecoes-listagem, .colecoes-relacionadas, .colecoes-destaque, .bloco-seo-frases-messias { padding-right: 18px; padding-left: 18px; } .grid-frases-colecao, .grid-colecoes, .grid-colecoes-inicial { grid-template-columns: 1fr; } .cabecalho-secao-colecao, .cabecalho-colecoes-destaque { align-items: flex-start; flex-direction: column; } .cabecalho-secao-colecao > p { white-space: normal; } .card-frase-colecao { min-height: 0; } }
 @media (prefers-reduced-motion: reduce) { .card-frase-colecao, .card-colecao, .acoes-colecao button, .btn-colecao-relacionada { transition: none; } }
 
 /* Página institucional e identidade editorial */
