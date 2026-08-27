@@ -12,9 +12,29 @@ body{
 }
 
 header{
-  background:#2563eb;
+  background:#024acf;
   color:#fff;
   padding:20px;
+}
+
+.marca-site{
+  margin-bottom:15px;
+}
+
+.marca-site-link{
+  display:inline-flex;
+  max-width:100%;
+  border-radius:10px;
+  overflow:hidden;
+  text-decoration:none;
+}
+
+.logo-site{
+  display:block;
+  width:min(100%, 360px);
+  height:auto;
+  max-height:142px;
+  object-fit:contain;
 }
 
 .container{
@@ -168,6 +188,8 @@ nav .menu-canais-link:focus-visible{ outline:3px solid #2563eb; outline-offset:1
 @media (max-width:600px){
   header{ padding:16px 12px; }
   header h1{ font-size:1.5rem; margin-bottom:11px; }
+  .marca-site{ margin-bottom:11px; }
+  .logo-site{ width:min(100%, 300px); max-height:118px; }
   nav{ gap:10px 12px; margin:10px 0 14px; }
   nav .menu-canais-gatilho{ min-height:32px; padding:6px 10px; font-size:.75rem; }
   .menu-canais-lista{ min-width:150px; }
