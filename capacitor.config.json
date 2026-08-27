@@ -1,5 +1,27 @@
 {
+  
   "appId": "com.messiasmoraes.frases",
+  
   "appName": "Frases de Messias",
-  "webDir": "dist"
+  
+  "webDir": "dist",
+  
+  "server": {
+    
+    "allowNavigation": [
+      
+      "frasesdemessias.com.br"
+      
+    ]
+    
+  }
+  
 }
+
+
+
+
+
+
+
+
