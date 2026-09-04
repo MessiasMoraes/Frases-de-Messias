@@ -1,1 +1,965 @@
-PLACEHOLDER
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f5f7fb;
+  color:#222;
+  line-height:1.6;
+}
+
+header{
+  background:#024acf;
+  color:#fff;
+  padding:20px;
+}
+
+.marca-site{
+  margin-bottom:15px;
+}
+
+.marca-site-link{
+  display:inline-flex;
+  max-width:100%;
+  border-radius:10px;
+  overflow:hidden;
+  text-decoration:none;
+}
+
+.logo-site{
+  display:block;
+  width:min(100%, 360px);
+  height:auto;
+  max-height:142px;
+  object-fit:contain;
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:0 15px;
+}
+
+header h1{
+  margin-bottom:15px;
+}
+
+header .titulo-site{
+  margin-bottom:15px;
+  font-size:2em;
+  font-weight:bold;
+  line-height:1.2;
+}
+
+.filtros-pesquisa{
+  display:grid;
+  grid-template-columns:minmax(0, 1.5fr) minmax(190px, .8fr);
+  gap:10px;
+  width:100%;
+}
+
+#pesquisa,
+#pesquisaAutor{
+  width:100%;
+  min-height:48px;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  font-size:16px;
+}
+
+.sr-only{
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0, 0, 0, 0);
+  white-space:nowrap;
+  border:0;
+}
+
+nav{
+  display:flex;
+  gap:15px;
+  margin:15px 0;
+  flex-wrap:wrap;
+}
+
+nav a{
+  color:white;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+nav a:hover{
+  text-decoration:underline;
+}
+
+/* Menu compacto para os canais oficiais dentro da navegação */
+.menu-canais-nav{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  z-index:20;
+}
+
+nav .menu-canais-gatilho{
+  min-height:32px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  padding:5px 10px;
+  border:1px solid rgba(255,255,255,.48);
+  border-radius:999px;
+  background:rgba(30, 86, 161, .48);
+  color:#fff;
+  cursor:pointer;
+  font:inherit;
+  font-size:.78rem;
+  font-weight:800;
+  line-height:1;
+  white-space:nowrap;
+  touch-action:manipulation;
+  transition:transform 160ms cubic-bezier(.23, 1, .32, 1), background 160ms cubic-bezier(.23, 1, .32, 1), border-color 160ms cubic-bezier(.23, 1, .32, 1);
+}
+
+nav .menu-canais-gatilho:hover,
+nav .menu-canais-gatilho:focus-visible,
+nav .menu-canais-gatilho[aria-expanded="true"]{
+  background:rgba(22, 75, 143, .88);
+  border-color:#fff;
+}
+
+nav .menu-canais-gatilho:active{ transform:scale(.96); }
+nav .menu-canais-gatilho:focus-visible{ outline:3px solid #fff; outline-offset:3px; }
+.menu-canais-seta{ font-size:.68rem; transition:transform 160ms ease; }
+.menu-canais-gatilho[aria-expanded="true"] .menu-canais-seta{ transform:rotate(180deg); }
+
+.menu-canais-lista{
+  position:absolute;
+  top:calc(100% + 7px);
+  left:0;
+  min-width:154px;
+  padding:6px;
+  display:grid;
+  gap:4px;
+  border:1px solid rgba(177, 217, 255, .88);
+  border-radius:12px;
+  background:#fff;
+  box-shadow:0 12px 28px rgba(12, 43, 86, .24);
+}
+
+.menu-canais-lista[hidden]{ display:none; }
+
+nav .menu-canais-link{
+  min-height:42px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 10px;
+  border-radius:8px;
+  color:#173b6c;
+  font-size:.86rem;
+  font-weight:800;
+  line-height:1;
+  text-decoration:none;
+  white-space:nowrap;
+}
+
+nav .menu-canais-link:hover,
+nav .menu-canais-link:focus-visible{
+  color:#173b6c;
+  text-decoration:none;
+  background:#edf6ff;
+}
+
+nav .menu-canais-whatsapp:hover,
+nav .menu-canais-whatsapp:focus-visible{ background:#e9f9ef; color:#166534; }
+nav .menu-canais-telegram:hover,
+nav .menu-canais-telegram:focus-visible{ background:#eaf7ff; color:#075985; }
+nav .menu-canais-link:focus-visible{ outline:3px solid #2563eb; outline-offset:1px; }
+
+@media (max-width:600px){
+  header{ padding:16px 12px; }
+  header h1{ font-size:1.5rem; margin-bottom:11px; }
+  .marca-site{ margin-bottom:11px; }
+  .logo-site{ width:min(100%, 300px); max-height:118px; }
+  nav{ gap:10px 12px; margin:10px 0 14px; }
+  nav .menu-canais-gatilho{ min-height:32px; padding:6px 10px; font-size:.75rem; }
+  .menu-canais-lista{ min-width:150px; }
+}
+
+.hero{
+  max-width:1100px;
+  margin:30px auto;
+  background:#fff;
+  padding:30px;
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+  text-align:center;
+}
+
+.hero h2{
+  color:#2563eb;
+  margin-bottom:15px;
+}
+
+/* Direção visual da chamada: Aurora Editorial — dourado de esperança sobre azul profundo. */
+.chamada-criador-imagem{
+  max-width:1100px;
+  margin:30px auto;
+  padding:0 15px;
+}
+
+.chamada-criador-imagem-conteudo{
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:28px;
+  padding:34px clamp(24px, 5vw, 58px);
+  border-radius:18px;
+  background:radial-gradient(circle at 88% 0%, rgba(255,219,139,.42), transparent 26%), linear-gradient(117deg,#102a43,#1d4b73 57%,#b87321 160%);
+  color:#fff9ee;
+  box-shadow:0 16px 32px rgba(22,62,95,.18);
+}
+
+.chamada-criador-imagem-conteudo::after{
+  content:"";
+  position:absolute;
+  right:-55px;
+  bottom:-105px;
+  width:230px;
+  height:230px;
+  border:1px solid rgba(255,226,161,.28);
+  border-radius:50%;
+  box-shadow:0 0 0 27px rgba(255,226,161,.06);
+}
+
+.chamada-criador-imagem-conteudo > *{ position:relative; z-index:1; }
+.selo-criador-imagem{ margin:0 0 6px; color:#ffcf78; font-size:.72rem; font-weight:800; letter-spacing:.13em; }
+.chamada-criador-imagem h2{ max-width:580px; margin:0; color:#fff9ee; font-family:Georgia,serif; font-size:clamp(1.85rem,4vw,3rem); line-height:1.02; }
+.chamada-criador-imagem p:not(.selo-criador-imagem){ max-width:630px; margin:10px 0 0; color:rgba(255,255,255,.86); }
+.btn-criador-imagem{ display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:11px 18px; border-radius:8px; background:#f3c466; color:#51300f; font-weight:800; text-decoration:none; white-space:nowrap; transition:transform .18s ease, background .18s ease; }
+.btn-criador-imagem:hover{ background:#ffe09b; color:#51300f; text-decoration:none; transform:translateY(-2px); }
+
+@media (max-width:650px){
+  .chamada-criador-imagem-conteudo{ align-items:flex-start; flex-direction:column; gap:18px; padding:27px 24px; }
+  .btn-criador-imagem{ width:100%; }
+}
+
+blockquote{
+  font-size:22px;
+  font-style:italic;
+  margin:20px 0;
+}
+
+button{
+  background:#2563eb;
+  color:#fff;
+  border:none;
+  padding:12px 20px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:16px;
+}
+
+button:hover{
+  opacity:.9;
+}
+
+/* ============================
+   CATEGORIAS
+============================ */
+.categorias, .categoriasDestaque{
+  max-width:1100px;
+  margin:30px auto;
+  padding:0 15px;
+}
+
+.categorias h2, .categoriasDestaque h2{
+  margin-bottom:20px;
+}
+
+.grid-botoes, .gridCategorias{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.btn-categoria {
+  background: #fff;
+  color: #2563eb;
+  border: 2px solid #2563eb;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.btn-categoria:hover {
+  background: #2563eb;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+}
+
+.dark .btn-categoria {
+  background: #1e1e1e;
+  color: #60a5fa;
+  border-color: #3b82f6;
+}
+
+.dark .btn-categoria:hover {
+  background: #3b82f6;
+  color: #fff;
+}
+
+/* ============================
+   CARD DAS FRASES (O ONDE FICA O BOTÃO BAIXAR)
+============================ */
+#listaFrases{
+  max-width:1100px;
+  margin:30px auto;
+  padding:0 15px;
+}
+
+.cardFrase{
+  background:#fff;
+  margin:25px auto;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 5px 15px rgba(0,0,0,.15);
+  max-width:500px;
+  width:100%;
+}
+
+.imagemFrase{
+  position:relative;
+  width:100%;
+  height:450px;
+  background: #eee; /* Placeholder enquanto carrega */
+}
+
+@media (max-width: 600px) {
+  .imagemFrase {
+    height: 300px; /* Menor no mobile para carregar mais rápido */
+  }
+  .textoFrase {
+    font-size: 18px; /* Ajuste de fonte para telas menores */
+  }
+}
+
+.imagemFrase img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.5);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  color:#fff;
+  text-align:center;
+  padding:20px;
+}
+
+.textoFrase{
+  font-size:22px;
+  font-weight:bold;
+  line-height:1.4;
+  text-shadow:2px 2px 8px #000;
+  max-width:90%;
+}
+
+.autorFrase{
+  margin-top:15px;
+  font-size:16px;
+  font-style:italic;
+}
+
+.marca{
+  position:absolute;
+  bottom:15px;
+  right:15px;
+  color:white;
+  font-size:12px;
+  font-weight:bold;
+  opacity:.9;
+}
+
+/* BOTOES DE AÇÃO DA FRASE */
+.botoes{
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  padding:15px;
+  background:#fff;
+}
+
+.botoes button{
+  background:#2563eb;
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  padding:8px 12px;
+  cursor:pointer;
+  font-size:14px;
+  transition:.3s;
+  flex:1 1 auto;
+}
+
+.botoes button:hover{
+  opacity:.9;
+}
+
+.estatisticas{
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  padding:12px;
+  font-size:13px;
+  font-weight:bold;
+  color:#555;
+  border-top:1px solid #eee;
+}
+
+/* ============================
+   MODO ESCURO E FOOTER
+============================ */
+footer{
+  background:#111827;
+  color:#fff;
+  text-align:center;
+  padding:20px;
+  margin-top:40px;
+}
+
+.dark{
+  background:#121212;
+  color:#ffffff;
+}
+
+.dark .hero, .dark .cardFrase, .dark .botoes{
+  background:#1e1e1e;
+  color:#ffffff;
+}
+
+.dark .estatisticas{
+  color:#ccc;
+  border-top:1px solid #333;
+}
+
+#temaBtn{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  padding:12px 18px;
+  border:none;
+  border-radius:30px;
+  background:#2563eb;
+  color:white;
+  cursor:pointer;
+  z-index:1000;
+}
+#cardExportacao{
+
+    width:1080px;
+    height:1920px;
+
+    position:relative;
+
+    overflow:hidden;
+
+    border-radius:40px;
+
+    background:#111;
+
+}
+
+#cardExportacao img{
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+    position:absolute;
+
+    inset:0;
+
+}
+
+.fundoEscuro{
+
+    position:absolute;
+
+    inset:0;
+
+    background:rgba(0,0,0,.45);
+
+}
+
+.conteudoExportacao{
+
+    position:absolute;
+
+    inset:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:90px;
+
+    text-align:center;
+
+}
+
+#textoExportacao{
+
+    color:white;
+
+    font-size:72px;
+
+    line-height:1.5;
+
+    font-weight:bold;
+
+}
+
+#autorExportacao{
+
+    margin-top:70px;
+
+    color:white;
+
+    font-size:44px;
+
+}
+
+.logoExportacao{
+
+    position:absolute;
+
+    bottom:70px;
+
+    color:white;
+
+    font-size:38px;
+
+    opacity:.9;
+
+}
+
+
+/* ============================
+   BOTÕES DE VÍDEO
+============================ */
+button[onclick*="gerarVideo"] {
+    background: linear-gradient(135deg, #ff6b6b, #ff5252) !important;
+    color: white !important;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
+}
+
+button[onclick*="gerarVideo"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(255, 107, 107, 0.4);
+    opacity: 1 !important;
+}
+
+button[onclick*="gerarVideo"]:active {
+    transform: translateY(0);
+}
+
+button[onclick*="gerarVideo"]:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Animação de carregamento para botão de vídeo */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+button[onclick*="gerarVideo"]:disabled {
+    animation: pulse 1.5s infinite;
+}
+
+/* ============================
+   MODO CINEMA ANIMADO
+============================ */
+.modo-cinema-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.cinema-content {
+    position: relative;
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.cinema-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    animation: kenBurns 20s infinite alternate ease-in-out;
+}
+
+@keyframes kenBurns {
+    0% { transform: scale(1) translate(0, 0); }
+    100% { transform: scale(1.2) translate(-2%, -2%); }
+}
+
+.cinema-overlay-dark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.cinema-text-container {
+    position: relative;
+    z-index: 2;
+    padding: 40px;
+    text-align: center;
+    color: white;
+    max-width: 90%;
+}
+
+.cinema-frase {
+    font-size: 2.5rem;
+    font-weight: bold;
+    line-height: 1.3;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1.5s forwards ease-out 0.5s;
+}
+
+.cinema-autor {
+    font-size: 1.4rem;
+    font-style: italic;
+    opacity: 0;
+    animation: fadeIn 1.5s forwards ease-out 1.5s;
+}
+
+.cinema-marca {
+    position: absolute;
+    bottom: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.1rem;
+    opacity: 0.8;
+    white-space: nowrap;
+    animation: fadeIn 1.5s forwards ease-out 2s;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+.cinema-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 10;
+    padding: 10px;
+}
+
+.btn-fechar-cinema {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    margin-bottom: 10px;
+}
+
+.instrucao-gravacao {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+/* Ajustes para proporção Story (9:16) no Modo Cinema */
+@media (min-aspect-ratio: 9/16) {
+    .cinema-text-container {
+        max-width: 600px;
+    }
+}
+
+/* Opções de download: compatibilidade com celulares */
+.opcoesDownload[hidden] {
+  display: none !important;
+}
+
+.opcoesDownload.aberta {
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 10px 14px;
+  background: #f8fafc;
+  border-top: 1px solid #e5e7eb;
+}
+
+.opcoesDownload.aberta p {
+  flex: 0 0 100%;
+}
+
+.opcoesDownload.aberta button {
+  min-height: 44px;
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 12px !important;
+  cursor: pointer;
+  font-size: 14px !important;
+  touch-action: manipulation;
+}
+
+.opcoesDownload.aberta button[onclick*="gerarVideo"] {
+  background: #ef5350 !important;
+  color: #fff !important;
+}
+
+@media (max-width: 600px) {
+  .opcoesDownload.aberta button {
+    flex: 1 1 calc(50% - 8px);
+    min-width: 135px;
+  }
+}
+
+.dark-mode .opcoesDownload.aberta {
+  background: #242424;
+  border-top-color: #444;
+  color: #fff;
+}
+
+.dark-mode .opcoesDownload.aberta button:not([onclick*="gerarVideo"]) {
+  background: #2563eb;
+  color: #fff;
+}
+
+/* Alguns navegadores Android ignoram estilos de display em elementos hidden sem esta regra */
+[hidden] {
+  display: none !important;
+}
+
+.opcoesDownload.aberta[hidden] {
+  display: flex !important;
+}
+
+@media (max-width: 600px) {
+  .filtros-pesquisa {
+    grid-template-columns:1fr;
+  }
+
+  .botoes button {
+    min-height: 44px;
+    font-size: 15px;
+  }
+}
+
+/* Em celulares compactos, o seletor de tema deixa de cobrir o conteúdo. */
+@media (max-width: 480px) {
+  #temaBtn {
+    top: 14px;
+    right: 12px;
+    bottom: auto;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    min-height: 44px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 0;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.22);
+    touch-action: manipulation;
+  }
+
+  #temaBtn::before {
+    content: "🌙";
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  .dark #temaBtn::before {
+    content: "☀️";
+  }
+}
+
+/* ============================
+   TEMA ESCURO — PÁGINA INICIAL
+============================ */
+body.dark {
+  background: #121826;
+  color: #f8fafc;
+}
+
+.dark .ia-gerador {
+  background: #172033 !important;
+  color: #f8fafc;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.24);
+}
+
+.dark .ia-gerador h2,
+.dark .hero h2,
+.dark .categorias h2,
+.dark .categoriasDestaque h2 {
+  color: #93c5fd;
+}
+
+.dark .ia-gerador p,
+.dark .ia-gerador label,
+.dark .hero,
+.dark .categorias,
+.dark .categoriasDestaque,
+.dark #listaFrases,
+.dark .semResultado {
+  color: #f8fafc;
+}
+
+.dark #pesquisa,
+.dark #pesquisaAutor,
+.dark .ia-gerador input,
+.dark .ia-gerador textarea {
+  background: #202b3c !important;
+  color: #f8fafc !important;
+  border: 1px solid #475569 !important;
+}
+
+.dark #pesquisa::placeholder,
+.dark #pesquisaAutor::placeholder,
+.dark .ia-gerador input::placeholder,
+.dark .ia-gerador textarea::placeholder {
+  color: #cbd5e1;
+  opacity: 1;
+}
+
+.dark #resultadoIA {
+  color: #e2e8f0 !important;
+}
+
+.dark .imagemFrase {
+  background: #263247;
+}
+
+.dark .opcoesDownload.aberta {
+  background: #242424;
+  border-top-color: #444;
+  color: #fff;
+}
+
+.dark .opcoesDownload.aberta button:not([onclick*="gerarVideo"]) {
+  background: #2563eb;
+  color: #fff;
+}
+
+.dark .estatisticas {
+  background: #1e1e1e;
+}
+
+/* ============================
+   BANNER CAPA PRINCIPAL
+============================ */
+.banner-capa {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  line-height: 0;
+  background: #0a1628;
+}
+
+.banner-capa img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 520px;
+  object-fit: cover;
+  object-position: center;
+}
+
+@media (max-width: 768px) {
+  .banner-capa img {
+    max-height: 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  .banner-capa img {
+    max-height: 220px;
+  }
+}
