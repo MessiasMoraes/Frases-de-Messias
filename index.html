@@ -90,13 +90,39 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#4A90E2">
 
-  <!-- Vínculo do CSS com forçador de atualização de cache -->
-  <link rel="stylesheet" href="./style.css?v=20260904-banner-capa-v1">
+  <!-- CSS completo do commit bom + estilos do banner -->
+  <link rel="stylesheet" href="https://raw.githubusercontent.com/MessiasMoraes/Frases-de-Messias/dee55bd14b73a80666d8ee859d5fc345d1ab3862/style.css">
+  <style>
+    /* BANNER CAPA PRINCIPAL */
+    .banner-capa {
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      line-height: 0;
+      background: #0a1628;
+    }
+    .banner-capa img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 520px;
+      object-fit: cover;
+      object-position: center;
+    }
+    @media (max-width: 768px) {
+      .banner-capa img { max-height: 280px; }
+    }
+    @media (max-width: 480px) {
+      .banner-capa img { max-height: 220px; }
+    }
+  </style>
 
   <!-- Biblioteca html2canvas para permitir baixar os cards como imagem -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-  <!-- Google Analytics (Substitua G-3TZ1W3722P pelo seu ID quando tiver) -->
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-3TZ1W3722P"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
