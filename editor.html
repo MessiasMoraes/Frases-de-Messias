@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor de Vídeo Completo | Frases de Messias</title>
+    <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/umd/util.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 16px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 20px;
+        }
+        @media (max-width: 950px) {
+            .container { grid-template-columns: 1fr; }
+        }
+        h1 {
+            grid-column: 1 / -1;
+            font-size: 1.4rem;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        .preview-box {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: sticky;
+            top: 16px;
+        }
+        #preview {
+            background: #000;
+            border-radius: 12px;
+            max-width: 100%;
+            max-height: 72vh;
+        }
+        .controls {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+            max-height: 88vh;
+            overflow-y: auto;
+        }
+        label {
+            font-size: 0.82rem;
+            color: #94a3b8;
+            margin-bottom: 3px;
+            display: block;
+        }
+        input, select, textarea, button {
+            width: 100%;
+            padding: 9px 11px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: #e2e8f0;
+            font-size: 0.93rem;
+        }
+        textarea { min-height: 75px; resize: vertical; }
+        button {
+            background: #3b82f6;
+            border: none;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover { background: #2563eb; }
+        button:disabled {
+            background: #475569;
+            cursor: not-allowed;
+        }
+        .btn-gerar {
+            background: #10b981;
+            font-size: 1.05rem;
+            padding: 13px;
+            margin-top: 4px;
+        }
+        .btn-gerar:hover { background: #059669; }
+        .btn-reset {
+            background: #475569;
+            margin-top: 4px;
+        }
+        .btn-reset:hover { background: #64748b; }
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .info {
+            font-size: 0.78rem;
+            color: #94a3b8;
+            margin-top: 3px;
+        }
+        .marca-info {
+            background: #1e3a5f;
+            border: 1px solid #3b82f6;
+            border-radius: 8px;
+            padding: 9px;
+            font-size: 0.82rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin-top: 6px;
+            margin-bottom: -4px;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 4px;
+        }
+        input[type="range"] {
+            padding: 0;
+            height: 6px;
+        }
+        input[type="color"] {
+            height: 38px;
+            padding: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 Editor de Vídeo Completo — Frases de Messias</h1>
+
+        <div class="preview-box">
+            <canvas id="preview" width="720" height="1280"></canvas>
+            <p class="info" style="margin-top:10px;">Pré-visualização ao vivo</p>
+        </div>
+
+        <div class="controls">
+            <!-- FRASE -->
+            <div>
+                <label>Frase</label>
+                <textarea id="textoFrase" placeholder="Digite a frase..."></textarea>
+            </div>
+
+            <div>
+                <label>Autor</label>
+                <input type="text" id="autor" value="Messias">
+            </div>
+
+            <!-- FORMATO E DURAÇÃO -->
+            <div class="section-title">Formato e Duração</div>
+
+            <div>
+                <label>Formato do vídeo</label>
+                <select id="formato">
+                    <option value="9:16">Vertical (9:16) — Reels / TikTok / Stories</option>
+                    <option value="16:9">Horizontal (16:9)</option>
+                    <option value="1:1">Quadrado (1:1)</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Duração do vídeo</label>
+                <select id="duracao">
+                    <option value="5">5 segundos</option>
+                    <option value="8" selected>8 segundos</option>
+                    <option value="10">10 segundos</option>
+                    <option value="12">12 segundos</option>
+                    <option value="15">15 segundos</option>
+                </select>
+            </div>
+
+            <!-- FUNDO -->
+            <div class="section-title">Fundo</div>
+
+            <div>
+                <label>Tipo de fundo</label>
+                <select id="tipoFundo">
+                    <option value="cor">Cor sólida</option>
+                    <option value="gradiente">Gradiente</option>
+                    <option value="imagem">Imagem</option>
+                </select>
+            </div>
+
+            <div id="opcoesCor">
+                <label>Cor de fundo</label>
+                <input type="color" id="corFundo" value="#1e3a5f">
+            </div>
+
+            <div id="opcoesGradiente" style="display:none;">
+                <div class="row">
+                    <div>
+                        <label>Cor 1</label>
+                        <input type="color" id="corGrad1" value="#1e3a5f">
+                    </div>
+                    <div>
+                        <label>Cor 2</label>
+                        <input type="color" id="corGrad2" value="#0f172a">
+                    </div>
+                </div>
+            </div>
+
+            <div id="opcoesImagem" style="display:none;">
+                <label>Imagem de fundo</label>
+                <input type="file" id="imagemFundo" accept="image/*">
+            </div>
+
+            <!-- MÚSICA -->
+            <div class="section-title">Música</div>
+
+            <div>
+                <label>Música de fundo (opcional)</label>
+                <input type="file" id="musica" accept="audio/*">
+            </div>
+
+            <div>
+                <label>Volume da música: <span id="valorVolume">70%</span></label>
+                <input type="range" id="volumeMusica" min="0" max="100" value="70">
+            </div>
+
+            <!-- TEXTO -->
+            <div class="section-title">Estilo do Texto</div>
+
+            <div>
+                <label>Fonte</label>
+                <select id="fonte">
+                    <option value="system-ui">Padrão do sistema</option>
+                    <option value="Georgia, serif">Georgia (elegante)</option>
+                    <option value="'Times New Roman', serif">Times New Roman</option>
+                    <option value="Arial, sans-serif">Arial</option>
+                    <option value="Verdana, sans-serif">Verdana</option>
+                    <option value="'Courier New', monospace">Courier New</option>
+                </select>
+            </div>
+
+            <div class="row">
+                <div>
+                    <label>Cor do texto</label>
+                    <input type="color" id="corTexto" value="#ffffff">
+                </div>
+                <div>
+                    <label>Tamanho</label>
+                    <input type="number" id="tamanhoTexto" value="42" min="18" max="90">
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    <label>Posição Vertical</label>
+                    <select id="posVertical">
+                        <option value="top">Topo</option>
+                        <option value="center" selected>Centro</option>
+                        <option value="bottom">Embaixo</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Posição Horizontal</label>
+                    <select id="posHorizontal">
+                        <option value="left">Esquerda</option>
+                        <option value="center" selected>Centro</option>
+                        <option value="right">Direita</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    <label>Contorno (borda)</label>
+                    <select id="contorno">
+                        <option value="0">Sem contorno</option>
+                        <option value="2" selected>Leve</option>
+                        <option value="4">Médio</option>
+                        <option value="6">Forte</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Sombra</label>
+                    <select id="sombra">
+                        <option value="0">Sem sombra</option>
+                        <option value="1" selected>Leve</option>
+                        <option value="2">Média</option>
+                        <option value="3">Forte</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label>
+                    <input type="checkbox" id="caixaTexto" style="width:auto; margin-right:6px;">
+                    Mostrar caixa atrás do texto
+                </label>
+            </div>
+
+            <div class="marca-info">
+                🔒 A marca d’água <strong>“Frases de Messias”</strong> é adicionada automaticamente em todos os vídeos
+            </div>
+
+            <button class="btn-gerar" id="btnGerar" onclick="gerarVideo()">
+                ⬇️ Gerar e Baixar Vídeo
+            </button>
+
+            <button class="btn-reset" onclick="resetarEditor()">↺ Resetar tudo</button>
+
+            <p id="status" class="info" style="text-align:center; min-height:20px;"></p>
+        </div>
+    </div>
+
+    <script>
+        const { FFmpeg } = FFmpegWASM;
+        const { fetchFile, toBlobURL } = FFmpegUtil;
+
+        const canvas = document.getElementById("preview");
+        const ctx = canvas.getContext("2d");
+        let imagemFundo = null;
+        let audioFile = null;
+
+        // Pega parâmetros da URL
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("frase")) {
+            document.getElementById("textoFrase").value = decodeURIComponent(params.get("frase"));
+        }
+        if (params.get("autor")) {
+            document.getElementById("autor").value = decodeURIComponent(params.get("autor"));
+        }
+
+        // Eventos
+        const campos = [
+            "textoFrase", "autor", "formato", "corFundo", "corTexto", "tamanhoTexto",
+            "posVertical", "posHorizontal", "fonte", "contorno", "sombra", "caixaTexto",
+            "tipoFundo", "corGrad1", "corGrad2"
+        ];
+        campos.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener("input", desenharPreview);
+                el.addEventListener("change", desenharPreview);
+            }
+        });
+
+        document.getElementById("tipoFundo").addEventListener("change", atualizarOpcoesFundo);
+        document.getElementById("volumeMusica").addEventListener("input", (e) => {
+            document.getElementById("valorVolume").textContent = e.target.value + "%";
+        });
+
+        document.getElementById("imagemFundo").addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if (!file) {
+                imagemFundo = null;
+                desenharPreview();
+                return;
+            }
+            const url = URL.createObjectURL(file);
+            const img = new Image();
+            img.onload = () => {
+                imagemFundo = img;
+                document.getElementById("tipoFundo").value = "imagem";
+                atualizarOpcoesFundo();
+                desenharPreview();
+            };
+            img.src = url;
+        });
+
+        document.getElementById("musica").addEventListener("change", (e) => {
+            audioFile = e.target.files[0] || null;
+        });
+
+        function atualizarOpcoesFundo() {
+            const tipo = document.getElementById("tipoFundo").value;
+            document.getElementById("opcoesCor").style.display = tipo === "cor" ? "block" : "none";
+            document.getElementById("opcoesGradiente").style.display = tipo === "gradiente" ? "block" : "none";
+            document.getElementById("opcoesImagem").style.display = tipo === "imagem" ? "block" : "none";
+            desenharPreview();
+        }
+
+        function getDimensoes() {
+            const formato = document.getElementById("formato").value;
+            if (formato === "16:9") return { w: 1280, h: 720 };
+            if (formato === "1:1") return { w: 1080, h: 1080 };
+            return { w: 720, h: 1280 };
+        }
+
+        function desenharPreview() {
+            const { w, h } = getDimensoes();
+            canvas.width = w;
+            canvas.height = h;
+
+            const tipoFundo = document.getElementById("tipoFundo").value;
+
+            // ===== FUNDO =====
+            if (tipoFundo === "imagem" && imagemFundo) {
+                const scale = Math.max(w / imagemFundo.width, h / imagemFundo.height);
+                const x = (w - imagemFundo.width * scale) / 2;
+                const y = (h - imagemFundo.height * scale) / 2;
+                ctx.drawImage(imagemFundo, x, y, imagemFundo.width * scale, imagemFundo.height * scale);
+            } else if (tipoFundo === "gradiente") {
+                const grad = ctx.createLinearGradient(0, 0, 0, h);
+                grad.addColorStop(0, document.getElementById("corGrad1").value);
+                grad.addColorStop(1, document.getElementById("corGrad2").value);
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, w, h);
+            } else {
+                ctx.fillStyle = document.getElementById("corFundo").value;
+                ctx.fillRect(0, 0, w, h);
+            }
+
+            // ===== TEXTO =====
+            const texto = document.getElementById("textoFrase").value || "Sua frase aqui";
+            const autor = document.getElementById("autor").value || "Messias";
+            const cor = document.getElementById("corTexto").value;
+            const tamanho = parseInt(document.getElementById("tamanhoTexto").value) || 42;
+            const posV = document.getElementById("posVertical").value;
+            const posH = document.getElementById("posHorizontal").value;
+            const fonte = document.getElementById("fonte").value;
+            const contorno = parseInt(document.getElementById("contorno").value) || 0;
+            const sombra = parseInt(document.getElementById("sombra").value) || 0;
+            const usarCaixa = document.getElementById("caixaTexto").checked;
+
+            ctx.font = `bold ${tamanho}px ${fonte}`;
+            ctx.textBaseline = "middle";
+
+            // Alinhamento
+            let posX, align;
+            const margem = 45;
+            if (posH === "left") {
+                posX = margem;
+                align = "left";
+            } else if (posH === "right") {
+                posX = w - margem;
+                align = "right";
+            } else {
+                posX = w / 2;
+                align = "center";
+            }
+            ctx.textAlign = align;
+
+            // Quebra de linha
+            const maxWidth = w * 0.82;
+            const palavras = texto.split(" ");
+            let linhas = [];
+            let linhaAtual = "";
+
+            palavras.forEach(palavra => {
+                const teste = linhaAtual + palavra + " ";
+                if (ctx.measureText(teste).width > maxWidth && linhaAtual !== "") {
+                    linhas.push(linhaAtual.trim());
+                    linhaAtual = palavra + " ";
+                } else {
+                    linhaAtual = teste;
+                }
+            });
+            if (linhaAtual) linhas.push(linhaAtual.trim());
+
+            const alturaLinha = tamanho * 1.28;
+            const alturaTexto = linhas.length * alturaLinha;
+            const alturaAutor = tamanho * 0.6;
+            const alturaTotal = alturaTexto + alturaAutor + 25;
+
+            let yInicial;
+            if (posV === "top") yInicial = 90;
+            else if (posV === "bottom") yInicial = h - alturaTotal - 90;
+            else yInicial = (h - alturaTotal) / 2;
+
+            // Caixa atrás do texto
+            if (usarCaixa) {
+                const padding = 28;
+                let caixaX, caixaW;
+                if (align === "center") {
+                    caixaW = maxWidth + padding * 2;
+                    caixaX = (w - caixaW) / 2;
+                } else if (align === "left") {
+                    caixaW = maxWidth + padding;
+                    caixaX = margem - padding / 2;
+                } else {
+                    caixaW = maxWidth + padding;
+                    caixaX = w - margem - maxWidth - padding / 2;
+                }
+
+                ctx.fillStyle = "rgba(0, 0, 0, 0.45)";
+                roundRect(ctx, caixaX, yInicial - 25, caixaW, alturaTotal + 30, 16);
+                ctx.fill();
+            }
+
+            // Sombra
+            if (sombra > 0) {
+                ctx.shadowColor = "rgba(0,0,0,0.75)";
+                ctx.shadowBlur = sombra * 6;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = sombra * 2;
+            } else {
+                ctx.shadowColor = "transparent";
+                ctx.shadowBlur = 0;
+            }
+
+            // Contorno + Texto
+            let y = yInicial;
+            linhas.forEach(linha => {
+                if (contorno > 0) {
+                    ctx.strokeStyle = "rgba(0,0,0,0.8)";
+                    ctx.lineWidth = contorno;
+                    ctx.lineJoin = "round";
+                    ctx.strokeText(linha, posX, y);
+                }
+                ctx.fillStyle = cor;
+                ctx.fillText(linha, posX, y);
+                y += alturaLinha;
+            });
+
+            // Autor
+            ctx.font = `italic ${Math.round(tamanho * 0.52)}px ${fonte}`;
+            if (contorno > 0) {
+                ctx.strokeText("— " + autor, posX, y + 16);
+            }
+            ctx.fillStyle = cor;
+            ctx.fillText("— " + autor, posX, y + 16);
+
+            // Reset sombra
+            ctx.shadowColor = "transparent";
+            ctx.shadowBlur = 0;
+
+            // ===== MARCA D'ÁGUA OBRIGATÓRIA =====
+            ctx.font = "600 17px system-ui, sans-serif";
+            ctx.fillStyle = "rgba(255,255,255,0.78)";
+            ctx.textAlign = "right";
+            ctx.fillText("Frases de Messias", w - 22, h - 26);
+        }
+
+        function roundRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, 
