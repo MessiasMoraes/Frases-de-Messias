@@ -59,18 +59,12 @@ function normalizarParaBusca(texto) {
     return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
-// Padroniza nomes de categorias exibidos no botão e no Firestore.
-// Assim, por exemplo, “boa-noite”, “Boa Noite” e “🌙 Boa Noite” apontam
-// para a mesma categoria, inclusive no WebView Android.
 function normalizarCategoria(texto = "") {
     return normalizarParaBusca(
         sanitizarTexto(String(texto).replace(/[-_]+/g, " "))
     ).replace(/\s+/g, " ").trim();
 }
 
-// Permite consultas naturais, como “frases de amor” ou “mensagens de fé”.
-// Palavras de contexto são ignoradas e o tema restante é comparado com
-// o texto, o autor e a categoria de cada frase.
 function termosRelevantesDaBusca(texto = "") {
     const palavrasIgnoradas = new Set([
         "a", "as", "o", "os", "de", "da", "das", "do", "dos", "e", "em", "para", "por", "com", "sobre",
@@ -82,8 +76,6 @@ function termosRelevantesDaBusca(texto = "") {
         .filter(palavra => palavra && !palavrasIgnoradas.has(palavra));
 }
 
-// Converte imagens antigas do GitHub Pages para o mesmo domínio atual.
-// O carregamento normal dos cards continua direto; a exportação usa o proxy abaixo.
 function normalizarUrlImagem(url = "") {
     const valor = String(url || "").trim();
     if (!valor) return "";
@@ -100,8 +92,6 @@ function normalizarUrlImagem(url = "") {
     }
 }
 
-// Proxy público estável na Vercel. Ele é usado também quando o domínio principal
-// ainda estiver servido pelo GitHub Pages, onde a rota /api/image não existe.
 const ORIGEM_PROXY_IMAGEM = "https://frasesdemessiascombr.vercel.app";
 
 function origemApiVideo() {
@@ -186,10 +176,6 @@ async function contarVisitaGlobal() {
         const docRef = doc(db, "estatisticas", "global");
         const jaRegistrouNestaSessao = sessionStorage.getItem(chaveVisita) === "true";
 
-        // A transação lê o valor atual e grava somente o próximo número inteiro.
-        // Assim, ela respeita a regra pública do Firestore, que permite alterar
-        // exclusivamente o campo "visitas" em +1, e evita perder contagens
-        // quando duas pessoas entram no site ao mesmo tempo.
         const totalAtualizado = await runTransaction(db, async (transacao) => {
             const estatistica = await transacao.get(docRef);
             const visitasAtuais = Number(estatistica.data()?.visitas || 0);
@@ -260,8 +246,6 @@ async function carregarPreviaComunidade() {
     if (!lista) return;
 
     try {
-        // A filtragem espelha o feed público: somente conteúdo já aprovado é exibido.
-        // A ordenação no navegador mantém a consulta compatível com os índices existentes.
         const resultado = await getDocs(query(
             collection(db, "comunidadePublicacoes"),
             where("status", "==", "publicado"),
@@ -333,7 +317,6 @@ async function carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa
     try {
         contarVisitaGlobal();
 
-        // As categorias são poucas e são carregadas uma única vez.
         const consultaCategorias = await getDocs(collection(db, "categorias"));
         consultaCategorias.forEach(docSnap => {
             const dados = docSnap.data();
@@ -341,7 +324,6 @@ async function carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa
             if (nomeLimpo) categorias[nomeLimpo] = dados.imagem;
         });
 
-        // Carrega somente o primeiro lote. Os demais são buscados por ação do visitante.
         await carregarProximoLoteDeFrases();
     } catch (e) {
         console.error("Erro no Firebase:", e);
@@ -357,7 +339,6 @@ async function carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa
     frasesCarregadas = true;
     fraseDoDia(fraseDiaElemento);
     mostrarCategorias(listaCategorias, pesquisa, lista);
-    // Preserva uma busca já digitada enquanto as frases estavam sendo carregadas.
     mostrarFrases(lista, filtrosAtuais());
 }
 
@@ -439,7 +420,7 @@ function adicionarBotaoCarregarMais(lista) {
     if (!lista || !haMaisFrases) return;
 
     const areaMais = document.createElement("div");
-    areaMais.style.cssText = "text-align:center; padding:18px 0 8px;";
+    areaMais.style.cssText = "text-align:center; padding:18px 0 8px; width:100%; grid-column: 1 / -1;";
     const botaoMais = document.createElement("button");
     botaoMais.type = "button";
     botaoMais.className = "btn-ver-resultados";
@@ -467,7 +448,6 @@ function mostrarFrases(lista, filtro = "") {
     if (!lista) return;
     lista.innerHTML = "";
 
-    // Mantém compatibilidade com chamadas antigas que enviavam apenas um texto.
     const filtros = typeof filtro === "string"
         ? { texto: filtro, autor: "", categoria: "" }
         : (filtro || {});
@@ -482,9 +462,6 @@ function mostrarFrases(lista, filtro = "") {
         const categoriaFrase = normalizarCategoria(f.categoria || "");
         const conteudoPesquisavel = `${textoFrase} ${categoriaFrase} ${autorFrase}`;
 
-        // Primeiro preserva a busca exata. Se o visitante escrever uma frase
-        // natural, cada termo relevante também é considerado; assim “frases de
-        // amor” encontra a categoria Amor, e “mensagens de fé” encontra Fé.
         const correspondeTexto = !textoLimpo
             || conteudoPesquisavel.includes(textoLimpo)
             || termosBusca.length === 0
@@ -499,7 +476,7 @@ function mostrarFrases(lista, filtro = "") {
 
     if (resultado.length === 0) {
         lista.innerHTML = `
-            <div class="semResultado" style="text-align:center; padding: 20px;">
+            <div class="semResultado" style="text-align:center; padding: 20px; grid-column: 1 / -1;">
                 😔 Nenhuma frase encontrada entre as frases carregadas. Você pode buscar mais no acervo.
             </div>
         `;
@@ -508,7 +485,6 @@ function mostrarFrases(lista, filtro = "") {
     }
 
     resultado.forEach(f => criarCardFrase(f, lista));
-
     adicionarBotaoCarregarMais(lista);
 }
 
@@ -525,12 +501,237 @@ function criarCardFrase(f, lista) {
         ? f.imagem
         : (categorias[categoriaLimpa] || `https://picsum.photos/seed/${encodeURIComponent(semente)}/${larguraImg}/${alturaImg}`));
 
-    // Escapa aspas simples para não quebrar o HTML
-    const textoEscapado = (f.texto || "").replace(/'/g, "\\'");
-    const autorEscapado = (f.autor || "Messias").replace(/'/g, "\\'");
-
     const card = document.createElement("div");
     card.className = "cardFrase";
     card.innerHTML = `
         <div class="imagemFrase">
-            <img src="${imagem}" alt=
+            <img src="${imagem}" alt="Imagem ilustrativa"
+                loading="lazy"
+                decoding="async"
+                onerror="this.onerror=null; this.src='https://picsum.photos/seed/${encodeURIComponent(semente)}/${larguraImg}/${alturaImg}';"
+            >
+        </div>
+        <div class="conteudoFrase">
+            ${categoriaLimpa ? `<span class="categoriaBadge">${categoriaLimpa}</span>` : ""}
+            <p class="textoFrase">"${f.texto}"</p>
+            <p class="autorFrase">— ${f.autor || "Messias"}</p>
+            
+            <div class="acoesFrase">
+                <button type="button" class="btnAcao btnCopiar" title="Copiar texto">
+                    📋 Copiar
+                </button>
+                <button type="button" class="btnAcao btnFavorito" title="Favoritar">
+                    ${favoritos.includes(f.id) ? "❤️" : "🤍"}
+                </button>
+                <button type="button" class="btnAcao btnEditor" title="Criar Vídeo">
+                    🎬 Vídeo
+                </button>
+                <button type="button" class="btnAcao btnBaixarImagem" title="Baixar Card como Imagem">
+                    🖼️ Baixar
+                </button>
+            </div>
+        </div>
+    `;
+
+    const btnCopiar = card.querySelector(".btnCopiar");
+    const btnFavorito = card.querySelector(".btnFavorito");
+    const btnEditor = card.querySelector(".btnEditor");
+    const btnBaixarImagem = card.querySelector(".btnBaixarImagem");
+
+    btnCopiar.addEventListener("click", () => copiarFrase(f.texto, f.autor, btnCopiar));
+    btnFavorito.addEventListener("click", () => alternarFavorito(f.id, btnFavorito));
+    btnEditor.addEventListener("click", () => abrirEditorVideo(f.texto, f.autor));
+    btnBaixarImagem.addEventListener("click", () => baixarCardComoImagem(f, imagem, btnBaixarImagem));
+
+    lista.appendChild(card);
+}
+
+// ======================
+// AÇÕES DOS CARDS
+// ======================
+async function copiarFrase(texto, autor, botao) {
+    const conteudo = `"${texto}" — ${autor || "Messias"}`;
+    try {
+        await navigator.clipboard.writeText(conteudo);
+        const textoOriginal = botao.innerHTML;
+        botao.innerHTML = "✅ Copiado!";
+        setTimeout(() => { botao.innerHTML = textoOriginal; }, 2000);
+    } catch (err) {
+        alert("Não foi possível copiar o texto automaticamente.");
+    }
+}
+
+function alternarFavorito(id, botao) {
+    const index = favoritos.indexOf(id);
+    if (index === -1) {
+        favoritos.push(id);
+        botao.innerHTML = "❤️";
+    } else {
+        favoritos.splice(index, 1);
+        botao.innerHTML = "🤍";
+    }
+    localStorage.setItem("favoritos", JSON.stringify(favoritos));
+}
+
+// ======================
+// GERAÇÃO DE IMAGEM (CANVAS)
+// ======================
+async function baixarCardComoImagem(fraseObj, urlImagem, botao) {
+    const textoOriginal = botao.innerHTML;
+    botao.disabled = true;
+    botao.innerHTML = "⏳ Gerando...";
+
+    try {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        const largura = 1080;
+        const altura = 1080;
+        canvas.width = largura;
+        canvas.height = altura;
+
+        const urlProxy = urlParaProxyImagem(urlImagem);
+        try {
+            const { imagem } = await carregarImagemParaCanvas(urlProxy || urlImagem);
+            ctx.drawImage(imagem, 0, 0, largura, altura);
+        } catch (_) {
+            const grad = ctx.createLinearGradient(0, 0, 0, altura);
+            grad.addColorStop(0, "#1e3a5f");
+            grad.addColorStop(1, "#0f172a");
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, largura, altura);
+        }
+
+        ctx.fillStyle = "rgba(0, 0, 0, 0.55)";
+        ctx.fillRect(0, 0, largura, altura);
+
+        const texto = `"${fraseObj.texto}"`;
+        const autor = `— ${fraseObj.autor || "Messias"}`;
+        ctx.fillStyle = "#ffffff";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        const tamanhoFonte = 48;
+        ctx.font = `bold ${tamanhoFonte}px sans-serif`;
+        const maxLargura = largura * 0.82;
+        const palavras = texto.split(" ");
+        let linhas = [];
+        let linhaAtual = "";
+
+        palavras.forEach(p => {
+            const teste = linhaAtual + p + " ";
+            if (ctx.measureText(teste).width > maxLargura && linhaAtual !== "") {
+                linhas.push(linhaAtual.trim());
+                linhaAtual = p + " ";
+            } else {
+                linhaAtual = teste;
+            }
+        });
+        if (linhaAtual) linhas.push(linhaAtual.trim());
+
+        const alturaLinha = tamanhoFonte * 1.3;
+        const alturaTotal = linhas.length * alturaLinha;
+        let yInicial = (altura - alturaTotal) / 2 - 20;
+
+        linhas.forEach(linha => {
+            ctx.fillText(linha, largura / 2, yInicial);
+            yInicial += alturaLinha;
+        });
+
+        ctx.font = "italic 32px sans-serif";
+        ctx.fillStyle = "#cbd5e1";
+        ctx.fillText(autor, largura / 2, yInicial + 30);
+
+        ctx.font = "600 22px sans-serif";
+        ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+        ctx.fillText("Frases de Messias", largura / 2, altura - 50);
+
+        const dataUrl = canvas.toDataURL("image/png");
+        const a = document.createElement("a");
+        a.href = dataUrl;
+        a.download = `frase-${fraseObj.id || "messias"}.png`;
+        a.click();
+
+        botao.innerHTML = "✅ Salvo!";
+    } catch (erro) {
+        console.error("Erro ao gerar imagem do card:", erro);
+        alert("Não foi possível gerar a imagem para download.");
+    } finally {
+        setTimeout(() => {
+            botao.disabled = false;
+            botao.innerHTML = textoOriginal;
+        }, 2000);
+    }
+}
+
+// ======================
+// MOSTRAR CATEGORIAS
+// ======================
+function mostrarCategorias(container, campoPesquisa, containerListaFrases) {
+    if (!container) return;
+    container.innerHTML = "";
+
+    const listaNomes = Object.keys(categorias);
+    if (!listaNomes.length) return;
+
+    const btnTodas = document.createElement("button");
+    btnTodas.type = "button";
+    btnTodas.className = `btnCategoria ${categoriaSelecionada === "" ? "ativa" : ""}`;
+    btnTodas.textContent = "Todas";
+    btnTodas.addEventListener("click", () => {
+        categoriaSelecionada = "";
+        atualizarBotoesCategoria(container);
+        mostrarFrases(containerListaFrases, filtrosAtuais());
+    });
+    container.appendChild(btnTodas);
+
+    listaNomes.forEach(nome => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `btnCategoria ${normalizarCategoria(categoriaSelecionada) === normalizarCategoria(nome) ? "ativa" : ""}`;
+        btn.textContent = nome;
+        btn.addEventListener("click", () => {
+            categoriaSelecionada = nome;
+            atualizarBotoesCategoria(container);
+            mostrarFrases(containerListaFrases, filtrosAtuais());
+        });
+        container.appendChild(btn);
+    });
+}
+
+function atualizarBotoesCategoria(container) {
+    const botoes = container.querySelectorAll(".btnCategoria");
+    botoes.forEach(btn => {
+        const texto = btn.textContent;
+        if (texto === "Todas" && categoriaSelecionada === "") {
+            btn.classList.add("ativa");
+        } else if (normalizarCategoria(texto) === normalizarCategoria(categoriaSelecionada)) {
+            btn.classList.add("ativa");
+        } else {
+            btn.classList.remove("ativa");
+        }
+    });
+}
+
+// ======================
+// INICIALIZAÇÃO E EVENTOS
+// ======================
+document.addEventListener("DOMContentLoaded", () => {
+    const listaFrases = document.getElementById("listaFrases");
+    const fraseDiaElemento = document.getElementById("fraseDia");
+    const listaCategorias = document.getElementById("listaCategorias");
+    const pesquisa = document.getElementById("pesquisa");
+    const pesquisaAutor = document.getElementById("pesquisaAutor");
+
+    carregarFrases(listaFrases, fraseDiaElemento, listaCategorias, pesquisa);
+    carregarPreviaComunidade();
+
+    const manipularInputBusca = () => {
+        clearTimeout(temporizadorBusca);
+        temporizadorBusca = setTimeout(() => {
+            atualizarListaComFiltros();
+        }, 300);
+    };
+
+    if (pesquisa) pesquisa.addEventListener("input", manipularInputBusca);
+    if (pesquisaAutor) pesquisaAutor.addEventListener("input", manipularInputBusca);
+});
