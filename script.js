@@ -1,4 +1,4 @@
-import { db } from "./firebase.js";
+ffimport { db } from "./firebase.js";
 import {
     collection,
     getDocs,
@@ -504,13 +504,6 @@ function criarCardFrase(f, lista) {
     const card = document.createElement("div");
     card.className = "cardFrase";
     card.innerHTML = `
-        <div class="imagemFrase">
-            <img src="${imagem}" alt="Imagem ilustrativa"
-                loading="lazy"
-                decoding="async"
-                onerror="this.onerror=null; this.src='https://picsum.photos/seed/${encodeURIComponent(semente)}/${larguraImg}/${alturaImg}';"
-            >
-        </div>
         <div class="conteudoFrase">
             ${categoriaLimpa ? `<span class="categoriaBadge">${categoriaLimpa}</span>` : ""}
             <p class="textoFrase">"${f.texto}"</p>
@@ -530,6 +523,13 @@ function criarCardFrase(f, lista) {
                     🖼️ Baixar
                 </button>
             </div>
+        </div>
+        <div class="imagemFrase">
+            <img src="${imagem}" alt="Imagem ilustrativa"
+                loading="lazy"
+                decoding="async"
+                onerror="this.onerror=null; this.src='https://picsum.photos/seed/${encodeURIComponent(semente)}/${larguraImg}/${alturaImg}';"
+            >
         </div>
     `;
 
