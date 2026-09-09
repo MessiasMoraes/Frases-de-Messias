@@ -315,9 +315,6 @@
     </div>
 
     <script>
-        const { FFmpeg } = FFmpegWASM;
-        const { fetchFile, toBlobURL } = FFmpegUtil;
-
         const canvas = document.getElementById("preview");
         const ctx = canvas.getContext("2d");
         let imagemFundo = null;
@@ -541,4 +538,6 @@
             ctx.lineTo(x + width, y + height - radius);
             ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
             ctx.lineTo(x + radius, y + height);
-            ctx.quadraticCurveTo(x, y + height, x, 
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo
