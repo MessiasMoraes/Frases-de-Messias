@@ -362,6 +362,15 @@ async function carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa
 }
 
 // ======================
+// ABRIR EDITOR DE VÍDEO
+// ======================
+function abrirEditorVideo(texto, autor = "Messias") {
+    const frase = encodeURIComponent(texto);
+    const autorCod = encodeURIComponent(autor);
+    window.location.href = `editor.html?frase=${frase}&autor=${autorCod}`;
+}
+
+// ======================
 // MOSTRAR FRASES
 // ======================
 function filtrosAtuais() {
