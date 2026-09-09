@@ -516,6 +516,10 @@ function criarCardFrase(f, lista) {
         ? f.imagem
         : (categorias[categoriaLimpa] || `https://picsum.photos/seed/${encodeURIComponent(semente)}/${larguraImg}/${alturaImg}`));
 
+    // Escapa aspas simples para não quebrar o HTML
+    const textoEscapado = (f.texto || "").replace(/'/g, "\\'");
+    const autorEscapado = (f.autor || "Messias").replace(/'/g, "\\'");
+
     const card = document.createElement("div");
     card.className = "cardFrase";
     card.innerHTML = `
@@ -529,21 +533,8 @@ function criarCardFrase(f, lista) {
         </div>
         <div class="botoes">
             <button onclick="curtir('${f.id}')">❤️ Curtir</button>
-            <button onclick="copiar('${f.texto.replace(/'/g, "\\'")}')">📋 Copiar</button>
-            <button onclick="compartilhar('${f.id}', '${f.texto.replace(/'/g, "\\'")}')">📤 Compartilhar</button>
-            <button type="button" class="btn-baixar" onclick="mostrarOpcoesDownload(this)" aria-expanded="false">📥 Baixar</button>
-        </div>
-        <div class="opcoesDownload" hidden style="margin-top:10px; text-align:center;">
-            <p style="font-size:13px; margin-bottom:5px; font-weight:bold;">Escolha o formato:</p>
-            <button onclick="baixarImagem(this, 'story')" style="margin-right:5px; font-size:12px; padding:6px 12px;">📱 Story (9:16)</button>
-            <button onclick="baixarImagem(this, 'feed')" style="font-size:12px; padding:6px 12px;">📸 Feed (1:1)</button>
-            <button onclick="gerarVideo(this, 'story')" style="margin-top:8px; margin-right:5px; font-size:12px; padding:6px 12px; background:#ff6b6b; color:white; border:none; border-radius:4px; cursor:pointer;">🎬 Vídeo Story</button>
-            <button onclick="gerarVideo(this, 'feed')" style="margin-top:8px; font-size:12px; padding:6px 12px; background:#ff6b6b; color:white; border:none; border-radius:4px; cursor:pointer;">🎬 Vídeo Feed</button>
-        </div>
-        <div class="estatisticas">
-            <span>❤️ ${Number(f.curtidas || 0).toLocaleString("pt-BR")}</span>
-            <span>👁️ ${Number(f.visualizacoes || 0).toLocaleString("pt-BR")}</span>
-            <span>📤 ${Number(f.compartilhamentos || 0).toLocaleString("pt-BR")}</span>
+            <button onclick="copiar('${textoEscapado}')">📋 Copiar</button>
+            <button onclick="abrirEditorVideo('${textoEscapado}', '${autorEscapado}')">⬇️ Baixar</button>
         </div>
     `;
 
