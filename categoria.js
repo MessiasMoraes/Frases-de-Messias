@@ -151,13 +151,13 @@ function renderizar(frases) {
 
     return `
       <article class="cardFrase">
-        <div class="imagemFrase">
-          <img src="${imagem}" alt="${texto}" loading="lazy" decoding="async">
-          <div class="overlay">
+        <div class="conteudoFrase">
             <p class="textoFrase">“${texto}”</p>
             <p class="autorFrase">— ${autor}</p>
             <div class="marca">Frases de Messias</div>
-          </div>
+        </div>
+        <div class="imagemFrase">
+          <img src="${imagem}" alt="${texto}" loading="lazy" decoding="async">
         </div>
         <div class="botoes" aria-label="Ações da frase">
           <button type="button" data-acao="curtir" data-id="${id}">Curtir</button>
