@@ -5,13 +5,26 @@ import {
     getDoc,
     doc,
     updateDoc,
-    increment
+    increment,
+    runTransaction,
+    query,
+    where,
+    orderBy,
+    limit,
+    startAfter,
+    documentId
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 let frases = [];
 let categorias = {};
 let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
 let categoriaSelecionada = "";
+let frasesCarregadas = false;
+let temporizadorBusca;
+const TAMANHO_LOTE_FRASES = 24;
+let ultimoDocumentoFrases = null;
+let haMaisFrases = true;
+let carregandoMaisFrases = false;
 
 // ======================
 // FUNÇÕES AUXILIARES
@@ -53,6 +66,20 @@ function normalizarCategoria(texto = "") {
     return normalizarParaBusca(
         sanitizarTexto(String(texto).replace(/[-_]+/g, " "))
     ).replace(/\s+/g, " ").trim();
+}
+
+// Permite consultas naturais, como “frases de amor” ou “mensagens de fé”.
+// Palavras de contexto são ignoradas e o tema restante é comparado com
+// o texto, o autor e a categoria de cada frase.
+function termosRelevantesDaBusca(texto = "") {
+    const palavrasIgnoradas = new Set([
+        "a", "as", "o", "os", "de", "da", "das", "do", "dos", "e", "em", "para", "por", "com", "sobre",
+        "frase", "frases", "mensagem", "mensagens", "pensamento", "pensamentos"
+    ]);
+
+    return normalizarParaBusca(String(texto))
+        .split(/[^a-z0-9]+/)
+        .filter(palavra => palavra && !palavrasIgnoradas.has(palavra));
 }
 
 // Converte imagens antigas do GitHub Pages para o mesmo domínio atual.
@@ -154,56 +181,168 @@ function fraseDoDia(fraseDiaElemento) {
 async function contarVisitaGlobal() {
     const chaveVisita = "visita_global_registrada";
     const contadorElemento = document.getElementById("contadorGlobal");
-    
+
     try {
         const docRef = doc(db, "estatisticas", "global");
-        
-        if (!sessionStorage.getItem(chaveVisita)) {
-            await updateDoc(docRef, { visitas: increment(1) });
+        const jaRegistrouNestaSessao = sessionStorage.getItem(chaveVisita) === "true";
+
+        // A transação lê o valor atual e grava somente o próximo número inteiro.
+        // Assim, ela respeita a regra pública do Firestore, que permite alterar
+        // exclusivamente o campo "visitas" em +1, e evita perder contagens
+        // quando duas pessoas entram no site ao mesmo tempo.
+        const totalAtualizado = await runTransaction(db, async (transacao) => {
+            const estatistica = await transacao.get(docRef);
+            const visitasAtuais = Number(estatistica.data()?.visitas || 0);
+
+            if (!jaRegistrouNestaSessao) {
+                transacao.update(docRef, { visitas: visitasAtuais + 1 });
+                return visitasAtuais + 1;
+            }
+
+            return visitasAtuais;
+        });
+
+        if (!jaRegistrouNestaSessao) {
             sessionStorage.setItem(chaveVisita, "true");
         }
-        
-        const consulta = await getDocs(collection(db, "estatisticas"));
-        consulta.forEach(d => {
-            if (d.id === "global" && contadorElemento) {
-                contadorElemento.textContent = Number(d.data().visitas || 0).toLocaleString("pt-BR");
-            }
-        });
+
+        if (contadorElemento) {
+            contadorElemento.textContent = Number(totalAtualizado).toLocaleString("pt-BR");
+        }
     } catch (e) {
         console.error("Erro ao contar visita global:", e);
     }
 }
 
 // ======================
+// PRÉVIA DA REDE SOCIAL
+// ======================
+function dataDaPublicacaoSocial(valor) {
+    if (valor?.toDate) return valor.toDate();
+    if (valor?.seconds) return new Date(valor.seconds * 1000);
+    return valor instanceof Date ? valor : null;
+}
+
+function criarCartaoPreviaComunidade(publicacao) {
+    const link = document.createElement("a");
+    link.className = "cartao-previa-comunidade";
+    link.href = "comunidade.html";
+    link.setAttribute("aria-label", "Ver publicação de " + (publicacao.autorNome || "membro da comunidade") + " na Rede Social");
+
+    const cabecalho = document.createElement("div");
+    cabecalho.className = "meta-previa-comunidade";
+
+    const autor = document.createElement("strong");
+    autor.textContent = publicacao.autorNome || "Membro da comunidade";
+
+    const categoria = document.createElement("span");
+    categoria.textContent = publicacao.categoria || "Comunidade";
+    cabecalho.append(autor, categoria);
+
+    const texto = document.createElement("blockquote");
+    const conteudo = String(publicacao.texto || "").trim();
+    texto.textContent = `“${conteudo.length > 170 ? conteudo.slice(0, 170).trimEnd() + "…" : conteudo}”`;
+
+    const rodape = document.createElement("span");
+    rodape.className = "link-cartao-previa";
+    const data = dataDaPublicacaoSocial(publicacao.publicadoEm || publicacao.criadoEm);
+    const dataFormatada = data
+        ? data.toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" })
+        : "Na Rede Social";
+    rodape.textContent = `${dataFormatada} · Ver publicação →`;
+
+    link.append(cabecalho, texto, rodape);
+    return link;
+}
+
+async function carregarPreviaComunidade() {
+    const lista = document.getElementById("listaPublicacoesComunidade");
+    if (!lista) return;
+
+    try {
+        // A filtragem espelha o feed público: somente conteúdo já aprovado é exibido.
+        // A ordenação no navegador mantém a consulta compatível com os índices existentes.
+        const resultado = await getDocs(query(
+            collection(db, "comunidadePublicacoes"),
+            where("status", "==", "publicado"),
+            limit(12)
+        ));
+        const publicacoes = resultado.docs
+            .map(item => ({ id: item.id, ...item.data() }))
+            .sort((primeira, segunda) => {
+                const dataPrimeira = dataDaPublicacaoSocial(primeira.publicadoEm || primeira.criadoEm)?.getTime() || 0;
+                const dataSegunda = dataDaPublicacaoSocial(segunda.publicadoEm || segunda.criadoEm)?.getTime() || 0;
+                return dataSegunda - dataPrimeira;
+            })
+            .slice(0, 3);
+
+        lista.replaceChildren();
+        if (!publicacoes.length) {
+            const estado = document.createElement("p");
+            estado.className = "estado-previa-comunidade";
+            estado.textContent = "A Comunidade está começando. Seja uma das primeiras pessoas a compartilhar uma frase inspiradora.";
+            lista.appendChild(estado);
+            return;
+        }
+
+        publicacoes.forEach(publicacao => lista.appendChild(criarCartaoPreviaComunidade(publicacao)));
+    } catch (erro) {
+        console.error("Não foi possível carregar a prévia da Comunidade:", erro);
+        lista.replaceChildren();
+        const estado = document.createElement("p");
+        estado.className = "estado-previa-comunidade";
+        estado.textContent = "As publicações recentes não puderam ser carregadas agora.";
+        lista.appendChild(estado);
+    }
+}
+
+// ======================
 // CARREGAR DADOS
 // ======================
+async function carregarProximoLoteDeFrases() {
+    if (!haMaisFrases || carregandoMaisFrases) return 0;
+
+    carregandoMaisFrases = true;
+    try {
+        const restricoes = [orderBy(documentId()), limit(TAMANHO_LOTE_FRASES)];
+        if (ultimoDocumentoFrases) restricoes.push(startAfter(ultimoDocumentoFrases));
+
+        const consultaFrases = await getDocs(query(collection(db, "frases"), ...restricoes));
+        consultaFrases.forEach(docSnap => {
+            frases.push({ id: docSnap.id, ...docSnap.data() });
+        });
+
+        if (consultaFrases.docs.length) {
+            ultimoDocumentoFrases = consultaFrases.docs[consultaFrases.docs.length - 1];
+        }
+        haMaisFrases = consultaFrases.size === TAMANHO_LOTE_FRASES;
+        return consultaFrases.size;
+    } finally {
+        carregandoMaisFrases = false;
+    }
+}
+
 async function carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa) {
     mostrarCarregando(lista);
     frases = [];
     categorias = {};
+    frasesCarregadas = false;
+    ultimoDocumentoFrases = null;
+    haMaisFrases = true;
 
     try {
         contarVisitaGlobal();
 
-        // Buscar Categorias
+        // As categorias são poucas e são carregadas uma única vez.
         const consultaCategorias = await getDocs(collection(db, "categorias"));
         consultaCategorias.forEach(docSnap => {
             const dados = docSnap.data();
             const nomeLimpo = sanitizarTexto(dados.nome || "");
-            if (nomeLimpo) {
-                categorias[nomeLimpo] = dados.imagem;
-            }
+            if (nomeLimpo) categorias[nomeLimpo] = dados.imagem;
         });
 
-        // Buscar Frases
-        const consultaFrases = await getDocs(collection(db, "frases"));
-        consultaFrases.forEach(docSnap => {
-            frases.push({
-                id: docSnap.id,
-                ...docSnap.data()
-            });
-        });
-
+        // Carrega somente o primeiro lote. Os demais são buscados por ação do visitante.
+        await carregarProximoLoteDeFrases();
     } catch (e) {
         console.error("Erro no Firebase:", e);
         mostrarErro(lista, "Erro ao conectar ao banco de dados. Verifique a conexão.");
@@ -215,9 +354,11 @@ async function carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa
         return;
     }
 
+    frasesCarregadas = true;
     fraseDoDia(fraseDiaElemento);
     mostrarCategorias(listaCategorias, pesquisa, lista);
-    mostrarFrases(lista, "");
+    // Preserva uma busca já digitada enquanto as frases estavam sendo carregadas.
+    mostrarFrases(lista, filtrosAtuais());
 }
 
 // ======================
@@ -231,8 +372,86 @@ function filtrosAtuais() {
     };
 }
 
+function rolarParaResultados() {
+    document.getElementById("todas-as-frases")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function atualizarStatusPesquisa(quantidade, filtros) {
+    const status = document.getElementById("statusPesquisa");
+    if (!status) return;
+
+    const texto = String(filtros.texto || "").trim();
+    const autor = String(filtros.autor || "").trim();
+    const categoria = String(filtros.categoria || "").trim();
+    const buscaAtiva = Boolean(texto || autor || categoria);
+
+    if (!buscaAtiva) {
+        status.hidden = true;
+        status.replaceChildren();
+        return;
+    }
+
+    status.hidden = false;
+    status.replaceChildren();
+
+    const mensagem = document.createElement("span");
+    const descricao = autor ? ` por autor “${autor}”` : (texto ? ` para “${texto}”` : ` em “${categoria}”`);
+    const sufixoCarregamento = haMaisFrases ? ` entre as ${frases.length} carregadas até agora` : "";
+    mensagem.textContent = quantidade === 1
+        ? `1 frase encontrada${descricao}${sufixoCarregamento}.`
+        : `${quantidade} frases encontradas${descricao}${sufixoCarregamento}.`;
+
+    const verResultados = document.createElement("button");
+    verResultados.type = "button";
+    verResultados.className = "btn-ver-resultados";
+    verResultados.textContent = "Ver resultados ↓";
+    verResultados.addEventListener("click", rolarParaResultados);
+
+    status.append(mensagem, verResultados);
+}
+
+function mostrarStatusCarregandoBusca() {
+    const status = document.getElementById("statusPesquisa");
+    if (!status) return;
+    status.hidden = false;
+    status.textContent = "Carregando frases… sua busca será aplicada automaticamente.";
+}
+
 function atualizarListaComFiltros() {
-    mostrarFrases(document.getElementById("listaFrases"), filtrosAtuais());
+    const filtros = filtrosAtuais();
+    if (!frasesCarregadas) {
+        mostrarStatusCarregandoBusca();
+        return;
+    }
+    mostrarFrases(document.getElementById("listaFrases"), filtros);
+}
+
+function adicionarBotaoCarregarMais(lista) {
+    if (!lista || !haMaisFrases) return;
+
+    const areaMais = document.createElement("div");
+    areaMais.style.cssText = "text-align:center; padding:18px 0 8px;";
+    const botaoMais = document.createElement("button");
+    botaoMais.type = "button";
+    botaoMais.className = "btn-ver-resultados";
+    botaoMais.textContent = "Carregar mais frases";
+    botaoMais.addEventListener("click", async () => {
+        const textoOriginal = botaoMais.textContent;
+        botaoMais.disabled = true;
+        botaoMais.textContent = "Carregando...";
+        try {
+            const quantidade = await carregarProximoLoteDeFrases();
+            if (!quantidade) haMaisFrases = false;
+            mostrarFrases(lista, filtrosAtuais());
+        } catch (erro) {
+            console.error("Erro ao carregar mais frases:", erro);
+            botaoMais.disabled = false;
+            botaoMais.textContent = textoOriginal;
+            alert("Não foi possível carregar mais frases agora. Tente novamente.");
+        }
+    });
+    areaMais.appendChild(botaoMais);
+    lista.appendChild(areaMais);
 }
 
 function mostrarFrases(lista, filtro = "") {
@@ -244,6 +463,7 @@ function mostrarFrases(lista, filtro = "") {
         ? { texto: filtro, autor: "", categoria: "" }
         : (filtro || {});
     const textoLimpo = normalizarParaBusca(String(filtros.texto || "").trim());
+    const termosBusca = termosRelevantesDaBusca(filtros.texto || "");
     const autorLimpo = normalizarParaBusca(String(filtros.autor || "").trim());
     const categoriaLimpa = normalizarCategoria(filtros.categoria || "");
 
@@ -251,27 +471,36 @@ function mostrarFrases(lista, filtro = "") {
         const textoFrase = normalizarParaBusca(f.texto || "");
         const autorFrase = normalizarParaBusca(f.autor || "Messias");
         const categoriaFrase = normalizarCategoria(f.categoria || "");
+        const conteudoPesquisavel = `${textoFrase} ${categoriaFrase} ${autorFrase}`;
 
+        // Primeiro preserva a busca exata. Se o visitante escrever uma frase
+        // natural, cada termo relevante também é considerado; assim “frases de
+        // amor” encontra a categoria Amor, e “mensagens de fé” encontra Fé.
         const correspondeTexto = !textoLimpo
-            || textoFrase.includes(textoLimpo)
-            || categoriaFrase.includes(textoLimpo)
-            || autorFrase.includes(textoLimpo);
+            || conteudoPesquisavel.includes(textoLimpo)
+            || termosBusca.length === 0
+            || termosBusca.every(termo => conteudoPesquisavel.includes(termo));
         const correspondeAutor = !autorLimpo || autorFrase.includes(autorLimpo);
         const correspondeCategoria = !categoriaLimpa || categoriaFrase === categoriaLimpa;
 
         return correspondeTexto && correspondeAutor && correspondeCategoria;
     });
 
+    atualizarStatusPesquisa(resultado.length, filtros);
+
     if (resultado.length === 0) {
         lista.innerHTML = `
             <div class="semResultado" style="text-align:center; padding: 20px;">
-                😔 Nenhuma frase encontrada para a busca realizada.
+                😔 Nenhuma frase encontrada entre as frases carregadas. Você pode buscar mais no acervo.
             </div>
         `;
+        adicionarBotaoCarregarMais(lista);
         return;
     }
 
     resultado.forEach(f => criarCardFrase(f, lista));
+
+    adicionarBotaoCarregarMais(lista);
 }
 
 // ======================
@@ -290,13 +519,13 @@ function criarCardFrase(f, lista) {
     const card = document.createElement("div");
     card.className = "cardFrase";
     card.innerHTML = `
+        <div class="conteudoFrase">
+            <p class="textoFrase">"${f.texto}"</p>
+            <p class="autorFrase">— ${f.autor || "Messias"}</p>
+            <div class="marca">📖 Frases de Messias</div>
+        </div>
         <div class="imagemFrase">
-            <img src="${imagem}" alt="Frase de Messias" loading="lazy">
-            <div class="overlay">
-                <p class="textoFrase">"${f.texto}"</p>
-                <p class="autorFrase">— ${f.autor || "Messias"}</p>
-                <div class="marca">📖 Frases de Messias</div>
-            </div>
+            <img src="${imagem}" alt="Imagem da frase de Messias" loading="lazy">
         </div>
         <div class="botoes">
             <button onclick="curtir('${f.id}')">❤️ Curtir</button>
@@ -319,7 +548,6 @@ function criarCardFrase(f, lista) {
     `;
 
     lista.appendChild(card);
-    visualizar(f.id);
 }
 
 // ======================
@@ -346,7 +574,9 @@ function mostrarCategorias(listaCategorias, pesquisa, lista) {
 }
 
 function configurarBotoesCategoriasFixos(pesquisa, lista) {
-    const botoes = document.querySelectorAll(".grid-botoes .btn-categoria");
+    // Os atalhos da página inicial agora são links para páginas públicas de categoria.
+    // Mantemos o filtro local apenas para botões reais que venham a existir futuramente.
+    const botoes = document.querySelectorAll(".grid-botoes button.btn-categoria");
     botoes.forEach(btn => {
         btn.onclick = () => {
             // O texto visível preserva o nome usado no Firestore; o atributo
@@ -1203,18 +1433,34 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    const atualizarBuscaComEspera = (limparCategoria = false) => {
+        if (limparCategoria) categoriaSelecionada = "";
+        window.clearTimeout(temporizadorBusca);
+        temporizadorBusca = window.setTimeout(atualizarListaComFiltros, 180);
+    };
+
+    const tratarEnterDaBusca = (evento) => {
+        if (evento.key !== "Enter") return;
+        evento.preventDefault();
+        window.clearTimeout(temporizadorBusca);
+        atualizarListaComFiltros();
+        rolarParaResultados();
+    };
+
     if (pesquisa) {
-        pesquisa.addEventListener("input", () => {
-            categoriaSelecionada = "";
-            atualizarListaComFiltros();
-        });
+        pesquisa.addEventListener("input", () => atualizarBuscaComEspera(true));
+        pesquisa.addEventListener("keydown", tratarEnterDaBusca);
+        pesquisa.addEventListener("search", () => atualizarBuscaComEspera(true));
     }
 
     if (pesquisaAutor) {
-        pesquisaAutor.addEventListener("input", atualizarListaComFiltros);
+        pesquisaAutor.addEventListener("input", () => atualizarBuscaComEspera());
+        pesquisaAutor.addEventListener("keydown", tratarEnterDaBusca);
+        pesquisaAutor.addEventListener("search", () => atualizarBuscaComEspera());
     }
 
     carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa);
+    carregarPreviaComunidade();
     configurarBotoesCategoriasFixos(pesquisa, lista);
 
     // Modo escuro compartilhado por todas as páginas públicas.
