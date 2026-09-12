@@ -1,1 +1,1 @@
-import { db } from "./firebase.js";
+TEMP
