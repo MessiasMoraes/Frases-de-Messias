@@ -573,94 +573,677 @@ function alternarFavorito(id, botao) {
     localStorage.setItem("favoritos", JSON.stringify(favoritos));
 }
 
-// ======================
-// GERAÇÃO DE IMAGEM (CANVAS)
-// ======================
-async function baixarCardComoImagem(fraseObj, urlImagem, botao) {
-    const textoOriginal = botao.innerHTML;
-    botao.disabled = true;
-    botao.innerHTML = "⏳ Gerando...";
+// =====================================================
+// GERAR IMAGEM PROFISSIONAL — FRASES DE MESSIAS
+// Formato 1080 x 1350 — ideal para Instagram
+// =====================================================
+async function baixarCardComoImagem(f, imagemUrl, botao) {
+
+    if (!f || !f.texto) {
+        alert("Não foi possível criar a imagem desta frase.");
+        return;
+    }
+
+    const textoBotao = botao?.textContent || "🖼️ Baixar";
 
     try {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-        const largura = 1080;
-        const altura = 1080;
-        canvas.width = largura;
-        canvas.height = altura;
 
-        const urlProxy = urlParaProxyImagem(urlImagem);
-        try {
-            const { imagem } = await carregarImagemParaCanvas(urlProxy || urlImagem);
-            ctx.drawImage(imagem, 0, 0, largura, altura);
-        } catch (_) {
-            const grad = ctx.createLinearGradient(0, 0, 0, altura);
-            grad.addColorStop(0, "#1e3a5f");
-            grad.addColorStop(1, "#0f172a");
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, largura, altura);
+        if (botao) {
+            botao.disabled = true;
+            botao.textContent = "⏳ Criando...";
         }
 
-        ctx.fillStyle = "rgba(0, 0, 0, 0.55)";
-        ctx.fillRect(0, 0, largura, altura);
+        // ---------------------------------------------
+        // CARREGAR IMAGEM
+        // ---------------------------------------------
+        const urlImagem = urlParaProxyImagem(imagemUrl) || imagemUrl;
 
-        const texto = `"${fraseObj.texto}"`;
-        const autor = `— ${fraseObj.autor || "Messias"}`;
-        ctx.fillStyle = "#ffffff";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
+        const { imagem, liberar } =
+            await carregarImagemParaCanvas(urlImagem);
 
-        const tamanhoFonte = 48;
-        ctx.font = `bold ${tamanhoFonte}px sans-serif`;
-        const maxLargura = largura * 0.82;
-        const palavras = texto.split(" ");
-        let linhas = [];
-        let linhaAtual = "";
+        try {
 
-        palavras.forEach(p => {
-            const teste = linhaAtual + p + " ";
-            if (ctx.measureText(teste).width > maxLargura && linhaAtual !== "") {
-                linhas.push(linhaAtual.trim());
-                linhaAtual = p + " ";
+            // ---------------------------------------------
+            // CANVAS 1080 x 1350
+            // ---------------------------------------------
+            const canvas = document.createElement("canvas");
+
+            const largura = 1080;
+            const altura = 1350;
+
+            canvas.width = largura;
+            canvas.height = altura;
+
+            const ctx = canvas.getContext("2d");
+
+            // ---------------------------------------------
+            // FUNDO DA FOTO
+            // ---------------------------------------------
+            const proporcaoImagem =
+                imagem.naturalWidth / imagem.naturalHeight;
+
+            const proporcaoCanvas =
+                largura / altura;
+
+            let sx = 0;
+            let sy = 0;
+            let sw = imagem.naturalWidth;
+            let sh = imagem.naturalHeight;
+
+            if (proporcaoImagem > proporcaoCanvas) {
+
+                sw = imagem.naturalHeight * proporcaoCanvas;
+
+                sx =
+                    (imagem.naturalWidth - sw) / 2;
+
             } else {
-                linhaAtual = teste;
+
+                sh = imagem.naturalWidth / proporcaoCanvas;
+
+                sy =
+                    (imagem.naturalHeight - sh) / 2;
             }
-        });
-        if (linhaAtual) linhas.push(linhaAtual.trim());
 
-        const alturaLinha = tamanhoFonte * 1.3;
-        const alturaTotal = linhas.length * alturaLinha;
-        let yInicial = (altura - alturaTotal) / 2 - 20;
+            ctx.drawImage(
+                imagem,
+                sx,
+                sy,
+                sw,
+                sh,
+                0,
+                0,
+                largura,
+                altura
+            );
 
-        linhas.forEach(linha => {
-            ctx.fillText(linha, largura / 2, yInicial);
-            yInicial += alturaLinha;
-        });
+            // ---------------------------------------------
+            // DEGRADÊ PROFISSIONAL
+            // ---------------------------------------------
+            const degradê =
+                ctx.createLinearGradient(
+                    0,
+                    0,
+                    0,
+                    altura
+                );
 
-        ctx.font = "italic 32px sans-serif";
-        ctx.fillStyle = "#cbd5e1";
-        ctx.fillText(autor, largura / 2, yInicial + 30);
+            degradê.addColorStop(
+                0,
+                "rgba(4,18,45,0.45)"
+            );
 
-        ctx.font = "600 22px sans-serif";
-        ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-        ctx.fillText("Frases de Messias", largura / 2, altura - 50);
+            degradê.addColorStop(
+                0.35,
+                "rgba(5,15,35,0.30)"
+            );
 
-        const dataUrl = canvas.toDataURL("image/png");
-        const a = document.createElement("a");
-        a.href = dataUrl;
-        a.download = `frase-${fraseObj.id || "messias"}.png`;
-        a.click();
+            degradê.addColorStop(
+                0.60,
+                "rgba(0,0,0,0.48)"
+            );
 
-        botao.innerHTML = "✅ Salvo!";
+            degradê.addColorStop(
+                1,
+                "rgba(2,8,20,0.88)"
+            );
+
+            ctx.fillStyle = degradê;
+
+            ctx.fillRect(
+                0,
+                0,
+                largura,
+                altura
+            );
+
+            // ---------------------------------------------
+            // EFEITO DE LUZ DOURADA
+            // ---------------------------------------------
+            const luz =
+                ctx.createRadialGradient(
+                    largura * 0.5,
+                    altura * 0.42,
+                    20,
+                    largura * 0.5,
+                    altura * 0.42,
+                    600
+                );
+
+            luz.addColorStop(
+                0,
+                "rgba(255,215,100,0.14)"
+            );
+
+            luz.addColorStop(
+                0.5,
+                "rgba(255,190,60,0.05)"
+            );
+
+            luz.addColorStop(
+                1,
+                "rgba(255,190,60,0)"
+            );
+
+            ctx.fillStyle = luz;
+
+            ctx.fillRect(
+                0,
+                0,
+                largura,
+                altura
+            );
+
+            // ---------------------------------------------
+            // PARTÍCULAS / ESTRELAS
+            // ---------------------------------------------
+            desenharParticulasFrase(ctx, largura, altura);
+
+            // ---------------------------------------------
+            // MOLDURA EXTERNA
+            // ---------------------------------------------
+            ctx.strokeStyle =
+                "rgba(255,215,100,0.75)";
+
+            ctx.lineWidth = 5;
+
+            ctx.strokeRect(
+                30,
+                30,
+                largura - 60,
+                altura - 60
+            );
+
+            ctx.strokeStyle =
+                "rgba(255,255,255,0.20)";
+
+            ctx.lineWidth = 2;
+
+            ctx.strokeRect(
+                48,
+                48,
+                largura - 96,
+                altura - 96
+            );
+
+            // ---------------------------------------------
+            // CABEÇALHO
+            // ---------------------------------------------
+            ctx.textAlign = "center";
+
+            ctx.shadowColor =
+                "rgba(0,0,0,0.7)";
+
+            ctx.shadowBlur = 12;
+
+            ctx.font =
+                "bold 42px Arial";
+
+            ctx.fillStyle =
+                "#ffffff";
+
+            ctx.fillText(
+                "FRASES DE MESSIAS",
+                largura / 2,
+                105
+            );
+
+            ctx.shadowBlur = 0;
+
+            // ---------------------------------------------
+            // LINHA DOURADA DECORATIVA
+            // ---------------------------------------------
+            ctx.fillStyle =
+                "#f5d36b";
+
+            ctx.fillRect(
+                390,
+                130,
+                300,
+                4
+            );
+
+            // Pequenos detalhes
+            ctx.beginPath();
+
+            ctx.arc(
+                375,
+                132,
+                5,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.arc(
+                705,
+                132,
+                5,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.fill();
+
+            // ---------------------------------------------
+            // CATEGORIA
+            // ---------------------------------------------
+            const categoria =
+                sanitizarTexto(
+                    f.categoria || ""
+                );
+
+            let yCategoria = 210;
+
+            if (categoria) {
+
+                ctx.font =
+                    "bold 28px Arial";
+
+                const larguraTexto =
+                    ctx.measureText(categoria).width;
+
+                const larguraBadge =
+                    larguraTexto + 70;
+
+                const alturaBadge = 58;
+
+                const xBadge =
+                    (largura - larguraBadge) / 2;
+
+                // fundo do badge
+                ctx.fillStyle =
+                    "rgba(37,99,235,0.92)";
+
+                desenharRetanguloArredondado(
+                    ctx,
+                    xBadge,
+                    yCategoria,
+                    larguraBadge,
+                    alturaBadge,
+                    29
+                );
+
+                ctx.fill();
+
+                // borda dourada
+                ctx.strokeStyle =
+                    "rgba(255,215,100,0.9)";
+
+                ctx.lineWidth = 2;
+
+                desenharRetanguloArredondado(
+                    ctx,
+                    xBadge,
+                    yCategoria,
+                    larguraBadge,
+                    alturaBadge,
+                    29
+                );
+
+                ctx.stroke();
+
+                ctx.fillStyle =
+                    "#ffffff";
+
+                ctx.fillText(
+                    categoria,
+                    largura / 2,
+                    yCategoria + 39
+                );
+            }
+
+            // ---------------------------------------------
+            // FRASE
+            // ---------------------------------------------
+            const frase =
+                String(f.texto || "")
+                    .trim();
+
+            const larguraMaxima =
+                largura - 180;
+
+            ctx.font =
+                "bold 58px Arial";
+
+            const linhas =
+                quebrarTextoCanvas(
+                    ctx,
+                    `"${frase}"`,
+                    larguraMaxima
+                );
+
+            const alturaLinha = 78;
+
+            // Limita tamanho para frases muito grandes
+            let tamanhoFonte = 58;
+
+            if (linhas.length > 6) {
+                tamanhoFonte = 48;
+
+                ctx.font =
+                    `bold ${tamanhoFonte}px Arial`;
+            }
+
+            const novasLinhas =
+                quebrarTextoCanvas(
+                    ctx,
+                    `"${frase}"`,
+                    larguraMaxima
+                );
+
+            const alturaLinhaFinal =
+                tamanhoFonte === 48
+                    ? 65
+                    : 78;
+
+            let yFrase =
+                650 -
+                ((novasLinhas.length - 1) *
+                    alturaLinhaFinal) / 2;
+
+            // ---------------------------------------------
+            // ASPAS DECORATIVAS
+            // ---------------------------------------------
+            ctx.font =
+                "bold 150px Georgia";
+
+            ctx.fillStyle =
+                "rgba(245,211,107,0.35)";
+
+            ctx.fillText(
+                "“",
+                100,
+                yFrase - 30
+            );
+
+            // ---------------------------------------------
+            // TEXTO DA FRASE
+            // ---------------------------------------------
+            ctx.textAlign = "center";
+
+            ctx.font =
+                `bold ${tamanhoFonte}px Arial`;
+
+            ctx.fillStyle =
+                "#ffffff";
+
+            ctx.shadowColor =
+                "rgba(0,0,0,0.9)";
+
+            ctx.shadowBlur = 14;
+
+            ctx.shadowOffsetX = 2;
+            ctx.shadowOffsetY = 3;
+
+            novasLinhas.forEach(linha => {
+
+                ctx.fillText(
+                    linha,
+                    largura / 2,
+                    yFrase
+                );
+
+                yFrase +=
+                    alturaLinhaFinal;
+            });
+
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+
+            // ---------------------------------------------
+            // AUTOR
+            // ---------------------------------------------
+            ctx.font =
+                "italic 36px Arial";
+
+            ctx.fillStyle =
+                "#f5d36b";
+
+            ctx.fillText(
+                `— ${f.autor || "Messias"}`,
+                largura / 2,
+                yFrase + 55
+            );
+
+            // ---------------------------------------------
+            // LINHA DECORATIVA INFERIOR
+            // ---------------------------------------------
+            const yLinha =
+                yFrase + 105;
+
+            ctx.fillStyle =
+                "rgba(245,211,107,0.9)";
+
+            ctx.fillRect(
+                430,
+                yLinha,
+                220,
+                3
+            );
+
+            // ---------------------------------------------
+            // MARCA DO SITE
+            // ---------------------------------------------
+            ctx.font =
+                "bold 28px Arial";
+
+            ctx.fillStyle =
+                "rgba(255,255,255,0.95)";
+
+            ctx.fillText(
+                "frasesdemessias.com.br",
+                largura / 2,
+                altura - 85
+            );
+
+            // ---------------------------------------------
+            // PEQUENO TEXTO
+            // ---------------------------------------------
+            ctx.font =
+                "22px Arial";
+
+            ctx.fillStyle =
+                "rgba(255,255,255,0.65)";
+
+            ctx.fillText(
+                "Inspiração para todos os momentos",
+                largura / 2,
+                altura - 50
+            );
+
+            // ---------------------------------------------
+            // GERAR PNG
+            // ---------------------------------------------
+            const blob =
+                await new Promise((resolve, reject) => {
+
+                    canvas.toBlob(
+                        resultado => {
+
+                            if (resultado) {
+                                resolve(resultado);
+                            } else {
+                                reject(
+                                    new Error(
+                                        "Não foi possível gerar a imagem."
+                                    )
+                                );
+                            }
+
+                        },
+                        "image/png",
+                        1
+                    );
+                });
+
+            // ---------------------------------------------
+            // DOWNLOAD
+            // ---------------------------------------------
+            const url =
+                URL.createObjectURL(blob);
+
+            const link =
+                document.createElement("a");
+
+            link.href = url;
+
+            link.download =
+                `frases-de-messias-${f.id || Date.now()}.png`;
+
+            document.body.appendChild(link);
+
+            link.click();
+
+            link.remove();
+
+            setTimeout(() => {
+                URL.revokeObjectURL(url);
+            }, 2000);
+
+        } finally {
+
+            liberar();
+        }
+
     } catch (erro) {
-        console.error("Erro ao gerar imagem do card:", erro);
-        alert("Não foi possível gerar a imagem para download.");
+
+        console.error(
+            "Erro ao criar imagem profissional:",
+            erro
+        );
+
+        alert(
+            "Não foi possível criar a imagem agora. Tente novamente."
+        );
+
     } finally {
-        setTimeout(() => {
+
+        if (botao) {
+
             botao.disabled = false;
-            botao.innerHTML = textoOriginal;
-        }, 2000);
+
+            botao.textContent =
+                textoBotao;
+        }
     }
+}
+
+
+// =====================================================
+// DESENHAR PARTÍCULAS DE LUZ
+// =====================================================
+function desenharParticulasFrase(ctx, largura, altura) {
+
+    const quantidade = 45;
+
+    for (let i = 0; i < quantidade; i++) {
+
+        const x =
+            Math.random() * largura;
+
+        const y =
+            Math.random() * altura;
+
+        const raio =
+            Math.random() * 2.5 + 0.5;
+
+        const brilho =
+            Math.random() * 0.6 + 0.2;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,
+            y,
+            raio,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fillStyle =
+            `rgba(255,215,120,${brilho})`;
+
+        ctx.shadowColor =
+            "rgba(255,215,100,0.8)";
+
+        ctx.shadowBlur = 8;
+
+        ctx.fill();
+
+        ctx.shadowBlur = 0;
+    }
+}
+
+
+// =====================================================
+// RETÂNGULO ARREDONDADO COMPATÍVEL
+// =====================================================
+function desenharRetanguloArredondado(
+    ctx,
+    x,
+    y,
+    largura,
+    altura,
+    raio
+) {
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x + raio,
+        y
+    );
+
+    ctx.lineTo(
+        x + largura - raio,
+        y
+    );
+
+    ctx.quadraticCurveTo(
+        x + largura,
+        y,
+        x + largura,
+        y + raio
+    );
+
+    ctx.lineTo(
+        x + largura,
+        y + altura - raio
+    );
+
+    ctx.quadraticCurveTo(
+        x + largura,
+        y + altura,
+        x + largura - raio,
+        y + altura
+    );
+
+    ctx.lineTo(
+        x + raio,
+        y + altura
+    );
+
+    ctx.quadraticCurveTo(
+        x,
+        y + altura,
+        x,
+        y + altura - raio
+    );
+
+    ctx.lineTo(
+        x,
+        y + raio
+    );
+
+    ctx.quadraticCurveTo(
+        x,
+        y,
+        x + raio,
+        y
+    );
+
+    ctx.closePath();
 }
 
 // ======================
