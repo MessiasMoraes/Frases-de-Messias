@@ -1,6 +1,6 @@
 /* =========================================================
    FRASES DE MESSIAS
-   STYLE.CSS — VERSÃO DEFINITIVA
+   STYLE.CSS — VERSÃO DEFINITIVA COMPLETA
    ========================================================= */
 
 /* =========================================================
@@ -327,6 +327,24 @@ nav a:hover {
     color: #697386;
 }
 
+.btn-ver-resultados {
+    margin-left: 10px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 8px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-ver-resultados:hover {
+    background: #2563eb;
+    color: #ffffff;
+}
+
 /* =========================================================
    9. CATEGORIAS
    ========================================================= */
@@ -374,7 +392,8 @@ nav a:hover {
 
 .categoria.ativo,
 .categoriaBtn.ativo,
-#listaCategorias button.ativo {
+#listaCategorias button.ativo,
+#listaCategorias button.categoriaAtiva {
     border-color: #2563eb;
     background: #2563eb;
     color: #ffffff;
@@ -835,7 +854,8 @@ nav a:hover {
     margin: 25px 0 50px;
 }
 
-.publicacaoComunidade {
+.cartao-previa-comunidade {
+    display: block;
     overflow: hidden;
 
     border-radius: 18px;
@@ -846,29 +866,69 @@ nav a:hover {
 
     box-shadow:
         0 8px 22px rgba(15, 23, 42, 0.06);
+
+    transition: all 0.3s ease;
 }
 
-.publicacaoComunidade img {
-    width: 100%;
-
-    aspect-ratio: 1 / 1;
-
-    object-fit: cover;
+.cartao-previa-comunidade:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+    border-color: rgba(37, 99, 235, 0.2);
 }
 
-.publicacaoComunidade .conteudo {
-    padding: 16px;
+.meta-previa-comunidade {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 16px 8px;
 }
 
-.publicacaoComunidade p {
+.meta-previa-comunidade strong {
+    font-size: 0.95rem;
+    color: #111827;
+}
+
+.meta-previa-comunidade span {
+    font-size: 0.8rem;
+    color: #6b7280;
+    background: #f3f4f6;
+    padding: 3px 10px;
+    border-radius: 999px;
+}
+
+.cartao-previa-comunidade blockquote {
+    padding: 0 16px 12px;
+    font-size: 0.95rem;
     color: #374151;
+    line-height: 1.5;
+    border: none;
+    margin: 0;
+}
+
+.link-cartao-previa {
+    display: block;
+    padding: 12px 16px 16px;
+    font-size: 0.85rem;
+    color: #2563eb;
+    font-weight: 600;
+    border-top: 1px solid #f3f4f6;
+}
+
+.estado-previa-comunidade {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px 20px;
+    color: #6b7280;
+    font-style: italic;
 }
 
 /* =========================================================
    25. FAVORITOS
    ========================================================= */
 
-.favoritoAtivo {
+.favoritoAtivo,
+.btnFavorito:active,
+.botoes button:nth-child(1):has(:scope .favoritoAtivo) {
     color: #dc2626 !important;
     border-color: #fecaca !important;
     background: #fff1f2 !important;
@@ -1209,114 +1269,166 @@ textarea {
 }
 
 @keyframes girar {
-    from {
-        transform: rotate(0deg);
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* =========================================================
+   34. RESPONSIVIDADE
+   ========================================================= */
+
+@media (max-width: 768px) {
+    header .container {
+        flex-wrap: wrap;
+        gap: 12px;
+        padding-top: 12px;
+        padding-bottom: 12px;
     }
 
-    to {
-        transform: rotate(360deg);
+    nav {
+        order: 3;
+        width: 100%;
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 4px;
+    }
+
+    .hero {
+        padding: 40px 16px;
+    }
+
+    .fraseDia {
+        padding: 24px 20px;
+        margin: 20px 16px;
+    }
+
+    #listaFrases {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .estatisticas {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .botoes {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .estatisticas {
+        grid-template-columns: 1fr;
+    }
+
+    .botoes {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .overlay {
+        padding: 16px;
+    }
+
+    .textoFrase {
+        font-size: 1rem;
     }
 }
 
 /* =========================================================
-   34. DARK MODE (SUPORTE TEMA ESCURO)
+   35. TEMA ESCURO
    ========================================================= */
 
-body.dark,
-[data-theme="dark"] body {
+body.escuro {
     background: #0f172a;
-    color: #f8fafc;
+    color: #e2e8f0;
 }
 
-body.dark header,
-[data-theme="dark"] header {
+body.escuro header {
     background: rgba(15, 23, 42, 0.94);
-    border-color: #1e293b;
+    border-bottom-color: #1e293b;
 }
 
-body.dark nav a,
-[data-theme="dark"] nav a {
-    color: #94a3b8;
-}
-
-body.dark nav a:hover,
-[data-theme="dark"] nav a:hover {
-    color: #60a5fa;
-    background: #1e293b;
-}
-
-body.dark .hero,
-[data-theme="dark"] .hero {
+body.escuro .hero {
     background:
-        radial-gradient(
-            circle at 20% 20%,
-            rgba(37, 99, 235, 0.15),
-            transparent 35%
-        ),
-        radial-gradient(
-            circle at 80% 80%,
-            rgba(124, 58, 237, 0.13),
-            transparent 35%
-        ),
-        #0f172a;
-    border-color: #1e293b;
+        radial-gradient(circle at 20% 20%, rgba(37, 99, 235, 0.15), transparent 35%),
+        radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.13), transparent 35%),
+        #111827;
+    border-bottom-color: #1e293b;
 }
 
-body.dark .hero h2,
-[data-theme="dark"] .hero h2 {
-    color: #f8fafc;
-}
+body.escuro .hero h2 { color: #f8fafc; }
+body.escuro .hero p { color: #94a3b8; }
 
-body.dark .cardFrase,
-[data-theme="dark"] .cardFrase,
-body.dark .estatistica,
-[data-theme="dark"] .estatistica,
-body.dark .modalConteudo,
-[data-theme="dark"] .modalConteudo {
+body.escuro .cardFrase,
+body.escuro .estatistica,
+body.escuro .modalConteudo {
     background: #1e293b;
     border-color: #334155;
-    color: #f8fafc;
 }
 
-body.dark .botoes,
-[data-theme="dark"] .botoes {
+body.escuro .botoes,
+body.escuro .imagemFrase {
     background: #1e293b;
 }
 
-body.dark .botoes button,
-[data-theme="dark"] .botoes button {
-    background: #0f172a;
-    border-color: #334155;
+body.escuro .botoes button {
+    background: #334155;
+    border-color: #475569;
+    color: #e2e8f0;
+}
+
+body.escuro input,
+body.escuro select,
+body.escuro textarea,
+body.escuro #pesquisa,
+body.escuro #pesquisaAutor,
+body.escuro #temaBtn {
+    background: #1e293b;
+    border-color: #475569;
+    color: #e2e8f0;
+}
+
+body.escuro .categoria,
+body.escuro #listaCategorias button {
+    background: #1e293b;
+    border-color: #475569;
     color: #cbd5e1;
 }
 
-body.dark .botoes button:hover,
-[data-theme="dark"] .botoes button:hover {
-    background: #334155;
-    color: #60a5fa;
-}
+body.escuro .secaoTitulo h2 { color: #f1f5f9; }
+body.escuro .secaoTitulo p { color: #94a3b8; }
 
-body.dark input,
-body.dark select,
-body.dark textarea,
-[data-theme="dark"] input,
-[data-theme="dark"] select,
-[data-theme="dark"] textarea {
+body.escuro .semResultado,
+body.escuro .estadoVazio,
+body.escuro .carregando {
     background: #1e293b;
     border-color: #334155;
-    color: #f8fafc;
+    color: #94a3b8;
 }
 
-/* Responsividade Básica */
-
-@media (max-width: 768px) {
-    header .container {
-        flex-direction: column;
-        justify-content: center;
-        padding: 12px 0;
-    }
-
-    .estatisticas {
-        grid-template-columns: 1fr;
-    }
+body.escuro .btn-ver-resultados {
+    background: #1e3a8a;
+    color: #bfdbfe;
 }
+
+body.escuro .btn-ver-resultados:hover {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+body.escuro .meta-previa-comunidade span {
+    background: #334155;
+    color: #cbd5e1;
+}
+
+body.escuro .link-cartao-previa {
+    border-top-color: #334155;
+}
+
+body.escuro .estado-previa-comunidade {
+    color: #94a3b8;
+}
+
+/* =========================================================
+   FIM — STYLE.CSS
+   ========================================================= */
