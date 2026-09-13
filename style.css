@@ -2396,3 +2396,236 @@ nav .link-rede-social-nav:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .btn-rede-social, .cartao-previa-comunidade { transition: none; }
 }
+/* =========================================
+   FRASES DE MESSIAS - CARD PROFISSIONAL
+   ========================================= */
+
+.cardFrase.profissional {
+    position: relative;
+    overflow: hidden;
+    border-radius: 22px;
+    background: #111827;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
+    margin-bottom: 28px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.cardFrase.profissional:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.25);
+}
+
+.profissionalImagem {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    min-height: 360px;
+    overflow: hidden;
+    background: #111827;
+}
+
+.profissionalImagem img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.5s ease;
+}
+
+.cardFrase.profissional:hover .profissionalImagem img {
+    transform: scale(1.04);
+}
+
+/* Escurecimento da imagem para garantir leitura */
+.overlayFrase {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 35px;
+    color: #fff;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(0, 0, 0, 0.60) 0%,
+            rgba(0, 0, 0, 0.25) 30%,
+            rgba(0, 0, 0, 0.35) 55%,
+            rgba(0, 0, 0, 0.78) 100%
+        );
+}
+
+/* Marca superior */
+.marcaTopo {
+    position: absolute;
+    top: 22px;
+    left: 24px;
+    right: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+
+    text-shadow: 0 2px 8px rgba(0,0,0,.7);
+}
+
+.marcaIcone {
+    font-size: 18px;
+}
+
+/* Categoria */
+.categoriaImagem {
+    margin-bottom: 18px;
+    padding: 7px 16px;
+
+    border: 1px solid rgba(255,255,255,.45);
+    border-radius: 50px;
+
+    background: rgba(255,255,255,.14);
+    backdrop-filter: blur(8px);
+
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .5px;
+}
+
+/* Frase */
+.textoImagem {
+    max-width: 900px;
+    margin: 0 auto;
+
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(22px, 3vw, 38px);
+    font-weight: 600;
+    line-height: 1.35;
+
+    text-shadow:
+        0 2px 4px rgba(0,0,0,.8),
+        0 5px 18px rgba(0,0,0,.65);
+
+    color: #fff;
+}
+
+/* Autor */
+.autorImagem {
+    margin-top: 18px;
+
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    font-style: italic;
+
+    color: rgba(255,255,255,.95);
+
+    text-shadow: 0 2px 7px rgba(0,0,0,.8);
+}
+
+/* Marca inferior */
+.marcaImagem {
+    position: absolute;
+    bottom: 20px;
+    left: 24px;
+    right: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+
+    opacity: .9;
+}
+
+/* Efeito decorativo */
+.brilhoFrase {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    top: -80px;
+    right: -70px;
+
+    border-radius: 50%;
+    background: rgba(255,255,255,.08);
+    filter: blur(2px);
+}
+
+/* =========================================
+   BOTÕES
+   ========================================= */
+
+.botoesFrase {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 14px;
+    background: #fff;
+}
+
+.botoesFrase button {
+    flex: 1;
+    min-width: 100px;
+    min-height: 44px;
+
+    border: none;
+    border-radius: 12px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+    transition: transform .2s ease, opacity .2s ease;
+}
+
+.botoesFrase button:hover {
+    transform: translateY(-2px);
+    opacity: .92;
+}
+
+/* Celular */
+@media (max-width: 600px) {
+
+    .profissionalImagem {
+        aspect-ratio: 4 / 5;
+        min-height: 430px;
+    }
+
+    .overlayFrase {
+        padding: 25px 20px;
+    }
+
+    .marcaTopo {
+        top: 18px;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+    }
+
+    .textoImagem {
+        font-size: 23px;
+        line-height: 1.35;
+    }
+
+    .autorImagem {
+        font-size: 16px;
+    }
+
+    .marcaImagem {
+        bottom: 16px;
+        font-size: 10px;
+    }
+
+    .botoesFrase button {
+        min-width: calc(50% - 8px);
+    }
+}
