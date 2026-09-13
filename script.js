@@ -59,18 +59,12 @@ function normalizarParaBusca(texto) {
     return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
-// Padroniza nomes de categorias exibidos no botão e no Firestore.
-// Assim, por exemplo, “boa-noite”, “Boa Noite” e “🌙 Boa Noite” apontam
-// para a mesma categoria, inclusive no WebView Android.
 function normalizarCategoria(texto = "") {
     return normalizarParaBusca(
         sanitizarTexto(String(texto).replace(/[-_]+/g, " "))
     ).replace(/\s+/g, " ").trim();
 }
 
-// Permite consultas naturais, como “frases de amor” ou “mensagens de fé”.
-// Palavras de contexto são ignoradas e o tema restante é comparado com
-// o texto, o autor e a categoria de cada frase.
 function termosRelevantesDaBusca(texto = "") {
     const palavrasIgnoradas = new Set([
         "a", "as", "o", "os", "de", "da", "das", "do", "dos", "e", "em", "para", "por", "com", "sobre",
@@ -82,8 +76,6 @@ function termosRelevantesDaBusca(texto = "") {
         .filter(palavra => palavra && !palavrasIgnoradas.has(palavra));
 }
 
-// Converte imagens antigas do GitHub Pages para o mesmo domínio atual.
-// O carregamento normal dos cards continua direto; a exportação usa o proxy abaixo.
 function normalizarUrlImagem(url = "") {
     const valor = String(url || "").trim();
     if (!valor) return "";
@@ -100,8 +92,6 @@ function normalizarUrlImagem(url = "") {
     }
 }
 
-// Proxy público estável na Vercel. Ele é usado também quando o domínio principal
-// ainda estiver servido pelo GitHub Pages, onde a rota /api/image não existe.
 const ORIGEM_PROXY_IMAGEM = "https://frasesdemessiascombr.vercel.app";
 
 function origemApiVideo() {
@@ -186,10 +176,6 @@ async function contarVisitaGlobal() {
         const docRef = doc(db, "estatisticas", "global");
         const jaRegistrouNestaSessao = sessionStorage.getItem(chaveVisita) === "true";
 
-        // A transação lê o valor atual e grava somente o próximo número inteiro.
-        // Assim, ela respeita a regra pública do Firestore, que permite alterar
-        // exclusivamente o campo "visitas" em +1, e evita perder contagens
-        // quando duas pessoas entram no site ao mesmo tempo.
         const totalAtualizado = await runTransaction(db, async (transacao) => {
             const estatistica = await transacao.get(docRef);
             const visitasAtuais = Number(estatistica.data()?.visitas || 0);
@@ -241,7 +227,7 @@ function criarCartaoPreviaComunidade(publicacao) {
 
     const texto = document.createElement("blockquote");
     const conteudo = String(publicacao.texto || "").trim();
-    texto.textContent = `“${conteudo.length > 170 ? conteudo.slice(0, 170).trimEnd() + "…" : conteudo}”`;
+    texto.textContent = `"${conteudo.length > 170 ? conteudo.slice(0, 170).trimEnd() + "…" : conteudo}"`;
 
     const rodape = document.createElement("span");
     rodape.className = "link-cartao-previa";
@@ -260,8 +246,6 @@ async function carregarPreviaComunidade() {
     if (!lista) return;
 
     try {
-        // A filtragem espelha o feed público: somente conteúdo já aprovado é exibido.
-        // A ordenação no navegador mantém a consulta compatível com os índices existentes.
         const resultado = await getDocs(query(
             collection(db, "comunidadePublicacoes"),
             where("status", "==", "publicado"),
@@ -333,7 +317,6 @@ async function carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa
     try {
         contarVisitaGlobal();
 
-        // As categorias são poucas e são carregadas uma única vez.
         const consultaCategorias = await getDocs(collection(db, "categorias"));
         consultaCategorias.forEach(docSnap => {
             const dados = docSnap.data();
@@ -341,7 +324,6 @@ async function carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa
             if (nomeLimpo) categorias[nomeLimpo] = dados.imagem;
         });
 
-        // Carrega somente o primeiro lote. Os demais são buscados por ação do visitante.
         await carregarProximoLoteDeFrases();
     } catch (e) {
         console.error("Erro no Firebase:", e);
@@ -357,8 +339,16 @@ async function carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa
     frasesCarregadas = true;
     fraseDoDia(fraseDiaElemento);
     mostrarCategorias(listaCategorias, pesquisa, lista);
-    // Preserva uma busca já digitada enquanto as frases estavam sendo carregadas.
     mostrarFrases(lista, filtrosAtuais());
+}
+
+// ======================
+// ABRIR EDITOR DE VÍDEO
+// ======================
+function abrirEditorVideo(texto, autor = "Messias") {
+    const frase = encodeURIComponent(texto);
+    const autorCod = encodeURIComponent(autor);
+    window.location.href = `editor.html?frase=${frase}&autor=${autorCod}`;
 }
 
 // ======================
@@ -395,7 +385,7 @@ function atualizarStatusPesquisa(quantidade, filtros) {
     status.replaceChildren();
 
     const mensagem = document.createElement("span");
-    const descricao = autor ? ` por autor “${autor}”` : (texto ? ` para “${texto}”` : ` em “${categoria}”`);
+    const descricao = autor ? ` por autor "${autor}"` : (texto ? ` para "${texto}"` : ` em "${categoria}"`);
     const sufixoCarregamento = haMaisFrases ? ` entre as ${frases.length} carregadas até agora` : "";
     mensagem.textContent = quantidade === 1
         ? `1 frase encontrada${descricao}${sufixoCarregamento}.`
@@ -430,7 +420,7 @@ function adicionarBotaoCarregarMais(lista) {
     if (!lista || !haMaisFrases) return;
 
     const areaMais = document.createElement("div");
-    areaMais.style.cssText = "text-align:center; padding:18px 0 8px;";
+    areaMais.style.cssText = "text-align:center; padding:18px 0 8px; width:100%; grid-column: 1 / -1;";
     const botaoMais = document.createElement("button");
     botaoMais.type = "button";
     botaoMais.className = "btn-ver-resultados";
@@ -458,7 +448,6 @@ function mostrarFrases(lista, filtro = "") {
     if (!lista) return;
     lista.innerHTML = "";
 
-    // Mantém compatibilidade com chamadas antigas que enviavam apenas um texto.
     const filtros = typeof filtro === "string"
         ? { texto: filtro, autor: "", categoria: "" }
         : (filtro || {});
@@ -473,9 +462,6 @@ function mostrarFrases(lista, filtro = "") {
         const categoriaFrase = normalizarCategoria(f.categoria || "");
         const conteudoPesquisavel = `${textoFrase} ${categoriaFrase} ${autorFrase}`;
 
-        // Primeiro preserva a busca exata. Se o visitante escrever uma frase
-        // natural, cada termo relevante também é considerado; assim “frases de
-        // amor” encontra a categoria Amor, e “mensagens de fé” encontra Fé.
         const correspondeTexto = !textoLimpo
             || conteudoPesquisavel.includes(textoLimpo)
             || termosBusca.length === 0
@@ -490,7 +476,7 @@ function mostrarFrases(lista, filtro = "") {
 
     if (resultado.length === 0) {
         lista.innerHTML = `
-            <div class="semResultado" style="text-align:center; padding: 20px;">
+            <div class="semResultado" style="text-align:center; padding: 20px; grid-column: 1 / -1;">
                 😔 Nenhuma frase encontrada entre as frases carregadas. Você pode buscar mais no acervo.
             </div>
         `;
@@ -499,7 +485,6 @@ function mostrarFrases(lista, filtro = "") {
     }
 
     resultado.forEach(f => criarCardFrase(f, lista));
-
     adicionarBotaoCarregarMais(lista);
 }
 
@@ -520,7 +505,8 @@ function criarCardFrase(f, lista) {
     card.className = "cardFrase";
     card.innerHTML = `
         <div class="imagemFrase">
-            <img src="${imagem}" alt="Frase de Messias" loading="lazy">
+            <img src="${imagem}" alt="Frase de Messias" loading="lazy"
+                onerror="this.onerror=null; this.src='https://picsum.photos/seed/${encodeURIComponent(semente)}/${larguraImg}/${alturaImg}';">
             <div class="overlay">
                 <p class="textoFrase">"${f.texto}"</p>
                 <p class="autorFrase">— ${f.autor || "Messias"}</p>
@@ -528,6 +514,246 @@ function criarCardFrase(f, lista) {
             </div>
         </div>
         <div class="botoes">
-            <button onclick="curtir('${f.id}')">❤️ Curtir</button>
-            <button onclick="copiar('${f.texto.replace(/'/g, "\\'")}')">📋 Copiar</button>
-            <bu
+            <button type="button" class="btnAcao btnFavorito" title="Favoritar">
+                ${favoritos.includes(f.id) ? "❤️" : "🤍"}
+            </button>
+            <button type="button" class="btnAcao btnCopiar" title="Copiar texto">
+                📋 Copiar
+            </button>
+            <button type="button" class="btnAcao btnEditor" title="Criar Vídeo">
+                🎬 Vídeo
+            </button>
+            <button type="button" class="btnAcao btnBaixarImagem" title="Baixar Card como Imagem">
+                🖼️ Baixar
+            </button>
+        </div>
+    `;
+
+    const btnCopiar = card.querySelector(".btnCopiar");
+    const btnFavorito = card.querySelector(".btnFavorito");
+    const btnEditor = card.querySelector(".btnEditor");
+    const btnBaixarImagem = card.querySelector(".btnBaixarImagem");
+
+    btnCopiar.addEventListener("click", () => copiarFrase(f.texto, f.autor, btnCopiar));
+    btnFavorito.addEventListener("click", () => alternarFavorito(f.id, btnFavorito));
+    btnEditor.addEventListener("click", () => abrirEditorVideo(f.texto, f.autor));
+    btnBaixarImagem.addEventListener("click", async () => {
+        btnBaixarImagem.disabled = true;
+        btnBaixarImagem.textContent = "Gerando...";
+        try {
+            await baixarCardComoImagem(f, imagem, btnBaixarImagem);
+        } finally {
+            btnBaixarImagem.disabled = false;
+            btnBaixarImagem.textContent = "🖼️ Baixar";
+        }
+    });
+
+    lista.appendChild(card);
+}
+
+// ======================
+// AÇÕES DOS CARDS
+// ======================
+async function copiarFrase(texto, autor, botao) {
+    const conteudo = `"${texto}" — ${autor || "Messias"}`;
+    try {
+        await navigator.clipboard.writeText(conteudo);
+        const textoOriginal = botao.textContent;
+        botao.textContent = "✅ Copiado!";
+        botao.disabled = true;
+        setTimeout(() => {
+            botao.textContent = textoOriginal;
+            botao.disabled = false;
+        }, 2000);
+    } catch (erro) {
+        console.error("Erro ao copiar:", erro);
+        alert("Não foi possível copiar. Selecione e copie manualmente.");
+    }
+}
+
+function alternarFavorito(id, botao) {
+    const indice = favoritos.indexOf(id);
+    if (indice === -1) {
+        favoritos.push(id);
+        botao.textContent = "❤️";
+        botao.setAttribute("title", "Remover dos favoritos");
+    } else {
+        favoritos.splice(indice, 1);
+        botao.textContent = "🤍";
+        botao.setAttribute("title", "Favoritar");
+    }
+    localStorage.setItem("favoritos", JSON.stringify(favoritos));
+}
+
+async function baixarCardComoImagem(frase, urlImagem, botao) {
+    const categoriaLimpa = sanitizarTexto(frase.categoria || "");
+    const largura = 1080;
+    const altura = 1350;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = largura;
+    canvas.height = altura;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("Canvas não suportado.");
+
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, largura, altura);
+
+    const { imagem, liberar } = await carregarImagemParaCanvas(urlImagem);
+    const margemImagem = 40;
+    const alturaImagem = altura * 0.52;
+    ctx.save();
+    ctx.beginPath();
+    ctx.roundRect(margemImagem, margemImagem, largura - margemImagem * 2, alturaImagem, 24);
+    ctx.clip();
+    const escala = Math.max(
+        (largura - margemImagem * 2) / imagem.naturalWidth,
+        alturaImagem / imagem.naturalHeight
+    );
+    const dw = imagem.naturalWidth * escala;
+    const dh = imagem.naturalHeight * escala;
+    const dx = margemImagem + (largura - margemImagem * 2 - dw) / 2;
+    const dy = margemImagem + (alturaImagem - dh) / 2;
+    ctx.drawImage(imagem, dx, dy, dw, dh);
+    ctx.restore();
+    liberar();
+
+    const gradiente = ctx.createLinearGradient(0, alturaImagem + margemImagem, 0, altura);
+    gradiente.addColorStop(0, "rgba(255,255,255,0.95)");
+    gradiente.addColorStop(1, "rgba(255,255,255,1)");
+    ctx.fillStyle = gradiente;
+    ctx.fillRect(0, alturaImagem + margemImagem, largura, altura - alturaImagem - margemImagem);
+
+    if (categoriaLimpa) {
+        ctx.fillStyle = "#4f46e5";
+        ctx.font = "bold 36px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(categoriaLimpa.toUpperCase(), largura / 2, alturaImagem + margemImagem + 70);
+    }
+
+    ctx.fillStyle = "#111827";
+    ctx.font = "bold 52px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    const margemTexto = 80;
+    const larguraTexto = largura - margemTexto * 2;
+    const linhas = quebrarTextoEmLinhas(ctx, `"${frase.texto}"`, larguraTexto);
+    let yAtual = alturaImagem + margemImagem + 130;
+    const espacoLinha = 70;
+    linhas.forEach(linha => {
+        ctx.fillText(linha, largura / 2, yAtual);
+        yAtual += espacoLinha;
+    });
+
+    ctx.fillStyle = "#6b7280";
+    ctx.font = "italic 40px sans-serif";
+    ctx.fillText(`— ${frase.autor || "Messias"}`, largura / 2, yAtual + 40);
+
+    ctx.fillStyle = "#9ca3af";
+    ctx.font = "30px sans-serif";
+    ctx.fillText("frasesdemessias.com.br", largura / 2, altura - 60);
+
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg", 0.95));
+    if (!blob) throw new Error("Falha ao gerar imagem.");
+
+    const urlDownload = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = urlDownload;
+    link.download = `frase-${frase.id || Date.now()}.jpg`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(urlDownload);
+}
+
+function quebrarTextoEmLinhas(ctx, texto, larguraMax) {
+    const palavras = texto.split(/\s+/);
+    const linhas = [];
+    let linhaAtual = palavras[0];
+
+    for (let i = 1; i < palavras.length; i++) {
+        const proximaLinha = `${linhaAtual} ${palavras[i]}`;
+        if (ctx.measureText(proximaLinha).width <= larguraMax) {
+            linhaAtual = proximaLinha;
+        } else {
+            linhas.push(linhaAtual);
+            linhaAtual = palavras[i];
+        }
+    }
+    linhas.push(linhaAtual);
+    return linhas;
+}
+
+// ======================
+// MOSTRAR CATEGORIAS
+// ======================
+function mostrarCategorias(lista, pesquisa, listaFrases) {
+    if (!lista) return;
+    lista.innerHTML = "";
+
+    const todas = document.createElement("button");
+    todas.type = "button";
+    todas.className = !categoriaSelecionada ? "categoriaAtiva" : "";
+    todas.textContent = "Todas";
+    todas.addEventListener("click", () => {
+        categoriaSelecionada = "";
+        mostrarCategorias(lista, pesquisa, listaFrases);
+        atualizarListaComFiltros();
+        rolarParaResultados();
+    });
+    lista.appendChild(todas);
+
+    Object.keys(categorias).sort().forEach(nome => {
+        const botao = document.createElement("button");
+        botao.type = "button";
+        botao.className = categoriaSelecionada === nome ? "categoriaAtiva" : "";
+        botao.textContent = nome;
+        botao.addEventListener("click", () => {
+            categoriaSelecionada = nome;
+            mostrarCategorias(lista, pesquisa, listaFrases);
+            atualizarListaComFiltros();
+            rolarParaResultados();
+        });
+        lista.appendChild(botao);
+    });
+}
+
+// ======================
+// PESQUISA COM DEBOUNCE
+// ======================
+function configurarPesquisa(listaFrases) {
+    const campoPesquisa = document.getElementById("pesquisa");
+    const campoPesquisaAutor = document.getElementById("pesquisaAutor");
+
+    const reagirPesquisa = () => {
+        clearTimeout(temporizadorBusca);
+        temporizadorBusca = setTimeout(() => {
+            atualizarListaComFiltros();
+        }, 350);
+    };
+
+    campoPesquisa?.addEventListener("input", reagirPesquisa);
+    campoPesquisaAutor?.addEventListener("input", reagirPesquisa);
+
+    document.getElementById("btnLimparPesquisa")?.addEventListener("click", () => {
+        if (campoPesquisa) campoPesquisa.value = "";
+        if (campoPesquisaAutor) campoPesquisaAutor.value = "";
+        categoriaSelecionada = "";
+        mostrarCategorias(document.getElementById("listaCategorias"), null, listaFrases);
+        atualizarListaComFiltros();
+    });
+}
+
+// ======================
+// INICIALIZAÇÃO
+// ======================
+document.addEventListener("DOMContentLoaded", () => {
+    const listaFrases = document.getElementById("listaFrases");
+    const fraseDia = document.getElementById("fraseDoDia");
+    const listaCategorias = document.getElementById("listaCategorias");
+    const pesquisa = document.getElementById("pesquisa");
+
+    configurarPesquisa(listaFrases);
+    carregarFrases(listaFrases, fraseDia, listaCategorias, pesquisa);
+    carregarPreviaComunidade();
+});
