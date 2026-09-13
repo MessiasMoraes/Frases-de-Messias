@@ -27,13 +27,13 @@ let haMaisFrases = true;
 let carregandoMaisFrases = false;
 
 // ======================
-// FUNÃ‡Ã•ES AUXILIARES
+// FUNÇÕES AUXILIARES
 // ======================
 function mostrarCarregando(lista) {
     if (lista) {
         lista.innerHTML = `
             <div class="loading" style="text-align:center; padding: 30px; font-weight: bold;">
-                â³ Carregando frases...
+                ⏳ Carregando frases...
             </div>
         `;
     }
@@ -59,12 +59,18 @@ function normalizarParaBusca(texto) {
     return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
+// Padroniza nomes de categorias exibidos no botão e no Firestore.
+// Assim, por exemplo, “boa-noite”, “Boa Noite” e “🌙 Boa Noite” apontam
+// para a mesma categoria, inclusive no WebView Android.
 function normalizarCategoria(texto = "") {
     return normalizarParaBusca(
         sanitizarTexto(String(texto).replace(/[-_]+/g, " "))
     ).replace(/\s+/g, " ").trim();
 }
 
+// Permite consultas naturais, como “frases de amor” ou “mensagens de fé”.
+// Palavras de contexto são ignoradas e o tema restante é comparado com
+// o texto, o autor e a categoria de cada frase.
 function termosRelevantesDaBusca(texto = "") {
     const palavrasIgnoradas = new Set([
         "a", "as", "o", "os", "de", "da", "das", "do", "dos", "e", "em", "para", "por", "com", "sobre",
@@ -76,6 +82,8 @@ function termosRelevantesDaBusca(texto = "") {
         .filter(palavra => palavra && !palavrasIgnoradas.has(palavra));
 }
 
+// Converte imagens antigas do GitHub Pages para o mesmo domínio atual.
+// O carregamento normal dos cards continua direto; a exportação usa o proxy abaixo.
 function normalizarUrlImagem(url = "") {
     const valor = String(url || "").trim();
     if (!valor) return "";
@@ -92,6 +100,8 @@ function normalizarUrlImagem(url = "") {
     }
 }
 
+// Proxy público estável na Vercel. Ele é usado também quando o domínio principal
+// ainda estiver servido pelo GitHub Pages, onde a rota /api/image não existe.
 const ORIGEM_PROXY_IMAGEM = "https://frasesdemessiascombr.vercel.app";
 
 function origemApiVideo() {
@@ -121,7 +131,7 @@ async function carregarImagemParaCanvas(url) {
     const resposta = await fetch(url, { cache: "no-store", mode: "cors" });
     const tipo = resposta.headers.get("content-type") || "";
     if (!resposta.ok || !tipo.toLowerCase().startsWith("image/")) {
-        throw new Error("A foto original nÃ£o pÃ´de ser carregada para o download.");
+        throw new Error("A foto original não pôde ser carregada para o download.");
     }
 
     const blob = await resposta.blob();
@@ -140,13 +150,13 @@ async function carregarImagemParaCanvas(url) {
             };
             imagem.onerror = () => {
                 clearTimeout(timeout);
-                reject(new Error("A foto original nÃ£o pÃ´de ser decodificada."));
+                reject(new Error("A foto original não pôde ser decodificada."));
             };
             imagem.src = objectUrl;
         });
 
         if (!imagem.naturalWidth || !imagem.naturalHeight) {
-            throw new Error("A foto original nÃ£o possui dimensÃµes vÃ¡lidas.");
+            throw new Error("A foto original não possui dimensões válidas.");
         }
         return { imagem, liberar: () => URL.revokeObjectURL(objectUrl) };
     } catch (erro) {
@@ -162,7 +172,7 @@ function fraseDoDia(fraseDiaElemento) {
     if (!fraseDiaElemento || frases.length === 0) return;
     const indice = Math.floor(Math.random() * frases.length);
     const f = frases[indice];
-    fraseDiaElemento.innerHTML = `"${f.texto}" â€” ${f.autor || "Messias"}`;
+    fraseDiaElemento.innerHTML = `"${f.texto}" — ${f.autor || "Messias"}`;
 }
 
 // ======================
@@ -176,6 +186,10 @@ async function contarVisitaGlobal() {
         const docRef = doc(db, "estatisticas", "global");
         const jaRegistrouNestaSessao = sessionStorage.getItem(chaveVisita) === "true";
 
+        // A transação lê o valor atual e grava somente o próximo número inteiro.
+        // Assim, ela respeita a regra pública do Firestore, que permite alterar
+        // exclusivamente o campo "visitas" em +1, e evita perder contagens
+        // quando duas pessoas entram no site ao mesmo tempo.
         const totalAtualizado = await runTransaction(db, async (transacao) => {
             const estatistica = await transacao.get(docRef);
             const visitasAtuais = Number(estatistica.data()?.visitas || 0);
@@ -201,7 +215,7 @@ async function contarVisitaGlobal() {
 }
 
 // ======================
-// PRÃ‰VIA DA REDE SOCIAL
+// PRÉVIA DA REDE SOCIAL
 // ======================
 function dataDaPublicacaoSocial(valor) {
     if (valor?.toDate) return valor.toDate();
@@ -213,7 +227,7 @@ function criarCartaoPreviaComunidade(publicacao) {
     const link = document.createElement("a");
     link.className = "cartao-previa-comunidade";
     link.href = "comunidade.html";
-    link.setAttribute("aria-label", "Ver publicaÃ§Ã£o de " + (publicacao.autorNome || "membro da comunidade") + " na Rede Social");
+    link.setAttribute("aria-label", "Ver publicação de " + (publicacao.autorNome || "membro da comunidade") + " na Rede Social");
 
     const cabecalho = document.createElement("div");
     cabecalho.className = "meta-previa-comunidade";
@@ -227,7 +241,7 @@ function criarCartaoPreviaComunidade(publicacao) {
 
     const texto = document.createElement("blockquote");
     const conteudo = String(publicacao.texto || "").trim();
-    texto.textContent = `â€œ${conteudo.length > 170 ? conteudo.slice(0, 170).trimEnd() + "â€¦" : conteudo}â€`;
+    texto.textContent = `“${conteudo.length > 170 ? conteudo.slice(0, 170).trimEnd() + "…" : conteudo}”`;
 
     const rodape = document.createElement("span");
     rodape.className = "link-cartao-previa";
@@ -235,7 +249,7 @@ function criarCartaoPreviaComunidade(publicacao) {
     const dataFormatada = data
         ? data.toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" })
         : "Na Rede Social";
-    rodape.textContent = `${dataFormatada} Â· Ver publicaÃ§Ã£o â†’`;
+    rodape.textContent = `${dataFormatada} · Ver publicação →`;
 
     link.append(cabecalho, texto, rodape);
     return link;
@@ -246,6 +260,8 @@ async function carregarPreviaComunidade() {
     if (!lista) return;
 
     try {
+        // A filtragem espelha o feed público: somente conteúdo já aprovado é exibido.
+        // A ordenação no navegador mantém a consulta compatível com os índices existentes.
         const resultado = await getDocs(query(
             collection(db, "comunidadePublicacoes"),
             where("status", "==", "publicado"),
@@ -264,18 +280,18 @@ async function carregarPreviaComunidade() {
         if (!publicacoes.length) {
             const estado = document.createElement("p");
             estado.className = "estado-previa-comunidade";
-            estado.textContent = "A Comunidade estÃ¡ comeÃ§ando. Seja uma das primeiras pessoas a compartilhar uma frase inspiradora.";
+            estado.textContent = "A Comunidade está começando. Seja uma das primeiras pessoas a compartilhar uma frase inspiradora.";
             lista.appendChild(estado);
             return;
         }
 
         publicacoes.forEach(publicacao => lista.appendChild(criarCartaoPreviaComunidade(publicacao)));
     } catch (erro) {
-        console.error("NÃ£o foi possÃ­vel carregar a prÃ©via da Comunidade:", erro);
+        console.error("Não foi possível carregar a prévia da Comunidade:", erro);
         lista.replaceChildren();
         const estado = document.createElement("p");
         estado.className = "estado-previa-comunidade";
-        estado.textContent = "As publicaÃ§Ãµes recentes nÃ£o puderam ser carregadas agora.";
+        estado.textContent = "As publicações recentes não puderam ser carregadas agora.";
         lista.appendChild(estado);
     }
 }
@@ -317,6 +333,7 @@ async function carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa
     try {
         contarVisitaGlobal();
 
+        // As categorias são poucas e são carregadas uma única vez.
         const consultaCategorias = await getDocs(collection(db, "categorias"));
         consultaCategorias.forEach(docSnap => {
             const dados = docSnap.data();
@@ -324,10 +341,11 @@ async function carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa
             if (nomeLimpo) categorias[nomeLimpo] = dados.imagem;
         });
 
+        // Carrega somente o primeiro lote. Os demais são buscados por ação do visitante.
         await carregarProximoLoteDeFrases();
     } catch (e) {
         console.error("Erro no Firebase:", e);
-        mostrarErro(lista, "Erro ao conectar ao banco de dados. Verifique a conexÃ£o.");
+        mostrarErro(lista, "Erro ao conectar ao banco de dados. Verifique a conexão.");
         return;
     }
 
@@ -339,16 +357,8 @@ async function carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa
     frasesCarregadas = true;
     fraseDoDia(fraseDiaElemento);
     mostrarCategorias(listaCategorias, pesquisa, lista);
+    // Preserva uma busca já digitada enquanto as frases estavam sendo carregadas.
     mostrarFrases(lista, filtrosAtuais());
-}
-
-// ======================
-// ABRIR EDITOR DE VÃDEO
-// ======================
-function abrirEditorVideo(texto, autor = "Messias") {
-    const frase = encodeURIComponent(texto);
-    const autorCod = encodeURIComponent(autor);
-    window.location.href = `editor.html?frase=${frase}&autor=${autorCod}`;
 }
 
 // ======================
@@ -385,8 +395,8 @@ function atualizarStatusPesquisa(quantidade, filtros) {
     status.replaceChildren();
 
     const mensagem = document.createElement("span");
-    const descricao = autor ? ` por autor â€œ${autor}â€` : (texto ? ` para â€œ${texto}â€` : ` em â€œ${categoria}â€`);
-    const sufixoCarregamento = haMaisFrases ? ` entre as ${frases.length} carregadas atÃ© agora` : "";
+    const descricao = autor ? ` por autor “${autor}”` : (texto ? ` para “${texto}”` : ` em “${categoria}”`);
+    const sufixoCarregamento = haMaisFrases ? ` entre as ${frases.length} carregadas até agora` : "";
     mensagem.textContent = quantidade === 1
         ? `1 frase encontrada${descricao}${sufixoCarregamento}.`
         : `${quantidade} frases encontradas${descricao}${sufixoCarregamento}.`;
@@ -394,7 +404,7 @@ function atualizarStatusPesquisa(quantidade, filtros) {
     const verResultados = document.createElement("button");
     verResultados.type = "button";
     verResultados.className = "btn-ver-resultados";
-    verResultados.textContent = "Ver resultados â†“";
+    verResultados.textContent = "Ver resultados ↓";
     verResultados.addEventListener("click", rolarParaResultados);
 
     status.append(mensagem, verResultados);
@@ -404,7 +414,7 @@ function mostrarStatusCarregandoBusca() {
     const status = document.getElementById("statusPesquisa");
     if (!status) return;
     status.hidden = false;
-    status.textContent = "Carregando frasesâ€¦ sua busca serÃ¡ aplicada automaticamente.";
+    status.textContent = "Carregando frases… sua busca será aplicada automaticamente.";
 }
 
 function atualizarListaComFiltros() {
@@ -420,7 +430,7 @@ function adicionarBotaoCarregarMais(lista) {
     if (!lista || !haMaisFrases) return;
 
     const areaMais = document.createElement("div");
-    areaMais.style.cssText = "text-align:center; padding:18px 0 8px; width:100%; grid-column: 1 / -1;";
+    areaMais.style.cssText = "text-align:center; padding:18px 0 8px;";
     const botaoMais = document.createElement("button");
     botaoMais.type = "button";
     botaoMais.className = "btn-ver-resultados";
@@ -437,7 +447,7 @@ function adicionarBotaoCarregarMais(lista) {
             console.error("Erro ao carregar mais frases:", erro);
             botaoMais.disabled = false;
             botaoMais.textContent = textoOriginal;
-            alert("NÃ£o foi possÃ­vel carregar mais frases agora. Tente novamente.");
+            alert("Não foi possível carregar mais frases agora. Tente novamente.");
         }
     });
     areaMais.appendChild(botaoMais);
@@ -448,6 +458,7 @@ function mostrarFrases(lista, filtro = "") {
     if (!lista) return;
     lista.innerHTML = "";
 
+    // Mantém compatibilidade com chamadas antigas que enviavam apenas um texto.
     const filtros = typeof filtro === "string"
         ? { texto: filtro, autor: "", categoria: "" }
         : (filtro || {});
@@ -462,6 +473,9 @@ function mostrarFrases(lista, filtro = "") {
         const categoriaFrase = normalizarCategoria(f.categoria || "");
         const conteudoPesquisavel = `${textoFrase} ${categoriaFrase} ${autorFrase}`;
 
+        // Primeiro preserva a busca exata. Se o visitante escrever uma frase
+        // natural, cada termo relevante também é considerado; assim “frases de
+        // amor” encontra a categoria Amor, e “mensagens de fé” encontra Fé.
         const correspondeTexto = !textoLimpo
             || conteudoPesquisavel.includes(textoLimpo)
             || termosBusca.length === 0
@@ -476,8 +490,8 @@ function mostrarFrases(lista, filtro = "") {
 
     if (resultado.length === 0) {
         lista.innerHTML = `
-            <div class="semResultado" style="text-align:center; padding: 20px; grid-column: 1 / -1;">
-                ðŸ˜” Nenhuma frase encontrada entre as frases carregadas. VocÃª pode buscar mais no acervo.
+            <div class="semResultado" style="text-align:center; padding: 20px;">
+                😔 Nenhuma frase encontrada entre as frases carregadas. Você pode buscar mais no acervo.
             </div>
         `;
         adicionarBotaoCarregarMais(lista);
@@ -485,6 +499,7 @@ function mostrarFrases(lista, filtro = "") {
     }
 
     resultado.forEach(f => criarCardFrase(f, lista));
+
     adicionarBotaoCarregarMais(lista);
 }
 
@@ -504,41 +519,15 @@ function criarCardFrase(f, lista) {
     const card = document.createElement("div");
     card.className = "cardFrase";
     card.innerHTML = `
-        <div class="conteudoFrase">
-            ${categoriaLimpa ? `<span class="categoriaBadge">${categoriaLimpa}</span>` : ""}
-            <p class="textoFrase">"${f.texto}"</p>
-            <p class="autorFrase">â€” ${f.autor || "Messias"}</p>
-            
-            <div class="acoesFrase">
-                <button type="button" class="btnAcao btnCopiar" title="Copiar texto">
-                    ðŸ“‹ Copiar
-                </button>
-                <button type="button" class="btnAcao btnFavorito" title="Favoritar">
-                    ${favoritos.includes(f.id) ? "â¤ï¸" : "ðŸ¤"}
-                </button>
-                <button type="button" class="btnAcao btnEditor" title="Criar VÃ­deo">
-                    ðŸŽ¬ VÃ­deo
-                </button>
-                <button type="button" class="btnAcao btnBaixarImagem" title="Baixar Card como Imagem">
-                    ðŸ–¼ï¸ Baixar
-                </button>
+        <div class="imagemFrase">
+            <img src="${imagem}" alt="Frase de Messias" loading="lazy">
+            <div class="overlay">
+                <p class="textoFrase">"${f.texto}"</p>
+                <p class="autorFrase">— ${f.autor || "Messias"}</p>
+                <div class="marca">📖 Frases de Messias</div>
             </div>
         </div>
-        <div class="imagemFrase">
-            <img src="${imagem}" alt="Imagem ilustrativa"
-                loading="lazy"
-                decoding="async"
-                onerror="this.onerror=null; this.src='https://picsum.photos/seed/${encodeURIComponent(semente)}/${larguraImg}/${alturaImg}';"
-            >
-        </div>
-    `;
-
-    const btnCopiar = card.querySelector(".btnCopiar");
-    const btnFavorito = card.querySelector(".btnFavorito");
-    const btnEditor = card.querySelector(".btnEditor");
-    const btnBaixarImagem = card.querySelector(".btnBaixarImagem");
-
-    btnCopiar.addEventListener("click", () => copiarFrase(f.texto, f.autor, btnCopiar));
-    btnFavorito.addEventListener("click", () => alternarFavorito(f.id, btnFavorito));
-    btnEditor.addEventListener("click", () => abrirEditorVideo(f.texto, f.autor));
-    btnBaixarImagem.addEventListener("click", () => baixarCardComoImagem(f, imagem, btnBaixarImagem
+        <div class="botoes">
+            <button onclick="curtir('${f.id}')">❤️ Curtir</button>
+            <button onclick="copiar('${f.texto.replace(/'/g, "\\'")}')">📋 Copiar</button>
+            <bu
