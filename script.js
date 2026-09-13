@@ -504,30 +504,199 @@ function mostrarFrases(lista, filtro = "") {
 }
 
 // ======================
-// CRIAR CARD
+// CRIAR CARD PROFISSIONAL
 // ======================
 function criarCardFrase(f, lista) {
-    const categoriaLimpa = sanitizarTexto(f.categoria || "");
-    const larguraImg = window.innerWidth < 600 ? 400 : 800;
-    const alturaImg = window.innerWidth < 600 ? 300 : 600;
-    const semente = f.id || "frase-padrao";
-    
-    const imagem = normalizarUrlImagem((f.imagem && f.imagem.trim() !== "")
-        ? f.imagem
-        : (categorias[categoriaLimpa] || `https://picsum.photos/seed/${encodeURIComponent(semente)}/${larguraImg}/${alturaImg}`));
+    if (!lista || !f) return;
 
-    const card = document.createElement("div");
-    card.className = "cardFrase";
-    card.innerHTML = `
-        <div class="imagemFrase">
-            <img src="${imagem}" alt="Frase de Messias" loading="lazy">
-            <div class="overlay">
-                <p class="textoFrase">"${f.texto}"</p>
-                <p class="autorFrase">— ${f.autor || "Messias"}</p>
-                <div class="marca">📖 Frases de Messias</div>
-            </div>
-        </div>
-        <div class="botoes">
-            <button onclick="curtir('${f.id}')">❤️ Curtir</button>
-            <button onclick="copiar('${f.texto.replace(/'/g, "\\'")}')">📋 Copiar</button>
-            <bu
+    const categoriaLimpa = sanitizarTexto(String(f.categoria || ""));
+    const textoFrase = sanitizarTexto(String(f.texto || "")).trim();
+    const autorFrase = sanitizarTexto(String(f.autor || "Messias")).trim();
+
+    // Tamanho adequado para celular e computador
+    const larguraImg = window.innerWidth < 600 ? 800 : 1200;
+    const alturaImg = window.innerWidth < 600 ? 1000 : 800;
+
+    const semente = String(f.id || textoFrase || "frase-messias")
+        .replace(/[^a-zA-Z0-9-_]/g, "-")
+        .slice(0, 60);
+
+    // Verifica se existe uma imagem cadastrada no Firebase.
+    let imagem = "";
+
+    if (typeof f.imagem === "string" && f.imagem.trim()) {
+        imagem = normalizarUrlImagem(f.imagem.trim());
+    }
+
+    // Se não houver imagem da frase, tenta usar a imagem da categoria.
+    if (!imagem && categoriaLimpa) {
+        const chaveCategoria = Object.keys(categorias).find(
+            chave => normalizarCategoria(chave) === normalizarCategoria(categoriaLimpa)
+        );
+
+        if (chaveCategoria && categorias[chaveCategoria]) {
+            imagem = normalizarUrlImagem(categorias[chaveCategoria]);
+        }
+    }
+
+    // Último recurso: imagem automática estável.
+    if (!imagem) {
+        imagem = `https://picsum.photos/seed/${encodeURIComponent(semente)}/${larguraImg}/${alturaImg}`;
+    }
+
+    const card = document.createElement("article");
+    card.className = "cardFrase profissional";
+
+    // ==========================
+    // ÁREA DA IMAGEM
+    // ==========================
+    const imagemFrase = document.createElement("div");
+    imagemFrase.className = "imagemFrase profissionalImagem";
+
+    const img = document.createElement("img");
+    img.src = imagem;
+    img.alt = textoFrase
+        ? `Frase de Messias: ${textoFrase}`
+        : "Frases de Messias";
+    img.loading = "lazy";
+    img.decoding = "async";
+
+    // Caso a imagem falhe, cria uma imagem alternativa.
+    img.onerror = function () {
+        this.onerror = null;
+        this.src = `https://picsum.photos/seed/${encodeURIComponent(
+            semente + "-fallback"
+        )}/${larguraImg}/${alturaImg}`;
+    };
+
+    // ==========================
+    // SOBREPOSIÇÃO PROFISSIONAL
+    // ==========================
+    const overlay = document.createElement("div");
+    overlay.className = "overlayFrase";
+
+    // Pequeno brilho decorativo
+    const brilho = document.createElement("div");
+    brilho.className = "brilhoFrase";
+    brilho.setAttribute("aria-hidden", "true");
+
+    // Marca
+    const marcaTopo = document.createElement("div");
+    marcaTopo.className = "marcaTopo";
+    marcaTopo.innerHTML = `
+        <span class="marcaIcone">✦</span>
+        <span>FRASES DE MESSIAS</span>
+    `;
+
+    // Categoria
+    if (categoriaLimpa) {
+        const categoria = document.createElement("div");
+        categoria.className = "categoriaImagem";
+        categoria.textContent = categoriaLimpa;
+        overlay.appendChild(categoria);
+    }
+
+    // Frase
+    const frase = document.createElement("p");
+    frase.className = "textoImagem";
+    frase.textContent = `“${textoFrase}”`;
+
+    // Autor
+    const autor = document.createElement("p");
+    autor.className = "autorImagem";
+    autor.textContent = `— ${autorFrase || "Messias"}`;
+
+    // Marca inferior
+    const marca = document.createElement("div");
+    marca.className = "marcaImagem";
+    marca.innerHTML = `
+        <span>📖</span>
+        <span>Frases de Messias</span>
+    `;
+
+    overlay.append(
+        brilho,
+        marcaTopo,
+        frase,
+        autor,
+        marca
+    );
+
+    imagemFrase.append(img, overlay);
+
+    // ==========================
+    // BOTÕES
+    // ==========================
+    const botoes = document.createElement("div");
+    botoes.className = "botoes botoesFrase";
+
+    const btnCurtir = document.createElement("button");
+    btnCurtir.type = "button";
+    btnCurtir.className = "btnAcao btnCurtir";
+    btnCurtir.innerHTML = favoritos.includes(f.id)
+        ? "❤️ Curtido"
+        : "🤍 Curtir";
+    btnCurtir.title = "Favoritar frase";
+
+    const btnCopiar = document.createElement("button");
+    btnCopiar.type = "button";
+    btnCopiar.className = "btnAcao btnCopiar";
+    btnCopiar.innerHTML = "📋 Copiar";
+    btnCopiar.title = "Copiar frase";
+
+    const btnVideo = document.createElement("button");
+    btnVideo.type = "button";
+    btnVideo.className = "btnAcao btnVideo";
+    btnVideo.innerHTML = "🎬 Vídeo";
+    btnVideo.title = "Criar vídeo com esta frase";
+
+    const btnBaixar = document.createElement("button");
+    btnBaixar.type = "button";
+    btnBaixar.className = "btnAcao btnBaixarImagem";
+    btnBaixar.innerHTML = "🖼️ Baixar";
+    btnBaixar.title = "Baixar imagem com a frase";
+
+    botoes.append(
+        btnCurtir,
+        btnCopiar,
+        btnVideo,
+        btnBaixar
+    );
+
+    card.append(
+        imagemFrase,
+        botoes
+    );
+
+    // ==========================
+    // EVENTOS
+    // ==========================
+    btnCurtir.addEventListener("click", () => {
+        alternarFavorito(f.id, btnCurtir);
+    });
+
+    btnCopiar.addEventListener("click", () => {
+        copiarFrase(
+            textoFrase,
+            autorFrase,
+            btnCopiar
+        );
+    });
+
+    btnVideo.addEventListener("click", () => {
+        abrirEditorVideo(
+            textoFrase,
+            autorFrase || "Messias"
+        );
+    });
+
+    btnBaixar.addEventListener("click", () => {
+        baixarCardComoImagem(
+            f,
+            imagem,
+            btnBaixar
+        );
+    });
+
+    lista.appendChild(card);
+        }
