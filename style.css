@@ -987,6 +987,7 @@ textarea {
    ========================================================= */
 
 .estadoVazio,
+.semResultado,
 .semResultados,
 .carregando {
     grid-column: 1 / -1;
@@ -1175,7 +1176,7 @@ textarea {
 }
 
 /* =========================================================
-   33. LOADING
+   33. LOADING & ANIMAÇÕES
    ========================================================= */
 
 .loading {
@@ -1208,432 +1209,114 @@ textarea {
 }
 
 @keyframes girar {
+    from {
+        transform: rotate(0deg);
+    }
+
     to {
         transform: rotate(360deg);
     }
 }
 
 /* =========================================================
-   34. RODAPÉ
+   34. DARK MODE (SUPORTE TEMA ESCURO)
    ========================================================= */
 
-footer {
-    margin-top: 60px;
-
-    padding: 40px 20px;
-
-    text-align: center;
-
-    background: #111827;
-
-    color: #cbd5e1;
+body.dark,
+[data-theme="dark"] body {
+    background: #0f172a;
+    color: #f8fafc;
 }
 
-footer a {
-    color: #93c5fd;
-}
-
-footer a:hover {
-    color: #ffffff;
-}
-
-/* =========================================================
-   35. MODO ESCURO
-   ========================================================= */
-
-body.dark {
-    background: #0b1120;
-    color: #e5e7eb;
-}
-
-body.dark header {
+body.dark header,
+[data-theme="dark"] header {
     background: rgba(15, 23, 42, 0.94);
-
     border-color: #1e293b;
 }
 
-body.dark header h1,
-body.dark .logo {
+body.dark nav a,
+[data-theme="dark"] nav a {
+    color: #94a3b8;
+}
+
+body.dark nav a:hover,
+[data-theme="dark"] nav a:hover {
     color: #60a5fa;
+    background: #1e293b;
 }
 
-body.dark nav a {
-    color: #cbd5e1;
-}
-
-body.dark nav a:hover {
-    color: #93c5fd;
-    background: #172554;
-}
-
-body.dark #temaBtn {
-    background: #111827;
-    border-color: #334155;
-    color: #e5e7eb;
-}
-
-body.dark .hero {
+body.dark .hero,
+[data-theme="dark"] .hero {
     background:
         radial-gradient(
             circle at 20% 20%,
-            rgba(37, 99, 235, 0.18),
+            rgba(37, 99, 235, 0.15),
             transparent 35%
         ),
         radial-gradient(
             circle at 80% 80%,
-            rgba(124, 58, 237, 0.15),
+            rgba(124, 58, 237, 0.13),
             transparent 35%
         ),
         #0f172a;
-
     border-color: #1e293b;
 }
 
-body.dark .hero h2 {
+body.dark .hero h2,
+[data-theme="dark"] .hero h2 {
     color: #f8fafc;
 }
 
-body.dark .hero p {
-    color: #94a3b8;
+body.dark .cardFrase,
+[data-theme="dark"] .cardFrase,
+body.dark .estatistica,
+[data-theme="dark"] .estatistica,
+body.dark .modalConteudo,
+[data-theme="dark"] .modalConteudo {
+    background: #1e293b;
+    border-color: #334155;
+    color: #f8fafc;
 }
 
-body.dark #pesquisa,
-body.dark #pesquisaAutor,
+body.dark .botoes,
+[data-theme="dark"] .botoes {
+    background: #1e293b;
+}
+
+body.dark .botoes button,
+[data-theme="dark"] .botoes button {
+    background: #0f172a;
+    border-color: #334155;
+    color: #cbd5e1;
+}
+
+body.dark .botoes button:hover,
+[data-theme="dark"] .botoes button:hover {
+    background: #334155;
+    color: #60a5fa;
+}
+
 body.dark input,
 body.dark select,
-body.dark textarea {
-    background: #111827;
+body.dark textarea,
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+    background: #1e293b;
     border-color: #334155;
-    color: #f1f5f9;
-}
-
-body.dark #pesquisa::placeholder,
-body.dark #pesquisaAutor::placeholder,
-body.dark input::placeholder,
-body.dark textarea::placeholder {
-    color: #64748b;
-}
-
-body.dark .categoria,
-body.dark .categoriaBtn,
-body.dark #listaCategorias button {
-    background: #111827;
-    border-color: #334155;
-    color: #cbd5e1;
-}
-
-body.dark .categoria:hover,
-body.dark .categoriaBtn:hover,
-body.dark #listaCategorias button:hover {
-    background: #172554;
-    border-color: #3b82f6;
-    color: #93c5fd;
-}
-
-body.dark .secaoTitulo h2 {
     color: #f8fafc;
 }
 
-body.dark .secaoTitulo p,
-body.dark #statusPesquisa {
-    color: #94a3b8;
-}
+/* Responsividade Básica */
 
-body.dark .cardFrase {
-    background: #111827;
-    border-color: #1e293b;
-
-    box-shadow:
-        0 10px 30px rgba(0, 0, 0, 0.28);
-}
-
-body.dark .botoes {
-    background: #111827;
-}
-
-body.dark .botoes button {
-    background: #172033;
-    border-color: #334155;
-    color: #cbd5e1;
-}
-
-body.dark .botoes button:hover {
-    background: #172554;
-    color: #93c5fd;
-    border-color: #3b82f6;
-}
-
-body.dark .estatistica {
-    background: #111827;
-    border-color: #1e293b;
-}
-
-body.dark .estatistica span {
-    color: #94a3b8;
-}
-
-body.dark .estadoVazio,
-body.dark .semResultados,
-body.dark .carregando {
-    background: #111827;
-    border-color: #334155;
-    color: #94a3b8;
-}
-
-body.dark .modalConteudo {
-    background: #111827;
-    color: #e5e7eb;
-}
-
-body.dark .fecharModal {
-    background: #1e293b;
-    color: #e5e7eb;
-}
-
-body.dark #contadorGlobal {
-    background: #172554;
-    color: #93c5fd;
-}
-
-/* =========================================================
-   36. RESPONSIVIDADE — TABLET
-   ========================================================= */
-
-@media (max-width: 900px) {
-
+@media (max-width: 768px) {
     header .container {
-        min-height: auto;
-
-        padding-top: 12px;
-        padding-bottom: 12px;
-
-        flex-wrap: wrap;
-    }
-
-    nav {
-        width: 100%;
-
+        flex-direction: column;
         justify-content: center;
-    }
-
-    #listaFrases {
-        grid-template-columns:
-            repeat(
-                2,
-                minmax(0, 1fr)
-            );
-    }
-
-    .hero {
-        padding: 55px 20px;
-    }
-
-    .estatisticas {
-        grid-template-columns:
-            repeat(3, 1fr);
-    }
-}
-
-/* =========================================================
-   37. RESPONSIVIDADE — CELULAR
-   ========================================================= */
-
-@media (max-width: 650px) {
-
-    .container {
-        width: min(100% - 20px, 1180px);
-    }
-
-    header .container {
-        justify-content: center;
-    }
-
-    header h1 {
-        width: 100%;
-
-        text-align: center;
-
-        font-size: 1.15rem;
-    }
-
-    nav {
-        gap: 5px;
-    }
-
-    nav a {
-        padding: 7px 9px;
-
-        font-size: 0.78rem;
-    }
-
-    #temaBtn {
-        height: 38px;
-        min-width: 38px;
-    }
-
-    .hero {
-        padding: 45px 15px;
-    }
-
-    .hero h2 {
-        font-size: 2rem;
-    }
-
-    .hero p {
-        font-size: 0.95rem;
-    }
-
-    #listaFrases {
-        grid-template-columns: 1fr;
-
-        gap: 20px;
-    }
-
-    .cardFrase {
-        border-radius: 18px;
-    }
-
-    .imagemFrase {
-        aspect-ratio: 4 / 3;
-    }
-
-    .overlay {
-        padding: 18px;
-    }
-
-    .textoFrase {
-        font-size: 1.08rem;
-
-        -webkit-line-clamp: 8;
-    }
-
-    .autorFrase {
-        font-size: 0.86rem;
-    }
-
-    .marca {
-        left: 15px;
-        bottom: 13px;
-
-        font-size: 0.68rem;
-    }
-
-    .badgeCategoria {
-        top: 13px;
-        left: 13px;
-
-        font-size: 0.66rem;
-    }
-
-    .botoes {
-        grid-template-columns:
-            repeat(2, 1fr);
-
-        padding: 10px;
-    }
-
-    .botoes button {
-        min-height: 40px;
-
-        font-size: 0.77rem;
+        padding: 12px 0;
     }
 
     .estatisticas {
         grid-template-columns: 1fr;
-
-        gap: 10px;
-    }
-
-    .estatistica {
-        padding: 18px;
-    }
-
-    .estatistica strong {
-        font-size: 1.7rem;
-    }
-
-    #listaCategorias {
-        gap: 7px;
-    }
-
-    .categoria,
-    .categoriaBtn,
-    #listaCategorias button {
-        padding: 8px 11px;
-
-        font-size: 0.78rem;
-    }
-
-    .fraseDia {
-        padding: 25px 20px;
-
-        border-radius: 18px;
-    }
-
-    .fraseDia p {
-        font-size: 1.15rem;
-    }
-
-    .modal {
-        padding: 10px;
-    }
-
-    .modalConteudo {
-        padding: 22px 16px;
-
-        border-radius: 18px;
-    }
-}
-
-/* =========================================================
-   38. CELULARES MUITO PEQUENOS
-   ========================================================= */
-
-@media (max-width: 380px) {
-
-    nav a {
-        font-size: 0.7rem;
-
-        padding: 6px 7px;
-    }
-
-    .textoFrase {
-        font-size: 1rem;
-    }
-
-    .botoes button {
-        font-size: 0.7rem;
-    }
-}
-
-/* =========================================================
-   39. ACESSIBILIDADE
-   ========================================================= */
-
-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
-    outline: 3px solid rgba(37, 99, 235, 0.35);
-
-    outline-offset: 2px;
-}
-
-/* =========================================================
-   40. REDUZIR ANIMAÇÕES
-   ========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-    *,
-    *::before,
-    *::after {
-        scroll-behavior: auto !important;
-
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-
-        transition-duration: 0.01ms !important;
     }
 }
