@@ -227,7 +227,7 @@ function criarCartaoPreviaComunidade(publicacao) {
 
     const texto = document.createElement("blockquote");
     const conteudo = String(publicacao.texto || "").trim();
-    texto.textContent = `"${conteudo.length > 170 ? conteudo.slice(0, 170).trimEnd() + "…" : conteudo}"`;
+    texto.textContent = `“${conteudo.length > 170 ? conteudo.slice(0, 170).trimEnd() + "…" : conteudo}”`;
 
     const rodape = document.createElement("span");
     rodape.className = "link-cartao-previa";
@@ -385,7 +385,7 @@ function atualizarStatusPesquisa(quantidade, filtros) {
     status.replaceChildren();
 
     const mensagem = document.createElement("span");
-    const descricao = autor ? ` por autor "${autor}"` : (texto ? ` para "${texto}"` : ` em "${categoria}"`);
+    const descricao = autor ? ` por autor “${autor}”` : (texto ? ` para “${texto}”` : ` em “${categoria}”`);
     const sufixoCarregamento = haMaisFrases ? ` entre as ${frases.length} carregadas até agora` : "";
     mensagem.textContent = quantidade === 1
         ? `1 frase encontrada${descricao}${sufixoCarregamento}.`
@@ -492,62 +492,68 @@ function mostrarFrases(lista, filtro = "") {
 // CRIAR CARD
 // ======================
 function criarCardFrase(f, lista) {
-    const categoriaLimpa = sanitizarTexto(f.categoria || "");
-    const larguraImg = window.innerWidth < 600 ? 400 : 800;
-    const alturaImg = window.innerWidth < 600 ? 300 : 600;
-    const semente = f.id || "frase-padrao";
-    
-    const imagem = normalizarUrlImagem((f.imagem && f.imagem.trim() !== "")
-        ? f.imagem
-        : (categorias[categoriaLimpa] || `https://picsum.photos/seed/${encodeURIComponent(semente)}/${larguraImg}/${alturaImg}`));
+    const texto = String(f.texto || "").trim();
+    const autor = String(f.autor || "Messias").trim() || "Messias";
+    const categoria = sanitizarTexto(f.categoria || "").trim();
+    if (!texto || !lista) return;
 
-    const card = document.createElement("div");
-    card.className = "cardFrase";
-    card.innerHTML = `
-        <div class="imagemFrase">
-            <img src="${imagem}" alt="Frase de Messias" loading="lazy"
-                onerror="this.onerror=null; this.src='https://picsum.photos/seed/${encodeURIComponent(semente)}/${larguraImg}/${alturaImg}';">
-            <div class="overlay">
-                <p class="textoFrase">"${f.texto}"</p>
-                <p class="autorFrase">— ${f.autor || "Messias"}</p>
-                <div class="marca">📖 Frases de Messias</div>
-            </div>
-        </div>
-        <div class="botoes">
-            <button type="button" class="btnAcao btnFavorito" title="Favoritar">
-                ${favoritos.includes(f.id) ? "❤️" : "🤍"}
-            </button>
-            <button type="button" class="btnAcao btnCopiar" title="Copiar texto">
-                📋 Copiar
-            </button>
-            <button type="button" class="btnAcao btnEditor" title="Criar Vídeo">
-                🎬 Vídeo
-            </button>
-            <button type="button" class="btnAcao btnBaixarImagem" title="Baixar Card como Imagem">
-                🖼️ Baixar
-            </button>
+    const card = document.createElement("article");
+    card.className = "card-frase-colecao";
+    card.dataset.fraseCard = "";
+    card.dataset.texto = texto;
+    card.dataset.tema = categoria || "Frases de Messias";
+
+    const etiqueta = document.createElement("p");
+    etiqueta.className = "etiqueta-colecao";
+    etiqueta.textContent = categoria || "Frases de Messias";
+
+    const quote = document.createElement("blockquote");
+    quote.textContent = `“${texto}”`;
+
+    const autorElemento = document.createElement("p");
+    autorElemento.className = "autor-frase";
+    autorElemento.textContent = `— ${autor}`;
+
+    const acoes = document.createElement("div");
+    acoes.className = "acoes-colecao";
+    acoes.setAttribute("aria-label", "Ações da frase");
+
+    const copiar = document.createElement("button");
+    copiar.type = "button";
+    copiar.textContent = "Copiar";
+    copiar.dataset.copiarFrase = texto;
+
+    const compartilhar = document.createElement("button");
+    compartilhar.type = "button";
+    compartilhar.textContent = "Compartilhar";
+    compartilhar.dataset.compartilharFrase = texto;
+    compartilhar.dataset.titulo = categoria ? `Frases de ${categoria}` : "Frases de Messias";
+
+    const baixar = document.createElement("button");
+    baixar.type = "button";
+    baixar.className = "btn-baixar-colecao";
+    baixar.textContent = "📥 Baixar";
+    baixar.dataset.alternarDownload = "";
+    baixar.setAttribute("aria-expanded", "false");
+
+    acoes.append(copiar, compartilhar, baixar);
+
+    const opcoes = document.createElement("div");
+    opcoes.className = "opcoes-download-colecao";
+    opcoes.dataset.opcoesDownload = "";
+    opcoes.hidden = true;
+    opcoes.setAttribute("aria-label", "Formatos disponíveis para baixar");
+    opcoes.innerHTML = `
+        <p>Escolha o formato:</p>
+        <div>
+            <button type="button" data-baixar-imagem="story">📱 Imagem Story</button>
+            <button type="button" data-baixar-imagem="feed">🖼️ Imagem Feed</button>
+            <button type="button" class="btn-video-colecao" data-baixar-video="story">🎬 Vídeo Story</button>
+            <button type="button" class="btn-video-colecao" data-baixar-video="feed">🎬 Vídeo Feed</button>
         </div>
     `;
 
-    const btnCopiar = card.querySelector(".btnCopiar");
-    const btnFavorito = card.querySelector(".btnFavorito");
-    const btnEditor = card.querySelector(".btnEditor");
-    const btnBaixarImagem = card.querySelector(".btnBaixarImagem");
-
-    btnCopiar.addEventListener("click", () => copiarFrase(f.texto, f.autor, btnCopiar));
-    btnFavorito.addEventListener("click", () => alternarFavorito(f.id, btnFavorito));
-    btnEditor.addEventListener("click", () => abrirEditorVideo(f.texto, f.autor));
-    btnBaixarImagem.addEventListener("click", async () => {
-        btnBaixarImagem.disabled = true;
-        btnBaixarImagem.textContent = "Gerando...";
-        try {
-            await baixarCardComoImagem(f, imagem, btnBaixarImagem);
-        } finally {
-            btnBaixarImagem.disabled = false;
-            btnBaixarImagem.textContent = "🖼️ Baixar";
-        }
-    });
-
+    card.append(etiqueta, quote, autorElemento, acoes, opcoes);
     lista.appendChild(card);
 }
 
@@ -558,202 +564,768 @@ async function copiarFrase(texto, autor, botao) {
     const conteudo = `"${texto}" — ${autor || "Messias"}`;
     try {
         await navigator.clipboard.writeText(conteudo);
-        const textoOriginal = botao.textContent;
-        botao.textContent = "✅ Copiado!";
-        botao.disabled = true;
-        setTimeout(() => {
-            botao.textContent = textoOriginal;
-            botao.disabled = false;
-        }, 2000);
-    } catch (erro) {
-        console.error("Erro ao copiar:", erro);
-        alert("Não foi possível copiar. Selecione e copie manualmente.");
+        const textoOriginal = botao.innerHTML;
+        botao.innerHTML = "✅ Copiado!";
+        setTimeout(() => { botao.innerHTML = textoOriginal; }, 2000);
+    } catch (err) {
+        alert("Não foi possível copiar o texto automaticamente.");
     }
 }
 
 function alternarFavorito(id, botao) {
-    const indice = favoritos.indexOf(id);
-    if (indice === -1) {
+    const index = favoritos.indexOf(id);
+    if (index === -1) {
         favoritos.push(id);
-        botao.textContent = "❤️";
-        botao.setAttribute("title", "Remover dos favoritos");
+        botao.innerHTML = "❤️";
     } else {
-        favoritos.splice(indice, 1);
-        botao.textContent = "🤍";
-        botao.setAttribute("title", "Favoritar");
+        favoritos.splice(index, 1);
+        botao.innerHTML = "🤍";
     }
     localStorage.setItem("favoritos", JSON.stringify(favoritos));
 }
 
-async function baixarCardComoImagem(frase, urlImagem, botao) {
-    const categoriaLimpa = sanitizarTexto(frase.categoria || "");
-    const largura = 1080;
-    const altura = 1350;
+// =====================================================
+// GERAR IMAGEM PROFISSIONAL — FRASES DE MESSIAS
+// Formato 1080 x 1350 — ideal para Instagram
+// =====================================================
+async function baixarCardComoImagem(f, imagemUrl, botao) {
 
-    const canvas = document.createElement("canvas");
-    canvas.width = largura;
-    canvas.height = altura;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) throw new Error("Canvas não suportado.");
-
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, largura, altura);
-
-    const { imagem, liberar } = await carregarImagemParaCanvas(urlImagem);
-    const margemImagem = 40;
-    const alturaImagem = altura * 0.52;
-    ctx.save();
-    ctx.beginPath();
-    ctx.roundRect(margemImagem, margemImagem, largura - margemImagem * 2, alturaImagem, 24);
-    ctx.clip();
-    const escala = Math.max(
-        (largura - margemImagem * 2) / imagem.naturalWidth,
-        alturaImagem / imagem.naturalHeight
-    );
-    const dw = imagem.naturalWidth * escala;
-    const dh = imagem.naturalHeight * escala;
-    const dx = margemImagem + (largura - margemImagem * 2 - dw) / 2;
-    const dy = margemImagem + (alturaImagem - dh) / 2;
-    ctx.drawImage(imagem, dx, dy, dw, dh);
-    ctx.restore();
-    liberar();
-
-    const gradiente = ctx.createLinearGradient(0, alturaImagem + margemImagem, 0, altura);
-    gradiente.addColorStop(0, "rgba(255,255,255,0.95)");
-    gradiente.addColorStop(1, "rgba(255,255,255,1)");
-    ctx.fillStyle = gradiente;
-    ctx.fillRect(0, alturaImagem + margemImagem, largura, altura - alturaImagem - margemImagem);
-
-    if (categoriaLimpa) {
-        ctx.fillStyle = "#4f46e5";
-        ctx.font = "bold 36px sans-serif";
-        ctx.textAlign = "center";
-        ctx.fillText(categoriaLimpa.toUpperCase(), largura / 2, alturaImagem + margemImagem + 70);
+    if (!f || !f.texto) {
+        alert("Não foi possível criar a imagem desta frase.");
+        return;
     }
 
-    ctx.fillStyle = "#111827";
-    ctx.font = "bold 52px sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "top";
-    const margemTexto = 80;
-    const larguraTexto = largura - margemTexto * 2;
-    const linhas = quebrarTextoEmLinhas(ctx, `"${frase.texto}"`, larguraTexto);
-    let yAtual = alturaImagem + margemImagem + 130;
-    const espacoLinha = 70;
-    linhas.forEach(linha => {
-        ctx.fillText(linha, largura / 2, yAtual);
-        yAtual += espacoLinha;
-    });
+    const textoBotao = botao?.textContent || "🖼️ Baixar";
 
-    ctx.fillStyle = "#6b7280";
-    ctx.font = "italic 40px sans-serif";
-    ctx.fillText(`— ${frase.autor || "Messias"}`, largura / 2, yAtual + 40);
+    try {
 
-    ctx.fillStyle = "#9ca3af";
-    ctx.font = "30px sans-serif";
-    ctx.fillText("frasesdemessias.com.br", largura / 2, altura - 60);
+        if (botao) {
+            botao.disabled = true;
+            botao.textContent = "⏳ Criando...";
+        }
 
-    const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg", 0.95));
-    if (!blob) throw new Error("Falha ao gerar imagem.");
+        // ---------------------------------------------
+        // CARREGAR IMAGEM
+        // ---------------------------------------------
+        const urlImagem = urlParaProxyImagem(imagemUrl) || imagemUrl;
 
-    const urlDownload = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = urlDownload;
-    link.download = `frase-${frase.id || Date.now()}.jpg`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(urlDownload);
-}
+        const { imagem, liberar } =
+            await carregarImagemParaCanvas(urlImagem);
 
-function quebrarTextoEmLinhas(ctx, texto, larguraMax) {
-    const palavras = texto.split(/\s+/);
-    const linhas = [];
-    let linhaAtual = palavras[0];
+        try {
 
-    for (let i = 1; i < palavras.length; i++) {
-        const proximaLinha = `${linhaAtual} ${palavras[i]}`;
-        if (ctx.measureText(proximaLinha).width <= larguraMax) {
-            linhaAtual = proximaLinha;
-        } else {
-            linhas.push(linhaAtual);
-            linhaAtual = palavras[i];
+            // ---------------------------------------------
+            // CANVAS 1080 x 1350
+            // ---------------------------------------------
+            const canvas = document.createElement("canvas");
+
+            const largura = 1080;
+            const altura = 1350;
+
+            canvas.width = largura;
+            canvas.height = altura;
+
+            const ctx = canvas.getContext("2d");
+
+            // ---------------------------------------------
+            // FUNDO DA FOTO
+            // ---------------------------------------------
+            const proporcaoImagem =
+                imagem.naturalWidth / imagem.naturalHeight;
+
+            const proporcaoCanvas =
+                largura / altura;
+
+            let sx = 0;
+            let sy = 0;
+            let sw = imagem.naturalWidth;
+            let sh = imagem.naturalHeight;
+
+            if (proporcaoImagem > proporcaoCanvas) {
+
+                sw = imagem.naturalHeight * proporcaoCanvas;
+
+                sx =
+                    (imagem.naturalWidth - sw) / 2;
+
+            } else {
+
+                sh = imagem.naturalWidth / proporcaoCanvas;
+
+                sy =
+                    (imagem.naturalHeight - sh) / 2;
+            }
+
+            ctx.drawImage(
+                imagem,
+                sx,
+                sy,
+                sw,
+                sh,
+                0,
+                0,
+                largura,
+                altura
+            );
+
+            // ---------------------------------------------
+            // DEGRADÊ PROFISSIONAL
+            // ---------------------------------------------
+            const degradê =
+                ctx.createLinearGradient(
+                    0,
+                    0,
+                    0,
+                    altura
+                );
+
+            degradê.addColorStop(
+                0,
+                "rgba(4,18,45,0.45)"
+            );
+
+            degradê.addColorStop(
+                0.35,
+                "rgba(5,15,35,0.30)"
+            );
+
+            degradê.addColorStop(
+                0.60,
+                "rgba(0,0,0,0.48)"
+            );
+
+            degradê.addColorStop(
+                1,
+                "rgba(2,8,20,0.88)"
+            );
+
+            ctx.fillStyle = degradê;
+
+            ctx.fillRect(
+                0,
+                0,
+                largura,
+                altura
+            );
+
+            // ---------------------------------------------
+            // EFEITO DE LUZ DOURADA
+            // ---------------------------------------------
+            const luz =
+                ctx.createRadialGradient(
+                    largura * 0.5,
+                    altura * 0.42,
+                    20,
+                    largura * 0.5,
+                    altura * 0.42,
+                    600
+                );
+
+            luz.addColorStop(
+                0,
+                "rgba(255,215,100,0.14)"
+            );
+
+            luz.addColorStop(
+                0.5,
+                "rgba(255,190,60,0.05)"
+            );
+
+            luz.addColorStop(
+                1,
+                "rgba(255,190,60,0)"
+            );
+
+            ctx.fillStyle = luz;
+
+            ctx.fillRect(
+                0,
+                0,
+                largura,
+                altura
+            );
+
+            // ---------------------------------------------
+            // PARTÍCULAS / ESTRELAS
+            // ---------------------------------------------
+            desenharParticulasFrase(ctx, largura, altura);
+
+            // ---------------------------------------------
+            // MOLDURA EXTERNA
+            // ---------------------------------------------
+            ctx.strokeStyle =
+                "rgba(255,215,100,0.75)";
+
+            ctx.lineWidth = 5;
+
+            ctx.strokeRect(
+                30,
+                30,
+                largura - 60,
+                altura - 60
+            );
+
+            ctx.strokeStyle =
+                "rgba(255,255,255,0.20)";
+
+            ctx.lineWidth = 2;
+
+            ctx.strokeRect(
+                48,
+                48,
+                largura - 96,
+                altura - 96
+            );
+
+            // ---------------------------------------------
+            // CABEÇALHO
+            // ---------------------------------------------
+            ctx.textAlign = "center";
+
+            ctx.shadowColor =
+                "rgba(0,0,0,0.7)";
+
+            ctx.shadowBlur = 12;
+
+            ctx.font =
+                "bold 42px Arial";
+
+            ctx.fillStyle =
+                "#ffffff";
+
+            ctx.fillText(
+                "FRASES DE MESSIAS",
+                largura / 2,
+                105
+            );
+
+            ctx.shadowBlur = 0;
+
+            // ---------------------------------------------
+            // LINHA DOURADA DECORATIVA
+            // ---------------------------------------------
+            ctx.fillStyle =
+                "#f5d36b";
+
+            ctx.fillRect(
+                390,
+                130,
+                300,
+                4
+            );
+
+            // Pequenos detalhes
+            ctx.beginPath();
+
+            ctx.arc(
+                375,
+                132,
+                5,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.arc(
+                705,
+                132,
+                5,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.fill();
+
+            // ---------------------------------------------
+            // CATEGORIA
+            // ---------------------------------------------
+            const categoria =
+                sanitizarTexto(
+                    f.categoria || ""
+                );
+
+            let yCategoria = 210;
+
+            if (categoria) {
+
+                ctx.font =
+                    "bold 28px Arial";
+
+                const larguraTexto =
+                    ctx.measureText(categoria).width;
+
+                const larguraBadge =
+                    larguraTexto + 70;
+
+                const alturaBadge = 58;
+
+                const xBadge =
+                    (largura - larguraBadge) / 2;
+
+                // fundo do badge
+                ctx.fillStyle =
+                    "rgba(37,99,235,0.92)";
+
+                desenharRetanguloArredondado(
+                    ctx,
+                    xBadge,
+                    yCategoria,
+                    larguraBadge,
+                    alturaBadge,
+                    29
+                );
+
+                ctx.fill();
+
+                // borda dourada
+                ctx.strokeStyle =
+                    "rgba(255,215,100,0.9)";
+
+                ctx.lineWidth = 2;
+
+                desenharRetanguloArredondado(
+                    ctx,
+                    xBadge,
+                    yCategoria,
+                    larguraBadge,
+                    alturaBadge,
+                    29
+                );
+
+                ctx.stroke();
+
+                ctx.fillStyle =
+                    "#ffffff";
+
+                ctx.fillText(
+                    categoria,
+                    largura / 2,
+                    yCategoria + 39
+                );
+            }
+
+            // ---------------------------------------------
+            // FRASE
+            // ---------------------------------------------
+            const frase =
+                String(f.texto || "")
+                    .trim();
+
+            const larguraMaxima =
+                largura - 180;
+
+            ctx.font =
+                "bold 58px Arial";
+
+            const linhas =
+                quebrarTextoCanvas(
+                    ctx,
+                    `"${frase}"`,
+                    larguraMaxima
+                );
+
+            const alturaLinha = 78;
+
+            // Limita tamanho para frases muito grandes
+            let tamanhoFonte = 58;
+
+            if (linhas.length > 6) {
+                tamanhoFonte = 48;
+
+                ctx.font =
+                    `bold ${tamanhoFonte}px Arial`;
+            }
+
+            const novasLinhas =
+                quebrarTextoCanvas(
+                    ctx,
+                    `"${frase}"`,
+                    larguraMaxima
+                );
+
+            const alturaLinhaFinal =
+                tamanhoFonte === 48
+                    ? 65
+                    : 78;
+
+            let yFrase =
+                650 -
+                ((novasLinhas.length - 1) *
+                    alturaLinhaFinal) / 2;
+
+            // ---------------------------------------------
+            // ASPAS DECORATIVAS
+            // ---------------------------------------------
+            ctx.font =
+                "bold 150px Georgia";
+
+            ctx.fillStyle =
+                "rgba(245,211,107,0.35)";
+
+            ctx.fillText(
+                "“",
+                100,
+                yFrase - 30
+            );
+
+            // ---------------------------------------------
+            // TEXTO DA FRASE
+            // ---------------------------------------------
+            ctx.textAlign = "center";
+
+            ctx.font =
+                `bold ${tamanhoFonte}px Arial`;
+
+            ctx.fillStyle =
+                "#ffffff";
+
+            ctx.shadowColor =
+                "rgba(0,0,0,0.9)";
+
+            ctx.shadowBlur = 14;
+
+            ctx.shadowOffsetX = 2;
+            ctx.shadowOffsetY = 3;
+
+            novasLinhas.forEach(linha => {
+
+                ctx.fillText(
+                    linha,
+                    largura / 2,
+                    yFrase
+                );
+
+                yFrase +=
+                    alturaLinhaFinal;
+            });
+
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+
+            // ---------------------------------------------
+            // AUTOR
+            // ---------------------------------------------
+            ctx.font =
+                "italic 36px Arial";
+
+            ctx.fillStyle =
+                "#f5d36b";
+
+            ctx.fillText(
+                `— ${f.autor || "Messias"}`,
+                largura / 2,
+                yFrase + 55
+            );
+
+            // ---------------------------------------------
+            // LINHA DECORATIVA INFERIOR
+            // ---------------------------------------------
+            const yLinha =
+                yFrase + 105;
+
+            ctx.fillStyle =
+                "rgba(245,211,107,0.9)";
+
+            ctx.fillRect(
+                430,
+                yLinha,
+                220,
+                3
+            );
+
+            // ---------------------------------------------
+            // MARCA DO SITE
+            // ---------------------------------------------
+            ctx.font =
+                "bold 28px Arial";
+
+            ctx.fillStyle =
+                "rgba(255,255,255,0.95)";
+
+            ctx.fillText(
+                "frasesdemessias.com.br",
+                largura / 2,
+                altura - 85
+            );
+
+            // ---------------------------------------------
+            // PEQUENO TEXTO
+            // ---------------------------------------------
+            ctx.font =
+                "22px Arial";
+
+            ctx.fillStyle =
+                "rgba(255,255,255,0.65)";
+
+            ctx.fillText(
+                "Inspiração para todos os momentos",
+                largura / 2,
+                altura - 50
+            );
+
+            // ---------------------------------------------
+            // GERAR PNG
+            // ---------------------------------------------
+            const blob =
+                await new Promise((resolve, reject) => {
+
+                    canvas.toBlob(
+                        resultado => {
+
+                            if (resultado) {
+                                resolve(resultado);
+                            } else {
+                                reject(
+                                    new Error(
+                                        "Não foi possível gerar a imagem."
+                                    )
+                                );
+                            }
+
+                        },
+                        "image/png",
+                        1
+                    );
+                });
+
+            // ---------------------------------------------
+            // DOWNLOAD
+            // ---------------------------------------------
+            const url =
+                URL.createObjectURL(blob);
+
+            const link =
+                document.createElement("a");
+
+            link.href = url;
+
+            link.download =
+                `frases-de-messias-${f.id || Date.now()}.png`;
+
+            document.body.appendChild(link);
+
+            link.click();
+
+            link.remove();
+
+            setTimeout(() => {
+                URL.revokeObjectURL(url);
+            }, 2000);
+
+        } finally {
+
+            liberar();
+        }
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao criar imagem profissional:",
+            erro
+        );
+
+        alert(
+            "Não foi possível criar a imagem agora. Tente novamente."
+        );
+
+    } finally {
+
+        if (botao) {
+
+            botao.disabled = false;
+
+            botao.textContent =
+                textoBotao;
         }
     }
-    linhas.push(linhaAtual);
-    return linhas;
+}
+
+
+// =====================================================
+// DESENHAR PARTÍCULAS DE LUZ
+// =====================================================
+function desenharParticulasFrase(ctx, largura, altura) {
+
+    const quantidade = 45;
+
+    for (let i = 0; i < quantidade; i++) {
+
+        const x =
+            Math.random() * largura;
+
+        const y =
+            Math.random() * altura;
+
+        const raio =
+            Math.random() * 2.5 + 0.5;
+
+        const brilho =
+            Math.random() * 0.6 + 0.2;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,
+            y,
+            raio,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fillStyle =
+            `rgba(255,215,120,${brilho})`;
+
+        ctx.shadowColor =
+            "rgba(255,215,100,0.8)";
+
+        ctx.shadowBlur = 8;
+
+        ctx.fill();
+
+        ctx.shadowBlur = 0;
+    }
+}
+
+
+// =====================================================
+// RETÂNGULO ARREDONDADO COMPATÍVEL
+// =====================================================
+function desenharRetanguloArredondado(
+    ctx,
+    x,
+    y,
+    largura,
+    altura,
+    raio
+) {
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x + raio,
+        y
+    );
+
+    ctx.lineTo(
+        x + largura - raio,
+        y
+    );
+
+    ctx.quadraticCurveTo(
+        x + largura,
+        y,
+        x + largura,
+        y + raio
+    );
+
+    ctx.lineTo(
+        x + largura,
+        y + altura - raio
+    );
+
+    ctx.quadraticCurveTo(
+        x + largura,
+        y + altura,
+        x + largura - raio,
+        y + altura
+    );
+
+    ctx.lineTo(
+        x + raio,
+        y + altura
+    );
+
+    ctx.quadraticCurveTo(
+        x,
+        y + altura,
+        x,
+        y + altura - raio
+    );
+
+    ctx.lineTo(
+        x,
+        y + raio
+    );
+
+    ctx.quadraticCurveTo(
+        x,
+        y,
+        x + raio,
+        y
+    );
+
+    ctx.closePath();
 }
 
 // ======================
 // MOSTRAR CATEGORIAS
 // ======================
-function mostrarCategorias(lista, pesquisa, listaFrases) {
-    if (!lista) return;
-    lista.innerHTML = "";
+function mostrarCategorias(container, campoPesquisa, containerListaFrases) {
+    if (!container) return;
+    container.innerHTML = "";
 
-    const todas = document.createElement("button");
-    todas.type = "button";
-    todas.className = !categoriaSelecionada ? "categoriaAtiva" : "";
-    todas.textContent = "Todas";
-    todas.addEventListener("click", () => {
+    const listaNomes = Object.keys(categorias);
+    if (!listaNomes.length) return;
+
+    const btnTodas = document.createElement("button");
+    btnTodas.type = "button";
+    btnTodas.className = `btnCategoria ${categoriaSelecionada === "" ? "ativa" : ""}`;
+    btnTodas.textContent = "Todas";
+    btnTodas.addEventListener("click", () => {
         categoriaSelecionada = "";
-        mostrarCategorias(lista, pesquisa, listaFrases);
-        atualizarListaComFiltros();
-        rolarParaResultados();
+        atualizarBotoesCategoria(container);
+        mostrarFrases(containerListaFrases, filtrosAtuais());
     });
-    lista.appendChild(todas);
+    container.appendChild(btnTodas);
 
-    Object.keys(categorias).sort().forEach(nome => {
-        const botao = document.createElement("button");
-        botao.type = "button";
-        botao.className = categoriaSelecionada === nome ? "categoriaAtiva" : "";
-        botao.textContent = nome;
-        botao.addEventListener("click", () => {
+    listaNomes.forEach(nome => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `btnCategoria ${normalizarCategoria(categoriaSelecionada) === normalizarCategoria(nome) ? "ativa" : ""}`;
+        btn.textContent = nome;
+        btn.addEventListener("click", () => {
             categoriaSelecionada = nome;
-            mostrarCategorias(lista, pesquisa, listaFrases);
-            atualizarListaComFiltros();
-            rolarParaResultados();
+            atualizarBotoesCategoria(container);
+            mostrarFrases(containerListaFrases, filtrosAtuais());
         });
-        lista.appendChild(botao);
+        container.appendChild(btn);
+    });
+}
+
+function atualizarBotoesCategoria(container) {
+    const botoes = container.querySelectorAll(".btnCategoria");
+    botoes.forEach(btn => {
+        const texto = btn.textContent;
+        if (texto === "Todas" && categoriaSelecionada === "") {
+            btn.classList.add("ativa");
+        } else if (normalizarCategoria(texto) === normalizarCategoria(categoriaSelecionada)) {
+            btn.classList.add("ativa");
+        } else {
+            btn.classList.remove("ativa");
+        }
     });
 }
 
 // ======================
-// PESQUISA COM DEBOUNCE
-// ======================
-function configurarPesquisa(listaFrases) {
-    const campoPesquisa = document.getElementById("pesquisa");
-    const campoPesquisaAutor = document.getElementById("pesquisaAutor");
-
-    const reagirPesquisa = () => {
-        clearTimeout(temporizadorBusca);
-        temporizadorBusca = setTimeout(() => {
-            atualizarListaComFiltros();
-        }, 350);
-    };
-
-    campoPesquisa?.addEventListener("input", reagirPesquisa);
-    campoPesquisaAutor?.addEventListener("input", reagirPesquisa);
-
-    document.getElementById("btnLimparPesquisa")?.addEventListener("click", () => {
-        if (campoPesquisa) campoPesquisa.value = "";
-        if (campoPesquisaAutor) campoPesquisaAutor.value = "";
-        categoriaSelecionada = "";
-        mostrarCategorias(document.getElementById("listaCategorias"), null, listaFrases);
-        atualizarListaComFiltros();
-    });
-}
-
-// ======================
-// INICIALIZAÇÃO
+// INICIALIZAÇÃO E EVENTOS
 // ======================
 document.addEventListener("DOMContentLoaded", () => {
     const listaFrases = document.getElementById("listaFrases");
-    const fraseDia = document.getElementById("fraseDoDia");
+    const fraseDiaElemento = document.getElementById("fraseDia");
     const listaCategorias = document.getElementById("listaCategorias");
     const pesquisa = document.getElementById("pesquisa");
+    const pesquisaAutor = document.getElementById("pesquisaAutor");
 
-    configurarPesquisa(listaFrases);
-    carregarFrases(listaFrases, fraseDia, listaCategorias, pesquisa);
+    carregarFrases(listaFrases, fraseDiaElemento, listaCategorias, pesquisa);
     carregarPreviaComunidade();
+
+    const manipularInputBusca = () => {
+        clearTimeout(temporizadorBusca);
+        temporizadorBusca = setTimeout(() => {
+            atualizarListaComFiltros();
+        }, 300);
+    };
+
+    if (pesquisa) pesquisa.addEventListener("input", manipularInputBusca);
+    if (pesquisaAutor) pesquisaAutor.addEventListener("input", manipularInputBusca);
 });
