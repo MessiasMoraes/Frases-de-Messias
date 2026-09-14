@@ -1717,3 +1717,15 @@ img,video,canvas,iframe{max-width:100%}
   .cardFrase .botoes button{width:100%;min-height:44px}
 }
 @media (max-width:430px){header nav a,header nav button,header nav [data-menu-canais]{font-size:.84rem}.cardFrase .overlay{padding:16px 12px 14px}}
+
+
+/* Correção dos cartões de categoria: texto e autoria acima da imagem — 2026-09-14 */
+@media (max-width: 900px) {
+  .cardFrase .imagemFrase { display:flex !important; flex-direction:column !important; gap:14px !important; height:auto !important; overflow:visible !important; }
+  .cardFrase .imagemFrase > img { order:2 !important; position:static !important; width:100% !important; height:auto !important; aspect-ratio:4/3 !important; object-fit:cover !important; }
+  .cardFrase .imagemFrase > .overlayFrase { order:1 !important; position:static !important; inset:auto !important; display:block !important; background:#fff !important; color:#172033 !important; padding:20px 18px 0 !important; }
+  .cardFrase .imagemFrase .conteudoFrase { position:static !important; transform:none !important; color:inherit !important; text-align:center !important; }
+  .cardFrase .imagemFrase .textoFrase,
+  .cardFrase .imagemFrase .autorFrase,
+  .cardFrase .imagemFrase .marca { color:inherit !important; text-shadow:none !important; }
+}
