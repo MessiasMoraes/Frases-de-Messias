@@ -1570,3 +1570,110 @@ body.escuro .cardFrase .estatisticas {
 /* =========================================================
    FIM — STYLE.CSS
    ========================================================= */
+
+
+/* MODO TEXTO: imagens ocultas nos cards, preservadas para download */
+.cardFrase .imagemFrase {
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    background: #fff;
+}
+
+.cardFrase .imagemFrase img {
+    display: none;
+}
+
+.cardFrase .imagemFrase::after {
+    display: none;
+}
+
+.cardFrase .overlay,
+.cardFrase .overlayFrase {
+    position: static;
+    inset: auto;
+    display: flex;
+    width: 100%;
+    min-height: 0;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 24px 18px;
+    background: #fff;
+    color: #172033;
+    text-align: center;
+    text-shadow: none;
+}
+
+.cardFrase .overlay .textoFrase,
+.cardFrase .overlayFrase .textoFrase {
+    max-width: 100%;
+    color: #172033;
+    font-size: clamp(1.25rem, 2.8vw, 1.85rem);
+    line-height: 1.35;
+    text-shadow: none;
+}
+
+.cardFrase .overlay .autorFrase,
+.cardFrase .overlayFrase .autorFrase {
+    color: #52606d;
+    text-shadow: none;
+}
+
+.cardFrase .overlay .marca,
+.cardFrase .overlayFrase .marca {
+    position: static;
+    margin-top: 14px;
+    color: #64748b;
+    text-shadow: none;
+}
+
+.cardFrase .overlayFrase .etiquetaFrase {
+    border-color: #bfdbfe;
+    background: #eff6ff;
+    color: #1d4ed8;
+    text-shadow: none;
+}
+
+.cardFrase .conteudoFrase {
+    width: min(100%, 620px);
+    padding: 0;
+    background: transparent;
+    color: #172033;
+    text-shadow: none;
+}
+
+.dark .cardFrase .imagemFrase,
+.dark .cardFrase .overlay,
+.dark .cardFrase .overlayFrase {
+    background: #1e293b;
+}
+
+.dark .cardFrase .overlay .textoFrase,
+.dark .cardFrase .overlayFrase .textoFrase,
+.dark .cardFrase .conteudoFrase {
+    color: #f8fafc;
+}
+
+.dark .cardFrase .overlay .autorFrase,
+.dark .cardFrase .overlayFrase .autorFrase {
+    color: #cbd5e1;
+}
+
+.dark .cardFrase .overlay .marca,
+.dark .cardFrase .overlayFrase .marca {
+    color: #94a3b8;
+}
+
+@media (max-width: 600px) {
+    .cardFrase .overlay,
+    .cardFrase .overlayFrase {
+        padding: 20px 16px 16px;
+    }
+
+    .cardFrase .overlay .textoFrase,
+    .cardFrase .overlayFrase .textoFrase {
+        font-size: clamp(1.16rem, 5.3vw, 1.55rem);
+    }
+}
