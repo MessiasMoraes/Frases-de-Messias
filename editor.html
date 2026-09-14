@@ -540,4 +540,149 @@
             ctx.lineTo(x + radius, y + height);
             ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
             ctx.lineTo(x, y + radius);
-            ctx.quadraticCurveTo
+            ctx.quadraticCurveTo(x, y + radius, x + radius, y);
+            ctx.closePath();
+        }
+
+        function escolherMimeType() {
+            const tipos = [
+                "video/webm;codecs=vp9,opus",
+                "video/webm;codecs=vp8,opus",
+                "video/webm"
+            ];
+            return tipos.find(tipo => MediaRecorder.isTypeSupported(tipo)) || "";
+        }
+
+        async function gerarVideo() {
+            const botao = document.getElementById("btnGerar");
+            const status = document.getElementById("status");
+            const duracao = Number(document.getElementById("duracao").value) || 8;
+
+            if (!canvas.captureStream || !window.MediaRecorder) {
+                status.textContent = "Seu navegador não suporta a geração de vídeo diretamente. Use o Chrome atualizado.";
+                return;
+            }
+
+            botao.disabled = true;
+            status.textContent = "Preparando o vídeo...";
+
+            let stream;
+            let recorder;
+            let audioContext;
+            let audioElement;
+            let audioObjectUrl;
+            let audioSource;
+            let audioDestination;
+            let gravacaoAtiva = false;
+
+            try {
+                desenharPreview();
+                stream = canvas.captureStream(30);
+
+                const arquivoMusica = document.getElementById("musica").files[0] || audioFile;
+                if (arquivoMusica && window.AudioContext) {
+                    audioObjectUrl = URL.createObjectURL(arquivoMusica);
+                    audioElement = new Audio(audioObjectUrl);
+                    audioElement.loop = true;
+                    audioElement.volume = Number(document.getElementById("volumeMusica").value) / 100;
+                    audioContext = new AudioContext();
+                    audioDestination = audioContext.createMediaStreamDestination();
+                    audioSource = audioContext.createMediaElementSource(audioElement);
+                    audioSource.connect(audioDestination);
+                    await audioContext.resume();
+                    await audioElement.play();
+                    audioDestination.stream.getAudioTracks().forEach(track => stream.addTrack(track));
+                }
+
+                const mimeType = escolherMimeType();
+                recorder = mimeType
+                    ? new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 4_000_000 })
+                    : new MediaRecorder(stream);
+
+                const partes = [];
+                recorder.ondataavailable = evento => {
+                    if (evento.data && evento.data.size > 0) partes.push(evento.data);
+                };
+
+                const finalizado = new Promise((resolve, reject) => {
+                    recorder.onerror = evento => reject(evento.error || new Error("Falha ao gravar o vídeo."));
+                    recorder.onstop = resolve;
+                });
+
+                recorder.start(250);
+                gravacaoAtiva = true;
+                const inicio = performance.now();
+                const atualizarGravacao = agora => {
+                    if (!gravacaoAtiva) return;
+                    const progresso = Math.min(1, (agora - inicio) / (duracao * 1000));
+                    desenharPreview();
+                    status.textContent = `Gerando vídeo… ${Math.round(progresso * 100)}%`;
+                    if (progresso < 1 && recorder.state === "recording") requestAnimationFrame(atualizarGravacao);
+                };
+                requestAnimationFrame(atualizarGravacao);
+
+                await new Promise(resolve => setTimeout(resolve, duracao * 1000));
+                if (recorder.state === "recording") recorder.stop();
+                await finalizado;
+
+                const blob = new Blob(partes, { type: recorder.mimeType || "video/webm" });
+                if (!blob.size) throw new Error("O vídeo gerado ficou vazio.");
+
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = `frase-de-messias-${Date.now()}.webm`;
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                setTimeout(() => URL.revokeObjectURL(url), 2000);
+                status.textContent = "Vídeo gerado e baixado com sucesso. Formato: WebM.";
+            } catch (erro) {
+                console.error("Erro ao gerar vídeo:", erro);
+                status.textContent = `Não foi possível gerar o vídeo: ${erro.message || "erro desconhecido"}`;
+            } finally {
+                gravacaoAtiva = false;
+                if (audioElement) audioElement.pause();
+                if (audioSource) audioSource.disconnect();
+                if (audioContext && audioContext.state !== "closed") await audioContext.close();
+                if (audioObjectUrl) URL.revokeObjectURL(audioObjectUrl);
+                if (stream) stream.getTracks().forEach(track => track.stop());
+                botao.disabled = false;
+            }
+        }
+
+        function resetarEditor() {
+            document.getElementById("textoFrase").value = "";
+            document.getElementById("autor").value = "Messias";
+            document.getElementById("formato").value = "9:16";
+            document.getElementById("duracao").value = "8";
+            document.getElementById("tipoFundo").value = "cor";
+            document.getElementById("corFundo").value = "#1e3a5f";
+            document.getElementById("corGrad1").value = "#1e3a5f";
+            document.getElementById("corGrad2").value = "#0f172a";
+            document.getElementById("corTexto").value = "#ffffff";
+            document.getElementById("tamanhoTexto").value = "42";
+            document.getElementById("posVertical").value = "center";
+            document.getElementById("posHorizontal").value = "center";
+            document.getElementById("fonte").value = "system-ui";
+            document.getElementById("contorno").value = "2";
+            document.getElementById("sombra").value = "1";
+            document.getElementById("caixaTexto").checked = false;
+            document.getElementById("imagemFundo").value = "";
+            document.getElementById("musica").value = "";
+            document.getElementById("volumeMusica").value = "70";
+            document.getElementById("valorVolume").textContent = "70%";
+            imagemFundo = null;
+            audioFile = null;
+            document.getElementById("status").textContent = "";
+            atualizarOpcoesFundo();
+            desenharPreview();
+        }
+
+        window.addEventListener("resize", desenharPreview);
+        atualizarOpcoesFundo();
+        desenharPreview();
+    </script>
+</body>
+</html>
+
