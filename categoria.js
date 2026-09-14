@@ -148,16 +148,20 @@ function renderizar(frases) {
     const id = escaparHtml(frase.id);
     const curtidas = Number(frase.curtidas || 0).toLocaleString("pt-BR");
     const compartilhamentos = Number(frase.compartilhamentos || 0).toLocaleString("pt-BR");
+    const categoriaAtual = escaparHtml(document.body?.dataset.categoria || "Frases");
 
     return `
       <article class="cardFrase">
-        <div class="conteudoFrase">
-            <p class="textoFrase">“${texto}”</p>
-            <p class="autorFrase">— ${autor}</p>
-            <div class="marca">Frases de Messias</div>
-        </div>
         <div class="imagemFrase">
           <img src="${imagem}" alt="${texto}" loading="lazy" decoding="async">
+          <div class="overlayFrase">
+            <div class="conteudoFrase">
+              <span class="etiquetaFrase">${categoriaAtual}</span>
+              <p class="textoFrase">“${texto}”</p>
+              <p class="autorFrase">— ${autor}</p>
+              <div class="marca">Frases de Messias</div>
+            </div>
+          </div>
         </div>
         <div class="botoes" aria-label="Ações da frase">
           <button type="button" data-acao="curtir" data-id="${id}">Curtir</button>
