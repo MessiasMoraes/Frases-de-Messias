@@ -133,6 +133,242 @@
             height: 38px;
             padding: 3px;
         }
+        .biblioteca-musica {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 12px;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            background: #172338;
+        }
+        .biblioteca-musica .row {
+            align-items: center;
+        }
+        .lista-musicas {
+            display: grid;
+            gap: 8px;
+            max-height: 230px;
+            overflow-y: auto;
+            padding-right: 2px;
+        }
+        .item-musica {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 7px 9px;
+            align-items: center;
+            padding: 9px;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            background: #0f172a;
+        }
+        .item-musica.selecionada {
+            border-color: #34d399;
+            box-shadow: 0 0 0 2px rgba(52, 211, 153, .18);
+        }
+        .dados-musica {
+            min-width: 0;
+            display: grid;
+            gap: 2px;
+        }
+        .dados-musica strong,
+        .dados-musica small {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .dados-musica strong { color: #f8fafc; font-size: .88rem; }
+        .dados-musica small { color: #94a3b8; font-size: .72rem; }
+        .item-musica audio {
+            grid-column: 1 / -1;
+            width: 100%;
+            height: 32px;
+        }
+        .btn-usar-musica,
+        .btn-limpar-musica {
+            width: auto;
+            min-height: 36px;
+            padding: 7px 10px;
+            font-size: .78rem;
+            white-space: nowrap;
+        }
+        .btn-usar-musica { background: #2563eb; }
+        .item-musica.selecionada .btn-usar-musica { background: #059669; }
+        .btn-limpar-musica { background: #475569; }
+        .musica-vazia {
+            padding: 8px;
+            border: 1px dashed #475569;
+            border-radius: 8px;
+            text-align: center;
+        }
+        code {
+            color: #bfdbfe;
+            font-family: ui-monospace, monospace;
+        }
+        .cabecalho-musicas {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .cabecalho-musicas h2 {
+            margin: 2px 0 0;
+            color: #f8fafc;
+            font-size: 1.2rem;
+            letter-spacing: -.02em;
+        }
+        .eyebrow-musicas {
+            color: #60a5fa;
+            font-size: .62rem;
+            font-weight: 800;
+            letter-spacing: .14em;
+        }
+        .badge-seguranca-musicas {
+            padding: 5px 8px;
+            border: 1px solid rgba(52,211,153,.34);
+            border-radius: 999px;
+            background: rgba(16,185,129,.11);
+            color: #86efac;
+            font-size: .65rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .busca-musicas-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 42px;
+            padding: 0 12px;
+            border: 1px solid #475569;
+            border-radius: 10px;
+            background: #0b1425;
+            color: #94a3b8;
+        }
+        .busca-musicas-wrap > span {
+            font-size: 1.35rem;
+            line-height: 1;
+        }
+        .busca-musicas-wrap input {
+            min-width: 0;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            outline: 0;
+        }
+        .abas-musicas {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 1px 0 4px;
+            scrollbar-width: thin;
+        }
+        .aba-musica {
+            width: auto;
+            min-height: 31px;
+            padding: 6px 11px;
+            border: 1px solid #334155;
+            border-radius: 999px;
+            background: #1e293b;
+            color: #94a3b8;
+            font-size: .72rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .aba-musica.ativa {
+            border-color: #60a5fa;
+            background: #2563eb;
+            color: #fff;
+        }
+        .select-categoria-musicas { display: none; }
+        .lista-musicas {
+            max-height: 280px;
+            gap: 7px;
+        }
+        .item-musica {
+            grid-template-columns: 1fr auto;
+            gap: 6px 9px;
+            padding: 10px;
+            border-color: #283b58;
+            background: linear-gradient(135deg, #14233b, #0e192c);
+            transition: border-color .18s ease, transform .18s ease, background .18s ease;
+        }
+        .item-musica:hover,
+        .item-musica.tocando {
+            border-color: #4f8edb;
+            background: linear-gradient(135deg, #193154, #10213a);
+            transform: translateY(-1px);
+        }
+        .item-musica.selecionada {
+            border-color: #34d399;
+            background: linear-gradient(135deg, #123d3b, #102a33);
+        }
+        .controles-musica {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+        }
+        .btn-previa-musica {
+            flex: 0 0 32px;
+            width: 32px;
+            min-height: 32px;
+            padding: 0;
+            border-radius: 50%;
+            background: #2563eb;
+            font-size: .72rem;
+        }
+        .onda-musica {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            flex: 1;
+            height: 24px;
+            opacity: .7;
+        }
+        .onda-musica i {
+            display: block;
+            width: 3px;
+            height: 8px;
+            border-radius: 4px;
+            background: #60a5fa;
+        }
+        .onda-musica i:nth-child(2), .onda-musica i:nth-child(7) { height: 15px; }
+        .onda-musica i:nth-child(3), .onda-musica i:nth-child(5) { height: 21px; }
+        .onda-musica i:nth-child(4) { height: 12px; }
+        .tocando .onda-musica i { animation: onda-musica .8s ease-in-out infinite alternate; }
+        .tocando .onda-musica i:nth-child(2n) { animation-delay: .15s; }
+        .tocando .onda-musica i:nth-child(3n) { animation-delay: .28s; }
+        @keyframes onda-musica { to { transform: scaleY(.45); opacity: .45; } }
+        .duracao-musica { color: #64748b; font-size: .68rem; }
+        .btn-usar-musica {
+            width: auto;
+            min-width: 64px;
+            min-height: 32px;
+            padding: 6px 9px;
+            border-radius: 7px;
+            font-size: .72rem;
+        }
+        .aviso-licenca-musicas {
+            margin-top: 2px;
+            color: #64748b;
+            font-size: .68rem;
+            line-height: 1.35;
+        }
+        .btn-limpar-musica {
+            align-self: flex-start;
+            min-height: 30px;
+            padding: 5px 9px;
+            border: 1px solid #334155;
+            background: transparent;
+            color: #94a3b8;
+        }
+        @media (max-width: 520px) {
+            .cabecalho-musicas h2 { font-size: 1.08rem; }
+            .badge-seguranca-musicas { font-size: .58rem; }
+            .item-musica { grid-template-columns: minmax(0, 1fr) auto; }
+            .btn-usar-musica { width: auto; }
+        }
     </style>
 </head>
 <body>
@@ -217,12 +453,34 @@
             <!-- MÚSICA -->
             <div class="section-title">Música</div>
 
+            <div class="biblioteca-musica" id="bibliotecaMusica">
+                <div class="cabecalho-musicas">
+                    <div>
+                        <span class="eyebrow-musicas">ÁUDIO DO PROJETO</span>
+                        <h2>Músicas</h2>
+                    </div>
+                    <span class="badge-seguranca-musicas">🔒 Autorizadas</span>
+                </div>
+                <div class="busca-musicas-wrap">
+                    <span aria-hidden="true">⌕</span>
+                    <input type="search" id="buscaMusica" placeholder="Buscar músicas, estilos ou clima..." autocomplete="off">
+                </div>
+                <div id="categoriasMusica" class="abas-musicas" role="tablist" aria-label="Categorias de músicas"></div>
+                <select id="categoriaMusica" class="select-categoria-musicas" aria-label="Filtrar músicas por categoria">
+                    <option value="">Todos os estilos</option>
+                </select>
+                <div id="listaMusicas" class="lista-musicas" aria-live="polite"></div>
+                <button type="button" class="btn-limpar-musica" id="limparMusica">× Limpar seleção</button>
+                <p class="info aviso-licenca-musicas">Use apenas faixas próprias ou autorizadas. As músicas cadastradas pelo proprietário do site devem ficar na pasta <code>musicas/</code>.</p>
+            </div>
+
             <div>
-                <label>Música de fundo (opcional)</label>
+                <label>Ou envie uma música sua (opcional)</label>
                 <input type="file" id="musica" accept="audio/*">
             </div>
 
             <div>
+                <label>Música selecionada: <span id="musicaSelecionada">nenhuma</span></label>
                 <label>Volume da música: <span id="valorVolume">70%</span></label>
                 <input type="range" id="volumeMusica" min="0" max="100" value="70">
             </div>
@@ -314,11 +572,16 @@
         </div>
     </div>
 
+    <script src="musicas.js"></script>
     <script>
         const canvas = document.getElementById("preview");
         const ctx = canvas.getContext("2d");
         let imagemFundo = null;
         let audioFile = null;
+        let musicaBibliotecaSelecionada = null;
+        let audioPrevia = null;
+        let botaoPreviaAtivo = null;
+        const catalogoMusicas = Array.isArray(window.MUSIC_LIBRARY) ? window.MUSIC_LIBRARY : [];
 
         // Pega parâmetros da URL
         const params = new URLSearchParams(window.location.search);
@@ -368,7 +631,160 @@
 
         document.getElementById("musica").addEventListener("change", (e) => {
             audioFile = e.target.files[0] || null;
+            if (audioFile) {
+                musicaBibliotecaSelecionada = null;
+                document.getElementById("musicaSelecionada").textContent = audioFile.name;
+                document.querySelectorAll("[data-musica-id]").forEach(item => item.classList.remove("selecionada"));
+            }
         });
+
+        function preencherCategoriasMusica() {
+            const select = document.getElementById("categoriaMusica");
+            const abas = document.getElementById("categoriasMusica");
+            const categorias = [...new Set(catalogoMusicas.map(musica => musica.categoria).filter(Boolean))]
+                .sort((a, b) => a.localeCompare(b, "pt-BR"));
+
+            categorias.forEach(categoria => {
+                const option = document.createElement("option");
+                option.value = categoria;
+                option.textContent = categoria;
+                select.appendChild(option);
+            });
+
+            const criarAba = (valor, texto) => {
+                const aba = document.createElement("button");
+                aba.type = "button";
+                aba.className = "aba-musica ativa";
+                aba.dataset.categoria = valor;
+                aba.setAttribute("role", "tab");
+                aba.textContent = texto;
+                aba.addEventListener("click", () => {
+                    select.value = valor;
+                    abas.querySelectorAll(".aba-musica").forEach(item => item.classList.toggle("ativa", item === aba));
+                    renderizarMusicas();
+                });
+                abas.appendChild(aba);
+            };
+
+            criarAba("", "Todas");
+            categorias.slice(0, 5).forEach(categoria => criarAba(categoria, categoria));
+        }
+
+        function renderizarMusicas() {
+            const termo = document.getElementById("buscaMusica").value.trim().toLowerCase();
+            const categoria = document.getElementById("categoriaMusica").value;
+            const lista = document.getElementById("listaMusicas");
+            const resultados = catalogoMusicas.filter(musica => {
+                const texto = `${musica.nome || ""} ${musica.artista || ""} ${musica.categoria || ""} ${musica.clima || ""}`.toLowerCase();
+                return (!termo || texto.includes(termo)) && (!categoria || musica.categoria === categoria);
+            });
+
+            lista.replaceChildren();
+            if (!resultados.length) {
+                const vazio = document.createElement("p");
+                vazio.className = "info musica-vazia";
+                vazio.textContent = catalogoMusicas.length
+                    ? "Nenhuma música corresponde à busca."
+                    : "Nenhuma faixa cadastrada ainda. Adicione músicas autorizadas em musicas.js.";
+                lista.appendChild(vazio);
+                return;
+            }
+
+            resultados.forEach(musica => {
+                const item = document.createElement("article");
+                item.className = "item-musica" + (musicaBibliotecaSelecionada?.id === musica.id ? " selecionada" : "");
+                item.dataset.musicaId = musica.id;
+
+                const dados = document.createElement("div");
+                dados.className = "dados-musica";
+                dados.innerHTML = `<strong></strong><small></small>`;
+                dados.querySelector("strong").textContent = musica.nome || "Faixa sem nome";
+                dados.querySelector("small").textContent = `${musica.artista || "Autor não informado"} · ${musica.categoria || "Sem categoria"}`;
+
+                const controles = document.createElement("div");
+                controles.className = "controles-musica";
+
+                const tocar = document.createElement("button");
+                tocar.type = "button";
+                tocar.className = "btn-previa-musica";
+                tocar.textContent = "▶";
+                tocar.setAttribute("aria-label", `Ouvir prévia de ${musica.nome || "música"}`);
+                tocar.addEventListener("click", () => alternarPreviaMusica(musica, tocar));
+
+                const progresso = document.createElement("span");
+                progresso.className = "onda-musica";
+                progresso.setAttribute("aria-hidden", "true");
+                progresso.innerHTML = "<i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>";
+
+                const duracao = document.createElement("small");
+                duracao.className = "duracao-musica";
+                duracao.textContent = musica.duracao || "prévia";
+                controles.append(tocar, progresso, duracao);
+
+                const usar = document.createElement("button");
+                usar.type = "button";
+                usar.className = "btn-usar-musica";
+                usar.textContent = musicaBibliotecaSelecionada?.id === musica.id ? "✓ Usando" : "Usar";
+                usar.addEventListener("click", () => selecionarMusicaBiblioteca(musica));
+
+                item.append(dados, controles, usar);
+                lista.appendChild(item);
+            });
+        }
+
+        function alternarPreviaMusica(musica, botao) {
+            if (audioPrevia && botaoPreviaAtivo === botao) {
+                audioPrevia.pause();
+                audioPrevia = null;
+                botaoPreviaAtivo = null;
+                botao.textContent = "▶";
+                botao.closest(".item-musica")?.classList.remove("tocando");
+                return;
+            }
+
+            if (audioPrevia) audioPrevia.pause();
+            if (botaoPreviaAtivo) {
+                botaoPreviaAtivo.textContent = "▶";
+                botaoPreviaAtivo.closest(".item-musica")?.classList.remove("tocando");
+            }
+
+            audioPrevia = new Audio(musica.url);
+            audioPrevia.volume = Number(document.getElementById("volumeMusica").value) / 100;
+            botaoPreviaAtivo = botao;
+            botao.textContent = "Ⅱ";
+            botao.closest(".item-musica")?.classList.add("tocando");
+            audioPrevia.play().catch(() => {
+                botao.textContent = "▶";
+                botao.closest(".item-musica")?.classList.remove("tocando");
+            });
+            audioPrevia.addEventListener("ended", () => {
+                botao.textContent = "▶";
+                botao.closest(".item-musica")?.classList.remove("tocando");
+                audioPrevia = null;
+                botaoPreviaAtivo = null;
+            }, { once: true });
+        }
+
+        function selecionarMusicaBiblioteca(musica) {
+            musicaBibliotecaSelecionada = musica;
+            audioFile = null;
+            document.getElementById("musica").value = "";
+            document.getElementById("musicaSelecionada").textContent = musica.nome || "música da biblioteca";
+            renderizarMusicas();
+        }
+
+        document.getElementById("buscaMusica").addEventListener("input", renderizarMusicas);
+        document.getElementById("categoriaMusica").addEventListener("change", renderizarMusicas);
+        document.getElementById("limparMusica").addEventListener("click", () => {
+            musicaBibliotecaSelecionada = null;
+            audioFile = null;
+            document.getElementById("musica").value = "";
+            document.getElementById("musicaSelecionada").textContent = "nenhuma";
+            renderizarMusicas();
+        });
+
+        preencherCategoriasMusica();
+        renderizarMusicas();
 
         function atualizarOpcoesFundo() {
             const tipo = document.getElementById("tipoFundo").value;
@@ -580,9 +996,15 @@
                 stream = canvas.captureStream(30);
 
                 const arquivoMusica = document.getElementById("musica").files[0] || audioFile;
-                if (arquivoMusica && window.AudioContext) {
-                    audioObjectUrl = URL.createObjectURL(arquivoMusica);
-                    audioElement = new Audio(audioObjectUrl);
+                const urlMusicaBiblioteca = musicaBibliotecaSelecionada?.url || "";
+                if ((arquivoMusica || urlMusicaBiblioteca) && window.AudioContext) {
+                    if (urlMusicaBiblioteca) {
+                        audioElement = new Audio(urlMusicaBiblioteca);
+                        audioElement.crossOrigin = "anonymous";
+                    } else {
+                        audioObjectUrl = URL.createObjectURL(arquivoMusica);
+                        audioElement = new Audio(audioObjectUrl);
+                    }
                     audioElement.loop = true;
                     audioElement.volume = Number(document.getElementById("volumeMusica").value) / 100;
                     audioContext = new AudioContext();
@@ -670,6 +1092,10 @@
             document.getElementById("caixaTexto").checked = false;
             document.getElementById("imagemFundo").value = "";
             document.getElementById("musica").value = "";
+            musicaBibliotecaSelecionada = null;
+            audioFile = null;
+            document.getElementById("musicaSelecionada").textContent = "nenhuma";
+            renderizarMusicas();
             document.getElementById("volumeMusica").value = "70";
             document.getElementById("valorVolume").textContent = "70%";
             imagemFundo = null;
