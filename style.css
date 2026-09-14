@@ -1729,3 +1729,11 @@ img,video,canvas,iframe{max-width:100%}
   .cardFrase .imagemFrase .autorFrase,
   .cardFrase .imagemFrase .marca { color:inherit !important; text-shadow:none !important; }
 }
+
+
+/* Ordem universal dos cartões com overlay: texto/autoria antes da imagem — 2026-09-14 */
+.cardFrase .imagemFrase { display:flex !important; flex-direction:column !important; gap:14px !important; height:auto !important; overflow:visible !important; }
+.cardFrase .imagemFrase > img { order:2 !important; position:static !important; width:100% !important; height:auto !important; aspect-ratio:4/3 !important; object-fit:cover !important; }
+.cardFrase .imagemFrase > .overlayFrase { order:1 !important; position:static !important; inset:auto !important; display:block !important; background:#fff !important; color:#172033 !important; padding:20px 18px 0 !important; }
+.cardFrase .imagemFrase .conteudoFrase { position:static !important; transform:none !important; color:inherit !important; text-align:center !important; }
+.cardFrase .imagemFrase .textoFrase, .cardFrase .imagemFrase .autorFrase, .cardFrase .imagemFrase .marca { color:inherit !important; text-shadow:none !important; }
