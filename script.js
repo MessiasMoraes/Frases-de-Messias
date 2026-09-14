@@ -497,11 +497,36 @@ function criarCardFrase(f, lista) {
     const categoria = sanitizarTexto(f.categoria || "").trim();
     if (!texto || !lista) return;
 
+    const larguraImagem = window.innerWidth < 600 ? 800 : 1200;
+    const alturaImagem = window.innerWidth < 600 ? 1000 : 900;
+    const semente = f.id || texto.slice(0, 24) || "frase-messias";
+    const imagemOriginal = typeof f.imagem === "string" ? f.imagem.trim() : "";
+    const imagem = normalizarUrlImagem(
+        imagemOriginal || categorias[categoria] ||
+        `https://picsum.photos/seed/${encodeURIComponent(semente)}/${larguraImagem}/${alturaImagem}`
+    );
+
     const card = document.createElement("article");
     card.className = "card-frase-colecao";
     card.dataset.fraseCard = "";
     card.dataset.texto = texto;
     card.dataset.tema = categoria || "Frases de Messias";
+
+    const areaImagem = document.createElement("div");
+    areaImagem.className = "imagem-frase-colecao";
+
+    const imagemElemento = document.createElement("img");
+    imagemElemento.className = "imagem-frase-colecao-img";
+    imagemElemento.src = imagem;
+    imagemElemento.alt = `Imagem da frase: ${texto}`;
+    imagemElemento.loading = "lazy";
+    imagemElemento.addEventListener("error", () => {
+        imagemElemento.onerror = null;
+        imagemElemento.src = `https://picsum.photos/seed/${encodeURIComponent(semente)}/${larguraImagem}/${alturaImagem}`;
+    }, { once: true });
+
+    const overlay = document.createElement("div");
+    overlay.className = "overlay-frase-colecao";
 
     const etiqueta = document.createElement("p");
     etiqueta.className = "etiqueta-colecao";
@@ -513,6 +538,9 @@ function criarCardFrase(f, lista) {
     const autorElemento = document.createElement("p");
     autorElemento.className = "autor-frase";
     autorElemento.textContent = `— ${autor}`;
+
+    overlay.append(etiqueta, quote, autorElemento);
+    areaImagem.append(imagemElemento, overlay);
 
     const acoes = document.createElement("div");
     acoes.className = "acoes-colecao";
@@ -553,7 +581,7 @@ function criarCardFrase(f, lista) {
         </div>
     `;
 
-    card.append(etiqueta, quote, autorElemento, acoes, opcoes);
+    card.append(areaImagem, acoes, opcoes);
     lista.appendChild(card);
 }
 
