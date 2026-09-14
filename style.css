@@ -2479,3 +2479,128 @@ nav .link-rede-social-nav:focus-visible {
   #listaFrases .acoes-colecao button { flex: 1 1 120px; }
   #listaFrases .acoes-colecao .btn-baixar-colecao { flex-basis: 100%; }
 }
+
+/* =========================================================
+   CARDS DE FRASES — TEXTO SOBRE A IMAGEM
+   ========================================================= */
+#listaFrases .card-frase-colecao {
+  overflow: hidden;
+  padding: 0;
+  border-radius: 18px;
+}
+
+#listaFrases .imagem-frase-colecao {
+  position: relative;
+  min-height: 360px;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #172033;
+  isolation: isolate;
+}
+
+#listaFrases .imagem-frase-colecao::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(0,0,0,.16) 0%, rgba(0,0,0,.12) 28%, rgba(0,0,0,.52) 66%, rgba(0,0,0,.86) 100%);
+}
+
+#listaFrases .imagem-frase-colecao-img {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .45s ease, filter .35s ease;
+}
+
+#listaFrases .card-frase-colecao:hover .imagem-frase-colecao-img {
+  transform: scale(1.04);
+  filter: saturate(1.05);
+}
+
+#listaFrases .overlay-frase-colecao {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: clamp(20px, 4vw, 32px);
+  color: #fff;
+  text-align: left;
+}
+
+#listaFrases .overlay-frase-colecao .etiqueta-colecao {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  margin: 0 0 12px;
+  padding: 6px 11px;
+  border: 1px solid rgba(255,255,255,.55);
+  border-radius: 999px;
+  background: rgba(255,255,255,.18);
+  color: #fff;
+  font-size: .8rem;
+  font-weight: 800;
+  line-height: 1.2;
+  text-shadow: 0 1px 3px rgba(0,0,0,.5);
+}
+
+#listaFrases .overlay-frase-colecao blockquote {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(1.15rem, 2.6vw, 1.65rem);
+  font-style: normal;
+  font-weight: 800;
+  line-height: 1.35;
+  text-shadow: 0 2px 5px rgba(0,0,0,.72);
+}
+
+#listaFrases .overlay-frase-colecao .autor-frase {
+  margin: 14px 0 0;
+  color: rgba(255,255,255,.94);
+  font-size: 1rem;
+  font-style: italic;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0,0,0,.65);
+}
+
+#listaFrases .acoes-colecao,
+#listaFrases .opcoes-download-colecao {
+  position: relative;
+  z-index: 3;
+}
+
+@media (max-width: 780px) {
+  #listaFrases .imagem-frase-colecao {
+    min-height: 330px;
+    aspect-ratio: 4 / 3;
+  }
+  #listaFrases .overlay-frase-colecao { padding: 22px; }
+}
+
+@media (max-width: 480px) {
+  #listaFrases .imagem-frase-colecao { min-height: 300px; }
+  #listaFrases .overlay-frase-colecao blockquote { font-size: 1.16rem; }
+}
+
+body.escuro #listaFrases .card-frase-colecao {
+  border-color: #2c4a66;
+  background: #102438;
+}
+
+body.escuro #listaFrases .overlay-frase-colecao blockquote,
+body.escuro #listaFrases .overlay-frase-colecao .autor-frase,
+body.escuro #listaFrases .overlay-frase-colecao .etiqueta-colecao {
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #listaFrases .imagem-frase-colecao-img { transition: none; }
+}
