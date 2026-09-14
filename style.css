@@ -91,6 +91,24 @@ header {
 header .container {
     min-height: 72px;
 
+
+/* Estabilidade mobile final: cartões legíveis e coleções sem compressão */
+@media (max-width: 600px) {
+  .cardFrase { width: calc(100% - 8px); max-width: 500px; margin: 18px auto; }
+  .conteudoFrase { padding: 16px 14px 13px; }
+  .textoFrase { font-size: clamp(1.05rem, 4.8vw, 1.25rem); line-height: 1.35; }
+  .autorFrase { margin-top: 9px; font-size: .95rem; }
+  .marca { margin-top: 9px; font-size: .72rem; }
+  .imagemFrase { height: clamp(220px, 62vw, 280px); aspect-ratio: auto; }
+  .botoes { gap: 8px; padding: 10px; }
+  .botoes button { min-height: 42px; font-size: .95rem; line-height: 1.15; }
+  .card-colecao { grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; min-height: 0; padding: 14px; }
+  .card-colecao-conteudo { min-width: 0; display: block; }
+  .card-colecao-conteudo strong, .card-colecao-conteudo small { display: block; white-space: normal; overflow-wrap: anywhere; }
+  .card-colecao-conteudo strong { line-height: 1.2; }
+  .card-colecao-conteudo small { margin-top: 5px; line-height: 1.35; }
+}
+
     display: flex;
     align-items: center;
     justify-content: space-between;
