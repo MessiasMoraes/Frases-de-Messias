@@ -1,9 +1,9 @@
-const CACHE_NAME = 'frases-messias-v2';
+const CACHE_NAME = 'frases-messias-v3-mobile-20260914';
 const ASSETS = [
   './',
   './index.html',
-  './style.css',
-  './script.js',
+  './style.css?v=20260914-universal-final',
+  './script.js?v=20260914-mobile-fix-v2',
   './manifest.json',
   './imagens/categorias/amizade.png',
   './imagens/categorias/amor.png',
