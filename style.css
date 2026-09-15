@@ -5,40 +5,45 @@
 }
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f5f7fb;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fb;
     color: #222;
     line-height: 1.6;
-}
-
-header {
-    background: #2563eb;
-    color: #fff;
-    padding: 20px;
 }
 
 .container {
     max-width: 1100px;
     margin: auto;
+    padding: 0 15px;
+}
+
+header {
+    background: #2563eb;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
 }
 
 header h1 {
     margin-bottom: 15px;
+    font-size: 28px;
 }
 
 #pesquisa {
     width: 100%;
-    padding: 12px;
+    max-width: 600px;
+    padding: 12px 18px;
     border: none;
-    border-radius: 8px;
+    border-radius: 25px;
     font-size: 16px;
+    outline: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 .hero {
-    max-width: 1100px;
-    margin: 30px auto;
     background: #fff;
-    padding: 30px;
+    margin: 25px auto;
+    padding: 25px;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,.08);
     text-align: center;
@@ -46,100 +51,33 @@ header h1 {
 
 .hero h2 {
     color: #2563eb;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 blockquote {
-    font-size: 22px;
+    font-size: 20px;
     font-style: italic;
-    margin: 20px 0;
-}
-
-button {
-    background: #2563eb;
-    color: #fff;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-button:hover {
-    opacity: .9;
+    color: #444;
 }
 
 /* ============================
-   GRID DE CATEGORIAS
-   ============================ */
-.categorias {
-    max-width: 1100px;
-    margin: 30px auto;
-    padding: 0 15px;
-}
-
-.categorias h2 {
-    margin-bottom: 20px;
-}
-
-.gridCategorias, .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 15px;
-}
-
-.categoriaCard, .card {
-    position: relative;
-    height: 140px;
-    border-radius: 16px;
-    overflow: hidden;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,.1);
-    transition: transform .3s ease, box-shadow .3s ease;
-}
-
-.categoriaCard:hover, .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,.15);
-}
-
-.categoriaCard img, .card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.categoriaCard span, .card span {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.45);
-    color: #fff;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 10px;
-    text-align: center;
-}
-
-/* ============================
-   CARD COM IMAGEM E SOBREPOSIÇÃO
+   CARD DA FRASE COM OVERLAY
    ============================ */
 #listaFrases {
-    max-width: 1100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
     margin: 30px auto;
-    padding: 0 15px;
 }
 
 .cardFrase {
     background: #fff;
-    margin: 25px auto;
     border-radius: 18px;
     overflow: hidden;
     box-shadow: 0 5px 15px rgba(0,0,0,.15);
-    max-width: 500px;
+    width: 100%;
+    max-width: 480px;
 }
 
 .imagemFrase {
@@ -158,7 +96,7 @@ button:hover {
 .overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.55);
+    background: rgba(0, 0, 0, 0.6);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -191,17 +129,20 @@ button:hover {
     opacity: 0.8;
 }
 
+/* ============================
+   BOTOES DE AÇÃO
+   ============================ */
 .botoes {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
+    gap: 10px;
     padding: 15px;
     background: #fff;
+    flex-wrap: wrap;
 }
 
-.botoes button {
+.btnAcao {
     background: #2563eb;
     color: #fff;
     border: none;
@@ -209,30 +150,25 @@ button:hover {
     padding: 10px 14px;
     cursor: pointer;
     font-size: 14px;
-    transition: .3s;
+    font-weight: bold;
+    transition: background 0.3s ease;
 }
 
-.botoes button:hover {
-    opacity: .9;
-}
-
-footer {
-    background: #111827;
-    color: #fff;
-    text-align: center;
-    padding: 20px;
-    margin-top: 40px;
+.btnAcao:hover {
+    background: #1d4ed8;
 }
 
 /* ============================
-   MODO ESCURO
+   MODO ESCURO E BOTÃO FIXO
    ============================ */
-.dark {
-    background: #121212;
+body.dark {
+    background-color: #121212;
     color: #ffffff;
 }
 
-.dark .hero, .dark .cardFrase, .dark .botoes {
+body.dark .hero, 
+body.dark .cardFrase, 
+body.dark .botoes {
     background: #1e1e1e;
     color: #ffffff;
 }
@@ -247,5 +183,15 @@ footer {
     background: #2563eb;
     color: white;
     cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     z-index: 1000;
+}
+
+footer {
+    background: #111827;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
 }
