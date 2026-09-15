@@ -198,7 +198,7 @@ async function carregarFrases() {
 }
 
 // ======================
-// ABRIR EDITOR DE VÍDEO E FAVORITOS
+// ACOES DOS BOTÕES
 // ======================
 function abrirEditorVideo(texto, autor = "Messias") {
     const frase = encodeURIComponent(texto);
@@ -229,7 +229,7 @@ function alternarFavorito(id, botao) {
 }
 
 // ======================
-// FUNÇÃO DE BAIXAR IMAGEM (CANVAS NATIVO)
+// GERADOR E DOWNLOAD DE IMAGEM
 // ======================
 async function baixarCardComoImagem(f, urlImagem, botao) {
     const textoOriginal = botao.textContent;
@@ -240,7 +240,6 @@ async function baixarCardComoImagem(f, urlImagem, botao) {
         let imgTemp = new Image();
         imgTemp.crossOrigin = "anonymous";
 
-        // Converte a imagem para Blob local para evitar restrições de CORS
         try {
             const resposta = await fetch(urlImagem, { mode: "cors" });
             const blob = await resposta.blob();
@@ -251,7 +250,6 @@ async function baixarCardComoImagem(f, urlImagem, botao) {
                 imgTemp.onerror = reject;
             });
         } catch (_) {
-            // Fallback: carrega diretamente se o fetch for bloqueado
             imgTemp.src = urlImagem;
             await new Promise((resolve, reject) => {
                 imgTemp.onload = resolve;
@@ -264,23 +262,19 @@ async function baixarCardComoImagem(f, urlImagem, botao) {
         canvas.width = 800;
         canvas.height = 800;
 
-        // Desenha a imagem de fundo recortando centralizada (cover)
         const escala = Math.max(canvas.width / imgTemp.width, canvas.height / imgTemp.height);
         const x = (canvas.width / 2) - (imgTemp.width / 2) * escala;
         const y = (canvas.height / 2) - (imgTemp.height / 2) * escala;
         ctx.drawImage(imgTemp, x, y, imgTemp.width * escala, imgTemp.height * escala);
 
-        // Desenha a máscara escura (overlay)
         ctx.fillStyle = "rgba(0, 0, 0, 0.55)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Estilização do texto da Frase
         ctx.fillStyle = "#ffffff";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.font = "bold 32px sans-serif";
 
-        // Quebra de linha automática para o texto no canvas
         const palavras = `"${f.texto}"`.split(" ");
         let linha = "";
         const linhas = [];
@@ -305,23 +299,20 @@ async function baixarCardComoImagem(f, urlImagem, botao) {
             inicioY += alturaLinha;
         });
 
-        // Desenha o Autor
         ctx.font = "italic 24px sans-serif";
         ctx.fillText(`— ${f.autor || "Messias"}`, canvas.width / 2, inicioY + 30);
 
-        // Assinatura da Marca
         ctx.font = "18px sans-serif";
         ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
         ctx.fillText("📖 Frases de Messias", canvas.width / 2, canvas.height - 40);
 
-        // Executa o Download da Imagem Gerada
         const link = document.createElement("a");
         link.download = `frase-${f.id || "messias"}.png`;
         link.href = canvas.toDataURL("image/png");
         link.click();
     } catch (erro) {
         console.error("Erro ao gerar a imagem:", erro);
-        alert("Não foi possível gerar o download direto devido a restrições de segurança da imagem de fundo.");
+        alert("Não foi possível gerar o download direto devido a restrições da imagem.");
     } finally {
         botao.textContent = textoOriginal;
         botao.disabled = false;
@@ -360,7 +351,7 @@ function adicionarBotaoCarregarMais(lista) {
             console.error("Erro ao carregar mais frases:", erro);
             botaoMais.disabled = false;
             botaoMais.textContent = textoOriginal;
-            alert("Não foi possível carregar mais frases agora. Tente novamente.");
+            alert("Não foi possível carregar mais frases agora.");
         }
     });
     areaMais.appendChild(botaoMais);
@@ -410,7 +401,7 @@ function mostrarFrases(lista, filtro = "") {
 }
 
 // ======================
-// CRIAR CARD DE FRASE
+// RENDEREIZAR CARD COM TEXTO CENTRALIZADO
 // ======================
 function criarCardFrase(f, lista) {
     const categoriaLimpa = sanitizarTexto(f.categoria || "");
@@ -465,9 +456,7 @@ function criarCardFrase(f, lista) {
     lista.appendChild(card);
 }
 
-// ======================
 // INICIALIZAÇÃO
-// ======================
 const pesquisaInput = document.getElementById("pesquisa");
 if (pesquisaInput) {
     pesquisaInput.addEventListener("input", () => {
