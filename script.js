@@ -1,53 +1,59 @@
 import { db } from "./firebase.js";
-import {
-    collection,
-    getDocs,
-    query,
-    orderBy,
-    limit,
-    documentId
-} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+import { collection, getDocs, query, orderBy, limit, documentId } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 let frases = [];
 let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
 
-// ======================
-// CARREGAR FRASES DO FIREBASE
-// ======================
+const categoriasFixas = ["Amizade", "Amor", "Boa Noite", "Bom Dia", "Esperança", "Família", "Fé", "Gratidão", "Motivação", "Reflexão", "Sucesso", "Vida"];
+
+// MONTAR CATEGORIAS NA TELA
+function carregarCategorias() {
+    const listaCat = document.getElementById("listaCategorias");
+    if (!listaCat) return;
+    listaCat.innerHTML = "";
+    
+    categoriasFixas.forEach(cat => {
+        const btn = document.createElement("div");
+        btn.className = "itemCategoria";
+        btn.textContent = cat;
+        btn.onclick = () => {
+            const filtradas = frases.filter(f => (f.categoria || "").toLowerCase() === cat.toLowerCase());
+            renderizarFrases(filtradas.length > 0 ? filtradas : frases);
+        };
+        listaCat.appendChild(btn);
+    });
+}
+
+// CARREGAR FRASES DO BANCO
 async function carregarFrases() {
     const lista = document.getElementById("listaFrases");
-    const fraseDiaElemento = document.getElementById("fraseDia");
+    const fraseDiaEl = document.getElementById("fraseDia");
 
     if (lista) lista.innerHTML = `<p style="text-align:center;">⏳ Carregando frases...</p>`;
 
     try {
         const consulta = await getDocs(query(collection(db, "frases"), orderBy(documentId()), limit(20)));
         frases = [];
-        consulta.forEach(docSnap => {
-            frases.push({ id: docSnap.id, ...docSnap.data() });
-        });
+        consulta.forEach(docSnap => frases.push({ id: docSnap.id, ...docSnap.data() }));
 
         if (frases.length === 0) {
             if (lista) lista.innerHTML = `<p style="text-align:center;">Nenhuma frase encontrada.</p>`;
             return;
         }
 
-        // Selecionar Frase do Dia aleatória
-        if (fraseDiaElemento) {
+        if (fraseDiaEl) {
             const aleatoria = frases[Math.floor(Math.random() * frases.length)];
-            fraseDiaElemento.textContent = `"${aleatoria.texto}" — ${aleatoria.autor || "Messias"}`;
+            fraseDiaEl.textContent = `"${aleatoria.texto}" — ${aleatoria.autor || "Messias"}`;
         }
 
         renderizarFrases(frases);
     } catch (erro) {
-        console.error("Erro ao carregar do Firebase:", erro);
-        if (lista) lista.innerHTML = `<p style="text-align:center; color:red;">Erro ao carregar as frases do banco de dados.</p>`;
+        console.error("Erro Firebase:", erro);
+        if (lista) lista.innerHTML = `<p style="text-align:center; color:red;">Erro ao carregar dados.</p>`;
     }
 }
 
-// ======================
 // RENDERIZAR CARDS
-// ======================
 function renderizarFrases(listaDeFrases) {
     const lista = document.getElementById("listaFrases");
     if (!lista) return;
@@ -58,14 +64,11 @@ function renderizarFrases(listaDeFrases) {
         card.className = "cardFrase";
 
         const semente = f.id || "messias";
-        const imagemUrl = f.imagem && f.imagem.trim() !== "" 
-            ? f.imagem 
-            : `https://picsum.photos/seed/${encodeURIComponent(semente)}/600/600`;
+        const imagemUrl = f.imagem && f.imagem.trim() !== "" ? f.imagem : `https://picsum.photos/seed/${encodeURIComponent(semente)}/600/600`;
 
         card.innerHTML = `
             <div class="imagemFrase">
-                <img src="${imagemUrl}" alt="Frase de Messias" loading="lazy" 
-                     onerror="this.onerror=null; this.src='https://picsum.photos/seed/${encodeURIComponent(semente)}/600/600';">
+                <img src="${imagemUrl}" alt="Frase de Messias" loading="lazy" onerror="this.onerror=null; this.src='https://picsum.photos/seed/${encodeURIComponent(semente)}/600/600';">
                 <div class="overlay">
                     <p class="textoFrase">"${f.texto}"</p>
                     <p class="autorFrase">— ${f.autor || "Messias"}</p>
@@ -106,9 +109,7 @@ function renderizarFrases(listaDeFrases) {
     });
 }
 
-// ======================
-// GERADOR DE DOWNLOAD VIA CANVAS (SEGURO CONTRA CORS)
-// ======================
+// DOWNLOAD VIA CANVAS
 async function baixarCardComoImagem(f, urlImagem, botao) {
     const textoOriginal = botao.textContent;
     botao.textContent = "⏳ Gerando...";
@@ -196,15 +197,14 @@ async function baixarCardComoImagem(f, urlImagem, botao) {
         link.click();
 
     } catch (erro) {
-        console.error("Erro ao gerar imagem:", erro);
-        alert("Não foi possível realizar o download neste dispositivo.");
+        alert("Erro no download.");
     } finally {
         botao.textContent = textoOriginal;
         botao.disabled = false;
     }
 }
 
-// FILTRO DE PESQUISA
+// EVENTOS DE PESQUISA E TEMA
 const pesquisaInput = document.getElementById("pesquisa");
 if (pesquisaInput) {
     pesquisaInput.addEventListener("input", () => {
@@ -217,12 +217,10 @@ if (pesquisaInput) {
     });
 }
 
-// MODO ESCURO
 const temaBtn = document.getElementById("temaBtn");
 if (temaBtn) {
-    temaBtn.addEventListener("click", () => {
-        document.body.classList.toggle("dark");
-    });
+    temaBtn.addEventListener("click", () => document.body.classList.toggle("dark"));
 }
 
+carregarCategorias();
 carregarFrases();
