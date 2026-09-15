@@ -198,7 +198,7 @@ async function carregarFrases() {
 }
 
 // ======================
-// ACOES DOS BOTÕES
+// AÇÕES DOS BOTÕES
 // ======================
 function abrirEditorVideo(texto, autor = "Messias") {
     const frase = encodeURIComponent(texto);
@@ -237,38 +237,44 @@ async function baixarCardComoImagem(f, urlImagem, botao) {
     botao.disabled = true;
 
     try {
-        let imgTemp = new Image();
-        imgTemp.crossOrigin = "anonymous";
-
-        try {
-            const resposta = await fetch(urlImagem, { mode: "cors" });
-            const blob = await resposta.blob();
-            const urlBlob = URL.createObjectURL(blob);
-            imgTemp.src = urlBlob;
-            await new Promise((resolve, reject) => {
-                imgTemp.onload = () => { resolve(); URL.revokeObjectURL(urlBlob); };
-                imgTemp.onerror = reject;
-            });
-        } catch (_) {
-            imgTemp.src = urlImagem;
-            await new Promise((resolve, reject) => {
-                imgTemp.onload = resolve;
-                imgTemp.onerror = reject;
-            });
-        }
-
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
         canvas.width = 800;
         canvas.height = 800;
 
-        const escala = Math.max(canvas.width / imgTemp.width, canvas.height / imgTemp.height);
-        const x = (canvas.width / 2) - (imgTemp.width / 2) * escala;
-        const y = (canvas.height / 2) - (imgTemp.height / 2) * escala;
-        ctx.drawImage(imgTemp, x, y, imgTemp.width * escala, imgTemp.height * escala);
+        let imagemCarregada = false;
 
-        ctx.fillStyle = "rgba(0, 0, 0, 0.55)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        if (urlImagem) {
+            try {
+                const imgTemp = new Image();
+                imgTemp.crossOrigin = "anonymous";
+                imgTemp.src = urlImagem;
+
+                await new Promise((resolve, reject) => {
+                    imgTemp.onload = () => resolve();
+                    imgTemp.onerror = () => reject();
+                });
+
+                const escala = Math.max(canvas.width / imgTemp.width, canvas.height / imgTemp.height);
+                const x = (canvas.width / 2) - (imgTemp.width / 2) * escala;
+                const y = (canvas.height / 2) - (imgTemp.height / 2) * escala;
+                ctx.drawImage(imgTemp, x, y, imgTemp.width * escala, imgTemp.height * escala);
+                imagemCarregada = true;
+            } catch (_) {
+                imagemCarregada = false;
+            }
+        }
+
+        if (!imagemCarregada) {
+            const gradiente = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradiente.addColorStop(0, "#1e293b");
+            gradiente.addColorStop(1, "#0f172a");
+            ctx.fillStyle = gradiente;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        } else {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
 
         ctx.fillStyle = "#ffffff";
         ctx.textAlign = "center";
@@ -291,7 +297,7 @@ async function baixarCardComoImagem(f, urlImagem, botao) {
         }
         linhas.push(linha);
 
-        const alturaLinha = 42;
+        const alturaLinha = 44;
         let inicioY = (canvas.height / 2) - ((linhas.length * alturaLinha) / 2) - 20;
 
         linhas.forEach(l => {
@@ -310,9 +316,10 @@ async function baixarCardComoImagem(f, urlImagem, botao) {
         link.download = `frase-${f.id || "messias"}.png`;
         link.href = canvas.toDataURL("image/png");
         link.click();
+
     } catch (erro) {
-        console.error("Erro ao gerar a imagem:", erro);
-        alert("Não foi possível gerar o download direto devido a restrições da imagem.");
+        console.error("Erro ao gerar imagem:", erro);
+        alert("Não foi possível gerar a imagem neste dispositivo.");
     } finally {
         botao.textContent = textoOriginal;
         botao.disabled = false;
@@ -401,7 +408,7 @@ function mostrarFrases(lista, filtro = "") {
 }
 
 // ======================
-// RENDEREIZAR CARD COM TEXTO CENTRALIZADO
+// RENDERIZAR CARD
 // ======================
 function criarCardFrase(f, lista) {
     const categoriaLimpa = sanitizarTexto(f.categoria || "");
