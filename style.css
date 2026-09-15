@@ -26,24 +26,24 @@ header {
 
 header h1 {
     margin-bottom: 15px;
-    font-size: 28px;
+    font-size: 26px;
 }
 
 #pesquisa {
-    width: 100%;
+    width: 90%;
     max-width: 600px;
     padding: 12px 18px;
     border: none;
     border-radius: 25px;
-    font-size: 16px;
+    font-size: 15px;
     outline: none;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 .hero {
     background: #fff;
-    margin: 25px auto;
-    padding: 25px;
+    margin: 20px auto;
+    padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,.08);
     text-align: center;
@@ -52,23 +52,47 @@ header h1 {
 .hero h2 {
     color: #2563eb;
     margin-bottom: 10px;
+    font-size: 20px;
 }
 
 blockquote {
-    font-size: 20px;
+    font-size: 18px;
     font-style: italic;
     color: #444;
 }
 
-/* ============================
-   CARD DA FRASE COM OVERLAY
-   ============================ */
+/* CATEGORIAS */
+.categorias h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.gridCategorias {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.itemCategoria {
+    background: #2563eb;
+    color: white;
+    padding: 12px 8px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* CARDS DE FRASES */
 #listaFrases {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 25px;
-    margin: 30px auto;
+    margin-bottom: 40px;
 }
 
 .cardFrase {
@@ -107,39 +131,33 @@ blockquote {
 }
 
 .textoFrase {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: bold;
     line-height: 1.4;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
-    max-width: 90%;
 }
 
 .autorFrase {
-    margin-top: 15px;
-    font-size: 16px;
+    margin-top: 12px;
+    font-size: 15px;
     font-style: italic;
     opacity: 0.9;
 }
 
 .marca {
     position: absolute;
-    bottom: 15px;
-    font-size: 13px;
+    bottom: 12px;
+    font-size: 12px;
     font-weight: bold;
     opacity: 0.8;
 }
 
-/* ============================
-   BOTOES DE AÇÃO
-   ============================ */
 .botoes {
     display: flex;
     justify-content: center;
-    align-items: center;
-    gap: 10px;
-    padding: 15px;
+    gap: 8px;
+    padding: 12px;
     background: #fff;
-    flex-wrap: wrap;
 }
 
 .btnAcao {
@@ -147,44 +165,34 @@ blockquote {
     color: #fff;
     border: none;
     border-radius: 8px;
-    padding: 10px 14px;
+    padding: 8px 12px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: bold;
-    transition: background 0.3s ease;
 }
 
-.btnAcao:hover {
-    background: #1d4ed8;
-}
-
-/* ============================
-   MODO ESCURO E BOTÃO FIXO
-   ============================ */
+/* MODO ESCURO */
 body.dark {
     background-color: #121212;
     color: #ffffff;
 }
 
-body.dark .hero, 
-body.dark .cardFrase, 
-body.dark .botoes {
+body.dark .hero, body.dark .cardFrase, body.dark .botoes {
     background: #1e1e1e;
     color: #ffffff;
 }
 
 #temaBtn {
     position: fixed;
-    right: 20px;
-    bottom: 20px;
-    padding: 12px 18px;
+    right: 15px;
+    bottom: 15px;
+    padding: 10px 16px;
     border: none;
-    border-radius: 30px;
+    border-radius: 25px;
     background: #2563eb;
     color: white;
     cursor: pointer;
     font-weight: bold;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     z-index: 1000;
 }
 
@@ -193,5 +201,4 @@ footer {
     color: #fff;
     text-align: center;
     padding: 20px;
-    margin-top: 40px;
 }
