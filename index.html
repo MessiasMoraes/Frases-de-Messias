@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Frases de Messias</title>
-    
-    <!-- CSS com parâmetro para forçar atualização e evitar cache -->
-    <link rel="stylesheet" href="./style.css?v=200">
+    <link rel="stylesheet" href="./style.css?v=300">
 </head>
 <body>
 
@@ -24,8 +22,17 @@
             <blockquote id="fraseDia">"Carregando frase..."</blockquote>
         </section>
 
-        <!-- CONTAINER ONDE OS CARDS SERÃO GERADOS -->
-        <section id="listaFrases"></section>
+        <!-- SEÇÃO DE CATEGORIAS -->
+        <section class="categorias">
+            <h2>📂 Categorias em Destaque</h2>
+            <div id="listaCategorias" class="gridCategorias"></div>
+        </section>
+
+        <!-- TODAS AS FRASES -->
+        <section>
+            <h2 style="margin: 20px 0 10px;">💬 Todas as Frases</h2>
+            <div id="listaFrases"></div>
+        </section>
     </main>
 
     <button id="temaBtn" type="button">🌙 Modo Escuro</button>
@@ -34,7 +41,6 @@
         <p>&copy; Frases de Messias - Todos os direitos reservados.</p>
     </footer>
 
-    <!-- SCRIPT COM SUPORTE A MÓDULOS -->
-    <script type="module" src="./script.js?v=200"></script>
+    <script type="module" src="./script.js?v=300"></script>
 </body>
 </html>
