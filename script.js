@@ -1,1768 +1,759 @@
-/* =========================================================
-   FRASES DE MESSIAS — STYLE.CSS
-   Compatível com o script.js enviado
-   ========================================================= */
-
-/* =========================================================
-   1. RESET
-   ========================================================= */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Helvetica,
-        Arial,
-        sans-serif;
-
-    background: #f5f7fb;
-    color: #172033;
-    line-height: 1.6;
-    min-height: 100vh;
-
-    transition:
-        background-color .3s ease,
-        color .3s ease;
-}
-
-body,
-header,
-.cardFrase,
-.botoes,
-.estatistica,
-.cartao-previa-comunidade,
-.modalConteudo,
-input,
-select,
-textarea {
-    transition:
-        background-color .3s ease,
-        color .3s ease,
-        border-color .3s ease,
-        box-shadow .3s ease;
-}
-
-img {
-    max-width: 100%;
-    display: block;
-}
-
-button,
-input,
-select,
-textarea {
-    font: inherit;
-}
-
-button {
-    cursor: pointer;
-}
-
-button:disabled {
-    cursor: not-allowed;
-    opacity: .65;
-}
-
-a {
-    color: inherit;
-    text-decoration: none;
-}
-
-
-/* =========================================================
-   2. CONTAINER
-   ========================================================= */
-
-.container {
-    width: min(1180px, calc(100% - 32px));
-    margin: 0 auto;
-}
-
-
-/* =========================================================
-   3. HEADER
-   ========================================================= */
-
-header {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-
-    background: rgba(255, 255, 255, .96);
-
-    border-bottom: 1px solid #e7eaf0;
-
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-}
-
-header .container {
-    min-height: 72px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    gap: 18px;
-}
-
-.logo,
-header h1 {
-    color: #2563eb;
-    font-weight: 800;
-    letter-spacing: -.5px;
-}
-
-header h1 {
-    font-size: 1.3rem;
-    white-space: nowrap;
-}
-
-
-/* =========================================================
-   4. NAVEGAÇÃO
-   ========================================================= */
-
-nav {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    gap: 5px;
-    flex-wrap: wrap;
-}
-
-nav a {
-    padding: 9px 12px;
-
-    border-radius: 10px;
-
-    color: #4b5563;
-
-    font-size: .9rem;
-    font-weight: 650;
-
-    transition: .2s ease;
-}
-
-nav a:hover {
-    color: #2563eb;
-    background: #eff6ff;
-}
-
-
-/* =========================================================
-   5. TEMA
-   ========================================================= */
-
-#temaBtn {
-    min-width: 42px;
-    height: 42px;
-
-    padding: 0 11px;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    border: 1px solid #dce2ea;
-    border-radius: 12px;
-
-    background: #fff;
-    color: #263244;
-
-    font-size: 1.05rem;
-
-    transition: .2s ease;
-}
-
-#temaBtn:hover {
-    transform: translateY(-2px);
-    border-color: #2563eb;
-}
-
-
-/* =========================================================
-   6. HERO
-   ========================================================= */
-
-.hero {
-    position: relative;
-
-    overflow: hidden;
-
-    padding: 70px 24px;
-
-    text-align: center;
-
-    background:
-        radial-gradient(
-            circle at 20% 20%,
-            rgba(37, 99, 235, .15),
-            transparent 35%
-        ),
-        radial-gradient(
-            circle at 80% 80%,
-            rgba(124, 58, 237, .13),
-            transparent 35%
-        ),
-        #fff;
-
-    border-bottom: 1px solid #e8ebf1;
-}
-
-.hero h2 {
-    position: relative;
-    z-index: 2;
-
-    margin-bottom: 18px;
-
-    color: #111827;
-
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    line-height: 1.1;
-
-    font-weight: 900;
-    letter-spacing: -1.5px;
-}
-
-.hero p {
-    position: relative;
-    z-index: 2;
-
-    max-width: 720px;
-
-    margin: auto;
-
-    color: #5b6472;
-
-    font-size: 1.05rem;
-}
-
-
-/* =========================================================
-   7. FRASE DO DIA
-   ========================================================= */
-
-#fraseDia,
-#fraseDoDia {
-    margin: 30px auto;
-}
-
-.fraseDia {
-    position: relative;
-
-    max-width: 850px;
-
-    margin: 30px auto;
-
-    padding: 34px;
-
-    overflow: hidden;
-
-    border-radius: 24px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #2563eb,
-            #4f46e5
-        );
-
-    color: #fff;
-
-    box-shadow:
-        0 18px 45px rgba(37, 99, 235, .22);
-}
-
-.fraseDia::before {
-    content: "“";
-
-    position: absolute;
-
-    top: -35px;
-    left: 20px;
-
-    color: rgba(255,255,255,.12);
-
-    font-size: 160px;
-    line-height: 1;
-}
-
-.fraseDia p {
-    position: relative;
-    z-index: 2;
-
-    color: #fff;
-
-    font-size: clamp(1.25rem, 3vw, 2rem);
-
-    font-weight: 700;
-}
-
-
-/* =========================================================
-   8. BUSCA
-   ========================================================= */
-
-.areaBusca {
-    margin: 30px auto;
-}
-
-#pesquisa,
-#pesquisaAutor {
-    width: 100%;
-
-    min-height: 48px;
-
-    padding: 13px 17px;
-
-    border: 1px solid #dce2ea;
-    border-radius: 14px;
-
-    outline: none;
-
-    background: #fff;
-    color: #172033;
-}
-
-#pesquisa:focus,
-#pesquisaAutor:focus {
-    border-color: #2563eb;
-
-    box-shadow:
-        0 0 0 4px rgba(37,99,235,.10);
-}
-
-#statusPesquisa {
-    margin-top: 10px;
-
-    color: #697386;
-
-    font-size: .9rem;
-}
-
-.btn-ver-resultados {
-    margin-left: 8px;
-
-    padding: 6px 12px;
-
-    border: none;
-    border-radius: 8px;
-
-    background: #eff6ff;
-    color: #2563eb;
-
-    font-size: .85rem;
-    font-weight: 700;
-}
-
-.btn-ver-resultados:hover {
-    background: #2563eb;
-    color: #fff;
-}
-
-
-/* =========================================================
-   9. CATEGORIAS
-   ========================================================= */
-
-#listaCategorias {
-    display: flex;
-    flex-wrap: wrap;
-
-    justify-content: center;
-
-    gap: 10px;
-
-    margin: 25px 0 35px;
-}
-
-.categoria,
-.categoriaBtn,
-#listaCategorias button {
-    padding: 9px 15px;
-
-    border: 1px solid #dce3ed;
-    border-radius: 999px;
-
-    background: #fff;
-    color: #374151;
-
-    font-size: .9rem;
-    font-weight: 700;
-
-    transition: .2s ease;
-}
-
-.categoria:hover,
-.categoriaBtn:hover,
-#listaCategorias button:hover {
-    transform: translateY(-2px);
-
-    border-color: #2563eb;
-
-    background: #eff6ff;
-
-    color: #2563eb;
-}
-
-.categoria.ativo,
-.categoriaBtn.ativo,
-#listaCategorias button.ativo,
-#listaCategorias button.categoriaAtiva {
-    border-color: #2563eb;
-
-    background: #2563eb;
-
-    color: #fff;
-}
-
-
-/* =========================================================
-   10. TÍTULOS
-   ========================================================= */
-
-.secaoTitulo {
-    margin: 45px 0 22px;
-
-    text-align: center;
-}
-
-.secaoTitulo h2 {
-    color: #172033;
-
-    font-size: clamp(1.6rem, 4vw, 2.2rem);
-
-    font-weight: 850;
-}
-
-.secaoTitulo p {
-    margin-top: 6px;
-
-    color: #6b7280;
-}
-
-
-/* =========================================================
-   11. GRID DE FRASES
-   ========================================================= */
-
-#listaFrases {
-    display: grid;
-
-    grid-template-columns:
-        repeat(
-            auto-fill,
-            minmax(300px, 1fr)
-        );
-
-    gap: 26px;
-
-    width: 100%;
-
-    padding-bottom: 40px;
-}
-
-
-/* =========================================================
-   12. CARD
-   ========================================================= */
-
-.cardFrase {
-    position: relative;
-
-    width: 100%;
-
-    overflow: hidden;
-
-    border: 1px solid #e7eaf0;
-    border-radius: 22px;
-
-    background: #fff;
-
-    box-shadow:
-        0 8px 25px rgba(15,23,42,.07);
-}
-
-.cardFrase:hover {
-    transform: translateY(-6px);
-
-    border-color:
-        rgba(37,99,235,.25);
-
-    box-shadow:
-        0 20px 45px rgba(15,23,42,.13);
-}
-
-
-/* =========================================================
-   13. IMAGEM DA FRASE
-   ========================================================= */
-
-.imagemFrase {
-    position: relative;
-
-    display: block;
-
-    width: 100%;
-
-    aspect-ratio: 4 / 3;
-
-    min-height: 300px;
-
-    overflow: hidden;
-
-    background:
-        linear-gradient(
-            135deg,
-            #111827,
-            #334155
-        );
-}
-
-.imagemFrase img {
-    position: absolute;
-
-    inset: 0;
-
-    width: 100%;
-    height: 100%;
-
-    max-width: none;
-
-    object-fit: cover;
-
-    object-position: center;
-
-    transition:
-        transform .7s ease,
-        filter .5s ease;
-}
-
-.cardFrase:hover
-.imagemFrase img {
-    transform: scale(1.06);
-}
-
-
-/* =========================================================
-   14. GRADIENTE SOBRE IMAGEM
-   ========================================================= */
-
-.imagemFrase::after {
-    content: "";
-
-    position: absolute;
-
-    inset: 0;
-
-    z-index: 1;
-
-    pointer-events: none;
-
-    background:
-        linear-gradient(
-            to bottom,
-            rgba(0,0,0,.12) 0%,
-            rgba(0,0,0,.18) 25%,
-            rgba(0,0,0,.48) 55%,
-            rgba(0,0,0,.88) 100%
-        );
-}
-
-
-/* =========================================================
-   15. OVERLAY
-   ========================================================= */
-
-.imagemFrase .overlay {
-    position: absolute;
-
-    inset: 0;
-
-    z-index: 3;
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    justify-content: center;
-
-    padding: 55px 25px 65px;
-
-    text-align: center;
-
-    color: #fff;
-
-    pointer-events: none;
-}
-
-
-/* =========================================================
-   16. BADGE
-   ========================================================= */
-
-.imagemFrase .badgeCategoria {
-    position: absolute;
-
-    top: 17px;
-    left: 17px;
-
-    z-index: 5;
-
-    padding: 6px 12px;
-
-    border: 1px solid rgba(255,255,255,.28);
-    border-radius: 999px;
-
-    background:
-        rgba(0,0,0,.55);
-
-    color: #fff;
-
-    font-size: .72rem;
-    font-weight: 800;
-
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-}
-
-
-/* =========================================================
-   17. TEXTO DA FRASE SOBRE A IMAGEM
-   ========================================================= */
-
-.imagemFrase .textoFrase {
-    width: 100%;
-    max-width: 94%;
-
-    margin: 0 auto;
-
-    color: #fff;
-
-    font-size:
-        clamp(
-            1.05rem,
-            2.4vw,
-            1.42rem
-        );
-
-    line-height: 1.42;
-
-    font-weight: 800;
-
-    text-align: center;
-
-    text-shadow:
-        0 2px 5px rgba(0,0,0,.85),
-        0 4px 15px rgba(0,0,0,.5);
-
-    display: -webkit-box;
-
-    -webkit-box-orient: vertical;
-
-    -webkit-line-clamp: 7;
-
-    overflow: hidden;
-}
-
-
-/* =========================================================
-   18. AUTOR
-   ========================================================= */
-
-.imagemFrase .autorFrase {
-    margin-top: 15px;
-
-    color: #fff;
-
-    font-size: .95rem;
-
-    font-weight: 700;
-
-    text-shadow:
-        0 2px 6px rgba(0,0,0,.8);
-}
-
-
-/* =========================================================
-   19. MARCA
-   ========================================================= */
-
-.imagemFrase .marca {
-    position: absolute;
-
-    left: 20px;
-    bottom: 17px;
-
-    color: rgba(255,255,255,.95);
-
-    font-size: .76rem;
-
-    font-weight: 700;
-
-    text-shadow:
-        0 2px 6px rgba(0,0,0,.85);
-}
-
-
-/* =========================================================
-   20. BOTÕES DO CARD
-   ========================================================= */
-
-.botoes {
-    display: grid;
-
-    grid-template-columns:
-        repeat(4, 1fr);
-
-    gap: 8px;
-
-    padding: 13px;
-
-    background: #fff;
-}
-
-.botoes button {
-    min-height: 42px;
-
-    padding: 7px 5px;
-
-    border: 1px solid #e0e5ec;
-    border-radius: 11px;
-
-    background: #f8fafc;
-    color: #334155;
-
-    font-size: .8rem;
-    font-weight: 700;
-
-    transition: .2s ease;
-}
-
-.botoes button:hover {
-    transform: translateY(-2px);
-
-    border-color: #2563eb;
-
-    background: #eff6ff;
-
-    color: #2563eb;
-}
-
-.botoes button:active {
-    transform: scale(.97);
-}
-
-
-/* =========================================================
-   21. FAVORITO
-   ========================================================= */
-
-.btnFavorito.favoritoAtivo,
-.favoritoAtivo {
-    border-color: #fecaca !important;
-
-    background: #fff1f2 !important;
-
-    color: #dc2626 !important;
-}
-
-
-/* =========================================================
-   22. BOTÕES PRINCIPAIS
-   ========================================================= */
-
-.btnPrincipal,
-.btnCarregarMais {
-    display: inline-flex;
-
-    align-items: center;
-    justify-content: center;
-
-    gap: 8px;
-
-    min-height: 46px;
-
-    padding: 11px 20px;
-
-    border: none;
-    border-radius: 12px;
-
-    background: #2563eb;
-
-    color: #fff;
-
-    font-weight: 800;
-
-    box-shadow:
-        0 7px 18px
-        rgba(37,99,235,.22);
-
-    transition: .2s ease;
-}
-
-.btnPrincipal:hover,
-.btnCarregarMais:hover {
-    transform: translateY(-2px);
-
-    background: #1d4ed8;
-}
-
-
-/* =========================================================
-   23. CARREGAR MAIS
-   ========================================================= */
-
-.carregarMaisContainer {
-    display: flex;
-
-    justify-content: center;
-
-    padding: 10px 0 50px;
-}
-
-#carregarMais {
-    display: none;
-}
-
-
-/* =========================================================
-   24. ESTATÍSTICAS
-   ========================================================= */
-
-.estatisticas {
-    display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
-    gap: 16px;
-
-    margin: 35px 0;
-}
-
-.estatistica {
-    padding: 24px 18px;
-
-    text-align: center;
-
-    border: 1px solid #e7eaf0;
-    border-radius: 18px;
-
-    background: #fff;
-
-    box-shadow:
-        0 7px 20px rgba(15,23,42,.05);
-}
-
-.estatistica strong {
-    display: block;
-
-    color: #2563eb;
-
-    font-size: 2rem;
-
-    line-height: 1.1;
-}
-
-.estatistica span {
-    display: block;
-
-    margin-top: 6px;
-
-    color: #687386;
-
-    font-size: .9rem;
-}
-
-
-/* =========================================================
-   25. CONTADOR GLOBAL
-   ========================================================= */
-
-#contadorGlobal {
-    display: inline-flex;
-
-    align-items: center;
-    justify-content: center;
-
-    gap: 7px;
-
-    padding: 8px 14px;
-
-    border-radius: 999px;
-
-    background: #eff6ff;
-
-    color: #2563eb;
-
-    font-size: .85rem;
-
-    font-weight: 800;
-}
-
-
-/* =========================================================
-   26. COMUNIDADE
-   ========================================================= */
-
-#listaPublicacoesComunidade {
-    display: grid;
-
-    grid-template-columns:
-        repeat(
-            auto-fill,
-            minmax(260px, 1fr)
-        );
-
-    gap: 20px;
-
-    margin: 25px 0 50px;
-}
-
-.cartao-previa-comunidade {
-    display: block;
-
-    overflow: hidden;
-
-    border: 1px solid #e7eaf0;
-    border-radius: 18px;
-
-    background: #fff;
-
-    box-shadow:
-        0 8px 22px rgba(15,23,42,.06);
-
-    transition: .3s ease;
-}
-
-.cartao-previa-comunidade:hover {
-    transform: translateY(-4px);
-
-    box-shadow:
-        0 14px 30px rgba(15,23,42,.12);
-}
-
-.meta-previa-comunidade {
-    display: flex;
-
-    align-items: center;
-    justify-content: space-between;
-
-    gap: 10px;
-
-    padding: 16px 16px 8px;
-}
-
-.meta-previa-comunidade strong {
-    color: #111827;
-
-    font-size: .95rem;
-}
-
-.meta-previa-comunidade span {
-    padding: 3px 10px;
-
-    border-radius: 999px;
-
-    background: #f3f4f6;
-
-    color: #6b7280;
-
-    font-size: .8rem;
-}
-
-.cartao-previa-comunidade blockquote {
-    margin: 0;
-
-    padding: 0 16px 12px;
-
-    border: none;
-
-    color: #374151;
-
-    font-size: .95rem;
-
-    line-height: 1.5;
-}
-
-.link-cartao-previa {
-    display: block;
-
-    padding: 12px 16px 16px;
-
-    border-top: 1px solid #f3f4f6;
-
-    color: #2563eb;
-
-    font-size: .85rem;
-
-    font-weight: 700;
-}
-
-.estado-previa-comunidade {
-    grid-column: 1 / -1;
-
-    padding: 40px 20px;
-
-    text-align: center;
-
-    color: #6b7280;
-
-    font-style: italic;
-}
-
-
-/* =========================================================
-   27. MODAL
-   ========================================================= */
-
-.modal {
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 3000;
-
-    display: none;
-
-    align-items: center;
-    justify-content: center;
-
-    padding: 20px;
-
-    background: rgba(15,23,42,.72);
-
-    backdrop-filter: blur(7px);
-    -webkit-backdrop-filter: blur(7px);
-}
-
-.modal.ativo,
-.modal.aberto {
-    display: flex;
-}
-
-.modalConteudo {
-    position: relative;
-
-    width: min(700px, 100%);
-
-    max-height: 90vh;
-
-    overflow-y: auto;
-
-    padding: 28px;
-
-    border-radius: 22px;
-
-    background: #fff;
-
-    box-shadow:
-        0 30px 80px rgba(0,0,0,.25);
-}
-
-.fecharModal {
-    position: absolute;
-
-    top: 14px;
-    right: 14px;
-
-    width: 38px;
-    height: 38px;
-
-    border: none;
-    border-radius: 50%;
-
-    background: #f1f5f9;
-    color: #334155;
-
-    font-size: 1.3rem;
-}
-
-
-/* =========================================================
-   28. FORMULÁRIOS
-   ========================================================= */
-
-input,
-select,
-textarea {
-    width: 100%;
-
-    padding: 12px 14px;
-
-    border: 1px solid #dce2ea;
-    border-radius: 12px;
-
-    outline: none;
-
-    background: #fff;
-    color: #172033;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-    border-color: #2563eb;
-
-    box-shadow:
-        0 0 0 4px rgba(37,99,235,.10);
-}
-
-textarea {
-    min-height: 130px;
-
-    resize: vertical;
-}
-
-
-/* =========================================================
-   29. ESTADOS
-   ========================================================= */
-
-.estadoVazio,
-.semResultado,
-.semResultados,
-.carregando,
-.loading {
-    grid-column: 1 / -1;
-
-    padding: 50px 20px;
-
-    text-align: center;
-
-    border: 1px dashed #d6dce5;
-    border-radius: 18px;
-
-    background: #fff;
-
-    color: #697386;
-}
-
-.erro {
-    grid-column: 1 / -1;
-
-    padding: 20px;
-
-    border: 1px solid #fecaca;
-    border-radius: 14px;
-
-    background: #fef2f2;
-
-    color: #b91c1c;
-
-    text-align: center;
-}
-
-
-/* =========================================================
-   30. EDITOR DE VÍDEO / COMPATIBILIDADE
-   ========================================================= */
-
-.editorVideo {
-    position: relative;
-
-    width: 100%;
-
-    overflow: hidden;
-
-    border-radius: 20px;
-}
-
-.cinemaOverlay {
-    position: absolute;
-
-    inset: 0;
-
-    z-index: 5;
-
-    pointer-events: none;
-}
-
-.efeitoKenBurns {
-    animation:
-        kenBurns 12s ease-in-out infinite alternate;
-}
-
-@keyframes kenBurns {
-    from {
-        transform: scale(1);
-    }
-
-    to {
-        transform: scale(1.08);
+import { db } from "./firebase.js";
+import {
+    collection,
+    getDocs,
+    getDoc,
+    doc,
+    updateDoc,
+    increment,
+    runTransaction,
+    query,
+    where,
+    orderBy,
+    limit,
+    startAfter,
+    documentId
+} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+let frases = [];
+let categorias = {};
+let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+let categoriaSelecionada = "";
+let frasesCarregadas = false;
+let temporizadorBusca;
+const TAMANHO_LOTE_FRASES = 24;
+let ultimoDocumentoFrases = null;
+let haMaisFrases = true;
+let carregandoMaisFrases = false;
+
+// ======================
+// FUNÇÕES AUXILIARES
+// ======================
+function mostrarCarregando(lista) {
+    if (lista) {
+        lista.innerHTML = `
+            <div class="loading" style="text-align:center; padding: 30px; font-weight: bold;">
+                ⏳ Carregando frases...
+            </div>
+        `;
     }
 }
 
-
-/* =========================================================
-   31. CARD DE EXPORTAÇÃO
-   ========================================================= */
-
-#cardExportacao {
-    position: fixed;
-
-    left: -99999px;
-    top: 0;
-
-    width: 1080px;
-    height: 1350px;
-
-    overflow: hidden;
-
-    background: #111827;
-}
-
-.fundoEscuro {
-    position: absolute;
-
-    inset: 0;
-
-    background:
-        linear-gradient(
-            135deg,
-            #111827,
-            #1e293b
-        );
-}
-
-.conteudoExportacao {
-    position: relative;
-
-    z-index: 2;
-
-    height: 100%;
-
-    padding: 80px;
-
-    display: flex;
-
-    flex-direction: column;
-
-    justify-content: center;
-
-    align-items: center;
-
-    text-align: center;
-
-    color: #fff;
-}
-
-
-/* =========================================================
-   32. MODO ESCURO
-   ========================================================= */
-
-body.dark {
-    background: #0b1120;
-
-    color: #e5e7eb;
-}
-
-body.dark header {
-    background: rgba(15,23,42,.96);
-
-    border-color: #1e293b;
-}
-
-body.dark header h1,
-body.dark .logo {
-    color: #60a5fa;
-}
-
-body.dark nav a {
-    color: #cbd5e1;
-}
-
-body.dark nav a:hover {
-    background: #172554;
-
-    color: #60a5fa;
-}
-
-body.dark #temaBtn {
-    border-color: #334155;
-
-    background: #1e293b;
-
-    color: #f8fafc;
-}
-
-body.dark .hero {
-    background:
-        radial-gradient(
-            circle at 20% 20%,
-            rgba(37,99,235,.18),
-            transparent 35%
-        ),
-        radial-gradient(
-            circle at 80% 80%,
-            rgba(124,58,237,.16),
-            transparent 35%
-        ),
-        #0f172a;
-
-    border-color: #1e293b;
-}
-
-body.dark .hero h2 {
-    color: #f8fafc;
-}
-
-body.dark .hero p {
-    color: #94a3b8;
-}
-
-body.dark #pesquisa,
-body.dark #pesquisaAutor,
-body.dark input,
-body.dark select,
-body.dark textarea {
-    border-color: #334155;
-
-    background: #111827;
-
-    color: #f8fafc;
-}
-
-body.dark #statusPesquisa {
-    color: #94a3b8;
-}
-
-body.dark .categoria,
-body.dark .categoriaBtn,
-body.dark #listaCategorias button {
-    border-color: #334155;
-
-    background: #111827;
-
-    color: #cbd5e1;
-}
-
-body.dark .categoria:hover,
-body.dark .categoriaBtn:hover,
-body.dark #listaCategorias button:hover {
-    border-color: #3b82f6;
-
-    background: #172554;
-
-    color: #60a5fa;
-}
-
-body.dark .secaoTitulo h2 {
-    color: #f8fafc;
-}
-
-body.dark .secaoTitulo p {
-    color: #94a3b8;
-}
-
-body.dark .cardFrase {
-    border-color: #263449;
-
-    background: #111827;
-
-    box-shadow:
-        0 10px 30px rgba(0,0,0,.25);
-}
-
-body.dark .botoes {
-    background: #111827;
-
-    border-top: 1px solid #1e293b;
-}
-
-body.dark .botoes button {
-    border-color: #334155;
-
-    background: #1e293b;
-
-    color: #cbd5e1;
-}
-
-body.dark .botoes button:hover {
-    border-color: #3b82f6;
-
-    background: #172554;
-
-    color: #60a5fa;
-}
-
-body.dark .estatistica {
-    border-color: #263449;
-
-    background: #111827;
-}
-
-body.dark .estatistica span {
-    color: #94a3b8;
-}
-
-body.dark #contadorGlobal {
-    background: #172554;
-
-    color: #60a5fa;
-}
-
-body.dark .cartao-previa-comunidade {
-    border-color: #263449;
-
-    background: #111827;
-}
-
-body.dark .meta-previa-comunidade strong {
-    color: #f8fafc;
-}
-
-body.dark .meta-previa-comunidade span {
-    background: #1e293b;
-
-    color: #94a3b8;
-}
-
-body.dark .cartao-previa-comunidade blockquote {
-    color: #cbd5e1;
-}
-
-body.dark .link-cartao-previa {
-    border-color: #1e293b;
-
-    color: #60a5fa;
-}
-
-body.dark .estado-previa-comunidade {
-    color: #94a3b8;
-}
-
-body.dark .estadoVazio,
-body.dark .semResultado,
-body.dark .semResultados,
-body.dark .carregando,
-body.dark .loading {
-    border-color: #334155;
-
-    background: #111827;
-
-    color: #94a3b8;
-}
-
-body.dark .modalConteudo {
-    background: #111827;
-
-    color: #e5e7eb;
-}
-
-body.dark .fecharModal {
-    background: #1e293b;
-
-    color: #e2e8f0;
-}
-
-
-/* =========================================================
-   33. RESPONSIVIDADE — TABLET
-   ========================================================= */
-
-@media (max-width: 900px) {
-
-    header .container {
-        min-height: auto;
-
-        padding-top: 12px;
-        padding-bottom: 12px;
-
-        flex-wrap: wrap;
-    }
-
-    header h1 {
-        font-size: 1.15rem;
-    }
-
-    nav {
-        order: 3;
-
-        width: 100%;
-
-        padding-bottom: 4px;
-    }
-
-    #listaFrases {
-        grid-template-columns:
-            repeat(
-                2,
-                minmax(0, 1fr)
-            );
-
-        gap: 18px;
-    }
-
-    .imagemFrase {
-        min-height: 270px;
-    }
-
-    .estatisticas {
-        grid-template-columns:
-            repeat(3, 1fr);
+function mostrarErro(lista, msg) {
+    if (lista) {
+        lista.innerHTML = `
+            <div class="erro" style="text-align:center; padding: 30px; color: #ef4444; font-weight: bold;">
+                ${msg}
+            </div>
+        `;
     }
 }
 
+function sanitizarTexto(texto = "") {
+    return texto
+        .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1F004}\u{1F0CF}\u{1F170}-\u{1F251}]/gu, '')
+        .trim();
+}
 
-/* =========================================================
-   34. RESPONSIVIDADE — CELULAR
-   ========================================================= */
+function normalizarParaBusca(texto) {
+    return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
 
-@media (max-width: 600px) {
+function normalizarCategoria(texto = "") {
+    return normalizarParaBusca(
+        sanitizarTexto(String(texto).replace(/[-_]+/g, " "))
+    ).replace(/\s+/g, " ").trim();
+}
 
-    .container {
-        width: min(
-            100% - 20px,
-            1180px
-        );
-    }
+function termosRelevantesDaBusca(texto = "") {
+    const palavrasIgnoradas = new Set([
+        "a", "as", "o", "os", "de", "da", "das", "do", "dos", "e", "em", "para", "por", "com", "sobre",
+        "frase", "frases", "mensagem", "mensagens", "pensamento", "pensamentos"
+    ]);
 
-    header .container {
-        gap: 10px;
-    }
+    return normalizarParaBusca(String(texto))
+        .split(/[^a-z0-9]+/)
+        .filter(palavra => palavra && !palavrasIgnoradas.has(palavra));
+}
 
-    header h1 {
-        font-size: 1rem;
-
-        max-width: calc(100% - 55px);
-
-        overflow: hidden;
-
-        text-overflow: ellipsis;
-    }
-
-    nav {
-        justify-content: flex-start;
-
-        overflow-x: auto;
-
-        flex-wrap: nowrap;
-
-        width: 100%;
-
-        padding-bottom: 5px;
-
-        scrollbar-width: none;
-    }
-
-    nav::-webkit-scrollbar {
-        display: none;
-    }
-
-    nav a {
-        flex: 0 0 auto;
-
-        padding: 8px 10px;
-
-        font-size: .82rem;
-    }
-
-    .hero {
-        padding: 48px 16px;
-    }
-
-    .hero h2 {
-        font-size: 2rem;
-    }
-
-    .hero p {
-        font-size: .95rem;
-    }
-
-    .fraseDia {
-        padding: 27px 20px;
-
-        border-radius: 19px;
-    }
-
-    #listaFrases {
-        grid-template-columns: 1fr;
-
-        gap: 20px;
-    }
-
-    .cardFrase {
-        border-radius: 19px;
-    }
-
-    .imagemFrase {
-        aspect-ratio: 4 / 3;
-
-        min-height: 285px;
-    }
-
-    .imagemFrase .overlay {
-        padding:
-            50px
-            18px
-            58px;
-    }
-
-    .imagemFrase .textoFrase {
-        max-width: 96%;
-
-        font-size:
-            clamp(
-                1.05rem,
-                5vw,
-                1.35rem
-            );
-
-        line-height: 1.4;
-
-        -webkit-line-clamp: 8;
-    }
-
-    .imagemFrase .autorFrase {
-        font-size: .88rem;
-    }
-
-    .imagemFrase .marca {
-        left: 15px;
-        bottom: 13px;
-
-        font-size: .68rem;
-    }
-
-    .imagemFrase .badgeCategoria {
-        top: 13px;
-        left: 13px;
-
-        font-size: .68rem;
-    }
-
-    .botoes {
-        grid-template-columns:
-            repeat(2, 1fr);
-
-        gap: 7px;
-
-        padding: 10px;
-    }
-
-    .botoes button {
-        min-height: 43px;
-
-        font-size: .78rem;
-    }
-
-    .estatisticas {
-        grid-template-columns: 1fr;
-
-        gap: 10px;
-    }
-
-    .estatistica {
-        padding: 18px;
-    }
-
-    #listaPublicacoesComunidade {
-        grid-template-columns: 1fr;
-
-        gap: 15px;
-    }
-
-    .modal {
-        padding: 10px;
-    }
-
-    .modalConteudo {
-        padding: 22px 17px;
-
-        border-radius: 18px;
+function normalizarUrlImagem(url = "") {
+    const valor = String(url || "").trim();
+    if (!valor) return "";
+    try {
+        const origem = new URL(valor, window.location.href);
+        if (origem.hostname === "messiasmoraes.github.io" && origem.pathname.startsWith("/Frases-de-Messias/")) {
+            origem.pathname = origem.pathname.replace(/^\/Frases-de-Messias\//, "/");
+            origem.protocol = window.location.protocol;
+            origem.host = window.location.host;
+        }
+        return origem.href;
+    } catch (_) {
+        return valor;
     }
 }
 
+const ORIGEM_PROXY_IMAGEM = "https://frasesdemessiascombr.vercel.app";
 
-/* =========================================================
-   35. CELULARES MUITO PEQUENOS
-   ========================================================= */
+function origemApiVideo() {
+    return window.location.hostname.endsWith(".vercel.app")
+        ? window.location.origin
+        : ORIGEM_PROXY_IMAGEM;
+}
 
-@media (max-width: 380px) {
+function urlParaProxyImagem(url = "") {
+    const valor = String(url || "").trim();
+    if (!valor) return "";
+    try {
+        const origem = new URL(valor, window.location.href);
+        if (origem.origin === window.location.origin) return origem.href;
+        if (origem.protocol !== "https:") return "";
 
-    .container {
-        width: calc(100% - 14px);
-    }
-
-    header h1 {
-        font-size: .92rem;
-    }
-
-    nav a {
-        padding: 7px 8px;
-
-        font-size: .76rem;
-    }
-
-    #temaBtn {
-        min-width: 38px;
-        height: 38px;
-    }
-
-    .imagemFrase {
-        min-height: 260px;
-    }
-
-    .imagemFrase .textoFrase {
-        font-size: 1rem;
-    }
-
-    .botoes button {
-        font-size: .73rem;
+        const proxyBase = window.location.hostname.endsWith(".vercel.app")
+            ? window.location.origin
+            : ORIGEM_PROXY_IMAGEM;
+        return `${proxyBase}/api/image?url=${encodeURIComponent(origem.href)}`;
+    } catch (_) {
+        return "";
     }
 }
 
-
-/* =========================================================
-   36. ACESSIBILIDADE
-   ========================================================= */
-
-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
-    outline: 3px solid rgba(37,99,235,.35);
-
-    outline-offset: 2px;
-}
-
-
-/* =========================================================
-   37. REDUÇÃO DE MOVIMENTO
-   ========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-    html {
-        scroll-behavior: auto;
+async function carregarImagemParaCanvas(url) {
+    const resposta = await fetch(url, { cache: "no-store", mode: "cors" });
+    const tipo = resposta.headers.get("content-type") || "";
+    if (!resposta.ok || !tipo.toLowerCase().startsWith("image/")) {
+        throw new Error("A foto original não pôde ser carregada para o download.");
     }
 
-    *,
-    *::before,
-    *::after {
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: .01ms !important;
+    const blob = await resposta.blob();
+    if (!blob.size) throw new Error("A foto original retornou vazia.");
+
+    const objectUrl = URL.createObjectURL(blob);
+    const imagem = new Image();
+    imagem.decoding = "async";
+
+    try {
+        await new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => reject(new Error("Tempo esgotado ao carregar a foto original.")), 10000);
+            imagem.onload = () => {
+                clearTimeout(timeout);
+                resolve();
+            };
+            imagem.onerror = () => {
+                clearTimeout(timeout);
+                reject(new Error("A foto original não pôde ser decodificada."));
+            };
+            imagem.src = objectUrl;
+        });
+
+        if (!imagem.naturalWidth || !imagem.naturalHeight) {
+            throw new Error("A foto original não possui dimensões válidas.");
+        }
+        return { imagem, liberar: () => URL.revokeObjectURL(objectUrl) };
+    } catch (erro) {
+        URL.revokeObjectURL(objectUrl);
+        throw erro;
     }
 }
+
+// ======================
+// FRASE DO DIA
+// ======================
+function fraseDoDia(fraseDiaElemento) {
+    if (!fraseDiaElemento || frases.length === 0) return;
+    const indice = Math.floor(Math.random() * frases.length);
+    const f = frases[indice];
+    fraseDiaElemento.innerHTML = `"${f.texto}" — ${f.autor || "Messias"}`;
+}
+
+// ======================
+// CONTADOR DE VISITAS
+// ======================
+async function contarVisitaGlobal() {
+    const chaveVisita = "visita_global_registrada";
+    const contadorElemento = document.getElementById("contadorGlobal");
+
+    try {
+        const docRef = doc(db, "estatisticas", "global");
+        const jaRegistrouNestaSessao = sessionStorage.getItem(chaveVisita) === "true";
+
+        const totalAtualizado = await runTransaction(db, async (transacao) => {
+            const estatistica = await transacao.get(docRef);
+            const visitasAtuais = Number(estatistica.data()?.visitas || 0);
+
+            if (!jaRegistrouNestaSessao) {
+                transacao.update(docRef, { visitas: visitasAtuais + 1 });
+                return visitasAtuais + 1;
+            }
+
+            return visitasAtuais;
+        });
+
+        if (!jaRegistrouNestaSessao) {
+            sessionStorage.setItem(chaveVisita, "true");
+        }
+
+        if (contadorElemento) {
+            contadorElemento.textContent = Number(totalAtualizado).toLocaleString("pt-BR");
+        }
+    } catch (e) {
+        console.error("Erro ao contar visita global:", e);
+    }
+}
+
+// ======================
+// PRÉVIA DA REDE SOCIAL
+// ======================
+function dataDaPublicacaoSocial(valor) {
+    if (valor?.toDate) return valor.toDate();
+    if (valor?.seconds) return new Date(valor.seconds * 1000);
+    return valor instanceof Date ? valor : null;
+}
+
+function criarCartaoPreviaComunidade(publicacao) {
+    const link = document.createElement("a");
+    link.className = "cartao-previa-comunidade";
+    link.href = "comunidade.html";
+    link.setAttribute("aria-label", "Ver publicação de " + (publicacao.autorNome || "membro da comunidade") + " na Rede Social");
+
+    const cabecalho = document.createElement("div");
+    cabecalho.className = "meta-previa-comunidade";
+
+    const autor = document.createElement("strong");
+    autor.textContent = publicacao.autorNome || "Membro da comunidade";
+
+    const categoria = document.createElement("span");
+    categoria.textContent = publicacao.categoria || "Comunidade";
+    cabecalho.append(autor, categoria);
+
+    const texto = document.createElement("blockquote");
+    const conteudo = String(publicacao.texto || "").trim();
+    texto.textContent = `"${conteudo.length > 170 ? conteudo.slice(0, 170).trimEnd() + "…" : conteudo}"`;
+
+    const rodape = document.createElement("span");
+    rodape.className = "link-cartao-previa";
+    const data = dataDaPublicacaoSocial(publicacao.publicadoEm || publicacao.criadoEm);
+    const dataFormatada = data
+        ? data.toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" })
+        : "Na Rede Social";
+    rodape.textContent = `${dataFormatada} · Ver publicação →`;
+
+    link.append(cabecalho, texto, rodape);
+    return link;
+}
+
+async function carregarPreviaComunidade() {
+    const lista = document.getElementById("listaPublicacoesComunidade");
+    if (!lista) return;
+
+    try {
+        const resultado = await getDocs(query(
+            collection(db, "comunidadePublicacoes"),
+            where("status", "==", "publicado"),
+            limit(12)
+        ));
+        const publicacoes = resultado.docs
+            .map(item => ({ id: item.id, ...item.data() }))
+            .sort((primeira, segunda) => {
+                const dataPrimeira = dataDaPublicacaoSocial(primeira.publicadoEm || primeira.criadoEm)?.getTime() || 0;
+                const dataSegunda = dataDaPublicacaoSocial(segunda.publicadoEm || segunda.criadoEm)?.getTime() || 0;
+                return dataSegunda - dataPrimeira;
+            })
+            .slice(0, 3);
+
+        lista.replaceChildren();
+        if (!publicacoes.length) {
+            const estado = document.createElement("p");
+            estado.className = "estado-previa-comunidade";
+            estado.textContent = "A Comunidade está começando. Seja uma das primeiras pessoas a compartilhar uma frase inspiradora.";
+            lista.appendChild(estado);
+            return;
+        }
+
+        publicacoes.forEach(publicacao => lista.appendChild(criarCartaoPreviaComunidade(publicacao)));
+    } catch (erro) {
+        console.error("Não foi possível carregar a prévia da Comunidade:", erro);
+        lista.replaceChildren();
+        const estado = document.createElement("p");
+        estado.className = "estado-previa-comunidade";
+        estado.textContent = "As publicações recentes não puderam ser carregadas agora.";
+        lista.appendChild(estado);
+    }
+}
+
+// ======================
+// CARREGAR DADOS
+// ======================
+async function carregarProximoLoteDeFrases() {
+    if (!haMaisFrases || carregandoMaisFrases) return 0;
+
+    carregandoMaisFrases = true;
+    try {
+        const restricoes = [orderBy(documentId()), limit(TAMANHO_LOTE_FRASES)];
+        if (ultimoDocumentoFrases) restricoes.push(startAfter(ultimoDocumentoFrases));
+
+        const consultaFrases = await getDocs(query(collection(db, "frases"), ...restricoes));
+        consultaFrases.forEach(docSnap => {
+            frases.push({ id: docSnap.id, ...docSnap.data() });
+        });
+
+        if (consultaFrases.docs.length) {
+            ultimoDocumentoFrases = consultaFrases.docs[consultaFrases.docs.length - 1];
+        }
+        haMaisFrases = consultaFrases.size === TAMANHO_LOTE_FRASES;
+        return consultaFrases.size;
+    } finally {
+        carregandoMaisFrases = false;
+    }
+}
+
+async function carregarFrases(lista, fraseDiaElemento, listaCategorias, pesquisa) {
+    mostrarCarregando(lista);
+    frases = [];
+    categorias = {};
+    frasesCarregadas = false;
+    ultimoDocumentoFrases = null;
+    haMaisFrases = true;
+
+    try {
+        contarVisitaGlobal();
+
+        const consultaCategorias = await getDocs(collection(db, "categorias"));
+        consultaCategorias.forEach(docSnap => {
+            const dados = docSnap.data();
+            const nomeLimpo = sanitizarTexto(dados.nome || "");
+            if (nomeLimpo) categorias[nomeLimpo] = dados.imagem;
+        });
+
+        await carregarProximoLoteDeFrases();
+    } catch (e) {
+        console.error("Erro no Firebase:", e);
+        mostrarErro(lista, "Erro ao conectar ao banco de dados. Verifique a conexão.");
+        return;
+    }
+
+    if (frases.length === 0) {
+        mostrarErro(lista, "Nenhuma frase cadastrada no momento.");
+        return;
+    }
+
+    frasesCarregadas = true;
+    fraseDoDia(fraseDiaElemento);
+    mostrarCategorias(listaCategorias, pesquisa, lista);
+    mostrarFrases(lista, filtrosAtuais());
+}
+
+// ======================
+// ABRIR EDITOR DE VÍDEO
+// ======================
+function abrirEditorVideo(texto, autor = "Messias") {
+    const frase = encodeURIComponent(texto);
+    const autorCod = encodeURIComponent(autor);
+    window.location.href = `editor.html?frase=${frase}&autor=${autorCod}`;
+}
+
+// ======================
+// MOSTRAR FRASES
+// ======================
+function filtrosAtuais() {
+    return {
+        texto: document.getElementById("pesquisa")?.value || "",
+        autor: document.getElementById("pesquisaAutor")?.value || "",
+        categoria: categoriaSelecionada
+    };
+}
+
+function rolarParaResultados() {
+    document.getElementById("todas-as-frases")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function atualizarStatusPesquisa(quantidade, filtros) {
+    const status = document.getElementById("statusPesquisa");
+    if (!status) return;
+
+    const texto = String(filtros.texto || "").trim();
+    const autor = String(filtros.autor || "").trim();
+    const categoria = String(filtros.categoria || "").trim();
+    const buscaAtiva = Boolean(texto || autor || categoria);
+
+    if (!buscaAtiva) {
+        status.hidden = true;
+        status.replaceChildren();
+        return;
+    }
+
+    status.hidden = false;
+    status.replaceChildren();
+
+    const mensagem = document.createElement("span");
+    const descricao = autor ? ` por autor "${autor}"` : (texto ? ` para "${texto}"` : ` em "${categoria}"`);
+    const sufixoCarregamento = haMaisFrases ? ` entre as ${frases.length} carregadas até agora` : "";
+    mensagem.textContent = quantidade === 1
+        ? `1 frase encontrada${descricao}${sufixoCarregamento}.`
+        : `${quantidade} frases encontradas${descricao}${sufixoCarregamento}.`;
+
+    const verResultados = document.createElement("button");
+    verResultados.type = "button";
+    verResultados.className = "btn-ver-resultados";
+    verResultados.textContent = "Ver resultados ↓";
+    verResultados.addEventListener("click", rolarParaResultados);
+
+    status.append(mensagem, verResultados);
+}
+
+function mostrarStatusCarregandoBusca() {
+    const status = document.getElementById("statusPesquisa");
+    if (!status) return;
+    status.hidden = false;
+    status.textContent = "Carregando frases… sua busca será aplicada automaticamente.";
+}
+
+function atualizarListaComFiltros() {
+    const filtros = filtrosAtuais();
+    if (!frasesCarregadas) {
+        mostrarStatusCarregandoBusca();
+        return;
+    }
+    mostrarFrases(document.getElementById("listaFrases"), filtros);
+}
+
+function adicionarBotaoCarregarMais(lista) {
+    if (!lista || !haMaisFrases) return;
+
+    const areaMais = document.createElement("div");
+    areaMais.style.cssText = "text-align:center; padding:18px 0 8px; width:100%; grid-column: 1 / -1;";
+    const botaoMais = document.createElement("button");
+    botaoMais.type = "button";
+    botaoMais.className = "btn-ver-resultados";
+    botaoMais.textContent = "Carregar mais frases";
+    botaoMais.addEventListener("click", async () => {
+        const textoOriginal = botaoMais.textContent;
+        botaoMais.disabled = true;
+        botaoMais.textContent = "Carregando...";
+        try {
+            const quantidade = await carregarProximoLoteDeFrases();
+            if (!quantidade) haMaisFrases = false;
+            mostrarFrases(lista, filtrosAtuais());
+        } catch (erro) {
+            console.error("Erro ao carregar mais frases:", erro);
+            botaoMais.disabled = false;
+            botaoMais.textContent = textoOriginal;
+            alert("Não foi possível carregar mais frases agora. Tente novamente.");
+        }
+    });
+    areaMais.appendChild(botaoMais);
+    lista.appendChild(areaMais);
+}
+
+function mostrarFrases(lista, filtro = "") {
+    if (!lista) return;
+    lista.innerHTML = "";
+
+    const filtros = typeof filtro === "string"
+        ? { texto: filtro, autor: "", categoria: "" }
+        : (filtro || {});
+    const textoLimpo = normalizarParaBusca(String(filtros.texto || "").trim());
+    const termosBusca = termosRelevantesDaBusca(filtros.texto || "");
+    const autorLimpo = normalizarParaBusca(String(filtros.autor || "").trim());
+    const categoriaLimpa = normalizarCategoria(filtros.categoria || "");
+
+    const resultado = frases.filter(f => {
+        const textoFrase = normalizarParaBusca(f.texto || "");
+        const autorFrase = normalizarParaBusca(f.autor || "Messias");
+        const categoriaFrase = normalizarCategoria(f.categoria || "");
+        const conteudoPesquisavel = `${textoFrase} ${categoriaFrase} ${autorFrase}`;
+
+        const correspondeTexto = !textoLimpo
+            || conteudoPesquisavel.includes(textoLimpo)
+            || termosBusca.length === 0
+            || termosBusca.every(termo => conteudoPesquisavel.includes(termo));
+        const correspondeAutor = !autorLimpo || autorFrase.includes(autorLimpo);
+        const correspondeCategoria = !categoriaLimpa || categoriaFrase === categoriaLimpa;
+
+        return correspondeTexto && correspondeAutor && correspondeCategoria;
+    });
+
+    atualizarStatusPesquisa(resultado.length, filtros);
+
+    if (resultado.length === 0) {
+        lista.innerHTML = `
+            <div class="semResultado" style="text-align:center; padding: 20px; grid-column: 1 / -1;">
+                😔 Nenhuma frase encontrada entre as frases carregadas. Você pode buscar mais no acervo.
+            </div>
+        `;
+        adicionarBotaoCarregarMais(lista);
+        return;
+    }
+
+    resultado.forEach(f => criarCardFrase(f, lista));
+    adicionarBotaoCarregarMais(lista);
+}
+
+// ======================
+// CRIAR CARD
+// ======================
+function criarCardFrase(f, lista) {
+    const categoriaLimpa = sanitizarTexto(f.categoria || "");
+    const larguraImg = window.innerWidth < 600 ? 400 : 800;
+    const alturaImg = window.innerWidth < 600 ? 300 : 600;
+    const semente = f.id || "frase-padrao";
+    
+    const imagem = normalizarUrlImagem((f.imagem && f.imagem.trim() !== "")
+        ? f.imagem
+        : (categorias[categoriaLimpa] || `https://picsum.photos/seed/${encodeURIComponent(semente)}/${larguraImg}/${alturaImg}`));
+
+    const card = document.createElement("div");
+    card.className = "cardFrase";
+    card.innerHTML = `
+        <div class="imagemFrase">
+            <img src="${imagem}" alt="Frase de Messias" loading="lazy"
+                onerror="this.onerror=null; this.src='https://picsum.photos/seed/${encodeURIComponent(semente)}/${larguraImg}/${alturaImg}';">
+            <div class="overlay">
+                <p class="textoFrase">"${f.texto}"</p>
+                <p class="autorFrase">— ${f.autor || "Messias"}</p>
+                <div class="marca">📖 Frases de Messias</div>
+            </div>
+        </div>
+        <div class="botoes">
+            <button type="button" class="btnAcao btnFavorito" title="Favoritar">
+                ${favoritos.includes(f.id) ? "❤️" : "🤍"}
+            </button>
+            <button type="button" class="btnAcao btnCopiar" title="Copiar texto">
+                📋 Copiar
+            </button>
+            <button type="button" class="btnAcao btnEditor" title="Criar Vídeo">
+                🎬 Vídeo
+            </button>
+            <button type="button" class="btnAcao btnBaixarImagem" title="Baixar Card como Imagem">
+                🖼️ Baixar
+            </button>
+        </div>
+    `;
+
+    const btnCopiar = card.querySelector(".btnCopiar");
+    const btnFavorito = card.querySelector(".btnFavorito");
+    const btnEditor = card.querySelector(".btnEditor");
+    const btnBaixarImagem = card.querySelector(".btnBaixarImagem");
+
+    btnCopiar.addEventListener("click", () => copiarFrase(f.texto, f.autor, btnCopiar));
+    btnFavorito.addEventListener("click", () => alternarFavorito(f.id, btnFavorito));
+    btnEditor.addEventListener("click", () => abrirEditorVideo(f.texto, f.autor));
+    btnBaixarImagem.addEventListener("click", async () => {
+        btnBaixarImagem.disabled = true;
+        btnBaixarImagem.textContent = "Gerando...";
+        try {
+            await baixarCardComoImagem(f, imagem, btnBaixarImagem);
+        } finally {
+            btnBaixarImagem.disabled = false;
+            btnBaixarImagem.textContent = "🖼️ Baixar";
+        }
+    });
+
+    lista.appendChild(card);
+}
+
+// ======================
+// AÇÕES DOS CARDS
+// ======================
+async function copiarFrase(texto, autor, botao) {
+    const conteudo = `"${texto}" — ${autor || "Messias"}`;
+    try {
+        await navigator.clipboard.writeText(conteudo);
+        const textoOriginal = botao.textContent;
+        botao.textContent = "✅ Copiado!";
+        botao.disabled = true;
+        setTimeout(() => {
+            botao.textContent = textoOriginal;
+            botao.disabled = false;
+        }, 2000);
+    } catch (erro) {
+        console.error("Erro ao copiar:", erro);
+        alert("Não foi possível copiar. Selecione e copie manualmente.");
+    }
+}
+
+function alternarFavorito(id, botao) {
+    const indice = favoritos.indexOf(id);
+    if (indice === -1) {
+        favoritos.push(id);
+        botao.textContent = "❤️";
+        botao.setAttribute("title", "Remover dos favoritos");
+    } else {
+        favoritos.splice(indice, 1);
+        botao.textContent = "🤍";
+        botao.setAttribute("title", "Favoritar");
+    }
+    localStorage.setItem("favoritos", JSON.stringify(favoritos));
+}
+
+async function baixarCardComoImagem(frase, urlImagem, botao) {
+    const categoriaLimpa = sanitizarTexto(frase.categoria || "");
+    const largura = 1080;
+    const altura = 1350;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = largura;
+    canvas.height = altura;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("Canvas não suportado.");
+
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, largura, altura);
+
+    const { imagem, liberar } = await carregarImagemParaCanvas(urlImagem);
+    const margemImagem = 40;
+    const alturaImagem = altura * 0.52;
+    ctx.save();
+    ctx.beginPath();
+    ctx.roundRect(margemImagem, margemImagem, largura - margemImagem * 2, alturaImagem, 24);
+    ctx.clip();
+    const escala = Math.max(
+        (largura - margemImagem * 2) / imagem.naturalWidth,
+        alturaImagem / imagem.naturalHeight
+    );
+    const dw = imagem.naturalWidth * escala;
+    const dh = imagem.naturalHeight * escala;
+    const dx = margemImagem + (largura - margemImagem * 2 - dw) / 2;
+    const dy = margemImagem + (alturaImagem - dh) / 2;
+    ctx.drawImage(imagem, dx, dy, dw, dh);
+    ctx.restore();
+    liberar();
+
+    const gradiente = ctx.createLinearGradient(0, alturaImagem + margemImagem, 0, altura);
+    gradiente.addColorStop(0, "rgba(255,255,255,0.95)");
+    gradiente.addColorStop(1, "rgba(255,255,255,1)");
+    ctx.fillStyle = gradiente;
+    ctx.fillRect(0, alturaImagem + margemImagem, largura, altura - alturaImagem - margemImagem);
+
+    if (categoriaLimpa) {
+        ctx.fillStyle = "#4f46e5";
+        ctx.font = "bold 36px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(categoriaLimpa.toUpperCase(), largura / 2, alturaImagem + margemImagem + 70);
+    }
+
+    ctx.fillStyle = "#111827";
+    ctx.font = "bold 52px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    const margemTexto = 80;
+    const larguraTexto = largura - margemTexto * 2;
+    const linhas = quebrarTextoEmLinhas(ctx, `"${frase.texto}"`, larguraTexto);
+    let yAtual = alturaImagem + margemImagem + 130;
+    const espacoLinha = 70;
+    linhas.forEach(linha => {
+        ctx.fillText(linha, largura / 2, yAtual);
+        yAtual += espacoLinha;
+    });
+
+    ctx.fillStyle = "#6b7280";
+    ctx.font = "italic 40px sans-serif";
+    ctx.fillText(`— ${frase.autor || "Messias"}`, largura / 2, yAtual + 40);
+
+    ctx.fillStyle = "#9ca3af";
+    ctx.font = "30px sans-serif";
+    ctx.fillText("frasesdemessias.com.br", largura / 2, altura - 60);
+
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg", 0.95));
+    if (!blob) throw new Error("Falha ao gerar imagem.");
+
+    const urlDownload = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = urlDownload;
+    link.download = `frase-${frase.id || Date.now()}.jpg`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(urlDownload);
+}
+
+function quebrarTextoEmLinhas(ctx, texto, larguraMax) {
+    const palavras = texto.split(/\s+/);
+    const linhas = [];
+    let linhaAtual = palavras[0];
+
+    for (let i = 1; i < palavras.length; i++) {
+        const proximaLinha = `${linhaAtual} ${palavras[i]}`;
+        if (ctx.measureText(proximaLinha).width <= larguraMax) {
+            linhaAtual = proximaLinha;
+        } else {
+            linhas.push(linhaAtual);
+            linhaAtual = palavras[i];
+        }
+    }
+    linhas.push(linhaAtual);
+    return linhas;
+}
+
+// ======================
+// MOSTRAR CATEGORIAS
+// ======================
+function mostrarCategorias(lista, pesquisa, listaFrases) {
+    if (!lista) return;
+    lista.innerHTML = "";
+
+    const todas = document.createElement("button");
+    todas.type = "button";
+    todas.className = !categoriaSelecionada ? "categoriaAtiva" : "";
+    todas.textContent = "Todas";
+    todas.addEventListener("click", () => {
+        categoriaSelecionada = "";
+        mostrarCategorias(lista, pesquisa, listaFrases);
+        atualizarListaComFiltros();
+        rolarParaResultados();
+    });
+    lista.appendChild(todas);
+
+    Object.keys(categorias).sort().forEach(nome => {
+        const botao = document.createElement("button");
+        botao.type = "button";
+        botao.className = categoriaSelecionada === nome ? "categoriaAtiva" : "";
+        botao.textContent = nome;
+        botao.addEventListener("click", () => {
+            categoriaSelecionada = nome;
+            mostrarCategorias(lista, pesquisa, listaFrases);
+            atualizarListaComFiltros();
+            rolarParaResultados();
+        });
+        lista.appendChild(botao);
+    });
+}
+
+// ======================
+// PESQUISA COM DEBOUNCE
+// ======================
+function configurarPesquisa(listaFrases) {
+    const campoPesquisa = document.getElementById("pesquisa");
+    const campoPesquisaAutor = document.getElementById("pesquisaAutor");
+
+    const reagirPesquisa = () => {
+        clearTimeout(temporizadorBusca);
+        temporizadorBusca = setTimeout(() => {
+            atualizarListaComFiltros();
+        }, 350);
+    };
+
+    campoPesquisa?.addEventListener("input", reagirPesquisa);
+    campoPesquisaAutor?.addEventListener("input", reagirPesquisa);
+
+    document.getElementById("btnLimparPesquisa")?.addEventListener("click", () => {
+        if (campoPesquisa) campoPesquisa.value = "";
+        if (campoPesquisaAutor) campoPesquisaAutor.value = "";
+        categoriaSelecionada = "";
+        mostrarCategorias(document.getElementById("listaCategorias"), null, listaFrases);
+        atualizarListaComFiltros();
+    });
+}
+
+// ======================
+// INICIALIZAÇÃO
+// ======================
+document.addEventListener("DOMContentLoaded", () => {
+    const listaFrases = document.getElementById("listaFrases");
+    const fraseDia = document.getElementById("fraseDoDia");
+    const listaCategorias = document.getElementById("listaCategorias");
+    const pesquisa = document.getElementById("pesquisa");
+
+    configurarPesquisa(listaFrases);
+    carregarFrases(listaFrases, fraseDia, listaCategorias, pesquisa);
+    carregarPreviaComunidade();
+});

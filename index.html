@@ -1,46 +1,320 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frases de Messias</title>
-    <link rel="stylesheet" href="./style.css?v=300">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frases de Messias | Portal oficial de Messias Augusto</title>
+  <meta name="description" content="Frases de Messias: portal oficial de Messias Augusto com frases originais de fé, amor, motivação, gratidão e reflexão para ler e compartilhar.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://frasesdemessias.com.br/">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://frasesdemessias.com.br/#site",
+        "name": "Frases de Messias",
+        "alternateName": "Portal Frases de Messias",
+        "url": "https://frasesdemessias.com.br/",
+        "inLanguage": "pt-BR",
+        "description": "Frases de Messias: portal oficial de Messias Augusto com mensagens originais de fé, amor, motivação, gratidão e reflexão.",
+        "publisher": {"@id": "https://frasesdemessias.com.br/#organizacao"},
+        "creator": {"@id": "https://frasesdemessias.com.br/sobre.html#criador"},
+        "author": {"@id": "https://frasesdemessias.com.br/sobre.html#criador"},
+        "copyrightHolder": {"@id": "https://frasesdemessias.com.br/sobre.html#criador"}
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://frasesdemessias.com.br/#organizacao",
+        "name": "Frases de Messias",
+        "url": "https://frasesdemessias.com.br/",
+        "logo": "https://frasesdemessias.com.br/imagens/1785461694182.png",
+        "description": "Frases de Messias: portal oficial de Messias Augusto com mensagens originais de fé, amor, motivação, gratidão e reflexão.",
+        "alternateName": "@frasesdemessias.com.br",
+        "identifier": {
+          "@type": "PropertyValue",
+          "propertyID": "Instagram oficial",
+          "value": "@frasesdemessias.com.br"
+        },
+        "founder": {"@id": "https://frasesdemessias.com.br/sobre.html#criador"},
+        "sameAs": [
+          "https://www.instagram.com/frasesdemessias.com.br/",
+          "https://t.me/frasesdemessias",
+          "https://whatsapp.com/channel/0029Va94RaR3bbV779wzFL1J"
+        ]
+      },
+      {
+        "@type": "Person",
+        "@id": "https://frasesdemessias.com.br/sobre.html#criador",
+        "name": "Messias Augusto",
+        "jobTitle": "Criador do Frases de Messias e autor das frases publicadas",
+        "description": "Messias Augusto criou o Frases de Messias e é o autor das frases publicadas no portal.",
+        "alternateName": "@ue_messiasaugusto",
+        "url": "https://www.instagram.com/ue_messiasaugusto/",
+        "sameAs": ["https://www.instagram.com/ue_messiasaugusto/"]
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://frasesdemessias.com.br/#pagina",
+        "url": "https://frasesdemessias.com.br/",
+        "name": "Frases de Messias",
+        "description": "Portal de frases de Messias para ler e compartilhar, criado por Messias Augusto.",
+        "inLanguage": "pt-BR",
+        "isPartOf": {"@id": "https://frasesdemessias.com.br/#site"},
+        "about": {"@id": "https://frasesdemessias.com.br/#organizacao"},
+        "author": {"@id": "https://frasesdemessias.com.br/sobre.html#criador"}
+      }
+    ]
+  }
+  </script>
+
+  <!-- Open Graph / Facebook / WhatsApp -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://frasesdemessias.com.br/">
+  <meta property="og:title" content="Frases de Messias | Portal oficial de Messias Augusto">
+  <meta property="og:description" content="Mensagens originais de Messias Augusto sobre fé, amor, motivação, gratidão e reflexão para compartilhar.">
+  <meta property="og:image" content="https://frasesdemessias.com.br/imagens/frases-de-messias-social-nova.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://frasesdemessias.com.br/">
+  <meta property="twitter:title" content="Frases de Messias | Portal oficial de Messias Augusto">
+  <meta property="twitter:description" content="Mensagens originais de Messias Augusto sobre fé, amor, motivação, gratidão e reflexão para compartilhar.">
+  <meta property="twitter:image" content="https://frasesdemessias.com.br/imagens/frases-de-messias-social-nova.png">
+
+  <!-- Configurações PWA (Aplicativo) -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4A90E2">
+
+  <!-- Vínculo do CSS com forçador de atualização de cache -->
+  <link rel="stylesheet" href="./style.css?v=20260918-layout-restore-v1">
+
+  <!-- Biblioteca html2canvas para permitir baixar os cards como imagem -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <!-- Google Analytics (Substitua G-3TZ1W3722P pelo seu ID quando tiver) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3TZ1W3722P"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-3TZ1W3722P');
+  </script>
 </head>
+  <div id="templateExportacao" style="display:none;">
+
+    <div id="cardExportacao">
+
+        <img id="imgExportacao">
+
+        <div class="fundoEscuro"></div>
+
+        <div class="conteudoExportacao">
+
+            <p id="textoExportacao"></p>
+
+            <div id="autorExportacao"></div>
+
+            <div class="logoExportacao">
+                📖 Frases de Messias
+            </div>
+
+        </div>
+
+    </div>
+
+  </div>
 <body>
 
-    <header>
-        <div class="container">
-            <h1>📖 Frases de Messias</h1>
-            <input type="text" id="pesquisa" placeholder="Pesquisar frases, autor ou categoria...">
-        </div>
-    </header>
+  <section id="avisoApk" class="aviso-apk" role="dialog" aria-modal="true" aria-labelledby="avisoApkTitulo" hidden>
+    <div class="aviso-apk-caixa">
+      <div class="aviso-apk-icone" aria-hidden="true">📱</div>
+      <p class="aviso-apk-selo">APP ANDROID DISPONÍVEL</p>
+      <h2 id="avisoApkTitulo">Leve as Frases de Messias com você</h2>
+      <p>Baixe o aplicativo gratuito para acessar frases inspiradoras de forma rápida no seu celular.</p>
+      <a id="baixarApkBtn" class="btn-baixar-apk" href="Frases_de_Messias.apk?v=1.19" download="Frases-de-Messias-v1.19.apk" type="application/vnd.android.package-archive">
+        📥 Baixar aplicativo APK
+      </a>
+      <p class="aviso-apk-detalhe">Para celulares Android · Arquivo de aproximadamente 22 MB</p>
+      <button id="continuarNoSiteBtn" class="btn-continuar-site" type="button">Continuar no site</button>
+    </div>
+  </section>
 
-    <main class="container">
-        <!-- FRASE DO DIA -->
-        <section class="hero">
-            <h2>✨ Frase do Dia</h2>
-            <blockquote id="fraseDia">"Carregando frase..."</blockquote>
-        </section>
+<header>
+  <div class="container">
+    <div class="marca-site">
+      <a class="marca-site-link" href="index.html" aria-label="Frases de Messias — início">
+        <img class="logo-site" src="logo-frases-de-messias-cabecalho.png" width="1248" height="492" alt="Frases de Messias" fetchpriority="high">
+      </a>
+    </div>
+    <h1 class="sr-only">Frases de Messias</h1>
+    <nav>
+      <a href="index.html">🏠 Início</a>
+      <a href="categorias.html">📂 Categorias</a>
+      <a href="colecoes.html">✨ Coleções</a>
+      <a href="criar-imagem.html">✦ Criar imagem</a>
+      <a href="frases-importantes.html">⭐ Frases em destaque</a>
+      <div data-menu-canais></div>
+      <a href="favoritos.html">❤️ Favoritos</a>
+      <a class="link-rede-social-nav" href="comunidade.html">🌐 Rede Social</a>
+      <a href="sobre.html">ℹ️ Sobre</a>
+      <a href="frases-de-messias-augusto.html">✍️ Messias Augusto</a>
+      <a href="contato.html">📞 Contato</a>
+    </nav>
 
-        <!-- SEÇÃO DE CATEGORIAS -->
-        <section class="categorias">
-            <h2>📂 Categorias em Destaque</h2>
-            <div id="listaCategorias" class="gridCategorias"></div>
-        </section>
+    <div class="filtros-pesquisa" role="search" aria-label="Pesquisar frases">
+      <label class="sr-only" for="pesquisa">Pesquisar frases</label>
+      <input
+        type="search"
+        id="pesquisa"
+        placeholder="🔎 Pesquisar frases, temas ou categorias..."
+      >
+      <label class="sr-only" for="pesquisaAutor">Pesquisar por autor</label>
+      <input
+        type="search"
+        id="pesquisaAutor"
+        placeholder="✍️ Buscar por autor..."
+        autocomplete="off"
+      >
+    </div>
+    <div id="statusPesquisa" class="status-pesquisa" role="status" aria-live="polite" hidden></div>
+  </div>
+</header>
+<section class="hero">
+  <h2>Frase do Dia</h2>
 
-        <!-- TODAS AS FRASES -->
-        <section>
-            <h2 style="margin: 20px 0 10px;">💬 Todas as Frases</h2>
-            <div id="listaFrases"></div>
-        </section>
-    </main>
+  <blockquote id="fraseDia">
+    "Nunca desista dos seus sonhos. A persistência abre caminhos."
+  </blockquote>
 
-    <button id="temaBtn" type="button">🌙 Modo Escuro</button>
+  <button id="copiarBtn">Copiar Frase</button>
+</section>
 
-    <footer>
-        <p>&copy; Frases de Messias - Todos os direitos reservados.</p>
-    </footer>
+<section class="previa-comunidade" id="publicacoesComunidade" aria-labelledby="tituloPreviaComunidade">
+  <div class="cabecalho-previa-comunidade">
+    <div>
+      <p class="selo-rede-social">O QUE A COMUNIDADE ESTÁ COMPARTILHANDO</p>
+      <h2 id="tituloPreviaComunidade">Inspirações recentes</h2>
+      <p>Conheça palavras aprovadas e compartilhadas pelos membros da Rede Social.</p>
+    </div>
+    <a class="link-ver-rede-social" href="comunidade.html">Ver na Rede Social →</a>
+  </div>
+  <div id="listaPublicacoesComunidade" class="grade-previa-comunidade" aria-live="polite">
+    <p class="estado-previa-comunidade">⏳ Carregando inspirações da comunidade...</p>
+  </div>
+</section>
 
-    <script type="module" src="./script.js?v=300"></script>
-</body>
+<section class="categoriasDestaque">
+    <h2>📂 Categorias em Destaque</h2>
+    <div id="listaCategorias" class="gridCategorias"></div>
+</section>
+
+<section class="categorias">
+  <h2>Todas as Categorias</h2>
+  <div class="grid-botoes" aria-label="Páginas de categorias">
+    <a class="btn-categoria" href="frases-de-amizade.html">🤝 Amizade</a>
+    <a class="btn-categoria" href="frases-de-amor.html">❤️ Amor</a>
+    <a class="btn-categoria" href="frases-de-boa-noite.html">🌙 Boa Noite</a>
+    <a class="btn-categoria" href="frases-de-bom-dia.html">🌞 Bom Dia</a>
+    <a class="btn-categoria" href="frases-de-esperanca.html">🌱 Esperança</a>
+    <a class="btn-categoria" href="frases-de-familia.html">🏡 Família</a>
+    <a class="btn-categoria" href="frases-de-fe.html">🙏 Fé</a>
+    <a class="btn-categoria" href="frases-de-gratidao.html">✨ Gratidão</a>
+    <a class="btn-categoria" href="frases-de-motivacao.html">💪 Motivação</a>
+    <a class="btn-categoria" href="frases-de-reflexao.html">💡 Reflexão</a>
+    <a class="btn-categoria" href="frases-de-sucesso.html">🚀 Sucesso</a>
+    <a class="btn-categoria" href="frases-de-vida.html">🍃 Vida</a>
+  </div>
+</section>
+
+<section class="bloco-seo-frases-messias" aria-labelledby="tituloFrasesMessias">
+  <div class="cabecalho-colecoes-destaque">
+    <div>
+      <p class="selo-colecao">FRASES DE MESSIAS</p>
+      <h2 id="tituloFrasesMessias">Frases de Messias para ler e compartilhar</h2>
+    </div>
+  </div>
+  <p>Encontre mensagens originais do portal Frases de Messias para momentos de motivação, fé, amor, esperança e reflexão.</p>
+  <div class="grid-botoes" aria-label="Atalhos para frases de Messias">
+    <a class="btn-categoria" href="frases-de-messias-augusto.html">✍️ Frases de Messias Augusto</a>
+    <a class="btn-categoria" href="frases-de-motivacao.html">💪 Frases de Motivação</a>
+    <a class="btn-categoria" href="frases-de-fe.html">🙏 Frases de Fé</a>
+    <a class="btn-categoria" href="frases-de-amor.html">❤️ Frases de Amor</a>
+    <a class="btn-categoria" href="frases-de-esperanca.html">🌱 Frases de Esperança</a>
+    <a class="btn-categoria" href="frases-de-reflexao.html">💡 Frases de Reflexão</a>
+  </div>
+</section>
+
+<section class="colecoes-destaque" aria-labelledby="tituloColecoesDestaque">
+  <div class="cabecalho-colecoes-destaque"><div><p class="selo-colecao">MENSAGENS PARA COMPARTILHAR</p><h2 id="tituloColecoesDestaque">✨ Coleções especiais</h2></div><a href="colecoes.html">Ver todas →</a></div>
+  <p>Frases prontas para status, WhatsApp, aniversário, família, trabalho, paz e outros momentos importantes.</p>
+  <div class="grid-colecoes grid-colecoes-inicial">
+        <a class="card-colecao" href="frases-para-whatsapp.html">
+          <span class="card-colecao-icone" aria-hidden="true">📱</span>
+          <span class="card-colecao-conteudo"><strong>Frases para WhatsApp</strong><small>Mensagens prontas para tornar uma conversa mais carinhosa, motivadora e cheia de significado.</small></span>
+          <span class="card-colecao-seta" aria-hidden="true">→</span>
+        </a>
+        <a class="card-colecao" href="frases-para-status.html">
+          <span class="card-colecao-icone" aria-hidden="true">💬</span>
+          <span class="card-colecao-conteudo"><strong>Frases para Status</strong><small>Frases curtas para expressar seus sentimentos e dar um significado especial ao seu status.</small></span>
+          <span class="card-colecao-seta" aria-hidden="true">→</span>
+        </a>
+        <a class="card-colecao" href="frases-de-aniversario.html">
+          <span class="card-colecao-icone" aria-hidden="true">🎂</span>
+          <span class="card-colecao-conteudo"><strong>Frases de Aniversário</strong><small>Mensagens de aniversário para celebrar a vida com carinho, gratidão e bons desejos.</small></span>
+          <span class="card-colecao-seta" aria-hidden="true">→</span>
+        </a>
+        <a class="card-colecao" href="frases-de-saudade.html">
+          <span class="card-colecao-icone" aria-hidden="true">🌧️</span>
+          <span class="card-colecao-conteudo"><strong>Frases de Saudade</strong><small>Mensagens delicadas para transformar a saudade em uma lembrança cheia de carinho.</small></span>
+          <span class="card-colecao-seta" aria-hidden="true">→</span>
+        </a>
+  </div>
+</section>
+
+<section id="todas-as-frases">
+  <h2>Todas as Frases</h2>
+  <!-- Container onde as frases e os botões de Baixar serão renderizados pelo JS -->
+  <div id="listaFrases"></div>
+</section>
+
+<footer>
+  <p>© 2026 Frases de Messias · Criado por <a href="sobre.html#criador-titulo" rel="author">Messias Augusto</a></p>
+  <div style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">
+    🚀 <span id="contadorGlobal">...</span> visitas ao portal
+  </div>
+  <p><a href="colecoes.html">✨ Explorar coleções especiais</a></p>
+  <p><a href="frases-de-messias-augusto.html">✍️ Conheça as frases de Messias Augusto</a></p>
+  <p><a class="link-rodape-rede-social" href="comunidade.html">🌐 Participar da Rede Social de Frases</a></p>
+  <p class="rodape-canal-telegram"><a href="https://t.me/frasesdemessias" target="_blank" rel="noopener noreferrer">📣 Entre no canal Frases de Messias no Telegram</a></p>
+  <p class="rodape-canal-whatsapp"><a href="https://whatsapp.com/channel/0029Va94RaR3bbV779wzFL1J" target="_blank" rel="noopener noreferrer">📢 Siga o canal Frases de Messias no WhatsApp</a></p>
+
+    <p><a href="termos-de-uso.html">Termos de Uso</a> · <a href="contato.html">Contato</a></p></footer>
+
+<button id="temaBtn">🌙 Modo Escuro</button>
+
+  <!-- Modo Cinema Animado Overlay -->
+  <div id="modoCinema" class="modo-cinema-overlay" style="display:none;">
+    <div class="cinema-content">
+      <div id="cinemaBackground" class="cinema-bg"></div>
+      <div class="cinema-overlay-dark"></div>
+      <div class="cinema-text-container">
+        <p id="cinemaTexto" class="cinema-frase"></p>
+        <div id="cinemaAutor" class="cinema-autor"></div>
+        <div class="cinema-marca">📖 Frases de Messias</div>
+      </div>
+    </div>
+    <div class="cinema-controls">
+      <button onclick="fecharModoCinema()" class="btn-fechar-cinema">✖ Fechar</button>
+      <p class="instrucao-gravacao">Dica: Use o "Gravador de Tela" do seu celular para capturar esta animação! 📱</p>
+    </div>
+  </div>
+
+  <!-- Script do projeto carregado como módulo JavaScript -->
+  <script type="module" src="script.js?v=20260918-layout-restore-v1"></script>
+  <script type="module" src="convites-canais.js?v=20260820-menu-canais-v1"></script>
+  
+  </body>
 </html>
