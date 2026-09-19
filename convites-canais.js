@@ -13,7 +13,7 @@ const CANAIS_OFICIAIS = {
   }
 };
 
-const VERSAO_MENU = "20260919-menu-dots-v1";
+const VERSAO_MENU = "20260919-header-text-v1";
 
 function garantirEstiloAtualizado() {
   const folha = Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
