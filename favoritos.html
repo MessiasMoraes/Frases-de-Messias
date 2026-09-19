@@ -13,7 +13,7 @@
   <meta property="og:description" content="Veja as frases que mais me inspiraram no portal Frases de Messias.">
   <meta property="og:image" content="https://messiasmoraes.github.io/Frases-de-Messias/imagens/frases-de-messias-social-nova.png">
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=20260919-favorites-v1">
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-3TZ1W3722P"></script>
   <script>
@@ -34,19 +34,57 @@
 <main id="listaFavoritos"></main>
 
 <script>
-const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+const favoritos = (() => {
+  try {
+    const dados = JSON.parse(localStorage.getItem("favoritos") || "[]");
+    return Array.isArray(dados) ? dados.filter(Boolean).map(item => typeof item === "string"
+      ? { id: "", texto: item, autor: "Messias", imagem: "" }
+      : item
+    ) : [];
+  } catch (_) {
+    return [];
+  }
+})();
 const lista = document.getElementById("listaFavoritos");
 
-if (favoritos.length === 0) {
-  lista.innerHTML = "<p>Você ainda não salvou nenhuma frase.</p>";
-} else {
-  favoritos.forEach(frase => {
-    const card = document.createElement("div");
-    card.className = "frase";
-    card.innerHTML = `<p>${frase}</p>`;
-    lista.appendChild(card);
-  });
+function escaparFavorito(valor = "") {
+  return String(valor).replace(/[&<>'"]/g, caractere => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;"
+  }[caractere]));
 }
+
+function chaveFavorito(frase) {
+  const id = String(frase?.id || "").trim();
+  return id ? `id:${id}` : `texto:${String(frase?.texto || "").trim()}`;
+}
+
+function renderizarFavoritos() {
+  if (!favoritos.length) {
+    lista.innerHTML = "<p class=\"semFavoritos\">Você ainda não salvou nenhuma frase.</p>";
+    return;
+  }
+  lista.innerHTML = favoritos.map((frase, indice) => `
+    <article class="favorito-salvo">
+      ${frase.imagem ? `<img src="${escaparFavorito(frase.imagem)}" alt="" loading="lazy">` : ""}
+      <div class="favorito-salvo-conteudo">
+        <p class="favorito-salvo-texto">“${escaparFavorito(frase.texto || frase)}”</p>
+        <p class="favorito-salvo-autor">— ${escaparFavorito(frase.autor || "Messias")}</p>
+        <button type="button" data-remover-favorito="${indice}">Remover dos favoritos</button>
+      </div>
+    </article>
+  `).join("");
+}
+
+lista.addEventListener("click", evento => {
+  const botao = evento.target.closest("[data-remover-favorito]");
+  if (!botao) return;
+  const indice = Number(botao.dataset.removerFavorito);
+  favoritos.splice(indice, 1);
+  localStorage.setItem("favoritos", JSON.stringify(favoritos));
+  renderizarFavoritos();
+});
+
+renderizarFavoritos();
 </script>
 
 <footer>
@@ -57,7 +95,7 @@ if (favoritos.length === 0) {
 
     <p><a href="termos-de-uso.html">Termos de Uso</a> · <a href="contato.html">Contato</a></p></footer>
 
-<script type="module" src="script.js"></script>
+<script type="module" src="script.js?v=20260919-favorites-v1"></script>
 
 </body>
 </html>

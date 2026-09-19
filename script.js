@@ -27,6 +27,78 @@ let haMaisFrases = true;
 let carregandoMaisFrases = false;
 
 // ======================
+// FAVORITOS LOCAIS
+// ======================
+const FAVORITOS_STORAGE_KEY = "favoritos";
+
+function chaveFavorito(frase) {
+    const id = String(frase?.id || "").trim();
+    if (id) return `id:${id}`;
+    const texto = String(frase?.texto || "").trim();
+    return texto ? `texto:${texto}` : "";
+}
+
+function lerFavoritos() {
+    try {
+        const dados = JSON.parse(localStorage.getItem(FAVORITOS_STORAGE_KEY) || "[]");
+        if (!Array.isArray(dados)) return [];
+        return dados.filter(Boolean).map(item => typeof item === "string"
+            ? { id: "", texto: item, autor: "Messias", imagem: "", categoria: "" }
+            : item
+        );
+    } catch (_) {
+        return [];
+    }
+}
+
+function salvarFavoritos() {
+    localStorage.setItem(FAVORITOS_STORAGE_KEY, JSON.stringify(favoritos));
+}
+
+function fraseEstaFavorita(frase) {
+    const chave = chaveFavorito(frase);
+    return Boolean(chave && favoritos.some(item => chaveFavorito(item) === chave));
+}
+
+function atualizarBotaoFavorito(botao, ativo) {
+    if (!botao) return;
+    botao.classList.toggle("ativo", ativo);
+    botao.setAttribute("aria-pressed", String(ativo));
+    botao.setAttribute("aria-label", ativo ? "Remover dos favoritos" : "Salvar nos favoritos");
+    botao.title = ativo ? "Remover dos favoritos" : "Salvar nos favoritos";
+    botao.textContent = ativo ? "♥" : "♡";
+}
+
+function alternarFavorito(frase, botao) {
+    const chave = chaveFavorito(frase);
+    if (!chave) return false;
+    const indice = favoritos.findIndex(item => chaveFavorito(item) === chave);
+    let ativo;
+    if (indice >= 0) {
+        favoritos.splice(indice, 1);
+        ativo = false;
+    } else {
+        favoritos.push({
+            id: String(frase.id || ""),
+            texto: String(frase.texto || ""),
+            autor: String(frase.autor || "Messias"),
+            imagem: String(frase.imagem || ""),
+            categoria: String(frase.categoria || "")
+        });
+        ativo = true;
+    }
+    salvarFavoritos();
+    atualizarBotaoFavorito(botao, ativo);
+    return ativo;
+}
+
+window.alternarFavoritoPorId = function(id, botao) {
+    const frase = frases.find(item => String(item.id) === String(id));
+    if (frase) alternarFavorito(frase, botao);
+};
+
+
+// ======================
 // FUNÇÕES AUXILIARES
 // ======================
 function mostrarCarregando(lista) {
@@ -520,6 +592,7 @@ function criarCardFrase(f, lista) {
     card.className = "cardFrase";
     card.innerHTML = `
         <div class="conteudoFrase">
+            <button type="button" class="btn-favorito-imagem${fraseEstaFavorita(f) ? " ativo" : ""}" onclick="alternarFavoritoPorId('${f.id}', this)" aria-label="${fraseEstaFavorita(f) ? "Remover dos favoritos" : "Salvar nos favoritos"}" aria-pressed="${fraseEstaFavorita(f)}" title="${fraseEstaFavorita(f) ? "Remover dos favoritos" : "Salvar nos favoritos"}">${fraseEstaFavorita(f) ? "♥" : "♡"}</button>
             <p class="textoFrase">"${f.texto}"</p>
             <p class="autorFrase">— ${f.autor || "Messias"}</p>
             <div class="marca">📖 Frases de Messias</div>

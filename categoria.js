@@ -27,6 +27,68 @@ function origemApiVideo() {
 let frasesDaCategoria = [];
 let imagensCategorias = {};
 
+// ======================
+// FAVORITOS LOCAIS
+// ======================
+const FAVORITOS_STORAGE_KEY = "favoritos";
+
+function chaveFavorito(frase) {
+  const id = String(frase?.id || "").trim();
+  if (id) return `id:${id}`;
+  const texto = String(frase?.texto || "").trim();
+  return texto ? `texto:${texto}` : "";
+}
+
+function lerFavoritos() {
+  try {
+    const dados = JSON.parse(localStorage.getItem(FAVORITOS_STORAGE_KEY) || "[]");
+    if (!Array.isArray(dados)) return [];
+    return dados.filter(Boolean).map(item => typeof item === "string"
+      ? { id: "", texto: item, autor: "Messias", imagem: "", categoria: "" }
+      : item
+    );
+  } catch (_) {
+    return [];
+  }
+}
+
+let favoritosSalvos = lerFavoritos();
+
+function fraseEstaFavorita(frase) {
+  const chave = chaveFavorito(frase);
+  return Boolean(chave && favoritosSalvos.some(item => chaveFavorito(item) === chave));
+}
+
+function atualizarBotaoFavorito(botao, ativo) {
+  if (!botao) return;
+  botao.classList.toggle("ativo", ativo);
+  botao.setAttribute("aria-pressed", String(ativo));
+  botao.setAttribute("aria-label", ativo ? "Remover dos favoritos" : "Salvar nos favoritos");
+  botao.title = ativo ? "Remover dos favoritos" : "Salvar nos favoritos";
+  botao.textContent = ativo ? "♥" : "♡";
+}
+
+function alternarFavorito(frase, botao) {
+  const chave = chaveFavorito(frase);
+  if (!chave) return;
+  const indice = favoritosSalvos.findIndex(item => chaveFavorito(item) === chave);
+  const ativo = indice < 0;
+  if (ativo) {
+    favoritosSalvos.push({
+      id: String(frase.id || ""),
+      texto: String(frase.texto || ""),
+      autor: String(frase.autor || "Messias"),
+      imagem: String(frase.imagem || ""),
+      categoria: String(frase.categoria || categoria || "")
+    });
+  } else {
+    favoritosSalvos.splice(indice, 1);
+  }
+  localStorage.setItem(FAVORITOS_STORAGE_KEY, JSON.stringify(favoritosSalvos));
+  atualizarBotaoFavorito(botao, ativo);
+}
+
+
 function normalizar(valor = "") {
   return String(valor)
     .normalize("NFD")
@@ -149,12 +211,14 @@ function renderizar(frases) {
     const curtidas = Number(frase.curtidas || 0).toLocaleString("pt-BR");
     const compartilhamentos = Number(frase.compartilhamentos || 0).toLocaleString("pt-BR");
     const categoriaAtual = escaparHtml(document.body?.dataset.categoria || "Frases");
+    const favoritoAtivo = fraseEstaFavorita(frase);
 
     return `
       <article class="cardFrase">
         <div class="imagemFrase">
           <img src="${imagem}" alt="${texto}" loading="lazy" decoding="async">
           <div class="overlayFrase">
+            <button type="button" class="btn-favorito-imagem${favoritoAtivo ? " ativo" : ""}" data-acao="favoritar" data-id="${id}" aria-label="${favoritoAtivo ? "Remover dos favoritos" : "Salvar nos favoritos"}" aria-pressed="${favoritoAtivo}" title="${favoritoAtivo ? "Remover dos favoritos" : "Salvar nos favoritos"}">${favoritoAtivo ? "♥" : "♡"}</button>
             <div class="conteudoFrase">
               <span class="etiquetaFrase">${categoriaAtual}</span>
               <p class="textoFrase">“${texto}”</p>
@@ -647,6 +711,11 @@ function configurarAcoes() {
     if (!botao) return;
     const frase = frasesDaCategoria.find((item) => item.id === botao.dataset.id);
     if (!frase) return;
+
+    if (botao.dataset.acao === "favoritar") {
+      alternarFavorito(frase, botao);
+      return;
+    }
 
     if (botao.dataset.acao === "curtir") {
       await curtir(frase);
