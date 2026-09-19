@@ -1,5 +1,5 @@
 import { app, db } from "./firebase.js";
-import "./convites-canais.js?v=20260820-menu-canais-v1";
+import "./convites-canais.js?v=20260919-menu-dots-v1";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 import {
   collection,

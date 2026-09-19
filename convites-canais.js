@@ -13,13 +13,15 @@ const CANAIS_OFICIAIS = {
   }
 };
 
+const VERSAO_MENU = "20260919-menu-dots-v1";
+
 function garantirEstiloAtualizado() {
   const folha = Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
     .find((link) => new URL(link.href, window.location.href).pathname.endsWith('/style.css'));
   if (!folha) return;
 
   const url = new URL(folha.href, window.location.href);
-  url.searchParams.set('v', '20260820-menu-canais-v1');
+  url.searchParams.set('v', VERSAO_MENU);
   if (folha.href !== url.href) folha.href = url.href;
 }
 
@@ -88,20 +90,72 @@ function criarMenuCanais() {
   return grupo;
 }
 
-export function inserirConviteCanais() {
-  if (document.querySelector(".menu-canais-nav")) return;
+function criarMenuPrincipal(navegacao) {
+  if (!navegacao || navegacao.querySelector(".menu-principal-gatilho")) return;
 
+  const gatilho = document.createElement("button");
+  gatilho.type = "button";
+  gatilho.className = "menu-principal-gatilho";
+  gatilho.setAttribute("aria-expanded", "false");
+  gatilho.setAttribute("aria-controls", "menu-principal-links");
+  gatilho.setAttribute("aria-label", "Abrir menu de navegação");
+  gatilho.title = "Abrir menu";
+  gatilho.innerHTML = '<span aria-hidden="true">⋮</span><span class="menu-principal-gatilho-texto">Menu</span>';
+
+  const fechar = () => {
+    navegacao.classList.remove("menu-principal-aberto");
+    gatilho.setAttribute("aria-expanded", "false");
+    gatilho.setAttribute("aria-label", "Abrir menu de navegação");
+    gatilho.title = "Abrir menu";
+  };
+
+  const alternar = () => {
+    const abrir = !navegacao.classList.contains("menu-principal-aberto");
+    navegacao.classList.toggle("menu-principal-aberto", abrir);
+    gatilho.setAttribute("aria-expanded", String(abrir));
+    gatilho.setAttribute("aria-label", abrir ? "Fechar menu de navegação" : "Abrir menu de navegação");
+    gatilho.title = abrir ? "Fechar menu" : "Abrir menu";
+  };
+
+  gatilho.addEventListener("click", (evento) => {
+    evento.stopPropagation();
+    alternar();
+  });
+
+  navegacao.querySelectorAll(":scope > a").forEach((link) => {
+    link.addEventListener("click", fechar);
+  });
+
+  document.addEventListener("click", (evento) => {
+    if (!navegacao.contains(evento.target)) fechar();
+  });
+
+  document.addEventListener("keydown", (evento) => {
+    if (evento.key === "Escape" && navegacao.classList.contains("menu-principal-aberto")) {
+      fechar();
+      gatilho.focus();
+    }
+  });
+
+  navegacao.classList.add("menu-principal");
+  navegacao.prepend(gatilho);
+}
+
+export function inserirConviteCanais() {
   const navegacao = document.querySelector("header nav, .cabecalho-comunidade nav, nav");
   if (!navegacao) return;
 
   garantirEstiloAtualizado();
-  const menu = criarMenuCanais();
-  const pontoDeInsercao = navegacao.querySelector("[data-menu-canais]");
-  if (pontoDeInsercao) {
-    pontoDeInsercao.replaceWith(menu);
-  } else {
-    navegacao.appendChild(menu);
+  if (!navegacao.querySelector(".menu-canais-nav")) {
+    const menu = criarMenuCanais();
+    const pontoDeInsercao = navegacao.querySelector("[data-menu-canais]");
+    if (pontoDeInsercao) {
+      pontoDeInsercao.replaceWith(menu);
+    } else {
+      navegacao.appendChild(menu);
+    }
   }
+  criarMenuPrincipal(navegacao);
 }
 
 if (document.readyState === "loading") {
