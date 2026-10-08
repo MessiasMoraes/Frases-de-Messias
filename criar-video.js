@@ -29,6 +29,8 @@ const dimensao = document.getElementById("videoDimensao");
 const cenasEl = document.getElementById("videoCenas");
 const novaCenaBtn = document.getElementById("novaCena");
 const transicao = document.getElementById("videoTransicao");
+const formatoExportacao = document.getElementById("videoFormatoExportacao");
+const formatoStatus = document.getElementById("videoFormatoStatus");
 
 let formato = "story";
 let template = "aurora";
@@ -43,6 +45,8 @@ let previewFrame = 0;
 let previewPlaying = false;
 let nextSceneId = 2;
 let cenas = [{ id: 1, quote: "", author: "— Messias" }];
+let ffmpegInstance = null;
+let ffmpegLoading = null;
 
 function clamp(value, min = 0, max = 1) {
   return Math.max(min, Math.min(max, value));
@@ -336,9 +340,78 @@ function escolherTemplate(button) {
   atualizarPrevia();
 }
 
-function escolherMime() {
-  const opcoes = ["video/mp4;codecs=avc1.42E01E,mp4a.40.2", "video/webm;codecs=vp9,opus", "video/webm;codecs=vp8,opus", "video/webm"];
-  return opcoes.find((tipo) => MediaRecorder.isTypeSupported(tipo)) || "";
+function escolherMime(preferido = "webm") {
+  const mp4 = ["video/mp4;codecs=avc1.42E01E,mp4a.40.2", "video/mp4;codecs=avc1"];
+  const webm = ["video/webm;codecs=vp9,opus", "video/webm;codecs=vp8,opus", "video/webm"];
+  const opcoes = preferido === "mp4" ? [...mp4, ...webm] : [...webm, ...mp4];
+  return opcoes.find((tipo) => window.MediaRecorder?.isTypeSupported(tipo)) || "";
+}
+
+function suportaMp4Nativo() {
+  return Boolean(window.MediaRecorder && ["video/mp4;codecs=avc1.42E01E,mp4a.40.2", "video/mp4;codecs=avc1"].some((tipo) => MediaRecorder.isTypeSupported(tipo)));
+}
+
+function atualizarFormatoExportacao() {
+  if (!formatoStatus || !formatoExportacao) return;
+  const mp4 = formatoExportacao.value === "mp4";
+  const fallback = mp4 && !suportaMp4Nativo();
+  formatoStatus.textContent = mp4
+    ? (fallback ? "MP4 será convertido no navegador antes do download." : "MP4 nativo disponível neste navegador.")
+    : "WebM é mais rápido e funciona como alternativa leve.";
+  formatoExportacao.closest(".video-export-format")?.classList.toggle("is-fallback", fallback);
+}
+
+async function carregarConversorMp4() {
+  if (ffmpegInstance) return ffmpegInstance;
+  if (ffmpegLoading) return ffmpegLoading;
+  ffmpegLoading = (async () => {
+    const [{ FFmpeg }, { toBlobURL }] = await Promise.all([
+      import("https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/+esm"),
+      import("https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/+esm")
+    ]);
+    const ffmpeg = new FFmpeg();
+    const baseURL = "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm";
+    await ffmpeg.load({
+      coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
+      wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm")
+    });
+    ffmpegInstance = ffmpeg;
+    return ffmpeg;
+  })().catch((error) => {
+    ffmpegLoading = null;
+    throw error;
+  });
+  return ffmpegLoading;
+}
+
+async function converterWebmParaMp4(webmBlob) {
+  setStatus("Carregando conversor MP4 no navegador...", false);
+  const ffmpeg = await carregarConversorMp4();
+  const baseName = `frases-${Date.now()}`;
+  const inputName = `${baseName}.webm`;
+  const outputName = `${baseName}.mp4`;
+  const { fetchFile } = await import("https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/+esm");
+  const progresso = ({ progress }) => setStatus(`Convertendo para MP4... ${Math.round(Math.max(0, Math.min(1, progress)) * 100)}%`);
+  ffmpeg.on("progress", progresso);
+  try {
+    await ffmpeg.writeFile(inputName, await fetchFile(webmBlob));
+    await ffmpeg.exec(["-i", inputName, "-c:v", "libx264", "-preset", "veryfast", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", "-shortest", outputName]);
+    const data = await ffmpeg.readFile(outputName);
+    return new Blob([data.buffer], { type: "video/mp4" });
+  } finally {
+    ffmpeg.off?.("progress", progresso);
+    await ffmpeg.deleteFile(inputName).catch(() => {});
+    await ffmpeg.deleteFile(outputName).catch(() => {});
+  }
+}
+
+function baixarBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
 }
 
 async function exportarVideo() {
@@ -347,7 +420,8 @@ async function exportarVideo() {
     return;
   }
   const seconds = Number(duracao.value);
-  const mime = escolherMime();
+  const solicitado = formatoExportacao?.value === "mp4" ? "mp4" : "webm";
+  const mime = escolherMime(solicitado);
   if (!mime) { setStatus("Este navegador não encontrou um formato de vídeo compatível.", true); return; }
   exportar.disabled = true;
   reproduzir.disabled = true;
@@ -389,17 +463,17 @@ async function exportarVideo() {
     await new Promise((resolve) => setTimeout(resolve, seconds * 1000 + 250));
     if (recorder.state !== "inactive") recorder.stop();
     await done;
-    const blob = new Blob(chunks, { type: mime });
-    const extension = mime.startsWith("video/mp4") ? "mp4" : "webm";
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `frases-de-messias-${formato}-${Date.now()}.${extension}`;
-    link.click();
-    setStatus(`Vídeo ${extension.toUpperCase()} pronto. O download foi iniciado.`);
-    setTimeout(() => URL.revokeObjectURL(link.href), 10000);
+    let blob = new Blob(chunks, { type: mime });
+    let extensao = mime.startsWith("video/mp4") ? "mp4" : "webm";
+    if (solicitado === "mp4" && extensao !== "mp4") {
+      blob = await converterWebmParaMp4(blob);
+      extensao = "mp4";
+    }
+    baixarBlob(blob, `frases-de-messias-${formato}-${Date.now()}.${extensao}`);
+    setStatus(`Vídeo ${extensao.toUpperCase()} pronto. O download foi iniciado.`);
   } catch (error) {
     console.error(error);
-    setStatus("Não foi possível exportar agora. Verifique se o navegador permite áudio e vídeo.", true);
+    setStatus(solicitado === "mp4" ? "Não foi possível converter para MP4 neste navegador. Escolha WebM ou tente Chrome atualizado." : "Não foi possível exportar agora. Verifique se o navegador permite áudio e vídeo.", true);
   } finally {
     audioElement?.pause();
     audioContext?.close();
@@ -441,6 +515,7 @@ autor.addEventListener("input", () => { syncFirstScene(); atualizarPrevia(); });
 duracao.addEventListener("input", atualizarPrevia);
 animacao.addEventListener("change", () => { animacaoAtual = animacao.value; atualizarPrevia(); });
 transicao?.addEventListener("change", () => { transitionAtual = transicao.value; atualizarPrevia(); });
+formatoExportacao?.addEventListener("change", atualizarFormatoExportacao);
 novaCenaBtn?.addEventListener("click", () => { cenas.push({ id: nextSceneId++, quote: "", author: "— Messias" }); renderCenas(); atualizarPrevia(); setStatus("Nova cena adicionada à timeline."); });
 fundoInput.addEventListener("change", () => fundoInput.files[0] && carregarFundo(fundoInput.files[0]));
 musicaInput.addEventListener("change", () => { musicaFile = musicaInput.files[0] || null; document.getElementById("videoMusicaNome").textContent = musicaFile ? musicaFile.name : "Sem música"; setStatus(musicaFile ? "Música pronta para a exportação local." : "Música removida."); });
@@ -449,5 +524,6 @@ exportar.addEventListener("click", exportarVideo);
 document.getElementById("temaBtn")?.addEventListener("click", () => { document.body.classList.toggle("dark"); document.getElementById("temaBtn").textContent = document.body.classList.contains("dark") ? "☀️ Modo Claro" : "🌙 Modo Escuro"; });
 
 renderCenas();
+atualizarFormatoExportacao();
 carregarImagem(DEFAULT_IMAGE).then((image) => { fundo = image; atualizarPrevia(); }).catch(() => { atualizarPrevia(); setStatus("Escolha uma imagem ou vídeo para personalizar o fundo."); });
 atualizarPrevia();
