@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criar vídeo de frases | Frases de Messias</title>
+  <meta name="description" content="Crie vídeos verticais com frases, imagens, animações e música diretamente no seu aparelho.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://frasesdemessias.com.br/criar-video.html">
+  <link rel="stylesheet" href="./style.css?v=20260919-header-text-v1">
+  <link rel="stylesheet" href="./criar-video.css?v=20261008-video-mvp-v1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="pagina-criador-video">
+  <header>
+    <div class="container">
+      <h1>✦ Frases de Messias</h1>
+      <nav aria-label="Navegação principal">
+        <a href="index.html">🏠 Início</a>
+        <a href="categorias.html">📂 Categorias</a>
+        <a href="colecoes.html">✨ Coleções</a>
+        <a href="criar-imagem.html">✦ Criar imagem</a>
+        <a class="link-criador-video" href="criar-video.html" aria-current="page">🎬 Criar vídeo</a>
+        <a href="comunidade.html">🌐 Rede Social</a>
+        <a href="sobre.html">ℹ️ Sobre</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="video-hero" aria-labelledby="videoTitulo">
+      <div class="video-container">
+        <p class="video-kicker">CRIADOR DE VÍDEOS · MVP</p>
+        <h2 id="videoTitulo">Sua frase em movimento.</h2>
+        <p>Monte um vídeo vertical para Status, Reels, TikTok e Shorts sem enviar seus arquivos para outro lugar.</p>
+        <div class="video-badges" aria-label="Recursos disponíveis">
+          <span>Prévia ao vivo</span><span>Imagem ou vídeo</span><span>Música opcional</span><span>Exportação local</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="video-editor" aria-label="Editor de vídeo">
+      <div class="video-editor-grid">
+        <div class="video-preview-panel">
+          <div class="video-preview-label"><span>PRÉVIA AO VIVO</span><span id="videoDimensao">1080 × 1920</span></div>
+          <div class="video-stage" id="videoStage">
+            <canvas id="videoCanvas" width="540" height="960" aria-label="Prévia do vídeo"></canvas>
+            <span class="video-stage-hint" id="videoStageHint">Seu vídeo aparece aqui</span>
+          </div>
+          <div class="video-preview-actions">
+            <button class="video-secondary" id="reproduzirVideo" type="button">▶ Reproduzir</button>
+            <button class="video-primary" id="exportarVideo" type="button">↓ Exportar vídeo</button>
+          </div>
+          <p class="video-status" id="videoStatus" role="status" aria-live="polite"></p>
+        </div>
+
+        <div class="video-controls" aria-labelledby="controlesVideoTitulo">
+          <div class="video-controls-heading">
+            <p class="video-kicker">01 · PERSONALIZE</p>
+            <h2 id="controlesVideoTitulo">Monte sua história</h2>
+          </div>
+
+          <fieldset class="video-fieldset">
+            <legend>Formato</legend>
+            <div class="video-choice-row">
+              <button class="video-choice is-active" type="button" data-format="story" aria-pressed="true"><strong>9:16</strong><small>Story / Reels</small></button>
+              <button class="video-choice" type="button" data-format="feed" aria-pressed="false"><strong>1:1</strong><small>Feed / Post</small></button>
+            </div>
+          </fieldset>
+
+          <fieldset class="video-fieldset">
+            <legend>Estilo</legend>
+            <div class="video-template-row">
+              <button class="video-template is-active" type="button" data-template="aurora" aria-pressed="true"><span class="template-swatch swatch-aurora"></span><span>Aurora</span></button>
+              <button class="video-template" type="button" data-template="noite" aria-pressed="false"><span class="template-swatch swatch-noite"></span><span>Noite</span></button>
+              <button class="video-template" type="button" data-template="dourado" aria-pressed="false"><span class="template-swatch swatch-dourado"></span><span>Dourado</span></button>
+            </div>
+          </fieldset>
+
+          <div class="video-field">
+            <label for="videoFrase">Sua frase</label>
+            <textarea id="videoFrase" maxlength="220" rows="4">A vida é um eco. O que você envia, volta.</textarea>
+            <div class="video-help"><span>Uma mensagem curta fica mais legível.</span><span id="videoContador">0/220</span></div>
+          </div>
+          <div class="video-field">
+            <label for="videoAutor">Autoria</label>
+            <input id="videoAutor" maxlength="80" value="— Messias" type="text">
+          </div>
+
+          <div class="video-upload-grid">
+            <div class="video-upload-card">
+              <label for="videoFundo">Fundo</label>
+              <input id="videoFundo" type="file" accept="image/*,video/*">
+              <small id="videoFundoNome">Usar fundo padrão</small>
+            </div>
+            <div class="video-upload-card">
+              <label for="videoMusica">Música</label>
+              <input id="videoMusica" type="file" accept="audio/*">
+              <small id="videoMusicaNome">Sem música</small>
+            </div>
+          </div>
+
+          <div class="video-range-grid">
+            <div class="video-field"><label for="videoDuracao">Duração <output id="duracaoValor">8 s</output></label><input id="videoDuracao" type="range" min="4" max="15" value="8"></div>
+            <div class="video-field"><label for="videoAnimacao">Entrada</label><select id="videoAnimacao"><option value="fade">Fade suave</option><option value="zoom">Zoom lento</option><option value="static">Sem animação</option></select></div>
+          </div>
+
+          <div class="video-editor-note"><strong>Privacidade:</strong> a criação acontece no navegador. O arquivo só sai do aparelho quando você escolhe compartilhar ou baixar.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="video-steps" aria-labelledby="videoPassosTitulo">
+      <div class="video-container">
+        <p class="video-kicker">02 · PRONTO PARA COMPARTILHAR</p>
+        <h2 id="videoPassosTitulo">Um vídeo simples, com a sua identidade.</h2>
+        <div class="video-step-grid"><article><span>1</span><h3>Escolha</h3><p>Selecione o formato e um estilo visual para começar.</p></article><article><span>2</span><h3>Personalize</h3><p>Escreva a frase, envie um fundo e escolha uma música opcional.</p></article><article><span>3</span><h3>Exporte</h3><p>Baixe o vídeo gerado diretamente no seu celular ou computador.</p></article></div>
+      </div>
+    </section>
+  </main>
+
+  <footer><p>© 2026 Frases de Messias · Criado por <a href="sobre.html#criador-titulo" rel="author">Messias Augusto</a></p><p><a href="index.html">Voltar às frases</a> · <a href="criar-imagem.html">Criar imagem</a> · <a href="comunidade.html">Rede Social</a></p></footer>
+  <button id="temaBtn" type="button">🌙 Modo Escuro</button>
+  <script type="module" src="./criar-video.js?v=20261008-video-mvp-v1"></script>
+  <script type="module" src="./convites-canais.js?v=20261008-video-mvp-v1"></script>
+</body>
+</html>

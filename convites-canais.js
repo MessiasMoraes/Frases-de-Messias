@@ -13,7 +13,7 @@ const CANAIS_OFICIAIS = {
   }
 };
 
-const VERSAO_MENU = "20260919-header-text-v1";
+const VERSAO_MENU = "20261008-video-mvp-v1";
 
 function garantirEstiloAtualizado() {
   const folha = Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
@@ -141,11 +141,22 @@ function criarMenuPrincipal(navegacao) {
   navegacao.prepend(gatilho);
 }
 
+function garantirLinkCriarVideo(navegacao) {
+  if (navegacao.querySelector('a[href$="criar-video.html"]')) return;
+  const link = document.createElement("a");
+  link.className = "link-criador-video";
+  link.href = "criar-video.html";
+  link.textContent = "🎬 Criar vídeo";
+  link.setAttribute("aria-label", "Abrir Criador de Vídeos");
+  navegacao.appendChild(link);
+}
+
 export function inserirConviteCanais() {
   const navegacao = document.querySelector("header nav, .cabecalho-comunidade nav, nav");
   if (!navegacao) return;
 
   garantirEstiloAtualizado();
+  garantirLinkCriarVideo(navegacao);
   if (!navegacao.querySelector(".menu-canais-nav")) {
     const menu = criarMenuCanais();
     const pontoDeInsercao = navegacao.querySelector("[data-menu-canais]");
