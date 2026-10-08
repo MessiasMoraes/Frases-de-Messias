@@ -8,7 +8,7 @@
   <meta name="robots" content="index,follow">
   <link rel="canonical" href="https://frasesdemessias.com.br/criar-video.html">
   <link rel="stylesheet" href="./style.css?v=20260919-header-text-v1">
-  <link rel="stylesheet" href="./criar-video.css?v=20261008-video-mvp-v1">
+  <link rel="stylesheet" href="./criar-video.css?v=20261008-video-editor-v2">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -104,7 +104,13 @@
 
           <div class="video-range-grid">
             <div class="video-field"><label for="videoDuracao">Duração <output id="duracaoValor">8 s</output></label><input id="videoDuracao" type="range" min="4" max="15" value="8"></div>
-            <div class="video-field"><label for="videoAnimacao">Entrada</label><select id="videoAnimacao"><option value="fade">Fade suave</option><option value="zoom">Zoom lento</option><option value="static">Sem animação</option></select></div>
+            <div class="video-field"><label for="videoAnimacao">Entrada de texto</label><select id="videoAnimacao"><option value="fade">Fade suave</option><option value="slide-up">Subir suavemente</option><option value="slide-left">Entrar pela esquerda</option><option value="typewriter">Máquina de escrever</option><option value="word-by-word">Palavra por palavra</option><option value="blur-in">Desfoque para foco</option><option value="bounce">Quicar suavemente</option><option value="zoom">Zoom lento</option><option value="static">Sem animação</option></select></div>
+          </div>
+
+          <div class="video-scenes-panel">
+            <div class="video-scenes-heading"><div><label>Cenas do vídeo</label><small>Crie uma sequência de frases.</small></div><button class="video-add-scene" id="novaCena" type="button">＋ Nova cena</button></div>
+            <div class="video-scenes-list" id="videoCenas" aria-live="polite"></div>
+            <div class="video-field video-transition-field"><label for="videoTransicao">Transição para a próxima cena</label><select id="videoTransicao"><option value="crossfade">Crossfade suave</option><option value="wipe">Wipe lateral</option><option value="slide">Slide horizontal</option><option value="zoom-transition">Zoom de entrada</option><option value="flash">Flash de luz</option><option value="none">Corte direto</option></select></div>
           </div>
 
           <div class="video-editor-note"><strong>Privacidade:</strong> a criação acontece no navegador. O arquivo só sai do aparelho quando você escolhe compartilhar ou baixar.</div>
@@ -123,7 +129,7 @@
 
   <footer><p>© 2026 Frases de Messias · Criado por <a href="sobre.html#criador-titulo" rel="author">Messias Augusto</a></p><p><a href="index.html">Voltar às frases</a> · <a href="criar-imagem.html">Criar imagem</a> · <a href="comunidade.html">Rede Social</a></p></footer>
   <button id="temaBtn" type="button">🌙 Modo Escuro</button>
-  <script type="module" src="./criar-video.js?v=20261008-video-mvp-v1"></script>
-  <script type="module" src="./convites-canais.js?v=20261008-video-mvp-v1"></script>
+  <script type="module" src="./criar-video.js?v=20261008-video-editor-v2"></script>
+  <script type="module" src="./convites-canais.js?v=20261008-video-editor-v2"></script>
 </body>
 </html>
