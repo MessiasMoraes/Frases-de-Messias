@@ -372,6 +372,7 @@ async function carregarConversorMp4() {
     const ffmpeg = new FFmpeg();
     const baseURL = "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm";
     await ffmpeg.load({
+      classWorkerURL: new URL("./ffmpeg-worker.js", window.location.href).href,
       coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
       wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm")
     });
