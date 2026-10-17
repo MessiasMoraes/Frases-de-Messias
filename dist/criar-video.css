@@ -1,1 +1,11 @@
 .video-export-format{display:flex;justify-content:space-between;gap:16px;align-items:center;margin:0 0 22px;padding:13px 14px;border:1px solid #cbdaf2;border-radius:14px;background:#f3f7ff}.video-export-format label{display:block;margin:0;font-size:.78rem;font-weight:800;color:#344463}.video-export-format small{display:block;margin-top:4px;color:#6f7f99;font-size:.68rem;line-height:1.35}.video-export-format select{min-width:190px;border:1px solid #b9cbe7;border-radius:10px;padding:10px 11px;background:#fff;color:#214b9d;font:700 .75rem Manrope,Arial}.video-export-format select:focus{outline:3px solid rgba(36,99,232,.16);border-color:var(--video-blue)}.video-export-format.is-fallback{border-color:#e7c780;background:#fff9e9}.pagina-criador-video.dark .video-export-format{background:#172642;border-color:#38527c}.pagina-criador-video.dark .video-export-format label{color:#e2edff}.pagina-criador-video.dark .video-export-format small{color:#b9c9e4}.pagina-criador-video.dark .video-export-format select{background:#10203a;color:#e4edff;border-color:#38527c}@media(max-width:520px){.video-export-format{display:block}.video-export-format select{width:100%;margin-top:10px}}
+
+
+/* VIDEO QUALITY V1 — acabamento da prévia Full HD */
+.video-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.video-badges span{display:inline-flex;align-items:center;min-height:30px;padding:6px 11px;border:1px solid rgba(255,255,255,.25);border-radius:999px;background:rgba(5,25,70,.24);color:#f7fbff;font-size:.72rem;font-weight:800;letter-spacing:.02em;backdrop-filter:blur(10px)}
+.video-stage canvas{display:block;width:100%;height:auto;image-rendering:auto;background:#0b1a31}
+.video-preview-label{letter-spacing:.08em}
+.video-preview-actions button{min-height:48px;font-weight:800}
+.pagina-criador-video.dark .video-badges span{border-color:rgba(178,220,255,.3);background:rgba(7,20,38,.62);color:#f4f9ff}
+@media(max-width:520px){.video-badges{gap:6px}.video-badges span{font-size:.66rem;padding:5px 9px}.video-preview-actions{gap:8px}.video-preview-actions button{min-height:52px}}

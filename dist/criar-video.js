@@ -1,6 +1,6 @@
 const CONFIG = {
-  story: { width: 540, height: 960, label: "1080 × 1920" },
-  feed: { width: 540, height: 540, label: "1080 × 1080" }
+  story: { width: 1080, height: 1920, label: "1080 × 1920 · Full HD" },
+  feed: { width: 1080, height: 1080, label: "1080 × 1080 · Full HD" }
 };
 
 const TEMPLATES = {
@@ -14,6 +14,8 @@ const TRANSITION_TIME = .18;
 
 const canvas = document.getElementById("videoCanvas");
 const context = canvas.getContext("2d");
+context.imageSmoothingEnabled = true;
+context.imageSmoothingQuality = "high";
 const frase = document.getElementById("videoFrase");
 const autor = document.getElementById("videoAutor");
 const fundoInput = document.getElementById("videoFundo");
@@ -146,7 +148,7 @@ function drawText(scene, progress, opacity = 1) {
   if (animacaoAtual === "bounce") { alpha *= Math.min(1, p * 3); offsetY = Math.sin(entrance * Math.PI * 1.25) * (1 - entrance) * -18; scale = .94 + entrance * .06; }
   if (animacaoAtual === "static") { alpha = opacity; }
 
-  const quoteSize = formato === "feed" ? 32 : 38;
+  const quoteSize = formato === "feed" ? 64 : 76;
   const quoteFont = `italic 700 ${quoteSize}px Georgia, serif`;
   const lines = wrapText(visibleQuote, cfg.width * .78, quoteFont);
   const lineHeight = quoteSize * 1.22;
@@ -161,14 +163,14 @@ function drawText(scene, progress, opacity = 1) {
   context.textAlign = "center";
   context.textBaseline = "middle";
   context.fillStyle = style.accent;
-  context.font = `800 ${formato === "feed" ? 17 : 18}px Manrope, Arial`;
-  context.fillText("✦  FRASES DE MESSIAS", cfg.width / 2, cfg.height * .13);
+  context.font = `800 ${formato === "feed" ? 34 : 36}px Manrope, Arial`;
+  context.fillText("FRASES DE MESSIAS", cfg.width / 2, cfg.height * .13);
   context.font = quoteFont;
   context.fillStyle = "#fffdf7";
   lines.forEach((line, index) => context.fillText(line, cfg.width / 2, quoteY + index * lineHeight));
   context.fillStyle = style.accent;
-  context.fillRect(cfg.width * .39, quoteY + lines.length * lineHeight * .65, cfg.width * .22, 3);
-  context.font = `600 ${formato === "feed" ? 20 : 23}px Manrope, Arial`;
+  context.fillRect(cfg.width * .39, quoteY + lines.length * lineHeight * .65, cfg.width * .22, 6);
+  context.font = `600 ${formato === "feed" ? 40 : 46}px Manrope, Arial`;
   context.fillStyle = "#ffffffee";
   context.fillText(signature, cfg.width / 2, quoteY + lines.length * lineHeight * .65 + 34);
   context.restore();
@@ -372,6 +374,7 @@ async function carregarConversorMp4() {
     const ffmpeg = new FFmpeg();
     const baseURL = "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm";
     await ffmpeg.load({
+      classWorkerURL: new URL("./ffmpeg-worker.js", window.location.href).href,
       coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
       wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm")
     });
@@ -395,7 +398,7 @@ async function converterWebmParaMp4(webmBlob) {
   ffmpeg.on("progress", progresso);
   try {
     await ffmpeg.writeFile(inputName, await fetchFile(webmBlob));
-    await ffmpeg.exec(["-i", inputName, "-c:v", "libx264", "-preset", "veryfast", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", "-shortest", outputName]);
+      await ffmpeg.exec(["-i", inputName, "-c:v", "libx264", "-preset", "veryfast", "-crf", "18", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", "-shortest", outputName]);
     const data = await ffmpeg.readFile(outputName);
     return new Blob([data.buffer], { type: "video/mp4" });
   } finally {
@@ -446,7 +449,7 @@ async function exportarVideo() {
       await audioElement.play();
     }
     const chunks = [];
-    const recorder = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 5_000_000 });
+    const recorder = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 8_000_000 });
     const done = new Promise((resolve, reject) => {
       recorder.ondataavailable = (event) => event.data.size && chunks.push(event.data);
       recorder.onerror = () => reject(new Error("Falha no gravador local."));
