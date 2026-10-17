@@ -13,7 +13,7 @@ const CANAIS_OFICIAIS = {
   }
 };
 
-const VERSAO_MENU = "20261017-aurora-v1";
+const VERSAO_MENU = "20261017-aurora-dark-v1";
 
 function garantirEstiloAtualizado() {
   const folha = Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
