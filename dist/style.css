@@ -3354,3 +3354,83 @@ footer a { color: #a5f3fc; }
   .hero #copiarBtn, .btn-categoria, #listaFrases .cardFrase, #listaFrases .botoes button, #pesquisa, #pesquisaAutor { transition: none; }
 }
 /* FIM AURORA REDESIGN V1 */
+/* AURORA DARK FIX V1 — contraste acessível para modo escuro */
+body.dark {
+  background: radial-gradient(circle at 8% 0%, rgba(37, 99, 235, .16), transparent 24rem), #08111f;
+  color: #eef6ff;
+}
+
+body.dark .hero {
+  border-color: rgba(120, 190, 235, .34);
+  background: radial-gradient(circle at 90% 8%, rgba(247, 201, 72, .16), transparent 16rem), linear-gradient(135deg, #12283e 0%, #102033 100%);
+  color: #eef6ff;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .26);
+}
+body.dark .hero::before { background: #153f5b; color: #b8f3ff; }
+body.dark .hero::after { color: #f7d36a; }
+body.dark .hero h2 { color: #a8dcff; }
+body.dark .hero blockquote { color: #eef6ff; text-shadow: 0 2px 10px rgba(0, 0, 0, .48); }
+body.dark .hero #copiarBtn { box-shadow: 0 10px 24px rgba(37, 99, 235, .32); }
+
+body.dark .previa-comunidade,
+body.dark .categoriasDestaque,
+body.dark .categorias,
+body.dark .bloco-seo-frases-messias,
+body.dark .colecoes-destaque {
+  border-color: #2c4a66;
+  background: linear-gradient(145deg, rgba(18, 40, 62, .98), rgba(14, 30, 47, .98));
+  color: #e7f1fb;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, .22);
+}
+body.dark .previa-comunidade h2,
+body.dark .categoriasDestaque h2,
+body.dark .categorias h2,
+body.dark .bloco-seo-frases-messias h2,
+body.dark .colecoes-destaque h2,
+body.dark #todas-as-frases > h2 { color: #cfeaff; }
+body.dark .selo-rede-social,
+body.dark .selo-colecao { color: #9de8f4; }
+body.dark .cabecalho-previa-comunidade > div > p:not(.selo-rede-social),
+body.dark .previa-comunidade > p,
+body.dark .bloco-seo-frases-messias > p,
+body.dark .colecoes-destaque > p { color: #c4d4e3; }
+body.dark .link-ver-rede-social,
+body.dark .cabecalho-colecoes-destaque > a { color: #9ed7ff; }
+
+body.dark .btn-categoria {
+  border-color: #3b6e9b;
+  background: linear-gradient(135deg, #163653, #17274d);
+  color: #b9e4ff;
+  box-shadow: 0 7px 16px rgba(0, 0, 0, .18);
+}
+body.dark .btn-categoria:hover,
+body.dark .btn-categoria:focus-visible { border-color: #8bdced; background: linear-gradient(135deg, #1c5070, #293d78); color: #fff; }
+body.dark .card-colecao,
+body.dark .card-categoria-pagina,
+body.dark .card-frase-destaque {
+  border-color: #2c4a66;
+  background: #102438;
+  color: #eef6ff;
+  box-shadow: none;
+}
+body.dark .card-colecao-conteudo strong,
+body.dark .card-categoria-conteudo strong { color: #a8dcff; }
+body.dark .card-colecao-conteudo small,
+body.dark .card-categoria-conteudo small { color: #c4d4e3; }
+body.dark .card-colecao-seta,
+body.dark .card-categoria-seta { color: #9ed7ff; }
+
+body.dark #todas-as-frases > h2 { text-shadow: 0 2px 12px rgba(0, 0, 0, .32); }
+body.dark #listaFrases .cardFrase { border-color: #2c4a66; background: #0f1e31; box-shadow: 0 16px 34px rgba(0, 0, 0, .30); }
+body.dark #listaFrases .botoes { background: linear-gradient(180deg, #12283e, #0f1e31); }
+body.dark #listaFrases .estatisticas { border-top-color: #2c4a66; background: #102438; color: #c4d8e9; }
+body.dark .cartao-previa-comunidade { border-color: #2c4a66; background: #102438; color: #eef6ff; }
+body.dark .cartao-previa-comunidade blockquote,
+body.dark .meta-previa-comunidade strong { color: #eef6ff; }
+body.dark .meta-previa-comunidade { color: #c4d4e3; }
+body.dark .meta-previa-comunidade span { background: #173d65; color: #b9e4ff; }
+
+@media (prefers-reduced-motion: reduce) {
+  body.dark .hero #copiarBtn, body.dark .btn-categoria, body.dark #listaFrases .cardFrase { transition: none; }
+}
+/* FIM AURORA DARK FIX V1 */
