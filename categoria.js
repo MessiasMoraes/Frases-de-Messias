@@ -1,5 +1,5 @@
 import { db } from "./firebase.js";
-import "./convites-canais.js?v=20260919-menu-dots-v1";
+import "./convites-canais.js?v=20260919-header-text-v1";
 
 import {
   collection,
@@ -759,7 +759,7 @@ function configurarTema() {
   const aplicarTema = (escuro) => {
     document.body.classList.toggle("dark", escuro);
     if (botaoTema) {
-      botaoTema.textContent = escuro ? "☀️ Modo Claro" : "🌙 Modo Escuro";
+      botaoTema.textContent = escuro ? "Modo Claro" : "Modo Escuro";
       botaoTema.setAttribute("aria-pressed", String(escuro));
     }
   };

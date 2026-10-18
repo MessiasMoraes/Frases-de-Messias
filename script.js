@@ -132,7 +132,7 @@ function normalizarParaBusca(texto) {
 }
 
 // Padroniza nomes de categorias exibidos no botão e no Firestore.
-// Assim, por exemplo, “boa-noite”, “Boa Noite” e “🌙 Boa Noite” apontam
+// Assim, por exemplo, “boa-noite”, “Boa Noite” e “ Boa Noite” apontam
 // para a mesma categoria, inclusive no WebView Android.
 function normalizarCategoria(texto = "") {
     return normalizarParaBusca(
@@ -595,7 +595,7 @@ function criarCardFrase(f, lista) {
             <button type="button" class="btn-favorito-imagem${fraseEstaFavorita(f) ? " ativo" : ""}" onclick="alternarFavoritoPorId('${f.id}', this)" aria-label="${fraseEstaFavorita(f) ? "Remover dos favoritos" : "Salvar nos favoritos"}" aria-pressed="${fraseEstaFavorita(f)}" title="${fraseEstaFavorita(f) ? "Remover dos favoritos" : "Salvar nos favoritos"}">${fraseEstaFavorita(f) ? "♥" : "♡"}</button>
             <p class="textoFrase">"${f.texto}"</p>
             <p class="autorFrase">— ${f.autor || "Messias"}</p>
-            <div class="marca">📖 Frases de Messias</div>
+            <div class="marca">Frases de Messias</div>
         </div>
         <div class="imagemFrase">
             <img src="${imagem}" alt="Imagem da frase de Messias" loading="lazy">
@@ -899,7 +899,7 @@ window.baixarImagem = async function(botao, formato = "story") {
         // Desenhar marca d'água no rodapé
         ctx.font = `bold ${fontSizeMarcaNum}px Arial, sans-serif`;
         ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
-        ctx.fillText("📖 Frases de Messias", largura / 2, altura - 80);
+        ctx.fillText("Frases de Messias", largura / 2, altura - 80);
 
         const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));
         if (!blob) throw new Error("Erro ao gerar imagem.");
@@ -1543,7 +1543,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Remove a classe antiga para evitar que estilos diferentes disputem o tema.
         document.body.classList.remove("dark-mode");
         if (temaBtn) {
-            temaBtn.textContent = escuro ? "☀️ Modo Claro" : "🌙 Modo Escuro";
+            temaBtn.textContent = escuro ? "Modo Claro" : "Modo Escuro";
             temaBtn.setAttribute("aria-pressed", String(escuro));
             temaBtn.setAttribute("title", escuro ? "Ativar modo claro" : "Ativar modo escuro");
         }

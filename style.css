@@ -840,27 +840,18 @@ button[onclick*="gerarVideo"]:disabled {
     top: 14px;
     right: 12px;
     bottom: auto;
-    width: 44px;
-    min-width: 44px;
+    width: auto;
+    min-width: 92px;
     height: 44px;
     min-height: 44px;
-    padding: 0;
-    border-radius: 50%;
-    font-size: 0;
-    display: grid;
+    padding: 0 12px;
+    border-radius: 14px;
+    font-size: 12px;
+    line-height: 1;
+    display: inline-grid;
     place-items: center;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.22);
     touch-action: manipulation;
-  }
-
-  #temaBtn::before {
-    content: "🌙";
-    font-size: 20px;
-    line-height: 1;
-  }
-
-  .dark #temaBtn::before {
-    content: "☀️";
   }
 }
 
@@ -3155,7 +3146,6 @@ nav.menu-principal.menu-principal-aberto .menu-principal-gatilho {
   .marca-site-link { transition: none; }
 }
 /* FIM MARCA TEXTUAL V1 */
-
 /* AURORA REDESIGN V1 — identidade visual mais marcante, editorial e responsiva */
 :root {
   --aurora-ink: #102a43;
