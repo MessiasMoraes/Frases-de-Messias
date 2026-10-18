@@ -127,7 +127,7 @@ async function criarDownload() {
 
     contexto.fillStyle = dados.corTexto;
     contexto.font = "700 30px Georgia";
-    contexto.fillText("☼  Frases de Messias", 82, 90);
+    contexto.fillText("Frases de Messias", 82, 90);
     contexto.fillStyle = dados.corSelo;
     contexto.font = "800 18px Arial";
     contexto.fillText(dados.categoria.toUpperCase(), 84, 170);
@@ -178,7 +178,7 @@ document.getElementById("restaurarModelo").addEventListener("click", () => selec
 
 document.getElementById("temaBtn").addEventListener("click", () => {
   document.body.classList.toggle("dark");
-  document.getElementById("temaBtn").textContent = document.body.classList.contains("dark") ? "☀️ Modo Claro" : "🌙 Modo Escuro";
+  document.getElementById("temaBtn").textContent = document.body.classList.contains("dark") ? "Modo Claro" : "Modo Escuro";
 });
 
 selecionarModelo(modeloInicial);
