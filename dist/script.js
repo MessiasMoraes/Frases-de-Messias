@@ -839,7 +839,7 @@ window.baixarImagem = async function(botao, formato = "story") {
         }
 
         // Camada escura de leitura (overlay)
-        ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+        ctx.fillStyle = "rgba(0, 0, 0, 0.36)";
         ctx.fillRect(0, 0, largura, altura);
 
         // Textos centralizados com quebra de linha (Word Wrap)
