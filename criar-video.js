@@ -198,11 +198,11 @@ function drawText(scene, progress, opacity = 1) {
   context.font = quoteFont;
   context.fillStyle = "#fffdf7";
   lines.forEach((line, index) => context.fillText(line, cfg.width / 2, quoteY + index * lineHeight));
-  context.fillStyle = style.accent;
-  context.fillRect(cfg.width * .39, quoteY + lines.length * lineHeight * .65, cfg.width * .22, 6);
+  // A autoria fica abaixo da última linha; não desenhar faixa sobre a frase.
+  const quoteBottom = quoteY + (lines.length - 1) * lineHeight;
   context.font = `600 ${formato === "feed" ? 40 : 46}px Manrope, Arial`;
   context.fillStyle = "#ffffffee";
-  context.fillText(signature, cfg.width / 2, quoteY + lines.length * lineHeight * .65 + 34);
+  context.fillText(signature, cfg.width / 2, quoteBottom + lineHeight * .78);
   context.restore();
 }
 
