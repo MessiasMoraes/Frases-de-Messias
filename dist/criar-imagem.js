@@ -1,184 +1,24 @@
-// Direção visual: Aurora Editorial — controles discretos atualizam uma prévia editorial de forma imediata.
+// Criador de Imagens Aurora v2 — modelos editoriais, formatos sociais e exportação local em alta definição.
 const MODELOS = {
-  "bom-dia": {
-    categoria: "Bom Dia",
-    frase: "Que a luz de hoje encontre o seu coração.",
-    assinatura: "Uma mensagem para compartilhar",
-    imagem: "imagens/categorias/bom-dia.png",
-    corTexto: "#493016",
-    corSelo: "#a65f12",
-    sobreposicao: ["rgba(255,248,225,.98)", "rgba(255,238,184,.72)", "rgba(90,58,26,.2)"]
-  },
-  fe: {
-    categoria: "Fé",
-    frase: "A fé ilumina caminhos que os olhos ainda não veem.",
-    assinatura: "Uma mensagem para compartilhar",
-    imagem: "imagens/categorias/fe.png",
-    corTexto: "#fffdf7",
-    corSelo: "#e7ad56",
-    sobreposicao: ["rgba(12,32,60,.99)", "rgba(12,32,60,.9)", "rgba(12,32,60,.1)"]
-  }
+  "bom-dia": { categoria:"Bom Dia", frase:"Que a luz de hoje encontre o seu coração.", assinatura:"Uma mensagem para compartilhar", imagem:"imagens/categorias/bom-dia.png", corTexto:"#493016", corSelo:"#a65f12", sobreposicao:["rgba(255,248,225,.82)","rgba(255,238,184,.48)","rgba(90,58,26,.12)"] },
+  fe: { categoria:"Fé", frase:"A fé ilumina caminhos que os olhos ainda não veem.", assinatura:"Uma mensagem para compartilhar", imagem:"imagens/categorias/fe.png", corTexto:"#fffdf7", corSelo:"#e7ad56", sobreposicao:["rgba(12,32,60,.78)","rgba(12,32,60,.62)","rgba(12,32,60,.08)"] },
+  amor: { categoria:"Amor", frase:"O amor transforma pequenos momentos em memórias eternas.", assinatura:"Com carinho, Messias", imagem:"imagens/categorias/amor.png", corTexto:"#fff8f4", corSelo:"#f0b091", sobreposicao:["rgba(75,24,34,.72)","rgba(103,34,49,.48)","rgba(30,12,20,.12)"] },
+  gratidao: { categoria:"Gratidão", frase:"A gratidão revela beleza até nos dias mais simples.", assinatura:"Um coração agradecido", imagem:"imagens/categorias/gratidao.png", corTexto:"#fffdf4", corSelo:"#f3c76e", sobreposicao:["rgba(38,48,26,.72)","rgba(79,80,38,.45)","rgba(22,27,16,.10)"] },
+  reflexao: { categoria:"Reflexão", frase:"Algumas respostas chegam quando aprendemos a silenciar.", assinatura:"Pausa para sentir", imagem:"imagens/categorias/reflexao.png", corTexto:"#fffdf8", corSelo:"#c9d9db", sobreposicao:["rgba(22,35,43,.78)","rgba(47,67,72,.52)","rgba(10,18,24,.10)"] },
+  "boa-noite": { categoria:"Boa Noite", frase:"Que a noite acalme o coração e renove suas forças.", assinatura:"Durma em paz", imagem:"imagens/categorias/boa-noite.png", corTexto:"#fffaf0", corSelo:"#e9c47b", sobreposicao:["rgba(18,25,55,.82)","rgba(36,45,86,.58)","rgba(8,12,29,.12)"] },
+  motivacao: { categoria:"Motivação", frase:"Você não precisa correr: precisa continuar.", assinatura:"Siga com coragem", imagem:"imagens/categorias/motivacao.png", corTexto:"#fffdf4", corSelo:"#ffd071", sobreposicao:["rgba(55,31,16,.74)","rgba(120,66,19,.48)","rgba(28,16,8,.10)"] },
+  familia: { categoria:"Família", frase:"Onde existe cuidado, sempre existe um lugar para voltar.", assinatura:"Laços que acolhem", imagem:"imagens/categorias/familia.png", corTexto:"#fffdf7", corSelo:"#f0c887", sobreposicao:["rgba(38,35,25,.74)","rgba(92,76,42,.46)","rgba(22,18,12,.10)"] }
 };
-
-const modeloInicial = "bom-dia";
-let modeloAtual = modeloInicial;
-let imagemDoModelo = null;
-
-const quadroPrevia = document.getElementById("quadroPrevia");
-const textoImagem = document.getElementById("textoImagem");
-const assinaturaImagem = document.getElementById("assinaturaImagem");
-const frasePrevia = document.getElementById("frasePrevia");
-const assinaturaPrevia = document.getElementById("assinaturaPrevia");
-const categoriaPrevia = document.getElementById("categoriaPrevia");
-const contadorCaracteres = document.getElementById("contadorCaracteres");
-const statusCriador = document.getElementById("statusCriador");
-const botaoBaixar = document.getElementById("baixarImagem");
-
-function textoSeguro(valor, limite) {
-  return String(valor || "").replace(/\s+/g, " ").trim().slice(0, limite);
-}
-
-function atualizarContador() {
-  contadorCaracteres.textContent = `${textoImagem.value.length}/180`;
-}
-
-function atualizarPrevia() {
-  const frase = textoSeguro(textoImagem.value, 180) || MODELOS[modeloAtual].frase;
-  const assinatura = textoSeguro(assinaturaImagem.value, 48) || "Frases de Messias";
-  quadroPrevia.dataset.comprimento = frase.length > 110 ? "longo" : frase.length > 62 ? "medio" : "curto";
-  frasePrevia.textContent = frase;
-  assinaturaPrevia.textContent = assinatura;
-  atualizarContador();
-}
-
-function selecionarModelo(modelo) {
-  if (!MODELOS[modelo]) return;
-  modeloAtual = modelo;
-  const dados = MODELOS[modelo];
-  quadroPrevia.dataset.modelo = modelo;
-  categoriaPrevia.textContent = dados.categoria;
-  textoImagem.value = dados.frase;
-  assinaturaImagem.value = dados.assinatura;
-  document.querySelectorAll(".opcao-modelo").forEach(botao => {
-    const ativo = botao.dataset.modelo === modelo;
-    botao.classList.toggle("ativo", ativo);
-    botao.setAttribute("aria-pressed", String(ativo));
-  });
-  statusCriador.textContent = `Modelo ${dados.categoria} selecionado.`;
-  atualizarPrevia();
-}
-
-function quebrarLinhas(contexto, texto, larguraMaxima) {
-  const palavras = texto.split(" ");
-  const linhas = [];
-  let linha = "";
-  palavras.forEach(palavra => {
-    const tentativa = linha ? `${linha} ${palavra}` : palavra;
-    if (contexto.measureText(tentativa).width > larguraMaxima && linha) {
-      linhas.push(linha);
-      linha = palavra;
-    } else {
-      linha = tentativa;
-    }
-  });
-  if (linha) linhas.push(linha);
-  return linhas;
-}
-
-function desenharImagemCobrindo(contexto, imagem, largura, altura) {
-  const escala = Math.max(largura / imagem.naturalWidth, altura / imagem.naturalHeight);
-  const larguraRenderizada = imagem.naturalWidth * escala;
-  const alturaRenderizada = imagem.naturalHeight * escala;
-  contexto.drawImage(imagem, (largura - larguraRenderizada) / 2, (altura - alturaRenderizada) / 2, larguraRenderizada, alturaRenderizada);
-}
-
-function carregarImagem(url) {
-  return new Promise((resolve, reject) => {
-    const imagem = new Image();
-    imagem.decoding = "async";
-    imagem.onload = () => resolve(imagem);
-    imagem.onerror = () => reject(new Error("Não foi possível carregar o fundo do modelo."));
-    imagem.src = url;
-  });
-}
-
-async function criarDownload() {
-  const dados = MODELOS[modeloAtual];
-  const frase = textoSeguro(textoImagem.value, 180) || dados.frase;
-  const assinatura = textoSeguro(assinaturaImagem.value, 48) || "Frases de Messias";
-  const canvas = document.createElement("canvas");
-  const contexto = canvas.getContext("2d");
-  canvas.width = 1200;
-  canvas.height = 630;
-
-  botaoBaixar.disabled = true;
-  botaoBaixar.textContent = "Preparando imagem...";
-  statusCriador.textContent = "Gerando seu arquivo em 1200 × 630 px...";
-
-  try {
-    imagemDoModelo = await carregarImagem(dados.imagem);
-    desenharImagemCobrindo(contexto, imagemDoModelo, canvas.width, canvas.height);
-    const gradiente = contexto.createLinearGradient(0, 0, canvas.width, 0);
-    gradiente.addColorStop(0, dados.sobreposicao[0]);
-    gradiente.addColorStop(.52, dados.sobreposicao[1]);
-    gradiente.addColorStop(1, dados.sobreposicao[2]);
-    contexto.fillStyle = gradiente;
-    contexto.fillRect(0, 0, canvas.width, canvas.height);
-
-    contexto.fillStyle = dados.corTexto;
-    contexto.font = "700 30px Georgia";
-    contexto.fillText("Frases de Messias", 82, 90);
-    contexto.fillStyle = dados.corSelo;
-    contexto.font = "800 18px Arial";
-    contexto.fillText(dados.categoria.toUpperCase(), 84, 170);
-
-    let tamanhoFonte = modeloAtual === "fe" ? 69 : 74;
-    let linhas = [];
-    do {
-      contexto.font = `italic 600 ${tamanhoFonte}px Georgia`;
-      linhas = quebrarLinhas(contexto, frase, 650);
-      tamanhoFonte -= 2;
-    } while ((linhas.length > 4 || linhas.some(linha => contexto.measureText(linha).width > 650)) && tamanhoFonte > 43);
-    contexto.font = `italic 600 ${Math.max(tamanhoFonte, 43)}px Georgia`;
-    const alturaLinha = Math.max(tamanhoFonte, 43) * 1.08;
-    const alturaBloco = linhas.length * alturaLinha;
-    let y = 320 - alturaBloco / 2;
-    linhas.forEach(linha => { contexto.fillText(linha, 82, y); y += alturaLinha; });
-
-    contexto.globalAlpha = .62;
-    contexto.fillRect(84, Math.min(y + 14, 510), 115, 3);
-    contexto.globalAlpha = .82;
-    contexto.font = "700 18px Arial";
-    contexto.fillText(assinatura, 84, Math.min(y + 56, 562));
-    contexto.globalAlpha = 1;
-
-    const link = document.createElement("a");
-    link.download = `frases-de-messias-${modeloAtual}-${Date.now()}.png`;
-    link.href = canvas.toDataURL("image/png");
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    statusCriador.textContent = "Imagem pronta. O download foi iniciado.";
-  } catch (erro) {
-    console.error(erro);
-    statusCriador.textContent = "Não foi possível gerar a imagem agora. Tente novamente.";
-  } finally {
-    botaoBaixar.disabled = false;
-    botaoBaixar.innerHTML = '<span aria-hidden="true">↓</span> Baixar imagem';
-  }
-}
-
-document.querySelectorAll(".opcao-modelo").forEach(botao => {
-  botao.addEventListener("click", () => selecionarModelo(botao.dataset.modelo));
-});
-textoImagem.addEventListener("input", atualizarPrevia);
-assinaturaImagem.addEventListener("input", atualizarPrevia);
-botaoBaixar.addEventListener("click", criarDownload);
-document.getElementById("restaurarModelo").addEventListener("click", () => selecionarModelo(modeloAtual));
-
-document.getElementById("temaBtn").addEventListener("click", () => {
-  document.body.classList.toggle("dark");
-  document.getElementById("temaBtn").textContent = document.body.classList.contains("dark") ? "Modo Claro" : "Modo Escuro";
-});
-
-selecionarModelo(modeloInicial);
+const FORMATOS={paisagem:{label:"1200 × 630 px",largura:1200,altura:630},feed:{label:"1080 × 1080 px",largura:1080,altura:1080},story:{label:"1080 × 1920 px",largura:1080,altura:1920}};
+const modeloInicial="bom-dia"; let modeloAtual=modeloInicial; let formatoAtual="paisagem";
+const quadroPrevia=document.getElementById("quadroPrevia"), textoImagem=document.getElementById("textoImagem"), assinaturaImagem=document.getElementById("assinaturaImagem"), frasePrevia=document.getElementById("frasePrevia"), assinaturaPrevia=document.getElementById("assinaturaPrevia"), categoriaPrevia=document.getElementById("categoriaPrevia"), contadorCaracteres=document.getElementById("contadorCaracteres"), statusCriador=document.getElementById("statusCriador"), botaoBaixar=document.getElementById("baixarImagem"), dimensaoPrevia=document.getElementById("dimensaoPrevia");
+function textoSeguro(valor,limite){return String(valor||"").replace(/\s+/g," ").trim().slice(0,limite)}
+function atualizarContador(){contadorCaracteres.textContent=`${textoImagem.value.length}/180`}
+function atualizarPrevia(){const frase=textoSeguro(textoImagem.value,180)||MODELOS[modeloAtual].frase; const assinatura=textoSeguro(assinaturaImagem.value,48)||"Frases de Messias"; quadroPrevia.dataset.comprimento=frase.length>110?"longo":frase.length>62?"medio":"curto"; quadroPrevia.dataset.formato=formatoAtual; frasePrevia.textContent=frase; assinaturaPrevia.textContent=assinatura; dimensaoPrevia.textContent=FORMATOS[formatoAtual].label; atualizarContador()}
+function selecionarModelo(modelo){if(!MODELOS[modelo])return; modeloAtual=modelo; const dados=MODELOS[modelo]; quadroPrevia.dataset.modelo=modelo; categoriaPrevia.textContent=dados.categoria; textoImagem.value=dados.frase; assinaturaImagem.value=dados.assinatura; document.querySelectorAll(".opcao-modelo").forEach(botao=>{const ativo=botao.dataset.modelo===modelo;botao.classList.toggle("ativo",ativo);botao.setAttribute("aria-pressed",String(ativo))}); statusCriador.textContent=`Modelo ${dados.categoria} selecionado.`; atualizarPrevia()}
+function selecionarFormato(formato){if(!FORMATOS[formato])return; formatoAtual=formato; document.querySelectorAll(".opcao-formato").forEach(botao=>{const ativo=botao.dataset.formato===formato;botao.classList.toggle("ativo",ativo);botao.setAttribute("aria-pressed",String(ativo))}); atualizarPrevia(); statusCriador.textContent=`Formato ${FORMATOS[formato].label} selecionado.`}
+function quebrarLinhas(ctx,texto,max){const linhas=[];let linha="";texto.split(" ").forEach(p=>{const tentativa=linha?`${linha} ${p}`:p;if(ctx.measureText(tentativa).width>max&&linha){linhas.push(linha);linha=p}else linha=tentativa});if(linha)linhas.push(linha);return linhas}
+function desenharImagemCobrindo(ctx,img,w,h){const escala=Math.max(w/img.naturalWidth,h/img.naturalHeight);const rw=img.naturalWidth*escala,rh=img.naturalHeight*escala;ctx.drawImage(img,(w-rw)/2,(h-rh)/2,rw,rh)}
+function carregarImagem(url){return new Promise((resolve,reject)=>{const img=new Image();img.decoding="async";img.onload=()=>resolve(img);img.onerror=()=>reject(new Error("Não foi possível carregar o fundo do modelo."));img.src=url})}
+async function criarDownload(){const dados=MODELOS[modeloAtual],formato=FORMATOS[formatoAtual],frase=textoSeguro(textoImagem.value,180)||dados.frase,assinatura=textoSeguro(assinaturaImagem.value,48)||"Frases de Messias",canvas=document.createElement("canvas"),ctx=canvas.getContext("2d");canvas.width=formato.largura;canvas.height=formato.altura;botaoBaixar.disabled=true;botaoBaixar.textContent="Preparando imagem...";statusCriador.textContent=`Gerando seu arquivo em ${formato.label}...`;try{const img=await carregarImagem(dados.imagem);desenharImagemCobrindo(ctx,img,canvas.width,canvas.height);const grad=ctx.createLinearGradient(0,0,canvas.width,0);grad.addColorStop(0,dados.sobreposicao[0]);grad.addColorStop(.52,dados.sobreposicao[1]);grad.addColorStop(1,dados.sobreposicao[2]);ctx.fillStyle=grad;ctx.fillRect(0,0,canvas.width,canvas.height);const escala=canvas.width/1200;const margem=82*escala;const maxTexto=(formatoAtual==="story"?760:650)*escala;ctx.fillStyle=dados.corTexto;ctx.font=`700 ${30*escala}px Georgia`;ctx.fillText("Frases de Messias",margem,90*escala);ctx.fillStyle=dados.corSelo;ctx.font=`800 ${18*escala}px Arial`;ctx.fillText(dados.categoria.toUpperCase(),margem,170*escala);let tamanho= (formatoAtual==="story"?76:74)*escala,linhas=[];do{ctx.font=`italic 600 ${tamanho}px Georgia`;linhas=quebrarLinhas(ctx,frase,maxTexto);tamanho-=2*escala}while((linhas.length>5||linhas.some(l=>ctx.measureText(l).width>maxTexto))&&tamanho>34*escala);ctx.font=`italic 600 ${Math.max(tamanho,34*escala)}px Georgia`;const alturaLinha=Math.max(tamanho,34*escala)*1.08;const alturaBloco=linhas.length*alturaLinha;let y=(formatoAtual==="story"?canvas.height*.48:canvas.height*.51)-alturaBloco/2;linhas.forEach(l=>{ctx.fillText(l,margem,y);y+=alturaLinha});ctx.globalAlpha=.62;ctx.fillRect(margem,Math.min(y+14*escala,canvas.height-120*escala),115*escala,3*escala);ctx.globalAlpha=.82;ctx.font=`700 ${18*escala}px Arial`;ctx.fillText(assinatura,margem,Math.min(y+56*escala,canvas.height-60*escala));ctx.globalAlpha=1;const link=document.createElement("a");link.download=`frases-de-messias-${modeloAtual}-${formatoAtual}-${Date.now()}.png`;link.href=canvas.toDataURL("image/png");document.body.appendChild(link);link.click();link.remove();statusCriador.textContent="Imagem pronta. O download foi iniciado."}catch(erro){console.error(erro);statusCriador.textContent="Não foi possível gerar a imagem agora. Tente novamente."}finally{botaoBaixar.disabled=false;botaoBaixar.innerHTML='<span aria-hidden="true">↓</span> Baixar imagem'}}
+document.querySelectorAll(".opcao-modelo").forEach(b=>b.addEventListener("click",()=>selecionarModelo(b.dataset.modelo)));document.querySelectorAll(".opcao-formato").forEach(b=>b.addEventListener("click",()=>selecionarFormato(b.dataset.formato)));textoImagem.addEventListener("input",atualizarPrevia);assinaturaImagem.addEventListener("input",atualizarPrevia);botaoBaixar.addEventListener("click",criarDownload);document.getElementById("restaurarModelo").addEventListener("click",()=>selecionarModelo(modeloAtual));document.getElementById("temaBtn").addEventListener("click",()=>{document.body.classList.toggle("dark");document.getElementById("temaBtn").textContent=document.body.classList.contains("dark")?"Modo Claro":"Modo Escuro"});selecionarModelo(modeloInicial);

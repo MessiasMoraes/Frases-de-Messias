@@ -20,7 +20,7 @@
   <meta name="twitter:description" content="Personalize sua frase e transforme-a em uma imagem pronta para compartilhar.">
   <meta name="twitter:image" content="https://frasesdemessias.com.br/imagens/categorias/bom-dia.png">
   <link rel="stylesheet" href="./style.css?v=20261018-no-yellow-icon-v1">
-  <link rel="stylesheet" href="./criar-imagem.css?v=20260822-criador-imagens-v1">
+  <link rel="stylesheet" href="./criar-imagem.css?v=20261106-criador-imagens-v2">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600;1,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -46,9 +46,9 @@
       <div class="criador-container">
         <p class="criador-selo"><span aria-hidden="true">✦</span> CRIADOR DE IMAGENS</p>
         <h2 id="criadorTitulo">Transforme sua mensagem em presença.</h2>
-        <p>Escolha um modelo, escreva sua frase e baixe uma arte em alta qualidade para compartilhar onde quiser.</p>
+        <p>Escolha um modelo, defina o formato, escreva sua frase e baixe uma arte nítida para compartilhar onde quiser.</p>
         <div class="criador-info" aria-label="Características do criador">
-          <span>Modelos Bom Dia e Fé</span>
+          <span>8 modelos editoriais</span>
           <span>Texto personalizado</span>
           <span>1200 × 630 px</span>
         </div>
@@ -82,14 +82,23 @@
           <fieldset class="grupo-modelos">
             <legend>Categoria</legend>
             <div class="opcoes-modelo">
-              <button class="opcao-modelo ativo" type="button" data-modelo="bom-dia" aria-pressed="true">
-                <span class="mini-modelo mini-bom-dia" aria-hidden="true"></span>
-                <span><strong>Bom Dia</strong><small>Luz e recomeço</small></span>
-              </button>
-              <button class="opcao-modelo" type="button" data-modelo="fe" aria-pressed="false">
-                <span class="mini-modelo mini-fe" aria-hidden="true"></span>
-                <span><strong>Fé</strong><small>Esperança e caminho</small></span>
-              </button>
+<button class="opcao-modelo ativo" type="button" data-modelo="bom-dia" aria-pressed="true"><span class="mini-modelo mini-bom-dia" aria-hidden="true"></span><span><strong>Bom Dia</strong><small>Luz e recomeço</small></span></button>
+              <button class="opcao-modelo" type="button" data-modelo="fe" aria-pressed="false"><span class="mini-modelo mini-fe" aria-hidden="true"></span><span><strong>Fé</strong><small>Esperança e caminho</small></span></button>
+              <button class="opcao-modelo" type="button" data-modelo="amor" aria-pressed="false"><span class="mini-modelo mini-amor" aria-hidden="true"></span><span><strong>Amor</strong><small>Afeto e presença</small></span></button>
+              <button class="opcao-modelo" type="button" data-modelo="gratidao" aria-pressed="false"><span class="mini-modelo mini-gratidao" aria-hidden="true"></span><span><strong>Gratidão</strong><small>Leveza e reconhecimento</small></span></button>
+              <button class="opcao-modelo" type="button" data-modelo="reflexao" aria-pressed="false"><span class="mini-modelo mini-reflexao" aria-hidden="true"></span><span><strong>Reflexão</strong><small>Calma e profundidade</small></span></button>
+              <button class="opcao-modelo" type="button" data-modelo="boa-noite" aria-pressed="false"><span class="mini-modelo mini-boa-noite" aria-hidden="true"></span><span><strong>Boa Noite</strong><small>Paz para descansar</small></span></button>
+              <button class="opcao-modelo" type="button" data-modelo="motivacao" aria-pressed="false"><span class="mini-modelo mini-motivacao" aria-hidden="true"></span><span><strong>Motivação</strong><small>Coragem para agir</small></span></button>
+              <button class="opcao-modelo" type="button" data-modelo="familia" aria-pressed="false"><span class="mini-modelo mini-familia" aria-hidden="true"></span><span><strong>Família</strong><small>Laços que acolhem</small></span></button>
+            </div>
+          </fieldset>
+
+          <fieldset class="grupo-formatos">
+            <legend>Formato da imagem</legend>
+            <div class="opcoes-formato" role="group" aria-label="Escolha o formato da imagem">
+              <button class="opcao-formato ativo" type="button" data-formato="paisagem" aria-pressed="true"><strong>Paisagem</strong><small>1200 × 630</small></button>
+              <button class="opcao-formato" type="button" data-formato="feed" aria-pressed="false"><strong>Feed</strong><small>1080 × 1080</small></button>
+              <button class="opcao-formato" type="button" data-formato="story" aria-pressed="false"><strong>Story</strong><small>1080 × 1920</small></button>
             </div>
           </fieldset>
 
@@ -133,7 +142,7 @@
   </footer>
 
   <button id="temaBtn" type="button">Modo Escuro</button>
-  <script type="module" src="./criar-imagem.js?v=20260822-criador-imagens-v1"></script>
+  <script type="module" src="./criar-imagem.js?v=20261106-criador-imagens-v2"></script>
   <script type="module" src="./convites-canais.js?v=20261018-no-yellow-icon-v1"></script>
 </body>
 </html>
