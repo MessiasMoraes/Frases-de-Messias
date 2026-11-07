@@ -13,7 +13,7 @@ const CANAIS_OFICIAIS = {
   }
 };
 
-const VERSAO_MENU = "20261017-aurora-dark-v1";
+const VERSAO_MENU = "20261018-no-yellow-icon-v1";
 
 function garantirEstiloAtualizado() {
   const folha = Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
@@ -41,7 +41,7 @@ function criarMenuCanais() {
 
   grupo.innerHTML = `
     <button class="menu-canais-gatilho" type="button" aria-expanded="false" aria-controls="${idLista}" aria-label="Abrir opções dos canais oficiais">
-      <span aria-hidden="true">📣</span><span>Canais</span><span class="menu-canais-seta" aria-hidden="true">▾</span>
+      <span>Canais</span><span class="menu-canais-seta" aria-hidden="true">▾</span>
     </button>
     <div id="${idLista}" class="menu-canais-lista" role="menu" aria-label="Canais oficiais do Frases de Messias" hidden>
       ${Object.values(CANAIS_OFICIAIS).map((canal) => `
@@ -146,7 +146,7 @@ function garantirLinkCriarVideo(navegacao) {
   const link = document.createElement("a");
   link.className = "link-criador-video";
   link.href = "criar-video.html";
-  link.textContent = "🎬 Criar vídeo";
+  link.textContent = "Criar vídeo";
   link.setAttribute("aria-label", "Abrir Criador de Vídeos");
   navegacao.appendChild(link);
 }
