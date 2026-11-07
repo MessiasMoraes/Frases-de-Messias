@@ -1,9 +1,10 @@
 const CONFIG = {
-  story: { width: 1080, height: 1920, label: "1080 × 1920 · Full HD" },
-  feed: { width: 1080, height: 1080, label: "1080 × 1080 · Full HD" }
+  story: { width: 1080, height: 1920, label: "1080 × 1920 — Full HD" },
+  feed: { width: 1080, height: 1080, label: "1080 × 1080 — Full HD" }
 };
 
 const TEMPLATES = {
+  editorial: { colors: ["#102a43", "#4f9da6"], overlay: "rgba(7,24,39,.22)", accent: "#e9fbf5" },
   aurora: { colors: ["#0d54c9", "#d59b54"], overlay: "rgba(7,25,69,.28)", accent: "#ffe2a2" },
   noite: { colors: ["#071126", "#244d86"], overlay: "rgba(3,8,22,.52)", accent: "#b9d4ff" },
   dourado: { colors: ["#7b3f18", "#e7ad56"], overlay: "rgba(45,18,5,.34)", accent: "#fff0bd" }
@@ -35,7 +36,7 @@ const formatoExportacao = document.getElementById("videoFormatoExportacao");
 const formatoStatus = document.getElementById("videoFormatoStatus");
 
 let formato = "story";
-let template = "aurora";
+let template = "editorial";
 let fundo = null;
 let fundoUrl = null;
 let fundoVideo = null;
@@ -57,8 +58,8 @@ const MODELOS_VIDEO = {
   "gratidao": "dourado",
   "motivacao": "aurora",
   "familia": "aurora",
-  "bom-dia": "aurora",
-  "fe": "aurora"
+  "bom-dia": "editorial",
+  "fe": "editorial"
 };
 
 function carregarDadosDoCriadorDeImagens(){
@@ -519,7 +520,7 @@ function alternarPreview() {
   if (previewPlaying) {
     previewPlaying = false;
     cancelAnimationFrame(previewFrame);
-    reproduzir.textContent = "▶ Reproduzir";
+    reproduzir.textContent = "Reproduzir";
     atualizarPrevia();
     return;
   }
@@ -530,7 +531,7 @@ function alternarPreview() {
     const progress = (performance.now() - previewStart) / 1000 / Number(duracao.value);
     if (progress >= 1 || !previewPlaying) {
       previewPlaying = false;
-      reproduzir.textContent = "▶ Reproduzir";
+      reproduzir.textContent = "Reproduzir";
       drawTimeline(.4);
       return;
     }
