@@ -49,6 +49,35 @@ let nextSceneId = 2;
 let cenas = [{ id: 1, quote: "", author: "— Messias" }];
 let ffmpegInstance = null;
 let ffmpegLoading = null;
+const parametrosEntrada = new URLSearchParams(window.location.search);
+const MODELOS_VIDEO = {
+  "boa-noite": "noite",
+  "reflexao": "noite",
+  "amor": "dourado",
+  "gratidao": "dourado",
+  "motivacao": "aurora",
+  "familia": "aurora",
+  "bom-dia": "aurora",
+  "fe": "aurora"
+};
+
+function carregarDadosDoCriadorDeImagens(){
+  const quote=textoLimpo(parametrosEntrada.get("texto"),220);
+  const author=textoLimpo(parametrosEntrada.get("assinatura"),80);
+  const incomingFormat=parametrosEntrada.get("formato");
+  if(quote) frase.value=quote;
+  if(author) autor.value=author;
+  if(CONFIG[incomingFormat]) formato=incomingFormat;
+  const incomingTemplate=MODELOS_VIDEO[parametrosEntrada.get("modelo")];
+  if(incomingTemplate) template=incomingTemplate;
+  const fundoEntrada=parametrosEntrada.get("fundo");
+  if(fundoEntrada && /^imagens\/categorias\/[a-z-]+\.png$/.test(fundoEntrada)){
+    carregarImagem(fundoEntrada).then((image)=>{ fundo=image; document.getElementById("videoFundoNome").textContent="Fundo do modelo selecionado"; atualizarPrevia(); }).catch(()=>{});
+  }
+  document.querySelectorAll("[data-format]").forEach((button)=>{const active=button.dataset.format===formato;button.classList.toggle("is-active",active);button.setAttribute("aria-pressed",String(active));});
+  document.querySelectorAll("[data-template]").forEach((button)=>{const active=button.dataset.template===template;button.classList.toggle("is-active",active);button.setAttribute("aria-pressed",String(active));});
+}
+
 
 function clamp(value, min = 0, max = 1) {
   return Math.max(min, Math.min(max, value));
@@ -524,9 +553,10 @@ fundoInput.addEventListener("change", () => fundoInput.files[0] && carregarFundo
 musicaInput.addEventListener("change", () => { musicaFile = musicaInput.files[0] || null; document.getElementById("videoMusicaNome").textContent = musicaFile ? musicaFile.name : "Sem música"; setStatus(musicaFile ? "Música pronta para a exportação local." : "Música removida."); });
 reproduzir.addEventListener("click", alternarPreview);
 exportar.addEventListener("click", exportarVideo);
-document.getElementById("temaBtn")?.addEventListener("click", () => { document.body.classList.toggle("dark"); document.getElementById("temaBtn").textContent = document.body.classList.contains("dark") ? "☀️ Modo Claro" : "🌙 Modo Escuro"; });
+document.getElementById("temaBtn")?.addEventListener("click", () => { document.body.classList.toggle("dark"); document.getElementById("temaBtn").textContent = document.body.classList.contains("dark") ? "Modo Claro" : "Modo Escuro"; });
 
 renderCenas();
+carregarDadosDoCriadorDeImagens();
 atualizarFormatoExportacao();
-carregarImagem(DEFAULT_IMAGE).then((image) => { fundo = image; atualizarPrevia(); }).catch(() => { atualizarPrevia(); setStatus("Escolha uma imagem ou vídeo para personalizar o fundo."); });
+if (!parametrosEntrada.get("fundo")) carregarImagem(DEFAULT_IMAGE).then((image) => { fundo = image; atualizarPrevia(); }).catch(() => { atualizarPrevia(); setStatus("Escolha uma imagem ou vídeo para personalizar o fundo."); });
 atualizarPrevia();
