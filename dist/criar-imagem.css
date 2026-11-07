@@ -149,3 +149,6 @@
   .passos-criador article:last-child { border-bottom: 0; }
 }
 @media (prefers-reduced-motion: reduce) { .opcao-modelo, .opcao-formato, .btn-baixar-imagem, .campo-criador textarea, .campo-criador input { transition: none; } }
+
+
+.btn-criar-video{grid-column:1/-1;width:100%;border:1px solid rgba(25,91,210,.28);border-radius:16px;padding:13px 18px;background:linear-gradient(135deg,#eef5ff,#f7fbff);color:#174aab;font:700 15px/1.2 Manrope,Arial,sans-serif;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,background .18s ease}.btn-criar-video:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(25,91,210,.14);background:#fff}.btn-criar-video:active{transform:scale(.98)}@media (prefers-reduced-motion:reduce){.btn-criar-video{transition:none}}body.dark .btn-criar-video{background:rgba(25,91,210,.2);border-color:rgba(157,197,255,.35);color:#dceaff}
