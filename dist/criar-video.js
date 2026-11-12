@@ -23,6 +23,7 @@ const fundoInput = document.getElementById("videoFundo");
 const musicaInput = document.getElementById("videoMusica");
 const status = document.getElementById("videoStatus");
 const exportar = document.getElementById("exportarVideo");
+const compartilhar = document.getElementById("compartilharVideo");
 const reproduzir = document.getElementById("reproduzirVideo");
 const duracao = document.getElementById("videoDuracao");
 const animacao = document.getElementById("videoAnimacao");
@@ -50,6 +51,8 @@ let nextSceneId = 2;
 let cenas = [{ id: 1, quote: "", author: "— Messias" }];
 let ffmpegInstance = null;
 let ffmpegLoading = null;
+let ultimoVideoBlob = null;
+let ultimoVideoNome = "";
 const parametrosEntrada = new URLSearchParams(window.location.search);
 const MODELOS_VIDEO = {
   "boa-noite": "noite",
@@ -502,8 +505,11 @@ async function exportarVideo() {
       blob = await converterWebmParaMp4(blob);
       extensao = "mp4";
     }
-    baixarBlob(blob, `frases-de-messias-${formato}-${Date.now()}.${extensao}`);
-    setStatus(`Vídeo ${extensao.toUpperCase()} pronto. O download foi iniciado.`);
+    ultimoVideoNome = `frases-de-messias-${formato}-${Date.now()}.${extensao}`;
+    ultimoVideoBlob = blob;
+    baixarBlob(blob, ultimoVideoNome);
+    if (compartilhar) compartilhar.disabled = false;
+    setStatus(`Vídeo ${extensao.toUpperCase()} pronto. O download foi iniciado. Toque em Compartilhar para enviar às redes sociais.`);
   } catch (error) {
     console.error(error);
     setStatus(solicitado === "mp4" ? "Não foi possível converter para MP4 neste navegador. Escolha WebM ou tente Chrome atualizado." : "Não foi possível exportar agora. Verifique se o navegador permite áudio e vídeo.", true);
@@ -513,6 +519,38 @@ async function exportarVideo() {
     exportar.disabled = false;
     reproduzir.disabled = false;
     atualizarPrevia();
+  }
+}
+
+async function compartilharVideo() {
+  const quote = textoLimpo(frase.value, 220) || "Uma nova inspiração para o seu dia.";
+  const author = textoLimpo(autor.value, 80) || "— Messias";
+  const text = `"${quote}"\n${author}\n\nCriado em Frases de Messias`;
+  const shareData = { title: "Frases de Messias", text, url: window.location.href };
+  try {
+    if (ultimoVideoBlob && navigator.share) {
+      const file = new File([ultimoVideoBlob], ultimoVideoNome || "frases-de-messias.mp4", { type: ultimoVideoBlob.type || "video/mp4" });
+      if (!navigator.canShare || navigator.canShare({ files: [file] })) {
+        await navigator.share({ ...shareData, files: [file] });
+        setStatus("Vídeo e frase compartilhados com sucesso.");
+        return;
+      }
+    }
+    if (navigator.share) {
+      await navigator.share(shareData);
+      setStatus("Frase compartilhada com sucesso.");
+      return;
+    }
+    await navigator.clipboard?.writeText(`${text}\n${window.location.href}`);
+    setStatus("Frase copiada. Agora cole em sua rede social.");
+  } catch (error) {
+    if (error?.name === "AbortError") return;
+    try {
+      await navigator.clipboard?.writeText(`${text}\n${window.location.href}`);
+      setStatus("O compartilhamento de arquivo não está disponível. Frase copiada para você enviar.");
+    } catch {
+      setStatus("Não foi possível abrir o compartilhamento neste navegador.", true);
+    }
   }
 }
 
@@ -554,6 +592,8 @@ fundoInput.addEventListener("change", () => fundoInput.files[0] && carregarFundo
 musicaInput.addEventListener("change", () => { musicaFile = musicaInput.files[0] || null; document.getElementById("videoMusicaNome").textContent = musicaFile ? musicaFile.name : "Sem música"; setStatus(musicaFile ? "Música pronta para a exportação local." : "Música removida."); });
 reproduzir.addEventListener("click", alternarPreview);
 exportar.addEventListener("click", exportarVideo);
+compartilhar?.addEventListener("click", compartilharVideo);
+if (compartilhar) compartilhar.disabled = true;
 document.getElementById("temaBtn")?.addEventListener("click", () => { document.body.classList.toggle("dark"); document.getElementById("temaBtn").textContent = document.body.classList.contains("dark") ? "Modo Claro" : "Modo Escuro"; });
 
 renderCenas();
